@@ -1,7 +1,7 @@
 export const USER_SITE = {
-  website: "http://localhost:8080/",
+  website: "http://leokang123.github.io/astro-blog/",
   author: "Jeonghoon",
-  profile: "http://localhost:8080/about/",
+  profile: "http://leokang123.github.io/astro-blog/about/",
   desc: "홈서버, Docker, 웹호스팅, 개발 기록을 모아두는 개인 기술 블로그",
   title: "Home Notes",
   postPerIndex: 4,

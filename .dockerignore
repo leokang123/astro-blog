@@ -1,8 +1,28 @@
-# Ignore Astro cache
-.astro/
+# Dependencies and package-manager caches
+node_modules
+**/node_modules
+.pnpm-store
 
-# Ignore node_modules directory
-node_modules/
+# Build output and framework caches
+dist
+.astro
+.cache
+.vite
 
-# Ignore build output
-dist/
+# Git and editor metadata
+.git
+.github
+.vscode
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Docker/local files that are not needed inside the build context
+Dockerfile
+docker-compose.yml
+.dockerignore
