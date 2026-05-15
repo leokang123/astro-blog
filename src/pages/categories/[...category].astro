@@ -1,0 +1,70 @@
+---
+import { getCollection } from "astro:content";
+import Main from "@/layouts/Main.astro";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Card from "@/components/Card.astro";
+import getUniqueCategories, {
+  getCategoryChildren,
+} from "@/utils/getUniqueCategories";
+import getPostsByCategory from "@/utils/getPostsByCategory";
+import { SITE } from "@/config";
+import siteHref from "@/utils/siteHref";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("blog");
+  const categories = getUniqueCategories(posts);
+
+  return categories.map(categoryItem => ({
+    params: { category: categoryItem.category },
+    props: {
+      categoryItem,
+      childCategories: getCategoryChildren(categories, categoryItem.category),
+      categoryPosts: getPostsByCategory(posts, categoryItem.category),
+    },
+  }));
+}
+
+const { categoryItem, childCategories, categoryPosts } = Astro.props;
+const hasChildCategories = childCategories.length > 0;
+---
+
+<Layout title={`Category: ${categoryItem.categoryName} | ${SITE.title}`}>
+  <Header />
+  <Main
+    pageTitle={[`Category:`, `${categoryItem.categoryName}`]}
+    titleTransition={categoryItem.category}
+    pageDesc={
+      hasChildCategories
+        ? `Browse the next level inside "${categoryItem.categoryName}".`
+        : `All the articles in the "${categoryItem.categoryName}" category.`
+    }
+  >
+    <h1 slot="title" transition:name={categoryItem.category}>
+      {`Category:${categoryItem.categoryName}`}
+    </h1>
+    {
+      hasChildCategories ? (
+        <ul class="space-y-3">
+          {childCategories.map(({ category, categoryLabel }) => (
+            <li>
+              <a
+                href={siteHref(`/categories/${category}/`)}
+                class="text-lg text-accent underline decoration-dashed underline-offset-4"
+              >
+                {categoryLabel}
+              </a>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <ul>
+          {categoryPosts.map(data => <Card {...data} />)}
+        </ul>
+      )
+    }
+  </Main>
+
+  <Footer />
+</Layout>
