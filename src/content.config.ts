@@ -12,6 +12,7 @@ const blog = defineCollection({
       pubDatetime: z.date(),
       modDatetime: z.date().optional().nullable(),
       title: z.string(),
+      order: z.number().optional(),
       featured: z.boolean().optional(),
       draft: z.boolean().optional(),
       category: z.string().default("General"),

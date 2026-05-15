@@ -1,5 +1,6 @@
 ---
 title: "Chapter 6. System Configuration: DHCP and Autoconfiguration"
+order: 6
 pubDatetime: 2026-05-16T00:00:00+09:00
 modDatetime: 2026-05-16T00:00:00+09:00
 description: "Chapter 6. System Configuration: DHCP and Autoconfiguration 정리 노트입니다."

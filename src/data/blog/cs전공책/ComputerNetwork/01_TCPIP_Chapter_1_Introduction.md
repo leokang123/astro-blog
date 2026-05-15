@@ -1,5 +1,6 @@
 ---
 title: "01_TCPIP_Chapter_1_Introduction"
+order: 1
 pubDatetime: 2026-05-16T06:31:12+09:00
 modDatetime: 2026-05-16T06:31:31+09:00
 description: ""
