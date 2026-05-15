@@ -6,10 +6,13 @@ const siteHref = (path: string) => {
   }
 
   const pathWithLeadingSlash = path.startsWith("/") ? path : `/${path}`;
-  const pathWithBase = `${SITE.basePath}${pathWithLeadingSlash}`.replaceAll(
-    "//",
-    "/"
-  );
+  const alreadyHasBasePath =
+    SITE.basePath &&
+    (pathWithLeadingSlash === SITE.basePath ||
+      pathWithLeadingSlash.startsWith(`${SITE.basePath}/`));
+  const pathWithBase = alreadyHasBasePath
+    ? pathWithLeadingSlash
+    : `${SITE.basePath}${pathWithLeadingSlash}`.replaceAll("//", "/");
   const url = new URL(pathWithBase, SITE.website);
   const hasFileExtension = /\/[^/]+\.[^/]+$/.test(url.pathname);
 
