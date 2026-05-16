@@ -2,33 +2,91 @@
 import type { CollectionEntry } from "astro:content";
 import { slugifyStr } from "@/utils/slugify";
 import { getPath } from "@/utils/getPath";
+import { getFirstPostImage, resolvePostImageSrc } from "@/utils/getFirstPostImage";
 import siteHref from "@/utils/siteHref";
 import Datetime from "./Datetime.astro";
 
+type CardVariant = "featured" | "compact" | "text";
+type HeadingLevel = "h2" | "h3";
+
 type Props = {
-  variant?: "h2" | "h3";
+  variant?: CardVariant | HeadingLevel;
+  headingLevel?: HeadingLevel;
 } & CollectionEntry<"blog">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const {
+  variant: rawVariant = "text",
+  headingLevel,
+  id,
+  data,
+  filePath,
+} = Astro.props;
 
-const { title, description, ...props } = data;
+const isLegacyHeading = rawVariant === "h2" || rawVariant === "h3";
+const variant: CardVariant = isLegacyHeading ? "text" : rawVariant;
+const Heading = headingLevel ?? (isLegacyHeading ? rawVariant : "h2");
+const { title, description, ogImage, ...props } = data;
+const postHref = siteHref(getPath(id, filePath));
+const thumbnailSrc =
+  variant === "text"
+    ? undefined
+    : resolvePostImageSrc(ogImage, { filePath }) ?? getFirstPostImage(Astro.props);
+const mediaClasses =
+  variant === "featured"
+    ? "mb-4 block aspect-video overflow-hidden rounded-md border border-border bg-muted/30"
+    : "block aspect-video overflow-hidden rounded-md border border-border bg-muted/30 sm:w-32 sm:flex-none sm:aspect-[4/3] md:w-36";
 ---
 
-<li class="my-6">
-  <a
-    href={siteHref(getPath(id, filePath))}
+<li class:list={[variant === "featured" ? "my-8" : "my-6"]}>
+  <article
     class:list={[
-      "inline-block text-lg font-medium text-accent",
-      "decoration-dashed underline-offset-4 hover:underline",
-      "focus-visible:no-underline focus-visible:underline-offset-0",
+      "min-w-0",
+      variant === "compact" &&
+        thumbnailSrc &&
+        "flex flex-col gap-4 sm:flex-row sm:items-start",
     ]}
   >
-    <Heading
-      style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
-    >
-      {title}
-    </Heading>
-  </a>
-  <Datetime {...props} />
-  <p>{description}</p>
+    {
+      thumbnailSrc && (
+        <a
+          href={postHref}
+          data-card-media
+          class={mediaClasses}
+          aria-label={title}
+        >
+          <img
+            src={thumbnailSrc}
+            alt=""
+            loading="lazy"
+            decoding="async"
+            class="size-full object-cover transition-opacity hover:opacity-90"
+            onerror="this.closest('[data-card-media]')?.remove()"
+          />
+        </a>
+      )
+    }
+
+    <div class="min-w-0">
+      <a
+        href={postHref}
+        class:list={[
+          "inline-block font-medium text-accent",
+          variant === "featured" ? "text-xl sm:text-2xl" : "text-lg",
+          "decoration-dashed underline-offset-4 hover:underline",
+          "focus-visible:no-underline focus-visible:underline-offset-0",
+        ]}
+      >
+        <Heading
+          class="break-words"
+          style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
+        >
+          {title}
+        </Heading>
+      </a>
+      <Datetime {...props} />
+      <p class:list={["mt-1", variant === "compact" && "line-clamp-3"]}>
+        {description}
+      </p>
+    </div>
+  </article>
 </li>

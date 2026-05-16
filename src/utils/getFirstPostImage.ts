@@ -15,8 +15,27 @@ const cleanImageSrc = (src: string) =>
 
 const isRemoteUrl = (src: string) => /^https?:\/\//i.test(src);
 
-const resolveAssetImage = (src: string, post: CollectionEntry<"blog">) => {
-  const decodedSrc = decodeURI(cleanImageSrc(src));
+const decodeImageSrc = (src: string) => {
+  const imageSrc = cleanImageSrc(src);
+
+  try {
+    return decodeURI(imageSrc);
+  } catch {
+    return imageSrc;
+  }
+};
+
+export const resolvePostImageSrc = (
+  image: CollectionEntry<"blog">["data"]["ogImage"] | string,
+  post?: Pick<CollectionEntry<"blog">, "filePath">
+) => {
+  if (!image) return undefined;
+
+  if (typeof image !== "string") {
+    return image.src;
+  }
+
+  const decodedSrc = decodeImageSrc(image);
 
   if (isRemoteUrl(decodedSrc) || decodedSrc.startsWith("/")) {
     return decodedSrc;
@@ -28,7 +47,7 @@ const resolveAssetImage = (src: string, post: CollectionEntry<"blog">) => {
     assetPath = `/src/${decodedSrc.slice(2)}`;
   } else if (decodedSrc.startsWith("src/assets/images/")) {
     assetPath = `/${decodedSrc}`;
-  } else if (post.filePath) {
+  } else if (post?.filePath) {
     const pathFromPost = path
       .join(path.dirname(post.filePath), decodedSrc)
       .replaceAll(path.sep, "/");
@@ -50,7 +69,7 @@ const firstMatchingImage = (
     const src = match.groups?.src;
     if (!src) continue;
 
-    const resolvedImage = resolveAssetImage(src, post);
+    const resolvedImage = resolvePostImageSrc(src, post);
     if (resolvedImage) return resolvedImage;
   }
 

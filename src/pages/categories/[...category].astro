@@ -60,7 +60,7 @@ const hasChildCategories = childCategories.length > 0;
         </ul>
       ) : (
         <ul>
-          {categoryPosts.map(data => <Card {...data} />)}
+          {categoryPosts.map(data => <Card variant="compact" {...data} />)}
         </ul>
       )
     }

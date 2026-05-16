@@ -2,8 +2,9 @@
 title: "Chapter 1. Introduction"
 order: 1
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T16:30:18+09:00
+modDatetime: 2026-05-16T17:44:10+09:00
 description: "Chapter 1. Introduction 정리 노트입니다."
+featured: true
 tags:
   - cs전공책
   - OperatingSystem
