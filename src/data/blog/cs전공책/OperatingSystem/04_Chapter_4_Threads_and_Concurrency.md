@@ -58,7 +58,7 @@ Thread를 쓰면 한 application 안에서 UI 응답, background I/O, computatio
 - `signals`
 - 기타 operating-system resources
 
-<p align="center"><img src="./images/085_Figure_4.1_page_217.png" alt="Single-threaded and multithreaded processes" width="760"></p>
+![Single-threaded and multithreaded processes](@/assets/images/085_Figure_4.1_page_217.png)
 <p align="center"><sub>Figure 4.1 · PDF p. 217 · single-threaded process와 multithreaded process의 resource 공유 차이</sub></p>
 
 Figure 4.1은 process와 thread의 경계를 잘 보여준다. Single-threaded process는 register, PC, stack이 하나씩이고 실행 흐름도 하나다. Multithreaded process는 code/data/files를 공유하지만, 각 thread가 자기 registers, PC, stack을 따로 가진다. 따라서 thread는 “가벼운 process”처럼 보일 수 있지만, 독립 address space를 갖는 process와 달리 같은 address space 안에서 실행된다는 점이 핵심 차이다.
@@ -73,7 +73,7 @@ Figure 4.1은 process와 thread의 경계를 잘 보여준다. Single-threaded p
 
 Web server 예시는 thread의 경제성을 잘 보여준다. Busy web server는 수많은 clients의 web page, image, sound request를 동시에 처리해야 한다. Single-threaded server라면 한 번에 한 client만 처리하므로 대기 시간이 길어진다. 예전 방식처럼 request마다 process를 새로 만들 수도 있지만 process creation은 time-consuming하고 resource intensive하다. 같은 server code와 resource를 대부분 공유하는 request handler라면 process보다 thread를 만드는 편이 훨씬 효율적이다.
 
-<p align="center"><img src="./images/086_Figure_4.2_page_218.png" alt="Multithreaded server architecture" width="760"></p>
+![Multithreaded server architecture](@/assets/images/086_Figure_4.2_page_218.png)
 <p align="center"><sub>Figure 4.2 · PDF p. 218 · server가 request마다 새 thread를 만들고 다시 listening으로 돌아가는 구조</sub></p>
 
 Figure 4.2의 multithreaded server는 request를 받으면 새 thread를 만들어 해당 request를 처리하게 하고, main server thread는 다시 client request를 listen한다. 이 구조는 responsiveness와 throughput을 모두 높인다.
@@ -101,12 +101,12 @@ Multicore system은 한 chip 안에 여러 computing cores를 두고, 각 core�
 
 Single-core system에서도 여러 threads는 concurrent하게 실행될 수 있다. 다만 한 순간에 하나의 thread만 core에서 실행되므로, scheduler가 threads를 빠르게 switch하면서 interleaving할 뿐이다.
 
-<p align="center"><img src="./images/087_Figure_4.3_page_220.png" alt="Concurrent execution on a single-core system" width="760"></p>
+![Concurrent execution on a single-core system](@/assets/images/087_Figure_4.3_page_220.png)
 <p align="center"><sub>Figure 4.3 · PDF p. 220 · single core에서 T1-T4가 interleaving되어 concurrent하게 진행되는 모습</sub></p>
 
 Multicore system에서는 여러 threads가 서로 다른 cores에 배정되어 실제로 동시에 실행될 수 있다.
 
-<p align="center"><img src="./images/088_Figure_4.4_page_220.png" alt="Parallel execution on a multicore system" width="665"></p>
+![Parallel execution on a multicore system](@/assets/images/088_Figure_4.4_page_220.png)
 <p align="center"><sub>Figure 4.4 · PDF p. 220 · multiple cores에서 여러 threads가 동시에 실행되는 parallel execution</sub></p>
 
 | 구분 | 의미 | single core 가능 여부 | multicore 필요 여부 |
@@ -146,7 +146,7 @@ speedup <= 1 / (S + ((1 - S) / N))
 
 ### Data parallelism과 Task parallelism
 
-<p align="center"><img src="./images/089_Figure_4.5_page_222.png" alt="Data and task parallelism" width="760"></p>
+![Data and task parallelism](@/assets/images/089_Figure_4.5_page_222.png)
 <p align="center"><sub>Figure 4.5 · PDF p. 222 · data parallelism과 task parallelism의 분배 방식 차이</sub></p>
 
 Parallelism은 크게 두 유형으로 나뉜다.
@@ -164,7 +164,7 @@ Data parallelism은 “data를 나눈다”가 중심이고, task parallelism은
 
 Thread support는 user level 또는 kernel level에서 제공될 수 있다.
 
-<p align="center"><img src="./images/090_Figure_4.6_page_223.png" alt="User and kernel threads" width="655"></p>
+![User and kernel threads](@/assets/images/090_Figure_4.6_page_223.png)
 <p align="center"><sub>Figure 4.6 · PDF p. 223 · user space의 user threads와 kernel space의 kernel threads 관계</sub></p>
 
 | 구분 | 의미 | 관리 주체 |
@@ -176,7 +176,7 @@ Thread support는 user level 또는 kernel level에서 제공될 수 있다.
 
 ### Many-to-One Model
 
-<p align="center"><img src="./images/091_Figure_4.7_page_223.png" alt="Many-to-one model" width="657"></p>
+![Many-to-one model](@/assets/images/091_Figure_4.7_page_223.png)
 <p align="center"><sub>Figure 4.7 · PDF p. 223 · 여러 user-level threads가 하나의 kernel thread에 mapping되는 many-to-one model</sub></p>
 
 `many-to-one model`은 many user-level threads를 one kernel thread에 mapping한다. Thread management가 user space의 thread library에서 이루어지므로 효율적이다. User-level function call로 thread switching이 가능하고 kernel system call 비용을 피할 수 있기 때문이다.
@@ -191,7 +191,7 @@ Solaris의 Green threads와 초기 Java의 thread library가 이 model을 사용
 
 ### One-to-One Model
 
-<p align="center"><img src="./images/092_Figure_4.8_page_224.png" alt="One-to-one model" width="656"></p>
+![One-to-one model](@/assets/images/092_Figure_4.8_page_224.png)
 <p align="center"><sub>Figure 4.8 · PDF p. 224 · 각 user thread가 하나의 kernel thread에 대응되는 one-to-one model</sub></p>
 
 `one-to-one model`은 each user thread를 one kernel thread에 mapping한다. 어떤 thread가 blocking system call을 호출해도 다른 thread는 계속 실행될 수 있고, multiprocessor/multicore에서 여러 threads가 parallel하게 실행될 수 있다. 따라서 many-to-one보다 concurrency와 parallelism이 좋다.
@@ -202,7 +202,7 @@ Linux와 Windows 계열 운영체제는 one-to-one model을 구현한다. 현대
 
 ### Many-to-Many Model과 Two-Level Model
 
-<p align="center"><img src="./images/093_Figure_4.9_page_224.png" alt="Many-to-many model" width="656"></p>
+![Many-to-many model](@/assets/images/093_Figure_4.9_page_224.png)
 <p align="center"><sub>Figure 4.9 · PDF p. 224 · 여러 user-level threads를 더 적거나 같은 수의 kernel threads에 multiplex하는 many-to-many model</sub></p>
 
 `many-to-many model`은 many user-level threads를 smaller or equal number의 kernel threads에 multiplex한다. Kernel thread 수는 application 또는 machine 특성에 맞게 조정될 수 있다. 예를 들어 8-core system에서는 4-core system보다 더 많은 kernel threads를 application에 배정할 수 있다.
@@ -214,7 +214,7 @@ Many-to-many model의 의도는 many-to-one과 one-to-one의 단점을 함께 �
 - 한 user thread가 blocking system call을 수행해도 kernel은 다른 thread를 schedule할 수 있다.
 - Kernel thread 수를 user thread 수보다 적게 유지해 resource burden을 조절할 수 있다.
 
-<p align="center"><img src="./images/094_Figure_4.10_page_225.png" alt="Two-level model" width="657"></p>
+![Two-level model](@/assets/images/094_Figure_4.10_page_225.png)
 <p align="center"><sub>Figure 4.10 · PDF p. 225 · many-to-many mapping에 특정 user thread와 kernel thread binding을 허용하는 two-level model</sub></p>
 
 `two-level model`은 many-to-many model의 variation이다. 기본적으로 many user-level threads를 smaller/equal number의 kernel threads에 multiplex하지만, 특정 user-level thread를 특정 kernel thread에 bind할 수도 있다.
@@ -266,7 +266,7 @@ Asynchronous threading은 일반적으로 data sharing이 적다. Request handle
 
 `Pthreads`는 POSIX standard(IEEE 1003.1c)가 정의한 thread creation과 synchronization API다. Pthreads는 implementation이 아니라 specification이다. OS designer는 이 specification을 원하는 방식으로 구현할 수 있다. Linux와 macOS 같은 UNIX-type systems가 대표적으로 Pthreads를 구현한다. Windows는 native Pthreads를 지원하지 않지만 third-party implementation은 존재한다.
 
-<p align="center"><img src="./images/095_Figure_4.11_page_227.png" alt="Pthreads summation example" width="720"></p>
+![Pthreads summation example](@/assets/images/095_Figure_4.11_page_227.png)
 <p align="center"><sub>Figure 4.11 · PDF p. 227 · `pthread_create()`와 `pthread_join()`으로 summation thread를 만드는 Pthreads 예제</sub></p>
 
 Figure 4.11은 non-negative integer `N`에 대해 `sum = 1 + 2 + ... + N`을 별도 thread에서 계산한다. 핵심 흐름은 다음과 같다.
@@ -283,14 +283,14 @@ Figure 4.11은 non-negative integer `N`에 대해 `sum = 1 + 2 + ... + N`을 별
 
 여러 threads를 기다릴 때는 `pthread_join()`을 loop로 호출할 수 있다.
 
-<p align="center"><img src="./images/096_Figure_4.12_page_228.png" alt="Pthread join loop" width="760"></p>
+![Pthread join loop](@/assets/images/096_Figure_4.12_page_228.png)
 <p align="center"><sub>Figure 4.12 · PDF p. 228 · ten Pthreads를 `pthread_join()` loop로 기다리는 예제</sub></p>
 
 ### Windows Threads
 
 Windows thread API도 Pthreads와 유사하게 thread function을 지정하고 parent가 child thread completion을 기다린다. Windows API를 쓰려면 `windows.h`를 include한다.
 
-<p align="center"><img src="./images/097_Figure_4.13_page_229.png" alt="Windows thread example" width="640"></p>
+![Windows thread example](@/assets/images/097_Figure_4.13_page_229.png)
 <p align="center"><sub>Figure 4.13 · PDF p. 229 · `CreateThread()`와 `WaitForSingleObject()`를 사용하는 Windows summation thread 예제</sub></p>
 
 Figure 4.13에서 `Sum`은 global variable이며, child thread가 `Summation()` function에서 값을 누적한다. Windows의 주요 API는 다음과 같다.
@@ -379,7 +379,7 @@ Java는 C/Pthreads처럼 global data를 쉽게 공유하는 model이 아니다. 
 | `Future<V>` | 아직 끝나지 않았을 수 있는 asynchronous computation의 result handle |
 | `Future.get()` | result가 available할 때까지 wait한 뒤 value를 가져옴 |
 
-<p align="center"><img src="./images/098_Figure_4.14_page_233.png" alt="Java Executor framework" width="720"></p>
+![Java Executor framework](@/assets/images/098_Figure_4.14_page_233.png)
 <p align="center"><sub>Figure 4.14 · PDF p. 233 · `Callable`, `ExecutorService`, `Future`를 이용한 Java summation 예제</sub></p>
 
 Figure 4.14에서 `Summation` class는 `Callable<Integer>`를 implement하고, thread에서 실행될 code는 `call()` method에 들어간다. `Executors.newSingleThreadExecutor()`는 `ExecutorService`를 만들고, `pool.submit(new Summation(upper))`는 task를 제출하면서 `Future<Integer>`를 반환한다. Parent는 `result.get()`으로 summation result가 준비될 때까지 기다린다.
@@ -438,7 +438,7 @@ Java의 `java.util.concurrent` package는 여러 thread-pool architecture를 제
 
 각 factory method는 `ExecutorService`를 implement하는 object를 반환한다. `ExecutorService`는 `Executor`를 extend하므로 `execute()`를 제공하고, 추가로 pool termination management method를 제공한다.
 
-<p align="center"><img src="./images/099_Figure_4.15_page_237.png" alt="Java thread pool" width="760"></p>
+![Java thread pool](@/assets/images/099_Figure_4.15_page_237.png)
 <p align="center"><sub>Figure 4.15 · PDF p. 237 · `Executors.newCachedThreadPool()`로 Java thread pool을 만들고 tasks를 실행하는 예제</sub></p>
 
 Figure 4.15는 `newCachedThreadPool()`로 pool을 만들고, command-line에서 받은 `numTasks`만큼 `pool.execute(new Task())`로 tasks를 제출한다. 마지막의 `pool.shutdown()`은 추가 task를 거부하고 기존 tasks가 모두 끝나면 pool을 종료한다.
@@ -447,7 +447,7 @@ Figure 4.15는 `newCachedThreadPool()`로 pool을 만들고, command-line에서 
 
 `fork-join model`은 parent thread가 one or more child threads를 fork하고, children이 terminate한 뒤 join하여 결과를 combine하는 synchronous model이다. Section 4.4의 explicit thread creation도 fork-join으로 볼 수 있다. Implicit threading에서는 programmer가 직접 threads를 만들지 않고 parallel tasks만 지정하며, library가 task 수와 실제 threads 수를 관리한다.
 
-<p align="center"><img src="./images/100_Figure_4.16_page_238.png" alt="Fork-join parallelism" width="760"></p>
+![Fork-join parallelism](@/assets/images/100_Figure_4.16_page_238.png)
 <p align="center"><sub>Figure 4.16 · PDF p. 238 · main thread가 tasks를 fork하고 join으로 결과를 회수하는 fork-join parallelism</sub></p>
 
 Java 1.7의 fork-join library는 Quicksort, Mergesort 같은 recursive divide-and-conquer algorithms에 적합하다. 큰 problem을 작은 subproblems로 나누고, subtask를 fork한 뒤, 각 subtask result를 join해 combine한다.
@@ -468,17 +468,17 @@ Task(problem)
         return combined results
 ```
 
-<p align="center"><img src="./images/101_Figure_4.17_page_239.png" alt="Fork-join in Java" width="760"></p>
+![Fork-join in Java](@/assets/images/101_Figure_4.17_page_239.png)
 <p align="center"><sub>Figure 4.17 · PDF p. 239 · Java fork-join에서 recursive tasks가 fork/join되는 구조</sub></p>
 
 Java fork-join example은 integer array sum을 divide-and-conquer로 계산한다. `ForkJoinPool`에 initial task를 `invoke()`하면, library가 worker threads를 만들어 tasks를 실행하고 최종 sum을 돌려준다.
 
-<p align="center"><img src="./images/102_Figure_4.18_page_240.png" alt="Fork-join calculation using Java API" width="640"></p>
+![Fork-join calculation using Java API](@/assets/images/102_Figure_4.18_page_240.png)
 <p align="center"><sub>Figure 4.18 · PDF p. 240 · `RecursiveTask<Integer>` 기반 `SumTask`가 array summation을 fork-join으로 계산하는 코드</sub></p>
 
 `SumTask`의 핵심은 `compute()` method다. Subarray size가 `THRESHOLD`보다 작으면 직접 sum을 계산한다. 그렇지 않으면 middle point를 잡아 left/right tasks를 만들고 `fork()`한 뒤, `join()`으로 결과를 기다려 합친다.
 
-<p align="center"><img src="./images/103_Figure_4.19_page_241.png" alt="Java fork-join class hierarchy" width="760"></p>
+![Java fork-join class hierarchy](@/assets/images/103_Figure_4.19_page_241.png)
 <p align="center"><sub>Figure 4.19 · PDF p. 241 · `ForkJoinTask`, `RecursiveTask`, `RecursiveAction`의 관계</sub></p>
 
 | Class | 역할 |
@@ -725,7 +725,7 @@ static __thread int threadID;
 
 Many-to-many/two-level model을 구현하는 여러 system은 user threads와 kernel threads 사이에 intermediate data structure를 둔다. 이 structure가 `lightweight process (LWP)`다.
 
-<p align="center"><img src="./images/104_Figure_4.20_page_250.png" alt="Lightweight process" width="541"></p>
+![Lightweight process](@/assets/images/104_Figure_4.20_page_250.png)
 <p align="center"><sub>Figure 4.20 · PDF p. 250 · user thread와 kernel thread 사이의 virtual processor 역할을 하는 LWP</sub></p>
 
 Thread library 입장에서 LWP는 user thread를 schedule할 수 있는 `virtual processor`처럼 보인다. 각 LWP는 kernel thread에 붙어 있고, 실제 physical processor에 schedule되는 것은 kernel thread다. Kernel thread가 I/O wait 등으로 block되면 LWP도 block되고, 그 LWP에 붙은 user-level thread도 block된다.
@@ -765,7 +765,7 @@ Windows thread의 일반 component는 다음과 같다.
 
 Register set, stacks, private storage area를 thread의 `context`라고 한다. Windows thread의 주요 data structures는 `ETHREAD`, `KTHREAD`, `TEB`다.
 
-<p align="center"><img src="./images/105_Figure_4.21_page_252.png" alt="Windows thread data structures" width="760"></p>
+![Windows thread data structures](@/assets/images/105_Figure_4.21_page_252.png)
 <p align="center"><sub>Figure 4.21 · PDF p. 252 · Windows thread의 ETHREAD, KTHREAD, TEB 구조와 kernel/user space 경계</sub></p>
 
 | Structure | 위치 | 역할 |
@@ -782,7 +782,7 @@ Linux는 전통적인 process duplication을 위해 `fork()` system call을 제�
 
 `clone()`은 flags를 받아 parent와 child tasks 사이에 얼마나 많은 resource를 공유할지 결정한다.
 
-<p align="center"><img src="./images/106_Figure_4.22_page_253.png" alt="Linux clone flags" width="760"></p>
+![Linux clone flags](@/assets/images/106_Figure_4.22_page_253.png)
 <p align="center"><sub>Figure 4.22 · PDF p. 253 · `clone()` 호출 시 sharing 수준을 정하는 주요 flags</sub></p>
 
 | Flag | 의미 |

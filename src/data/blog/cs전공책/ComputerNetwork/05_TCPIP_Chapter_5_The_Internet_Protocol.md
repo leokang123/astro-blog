@@ -53,10 +53,10 @@ IPv4 header는 보통 20 bytes지만, `Options`가 붙으면 `IHL` 값에 따라
 
 IPv4와 IPv6 header 구조는 아래 두 그림으로 한 번에 잡는 것이 좋다. IPv4는 길이가 변하고 fragmentation 관련 field가 base header 안에 있으며, IPv6는 고정 header와 `Next Header` 기반 chain 구조를 사용한다.
 
-<p align="center"><img src="./images/056_Figure_5_1_page_221.png" alt="Figure 5-1" width="760"></p>
+![Figure 5-1](@/assets/images/056_Figure_5_1_page_221.png)
 <p align="center"><sub>Figure 5-1 · PDF p. 221 · IPv4 datagram header 구조</sub></p>
 
-<p align="center"><img src="./images/057_Figure_5_2_page_221.png" alt="Figure 5-2" width="760"></p>
+![Figure 5-2](@/assets/images/057_Figure_5_2_page_221.png)
 <p align="center"><sub>Figure 5-2 · PDF p. 221 · IPv6 fixed header와 Next Header 기반 확장 구조</sub></p>
 
 header 그림의 bit 번호는 32-bit word 기준으로 왼쪽의 most significant bit가 0, 오른쪽의 least significant bit가 31이다. TCP/IP header의 정수 값은 네트워크에서 `big endian byte ordering`, 즉 `network byte order`로 전달된다.
@@ -99,7 +99,7 @@ IPv4 header checksum 계산 절차는 다음과 같다.
 4. 수신자는 header와 Checksum field를 포함해 다시 checksum을 계산한다.
 5. 오류가 없다면 결과가 0이 된다. nonzero이면 IPv4 implementation은 datagram을 폐기하고, 별도 error message는 만들지 않는다.
 
-<p align="center"><img src="./images/058_Figure_5_3_page_226.png" alt="Figure 5-3" width="760"></p>
+![Figure 5-3](@/assets/images/058_Figure_5_3_page_226.png)
 <p align="center"><sub>Figure 5-3 · PDF p. 226 · Internet checksum 계산과 검증 예</sub></p>
 
 one's complement addition은 carry가 발생하면 그 carry를 다시 하위 bit에 더하는 `end-round-carry addition`으로 구현한다. 이 성질 때문에 송신자가 checksum을 넣은 뒤 수신자가 전체 header를 다시 더하면 정상 packet에서는 모든 bit가 1인 값의 one's complement, 즉 0이 나온다.
@@ -119,7 +119,7 @@ one's complement addition은 carry가 발생하면 그 carry를 다시 하위 bi
 
 DiffServ는 Internet에서 모든 traffic을 동일한 best-effort로만 다루지 않고, class별로 다른 service를 제공하려는 framework다. DSCP 값은 특정 `per-hop behavior(PHB)`를 가리키며, router는 그 PHB에 따라 queueing priority, drop probability 같은 처리를 다르게 할 수 있다. 기본 DSCP 값은 보통 0이고 routine best-effort traffic에 해당한다.
 
-<p align="center"><img src="./images/060_Figure_5_5_page_229.png" alt="Figure 5-5" width="760"></p>
+![Figure 5-5](@/assets/images/060_Figure_5_5_page_229.png)
 <p align="center"><sub>Figure 5-5 · PDF p. 229 · DSCP 6 bits와 ECN 2 bits의 배치</sub></p>
 
 ECN은 congestion이 이미 지속되는 router가 packet을 그냥 버리기 전에 "이 datagram이 혼잡을 경험했다"는 표시를 남기는 메커니즘이다. 목적지에 도착한 transport protocol, 대표적으로 TCP가 이 표시를 보고 송신자에게 알려 주면, 송신자는 전송률을 줄여 congestion을 완화할 수 있다. 핵심은 congestion signal을 loss로만 표현하지 않고 header bit로도 표현한다는 점이다.
@@ -168,7 +168,7 @@ IPv6의 중요한 설계 선택은 "자주 쓰지 않는 기능을 base header�
 
 IPv6 header chain은 각 header의 `Next Header` field가 다음 header의 type을 가리키는 방식으로 이어진다. 마지막에는 TCP, UDP, ICMPv6 같은 upper-layer header가 오거나, 더 이상 header가 없음을 나타내는 value 59가 올 수 있다.
 
-<p align="center"><img src="./images/061_Figure_5_6_page_234.png" alt="Figure 5-6" width="760"></p>
+![Figure 5-6](@/assets/images/061_Figure_5_6_page_234.png)
 <p align="center"><sub>Figure 5-6 · PDF p. 234 · IPv6 Next Header field로 이어지는 header chain</sub></p>
 
 대표적인 `Next Header` 값은 다음처럼 해석하면 된다.
@@ -195,7 +195,7 @@ IPv6 options는 크게 두 위치에 담긴다.
 
 두 option header 안의 option들은 공통적으로 `type-length-value(TLV)` 형식을 쓴다. TLV는 "무슨 option인지(type), option data 길이가 얼마인지(length), 실제 data(value)가 무엇인지"를 분리해, 새로운 option을 추가하더라도 기존 parser가 최소한 건너뛰거나 폐기 결정을 할 수 있게 해준다.
 
-<p align="center"><img src="./images/062_Figure_5_7_page_235.png" alt="Figure 5-7" width="760"></p>
+![Figure 5-7](@/assets/images/062_Figure_5_7_page_235.png)
 <p align="center"><sub>Figure 5-7 · PDF p. 235 · IPv6 Hop-by-Hop/Destination option의 TLV 구조</sub></p>
 
 option type 첫 byte에는 세 부분이 들어 있다.
@@ -244,7 +244,7 @@ IPv6 `Routing header`는 송신자가 datagram이 지나갈 경로를 일부 제
 
 RH0는 IPv4의 loose Source Route, strict Source Route, Record Route option을 일반화한 형태다. sender가 방문할 IPv6 node 주소 vector를 header에 넣고, datagram이 각 waypoint에 도착할 때마다 IPv6 base header의 `Destination IP Address`와 Routing header 안의 다음 주소를 바꿔 가며 forwarding한다.
 
-<p align="center"><img src="./images/063_Figure_5_8_page_239.png" alt="Figure 5-8" width="720"></p>
+![Figure 5-8](@/assets/images/063_Figure_5_8_page_239.png)
 <p align="center"><sub>Figure 5-8 · PDF p. 239 · deprecated RH0 Routing header 형식</sub></p>
 
 Routing header의 핵심 field는 다음과 같다.
@@ -259,7 +259,7 @@ Routing header의 핵심 field는 다음과 같다.
 
 동작은 `Segments Left`가 줄어들면서 base header destination이 다음 waypoint로 바뀌는 방식이다. 아래 그림에서는 S가 R2, R3, D를 경유하도록 의도하지만, 실제 forwarding 중에는 첫 destination이 R1로 설정되고 각 waypoint에서 주소가 swap된다.
 
-<p align="center"><img src="./images/064_Figure_5_9_page_240.png" alt="Figure 5-9" width="760"></p>
+![Figure 5-9](@/assets/images/064_Figure_5_9_page_240.png)
 <p align="center"><sub>Figure 5-9 · PDF p. 240 · RH0가 waypoint를 따라 Destination IP Address를 갱신하는 흐름</sub></p>
 
 RH0가 deprecated된 이유는 DoS amplification 가능성이다. RH0는 같은 주소를 주소 vector에 여러 번 넣을 수 있었고, 이 때문에 traffic이 두 node 또는 여러 node 사이를 반복적으로 오가며 특정 path의 대역폭을 과도하게 소모할 수 있었다. 결과적으로 RH0는 제거되고, IPv6에서 의미 있게 남은 Routing header는 Mobile IP용 RH2다. RH2는 단일 주소만 담을 수 있어 RH0의 반복 경유 문제를 크게 줄인다.
@@ -268,7 +268,7 @@ RH0가 deprecated된 이유는 DoS amplification 가능성이다. RH0는 같은 
 
 IPv6 `Fragment header`는 source가 destination까지의 `path MTU`보다 큰 datagram을 보내야 할 때 사용한다. IPv4에서는 host뿐 아니라 router도 next-hop MTU에 맞춰 datagram을 fragment할 수 있지만, IPv6에서는 sender만 fragmentation을 수행한다. router가 중간에서 fragment하지 않는 대신, 너무 큰 packet은 ICMPv6 Packet Too Big을 통해 sender가 path MTU를 학습하는 방향으로 설계된다.
 
-<p align="center"><img src="./images/066_Figure_5_11_page_242.png" alt="Figure 5-11" width="760"></p>
+![Figure 5-11](@/assets/images/066_Figure_5_11_page_242.png)
 <p align="center"><sub>Figure 5-11 · PDF p. 242 · IPv6 Fragment header의 Identification, Offset, M bit</sub></p>
 
 Fragment header의 핵심 field는 다음과 같다.
@@ -287,7 +287,7 @@ IPv6 fragmentation은 original packet을 두 부분으로 본다.
 
 각 fragment packet은 unfragmentable part를 복사하고, 그 뒤에 Fragment header와 fragment data를 붙인다. IPv6 header의 Payload Length는 해당 fragment packet 크기에 맞게 다시 설정된다. 수신자는 같은 Identification을 가진 모든 fragments를 모아 offset 순서대로 reassembly한 뒤 상위 protocol에 넘긴다.
 
-<p align="center"><img src="./images/067_Figure_5_12_page_243.png" alt="Figure 5-12" width="760"></p>
+![Figure 5-12](@/assets/images/067_Figure_5_12_page_243.png)
 <p align="center"><sub>Figure 5-12 · PDF p. 243 · 3960-byte IPv6 payload가 세 fragment로 나뉘는 예</sub></p>
 
 Figure 5-12의 예에서는 3960-byte payload를 Ethernet MTU 1500 bytes에 맞추기 위해 세 fragment로 나눈다. Fragment header가 8 bytes 추가되므로 각 fragment data는 1448 bytes 이하가 되며, offset은 8-byte 단위로 표현된다. 두 번째 fragment의 offset 181은 실제 byte offset `181 * 8 = 1448`을 뜻하고, 마지막 fragment의 offset 362는 `362 * 8 = 2896`을 뜻한다.
@@ -335,7 +335,7 @@ datagram의 destination IP address를 `D`라고 하면, forwarding lookup은 `lo
 
 IP delivery는 크게 `direct delivery`와 `indirect delivery`로 나뉜다. 둘의 차이는 IP datagram의 source/destination이 아니라 link-layer frame의 destination이 누구인지에서 드러난다.
 
-<p align="center"><img src="./images/071_Figure_5_16_page_250.png" alt="Figure 5-16" width="760"></p>
+![Figure 5-16](@/assets/images/071_Figure_5_16_page_250.png)
 <p align="center"><sub>Figure 5-16 · PDF p. 250 · direct delivery와 indirect delivery에서 IP header와 link-layer header의 차이</sub></p>
 
 ### 5.4.3.1 Direct Delivery
@@ -390,7 +390,7 @@ MIPv6의 주요 용어는 다음과 같다.
 | Care-of Address | CoA | MN이 visited network에서 받은 현재 위치의 IP address |
 | Binding | - | MN의 HoA와 현재 CoA의 대응 관계 |
 
-<p align="center"><img src="./images/072_Figure_5_17_page_256.png" alt="Figure 5-17" width="760"></p>
+![Figure 5-17](@/assets/images/072_Figure_5_17_page_256.png)
 <p align="center"><sub>Figure 5-17 · PDF p. 256 · Mobile IP의 MN, CN, HA, HoA, CoA 관계</sub></p>
 
 기본 모델에서는 MN이 visited network에 붙으면 CoA를 받고, 자신의 HA에 `binding update`를 보낸다. HA는 `binding acknowledgment`로 응답한다. 이후 CN과 MN 사이의 traffic은 HA를 통해 양방향 IPv6 tunneling으로 전달된다. 이 방식을 `bidirectional tunneling`이라고 한다.
@@ -408,7 +408,7 @@ bidirectional tunneling의 장점은 CN이 MIPv6를 몰라도 된다는 점이�
 
 RO에서 어려운 점은 보안이다. CN은 "이 binding update를 보낸 node가 정말 해당 HoA의 MN인가?"를 확인해야 한다. MN-CN 사이에 언제나 IPsec을 쓸 수 있다고 가정하기 어렵기 때문에, MIPv6는 `Return Routability Procedure(RRP)`를 사용한다.
 
-<p align="center"><img src="./images/073_Figure_5_18_page_257.png" alt="Figure 5-18" width="720"></p>
+![Figure 5-18](@/assets/images/073_Figure_5_18_page_257.png)
 <p align="center"><sub>Figure 5-18 · PDF p. 257 · Return Routability Procedure에서 HoA/CoA 양쪽 reachability 확인</sub></p>
 
 RRP는 MN이 home address와 care-of address 양쪽에서 reachable함을 CN에게 보이는 절차다.
@@ -424,7 +424,7 @@ MN은 HoT와 CoT에 들어 있는 token으로 binding update에 사용할 key를
 
 binding이 성공하면 data는 HA를 거치지 않고 직접 흐른다. 이때 방향별로 쓰는 IPv6 header 장치가 다르다.
 
-<p align="center"><img src="./images/074_Figure_5_19_page_258.png" alt="Figure 5-19" width="760"></p>
+![Figure 5-19](@/assets/images/074_Figure_5_19_page_258.png)
 <p align="center"><sub>Figure 5-19 · PDF p. 258 · RO 이후 MN-CN 직접 통신에서 Home Address option과 RH2 사용</sub></p>
 
 - MN -> CN: IPv6 Source IP Address는 MN의 CoA로 둔다. 그래야 ingress filtering이 "source prefix가 이상하다"며 버리지 않는다. MN의 HoA는 `Home Address Destination option`에 담아 CN에게 전달한다.
@@ -451,7 +451,7 @@ router는 forwarding할 때 보통 packet의 Source IP Address와 Destination IP
 | Strong host model | datagram이 들어온 interface에 설정된 destination address와 match될 때만 수신 | 해당 interface의 address를 Source IP Address로 쓸 때만 그 interface로 송신 | 보안에 유리하지만 multihomed routing이 덜 유연 |
 | Weak host model | destination이 local address 중 하나면 어느 interface로 들어와도 수신 | source address가 다른 interface에 속해도 송신 가능 | 유연하지만 spoofing/access control 위험 증가 |
 
-<p align="center"><img src="./images/075_Figure_5_20_page_260.png" alt="Figure 5-20" width="684"></p>
+![Figure 5-20](@/assets/images/075_Figure_5_20_page_260.png)
 <p align="center"><sub>Figure 5-20 · PDF p. 260 · multihomed host에서 host model과 address 선택이 문제가 되는 상황</sub></p>
 
 Figure 5-20처럼 Host A와 Host B가 Internet과 local network 양쪽으로 연결되어 있으면 문제가 생긴다. Host B가 local network로 Host A의 192.0.2.1 주소에 packet을 보내는 것이 빠르거나 저렴하다고 판단할 수 있다. 그런데 Host A가 strong host model이면, 192.0.2.1이 설정된 interface가 아닌 다른 interface로 들어온 packet은 버릴 수 있다.

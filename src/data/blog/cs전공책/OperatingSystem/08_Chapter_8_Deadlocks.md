@@ -82,7 +82,7 @@ pthread_mutex_init(&second_mutex, NULL);
 
 `thread_one`은 `first_mutex`를 먼저 잡고 그 다음 `second_mutex`를 잡는다. 반대로 `thread_two`는 `second_mutex`를 먼저 잡고 그 다음 `first_mutex`를 잡는다.
 
-<p align="center"><img src="./images/179_Figure_8.1_page_418.png" alt="Deadlock example" width="720"></p>
+![Deadlock example](@/assets/images/179_Figure_8.1_page_418.png)
 <p align="center"><sub>Figure 8.1 · PDF p. 418 · 두 threads가 두 mutex를 반대 순서로 획득해 deadlock이 가능해지는 Pthreads 예</sub></p>
 
 Deadlock은 다음 interleaving에서 발생한다.
@@ -106,7 +106,7 @@ Deadlock은 다음 interleaving에서 발생한다.
 
 Pthreads에서는 `pthread_mutex_trylock()`으로 livelock을 만들 수 있다. `trylock()`은 blocking하지 않고 lock acquire를 시도한다. 실패하면 thread가 가진 lock을 풀고 다시 반복하도록 만들면, 두 threads가 계속 같은 pattern으로 실패할 수 있다.
 
-<p align="center"><img src="./images/180_Figure_8.2_page_420.png" alt="Livelock example" width="560"></p>
+![Livelock example](@/assets/images/180_Figure_8.2_page_420.png)
 <p align="center"><sub>Figure 8.2 · PDF p. 420 · trylock 실패 시 자기 lock을 풀고 재시도하면서 livelock이 가능한 예</sub></p>
 
 Figure 8.2에서 `thread_one`이 `first_mutex`를 잡고, `thread_two`가 `second_mutex`를 잡은 뒤 서로의 두 번째 mutex에 `trylock()`을 시도한다고 하자. 둘 다 실패하면 각자 자기 mutex를 풀고 loop를 반복한다. 같은 timing이 계속되면 둘은 block되지 않지만 영원히 일을 끝내지 못한다.
@@ -144,14 +144,14 @@ Edges는 두 종류다.
 
 Pictorially, thread는 circle, resource type은 rectangle로 표현한다. Resource type에 여러 instances가 있으면 rectangle 안의 dots로 instances를 나타낸다. Request edge는 resource rectangle을 향하고, assignment edge는 그 resource type 안의 특정 dot에서 thread로 향한다.
 
-<p align="center"><img src="./images/181_Figure_8.3_page_421.png" alt="Resource-allocation graph for Figure 8.1" width="760"></p>
+![Resource-allocation graph for Figure 8.1](@/assets/images/181_Figure_8.3_page_421.png)
 <p align="center"><sub>Figure 8.3 · PDF p. 421 · Figure 8.1의 first_mutex/second_mutex deadlock을 resource-allocation graph로 표현한 모습</sub></p>
 
 Thread가 resource instance를 요청하면 request edge가 graph에 추가된다. Request가 fulfill되면 request edge는 즉시 assignment edge로 변환된다. Thread가 resource를 release하면 assignment edge가 삭제된다.
 
 Figure 8.4는 다음 상태를 표현한다.
 
-<p align="center"><img src="./images/182_Figure_8.4_page_422.png" alt="Resource-allocation graph" width="395"></p>
+![Resource-allocation graph](@/assets/images/182_Figure_8.4_page_422.png)
 <p align="center"><sub>Figure 8.4 · PDF p. 422 · threads T1-T3와 resource types R1-R4의 request/assignment 관계</sub></p>
 
 - `T = {T1, T2, T3}`
@@ -171,7 +171,7 @@ Resource-allocation graph의 핵심 판정은 cycle이다.
 
 Figure 8.4 상태에서 `T3`가 `R2` instance를 요청하면 available `R2` instance가 없으므로 request edge `T3 -> R2`가 추가된다.
 
-<p align="center"><img src="./images/183_Figure_8.5_page_423.png" alt="Resource-allocation graph with deadlock" width="395"></p>
+![Resource-allocation graph with deadlock](@/assets/images/183_Figure_8.5_page_423.png)
 <p align="center"><sub>Figure 8.5 · PDF p. 423 · T3가 R2를 요청하면서 두 minimal cycles가 생기고 deadlock이 발생한 graph</sub></p>
 
 이때 두 minimal cycles가 생긴다.
@@ -185,7 +185,7 @@ T2 -> R3 -> T3 -> R2 -> T2
 
 반면 Figure 8.6에는 cycle이 있지만 deadlock은 없다.
 
-<p align="center"><img src="./images/184_Figure_8.6_page_423.png" alt="Cycle without deadlock" width="440"></p>
+![Cycle without deadlock](@/assets/images/184_Figure_8.6_page_423.png)
 <p align="center"><sub>Figure 8.6 · PDF p. 423 · cycle은 있지만 T4가 R2 instance를 release하면 cycle이 깨질 수 있어 deadlock이 아닌 graph</sub></p>
 
 Cycle `T1 -> R1 -> T3 -> R2 -> T1`이 존재하지만, `T4`가 `R2` instance를 release할 수 있다. 그러면 그 instance를 `T3`에 allocate해 cycle을 깰 수 있다. 따라서 multiple instances가 있는 resource-allocation graph에서는 cycle만 보고 deadlock이라고 단정하면 안 된다.
@@ -266,7 +266,7 @@ Protocol은 다음과 같다.
 
 Dynamic lock acquisition에서는 ordering이 더 까다롭다. 두 accounts 사이 funds transfer를 생각하자. 각 account에 mutex lock이 있고 `get_lock(account)`로 얻는다고 하자.
 
-<p align="center"><img src="./images/185_Figure_8.7_page_428.png" alt="Deadlock with dynamic lock ordering" width="760"></p>
+![Deadlock with dynamic lock ordering](@/assets/images/185_Figure_8.7_page_428.png)
 <p align="center"><sub>Figure 8.7 · PDF p. 428 · from/to account 순서로 lock을 얻는 transaction()에서 dynamic lock ordering deadlock이 가능한 예</sub></p>
 
 한 thread가 `transaction(checking_account, savings_account, 25.0)`을 호출하고, 다른 thread가 동시에 `transaction(savings_account, checking_account, 50.0)`을 호출하면 각자 첫 번째 account lock을 잡고 두 번째 account lock을 기다릴 수 있다. 함수 인자 순서가 lock ordering을 결정하게 두면 global total ordering을 깨기 쉽다. Dynamic resources에 대해서도 항상 stable total order를 적용해야 circular wait prevention이 의미가 있다.
@@ -291,7 +291,7 @@ System state가 `safe`하다는 것은, system이 어떤 order로든 각 thread�
 
 Thread sequence `<T1, T2, ..., Tn>`이 safe sequence라는 뜻은 각 `Ti`가 앞으로 요청할 수 있는 remaining resources를 현재 available resources와 `Ti`보다 앞선 `Tj`들이 종료 후 반환할 resources로 만족시킬 수 있다는 뜻이다. `Ti`가 당장 필요한 resources를 못 받더라도 앞선 threads가 finish하고 resources를 반환하면 `Ti`가 완료될 수 있고, 그 다음 `Ti+1`도 같은 방식으로 진행된다.
 
-<p align="center"><img src="./images/186_Figure_8.8_page_430.png" alt="Safe, unsafe, and deadlocked states" width="461"></p>
+![Safe, unsafe, and deadlocked states](@/assets/images/186_Figure_8.8_page_430.png)
 <p align="center"><sub>Figure 8.8 · PDF p. 430 · safe state, unsafe state, deadlocked state의 포함 관계</sub></p>
 
 Figure 8.8의 관계가 중요하다.
@@ -336,12 +336,12 @@ Claim edges는 a priori로 선언되어야 한다. Thread가 실행되기 전에
 
 Thread `Ti`가 resource `Rj`를 요청할 때, request edge를 assignment edge로 바꿔도 graph에 cycle이 생기지 않을 때만 request를 grant한다. Cycle이 없으면 allocation 후에도 safe state다. Cycle이 생기면 unsafe state가 되므로 `Ti`는 wait해야 한다. Cycle detection은 threads 수가 `n`일 때 order of `n^2` operations가 필요하다.
 
-<p align="center"><img src="./images/187_Figure_8.9_page_432.png" alt="Resource-allocation graph for avoidance" width="395"></p>
+![Resource-allocation graph for avoidance](@/assets/images/187_Figure_8.9_page_432.png)
 <p align="center"><sub>Figure 8.9 · PDF p. 432 · claim edge를 포함한 deadlock avoidance용 resource-allocation graph</sub></p>
 
 Figure 8.9에서 `T2`가 `R2`를 요청한다고 하자. `R2`가 free라도 이를 `T2`에게 할당하면 graph에 cycle이 생긴다.
 
-<p align="center"><img src="./images/188_Figure_8.10_page_432.png" alt="Unsafe state in resource-allocation graph" width="395"></p>
+![Unsafe state in resource-allocation graph](@/assets/images/188_Figure_8.10_page_432.png)
 <p align="center"><sub>Figure 8.10 · PDF p. 432 · T2에 R2를 할당하면 cycle이 생겨 unsafe state가 되는 graph</sub></p>
 
 Cycle은 unsafe state를 의미한다. 이후 `T1`이 `R2`를 요청하고 `T2`가 `R1`을 요청하면 deadlock이 발생할 수 있다.
@@ -452,7 +452,7 @@ Detection-and-recovery scheme은 공짜가 아니다. Necessary information을 �
 
 `Ti -> Tj` edge는 `Ti`가 필요한 resource를 `Tj`가 release하기를 기다린다는 뜻이다. Resource-allocation graph에 `Ti -> Rq`와 `Rq -> Tj`가 있으면 wait-for graph에는 `Ti -> Tj`가 생긴다.
 
-<p align="center"><img src="./images/189_Figure_8.11_page_436.png" alt="Resource-allocation graph and wait-for graph" width="760"></p>
+![Resource-allocation graph and wait-for graph](@/assets/images/189_Figure_8.11_page_436.png)
 <p align="center"><sub>Figure 8.11 · PDF p. 436 · resource-allocation graph에서 resource nodes를 제거해 wait-for graph로 변환한 모습</sub></p>
 
 Single-instance system에서는 wait-for graph에 cycle이 있으면 deadlock이 존재한다. 따라서 system은 wait-for graph를 유지하고 주기적으로 cycle-detection algorithm을 실행한다. Vertices 수가 `n`일 때 cycle detection은 `O(n^2)` operations가 필요하다.

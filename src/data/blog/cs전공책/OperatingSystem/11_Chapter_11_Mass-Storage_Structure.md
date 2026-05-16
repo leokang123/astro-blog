@@ -107,7 +107,7 @@ Modern secondary storage는 대부분 HDDs와 NVM devices가 담당한다. 이 �
 
 `HDD`는 magnetic platters와 moving read-write heads로 구성된다. 각 platter surface는 circular `tracks`로 나뉘고, track은 `sectors`로 subdivide된다. Disk arm이 특정 위치에 있을 때 모든 platter surfaces에서 같은 radius의 tracks 집합이 `cylinder`다. `sector`는 fixed size이며 HDD의 smallest transfer unit이다. 과거에는 512 bytes sectors가 흔했고, 이후 4 KB sectors로 이동했다.
 
-<p align="center"><img src="./images/249_Figure_11.1_page_574.png" alt="HDD moving-head mechanism" width="760"></p>
+![HDD moving-head mechanism](@/assets/images/249_Figure_11.1_page_574.png)
 <p align="center"><sub>Figure 11.1 · PDF p. 574 · platter, track, sector, cylinder, arm/head로 구성되는 HDD moving-head mechanism</sub></p>
 
 HDD performance는 mechanical movement 때문에 결정된다. Motor는 platters를 high RPM으로 회전시키며, common speeds는 5,400, 7,200, 10,000, 15,000 RPM이다. Data가 drive와 computer 사이를 흐르는 속도는 `transfer rate`다. 하지만 random access에서는 data transfer보다 `positioning time`이 중요하다.
@@ -118,7 +118,7 @@ positioning time = seek time + rotational latency
 
 `seek time`은 disk arm을 desired cylinder로 옮기는 시간이고, `rotational latency`는 desired sector가 head 아래로 올 때까지 기다리는 시간이다. Typical HDDs는 seek/rotational latency가 several milliseconds이고, transfer rate는 tens to hundreds of MB/s다. Drive controller의 DRAM buffer는 performance를 높이는 데 쓰인다.
 
-<p align="center"><img src="./images/250_Figure_11.2_page_575.png" alt="HDD with cover removed" width="760"></p>
+![HDD with cover removed](@/assets/images/250_Figure_11.2_page_575.png)
 <p align="center"><sub>Figure 11.2 · PDF p. 575 · cover를 제거한 3.5-inch HDD의 platter와 actuator 구조</sub></p>
 
 HDD head는 platter surface 바로 위를 microns 단위 air/gas cushion 위에서 떠다닌다. Head가 platter surface에 닿으면 `head crash`가 발생할 수 있다. 보통 수리할 수 없고 drive를 교체해야 하며, data는 backup 또는 RAID protection이 없으면 손실된다. 일부 chassis는 hot removal/replacement를 지원해 bad drive를 system shutdown 없이 교체할 수 있다.
@@ -127,7 +127,7 @@ HDD head는 platter surface 바로 위를 microns 단위 air/gas cushion 위에�
 
 `NVM devices`는 mechanical storage가 아니라 electrical semiconductor storage다. 흔한 형태는 controller와 flash NAND die semiconductor chips로 구성된 device다. Flash-based NVM이 disk-drive-like container로 제공되면 `SSD (solid-state disk)`라고 부른다. USB flash drive, DRAM stick 형태, smartphone motherboard에 surface-mounted된 storage도 같은 범주로 볼 수 있다.
 
-<p align="center"><img src="./images/251_Figure_11.3_page_576.png" alt="SSD circuit board" width="760"></p>
+![SSD circuit board](@/assets/images/251_Figure_11.3_page_576.png)
 <p align="center"><sub>Figure 11.3 · PDF p. 576 · moving parts 없이 controller와 NAND chips로 구성되는 SSD circuit board</sub></p>
 
 NVM devices는 moving parts가 없어 HDD보다 reliable할 수 있고, seek time과 rotational latency가 없어 빠르며, power consumption도 낮다. 단점은 전통적 HDD보다 per-megabyte cost가 높고, 최대 capacity가 큰 HDD보다 작을 수 있다는 점이다. 하지만 capacity 증가와 price drop이 빠르게 진행되어 laptops/mobile devices에서 사용이 크게 늘었다.
@@ -144,7 +144,7 @@ NAND flash에는 병렬성이 있다. 여러 die와 datapaths가 있어 operatio
 
 NAND는 overwrite가 불가능하므로 invalid data pages가 자연스럽게 생긴다. File-system block이 한 번 쓰인 뒤 다시 write되면, 첫 physical page에는 old invalid data가 남고, 두 번째 physical page가 current valid data가 된다.
 
-<p align="center"><img src="./images/252_Figure_11.4_page_577.png" alt="NAND block with valid and invalid pages" width="596"></p>
+![NAND block with valid and invalid pages](@/assets/images/252_Figure_11.4_page_577.png)
 <p align="center"><sub>Figure 11.4 · PDF p. 577 · NAND block 안에 valid pages와 invalid pages가 함께 존재하는 상태</sub></p>
 
 Controller는 `FTL (Flash Translation Layer)`을 유지해 logical blocks가 현재 어느 physical pages에 valid data로 있는지 mapping한다. 또한 어떤 physical blocks가 invalid pages만 포함해 erase 가능한지도 tracking한다.
@@ -165,7 +165,7 @@ RAM drive는 crash, shutdown, power down 후 data가 사라진다. 하지만 use
 
 Magnetic tape는 nonvolatile이고 large capacity지만 random access가 매우 느리다. HDD보다 random access가 약 1,000배, SSD보다 약 100,000배 느릴 수 있어 secondary storage보다는 backup, infrequently used information storage, system 간 transfer에 적합하다.
 
-<p align="center"><img src="./images/253_Figure_11.5_page_579.png" alt="LTO-6 tape drive" width="760"></p>
+![LTO-6 tape drive](@/assets/images/253_Figure_11.5_page_579.png)
 <p align="center"><sub>Figure 11.5 · PDF p. 579 · backup과 archival storage에 주로 쓰이는 LTO-6 tape drive와 cartridge</sub></p>
 
 ### 11.1.4 Secondary Storage Connection Methods
@@ -228,7 +228,7 @@ head starts at 53
 
 FCFS는 53 → 98 → 183 → 37 → 122 → 14 → 124 → 65 → 67 순서로 이동해 total head movement가 640 cylinders가 된다.
 
-<p align="center"><img src="./images/254_Figure_11.6_page_583.png" alt="FCFS disk scheduling" width="760"></p>
+![FCFS disk scheduling](@/assets/images/254_Figure_11.6_page_583.png)
 <p align="center"><sub>Figure 11.6 · PDF p. 583 · 요청 도착 순서대로 처리해 head가 크게 왕복하는 FCFS disk scheduling</sub></p>
 
 122에서 14로 갔다가 다시 124로 가는 큰 swing이 FCFS의 문제를 보여 준다. 37과 14를 함께 처리하고, 122와 124를 함께 처리하면 total head movement를 크게 줄일 수 있다.
@@ -239,7 +239,7 @@ FCFS는 53 → 98 → 183 → 37 → 122 → 14 → 124 → 65 → 67 순서로 
 
 위 queue에서 head가 53에 있고 0 방향으로 이동 중이라고 하자. SCAN은 37, 14를 처리하고 cylinder 0에서 방향을 바꾼 뒤 65, 67, 98, 122, 124, 183을 처리한다.
 
-<p align="center"><img src="./images/255_Figure_11.7_page_583.png" alt="SCAN disk scheduling" width="760"></p>
+![SCAN disk scheduling](@/assets/images/255_Figure_11.7_page_583.png)
 <p align="center"><sub>Figure 11.7 · PDF p. 583 · 한 방향으로 이동하며 requests를 처리하고 끝에서 방향을 바꾸는 SCAN scheduling</sub></p>
 
 SCAN의 특성상 head 바로 앞에 도착한 request는 빠르게 처리되지만, head 바로 뒤에 도착한 request는 head가 끝까지 갔다가 돌아올 때까지 기다려야 한다. 또한 끝에서 방향을 바꾼 직후에는 앞쪽 requests가 상대적으로 적고, 반대쪽 끝에는 오래 기다린 requests가 많이 쌓이는 경향이 있다.
@@ -248,7 +248,7 @@ SCAN의 특성상 head 바로 앞에 도착한 request는 빠르게 처리되지
 
 `C-SCAN (Circular SCAN)`은 wait time을 더 uniform하게 만들기 위한 SCAN 변형이다. Head는 한 방향으로 이동하며 requests를 처리한다. 끝에 도달하면 return trip에서는 requests를 처리하지 않고 즉시 시작점으로 돌아간다. Cylinders를 마지막에서 처음으로 wrap around되는 circular list처럼 보는 셈이다.
 
-<p align="center"><img src="./images/256_Figure_11.8_page_584.png" alt="C-SCAN disk scheduling" width="760"></p>
+![C-SCAN disk scheduling](@/assets/images/256_Figure_11.8_page_584.png)
 <p align="center"><sub>Figure 11.8 · PDF p. 584 · 한 방향으로만 servicing하고 끝에서 처음으로 돌아가는 C-SCAN scheduling</sub></p>
 
 C-SCAN은 SCAN보다 wait time 분포가 균일하다. 모든 requests가 같은 방향 sweep에서 처리되기 때문이다.
@@ -317,7 +317,7 @@ Linux에서는 `fdisk`가 partitions를 관리하고, OS가 device를 인식하�
 
 Volume은 단순히 partition 안에 file system을 둔 것일 수도 있고, multiple devices를 RAID set으로 묶은 후 그 위에 file systems를 spread한 것일 수도 있다. Linux의 `lvm2`는 logical volume management를 제공하고, ZFS는 volume management와 file system을 통합한다.
 
-<p align="center"><img src="./images/257_Figure_11.9_page_589.png" alt="Windows disk management" width="760"></p>
+![Windows disk management](@/assets/images/257_Figure_11.9_page_589.png)
 <p align="center"><sub>Figure 11.9 · PDF p. 589 · devices, partitions, volumes, file systems를 보여 주는 Windows Disk Management 예</sub></p>
 
 Windows는 volumes를 `C:`, `D:`, `E:`처럼 separate drive letters로 보여 주는 반면, Linux는 boot file system을 root로 mount하고 다른 file systems를 tree 안에 mount한다. 따라서 Linux에서는 single file access가 여러 mounted devices를 traverse할 수 있다.
@@ -334,7 +334,7 @@ Tiny bootstrap loader는 secondary storage의 fixed location에 저장된 full b
 
 Windows boot 과정을 예로 보면, drive는 partitions로 나뉘고 boot partition에는 OS와 device drivers가 있다. Windows는 first logical block 또는 first NVM page에 boot code를 두며, 이를 `MBR (master boot record)`라고 한다.
 
-<p align="center"><img src="./images/258_Figure_11.10_page_590.png" alt="Windows boot from storage device" width="619"></p>
+![Windows boot from storage device](@/assets/images/258_Figure_11.10_page_590.png)
 <p align="center"><sub>Figure 11.10 · PDF p. 590 · MBR의 boot code와 partition table을 통해 boot partition을 찾아 OS loading으로 이어지는 Windows boot 구조</sub></p>
 
 Firmware code는 MBR의 boot code를 read하고 실행한다. MBR은 boot code뿐 아니라 drive partitions table과 어떤 partition으로 boot할지 나타내는 flag를 가진다. System은 boot partition을 식별한 뒤 그 partition의 first sector/page, 즉 boot sector를 읽고, 여기서 kernel 위치를 찾아 나머지 boot process를 계속한다.
@@ -395,7 +395,7 @@ Later Solaris는 virtual memory page가 처음 만들어질 때가 아니라 phy
 
 Linux도 Solaris와 비슷하게 swap space를 anonymous memory에 주로 사용한다. Linux는 one or more swap areas를 만들 수 있고, 각 swap area는 regular file system의 swap file이거나 dedicated swap partition일 수 있다. 각 swap area는 swapped pages를 담는 4-KB `page slots`의 series로 구성된다. 각 swap area에는 `swap map`이 있으며, page slot마다 integer counter가 대응된다.
 
-<p align="center"><img src="./images/259_Figure_11.11_page_594.png" alt="Linux swap data structures" width="760"></p>
+![Linux swap data structures](@/assets/images/259_Figure_11.11_page_594.png)
 <p align="center"><sub>Figure 11.11 · PDF p. 594 · Linux swap area의 page slots와 각 slot의 사용 여부 및 mapping count를 담는 swap map</sub></p>
 
 Swap map counter가 0이면 해당 page slot은 available하다. 0보다 크면 swapped page가 occupied하고 있다는 뜻이다. Counter value는 그 swapped page에 대한 mappings 수를 나타낸다. 예를 들어 3이면 shared memory region처럼 세 processes가 같은 swapped page를 mapping하고 있을 수 있다.
@@ -414,7 +414,7 @@ Host-attached storage의 I/O command는 특정 storage unit, 예를 들어 bus I
 
 `NAS (network-attached storage)`는 network를 통해 storage access를 제공한다. NAS device는 special-purpose storage system일 수도 있고, 자기 storage를 network로 제공하는 general computer일 수도 있다.
 
-<p align="center"><img src="./images/260_Figure_11.12_page_595.png" alt="Network-attached storage" width="760"></p>
+![Network-attached storage](@/assets/images/260_Figure_11.12_page_595.png)
 <p align="center"><sub>Figure 11.12 · PDF p. 595 · LAN/WAN을 통해 clients가 NAS devices의 storage를 공유하는 구조</sub></p>
 
 Clients는 UNIX/Linux의 `NFS`, Windows의 `CIFS` 같은 RPC interface로 NAS를 access한다. RPCs는 TCP 또는 UDP over IP network로 전달되며, 보통 clients의 data traffic과 같은 LAN을 쓴다. NFS/CIFS는 file sharing protocols이므로 locking features를 제공해 여러 hosts가 같은 files를 공유할 수 있게 한다.
@@ -435,14 +435,14 @@ NAS의 단점은 storage I/O가 data network bandwidth를 사용해 network comm
 
 `SAN (storage-area network)`은 servers와 storage units를 연결하는 private network다. Networking protocols가 아니라 storage protocols를 사용한다.
 
-<p align="center"><img src="./images/261_Figure_11.13_page_596.png" alt="Storage-area network" width="760"></p>
+![Storage-area network](@/assets/images/261_Figure_11.13_page_596.png)
 <p align="center"><sub>Figure 11.13 · PDF p. 596 · servers, storage arrays, tape library를 private storage network로 연결하는 SAN 구조</sub></p>
 
 SAN의 장점은 flexibility다. Multiple hosts와 multiple storage arrays가 같은 SAN에 attach될 수 있고, storage를 hosts에 dynamically allocate할 수 있다. SAN switch는 hosts와 storage 사이 access를 허용하거나 금지한다. Host disk space가 부족하면 SAN configuration으로 더 많은 storage를 줄 수 있고, server cluster가 같은 storage를 공유할 수도 있다.
 
 `storage array`는 SAN ports, network ports 또는 둘 다를 가진 purpose-built device다. 내부에는 drives와 controller 또는 redundant controllers가 있으며, controllers는 CPUs, memory, software로 구성되어 storage access와 features를 제공한다.
 
-<p align="center"><img src="./images/262_Figure_11.14_page_597.png" alt="Storage array" width="760"></p>
+![Storage array](@/assets/images/262_Figure_11.14_page_597.png)
 <p align="center"><sub>Figure 11.14 · PDF p. 597 · drives와 controllers를 포함하고 RAID, snapshots, replication 등을 제공할 수 있는 storage array</sub></p>
 
 Storage array는 RAID protection, snapshots, replication, compression, deduplication, encryption 등을 제공할 수 있다. SSD-only array는 maximum performance를 제공하지만 capacity가 작을 수 있고, SSD+HDD mixed array는 SSD를 cache로 쓰고 HDD를 bulk storage로 쓰는 식으로 balance를 잡을 수 있다. SAN interconnect로는 FC가 흔하고, iSCSI는 단순성 때문에 사용이 늘고 있으며, InfiniBand도 high-speed server/storage interconnect로 쓰인다.
@@ -500,7 +500,7 @@ RAID의 성능 향상은 `parallelism`에서 나온다. Mirroring은 read reques
 
 Mirroring은 reliability가 높지만 expensive하다. Striping은 data-transfer rate를 높이지만 reliability를 높이지 않는다. RAID levels는 striping과 redundancy, 특히 parity를 결합해 cost-performance trade-off를 나눈 분류다.
 
-<p align="center"><img src="./images/263_Figure_11.15_page_600.png" alt="RAID levels" width="560"></p>
+![RAID levels](@/assets/images/263_Figure_11.15_page_600.png)
 <p align="center"><sub>Figure 11.15 · PDF p. 600 · RAID 0, 1, 4, 5, 6, multidimensional RAID 6의 data/parity 배치</sub></p>
 
 | RAID level | 핵심 구조 | 장점 | 주의점 |
@@ -520,7 +520,7 @@ Parity-based RAID의 write overhead는 `XOR parity` computation과 parity writes
 
 `RAID 0 + 1`과 `RAID 1 + 0`은 striping과 mirroring을 결합한다.
 
-<p align="center"><img src="./images/264_Figure_11.16_page_603.png" alt="RAID 0+1 and RAID 1+0" width="760"></p>
+![RAID 0+1 and RAID 1+0](@/assets/images/264_Figure_11.16_page_603.png)
 <p align="center"><sub>Figure 11.16 · PDF p. 603 · single disk failure 시 RAID 0 + 1과 RAID 1 + 0의 availability 차이</sub></p>
 
 `RAID 0 + 1`은 stripe set을 만들고 그 stripe 전체를 mirror한다. Single drive failure가 나면 해당 stripe 전체가 inaccessible해지고 다른 stripe에 의존한다. `RAID 1 + 0`은 drives를 mirror pairs로 만든 뒤 그 pairs를 stripe한다. Single drive failure가 나도 해당 mirror partner는 계속 available하고 나머지 pairs도 그대로 available하므로, 이론적으로 더 유리하다.
@@ -553,7 +553,7 @@ RAID는 physical media failure를 견디는 데 초점이 있다. 따라서 RAID
 
 `ZFS`는 이런 문제를 줄이기 위해 all blocks, including data and metadata에 internal `checksums`를 유지한다. 중요한 점은 checksum을 checksummed block 자체에 저장하지 않고, 그 block을 가리키는 pointer 쪽에 저장한다는 것이다.
 
-<p align="center"><img src="./images/265_Figure_11.17_page_606.png" alt="ZFS checksums" width="760"></p>
+![ZFS checksums](@/assets/images/265_Figure_11.17_page_606.png)
 <p align="center"><sub>Figure 11.17 · PDF p. 606 · ZFS가 metadata/data blocks의 checksum을 parent pointer 쪽에 저장해 corruption을 탐지하는 구조</sub></p>
 
 예를 들어 inode 안에는 data blocks의 checksums가 있고, directory entry는 inode의 checksum을 가진다. Data block에 문제가 생기면 checksum mismatch로 감지된다. Mirrored data에서 한 copy는 checksum이 맞고 다른 copy가 틀리면 ZFS는 good block으로 bad block을 자동 update할 수 있다. 이 방식은 RAID drive sets나 standard file systems보다 더 높은 consistency, error detection, error correction을 제공한다.
@@ -562,7 +562,7 @@ RAID의 또 다른 문제는 flexibility 부족이다. 예를 들어 20 drives�
 
 ZFS는 file-system management와 volume management를 결합한다. Drives 또는 drive partitions를 RAID sets로 묶어 `storage pools`를 만들고, pool 안에 one or more ZFS file systems를 둔다. Pool의 free space는 pool 안 모든 file systems가 공유한다. ZFS는 `malloc()`/`free()` memory model처럼 file system이 blocks를 사용하고 해제할 때 storage를 allocate/release한다. 그래서 fixed volume boundary 때문에 file system을 옮기거나 volume을 resize할 필요가 줄어든다. 필요하면 quotas와 reservations로 file-system size/growth guarantee를 조절한다.
 
-<p align="center"><img src="./images/266_Figure_11.18_page_608.png" alt="Traditional volumes and ZFS model" width="537"></p>
+![Traditional volumes and ZFS model](@/assets/images/266_Figure_11.18_page_608.png)
 <p align="center"><sub>Figure 11.18 · PDF p. 608 · traditional volumes/file systems와 ZFS pooled storage model의 차이</sub></p>
 
 ### 11.8.7 Object Storage

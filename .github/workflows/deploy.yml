@@ -45,8 +45,8 @@ jobs:
 
       - name: Build site
         env:
-          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || steps.pages.outputs.origin }}
-          PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH || steps.pages.outputs.base_path }}
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL || 'https://kang-log.org/' }}
+          PUBLIC_BASE_PATH: ${{ vars.PUBLIC_BASE_PATH }}
           PUBLIC_PROFILE_URL: ${{ vars.PUBLIC_PROFILE_URL }}
         run: pnpm run build
 

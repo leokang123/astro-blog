@@ -36,7 +36,7 @@ Secure communication의 목표는 한 문장으로 “원하는 상대와만, �
 
 Figure 8.1은 Chapter 8 전체의 기본 위협 모델이다. Alice와 Bob은 control messages와 data messages를 주고받고, Trudy는 channel에서 eavesdropping하거나 messages를 modify/insert/delete할 수 있다.
 
-<p align="center"><img src="./images/236_Figure_8.1_page_620.png" alt="Figure 8.1" width="760"></p>
+![Figure 8.1](@/assets/images/236_Figure_8.1_page_620.png)
 <p align="center"><sub>Figure 8.1 · PDF p. 620 · sender Alice, receiver Bob, intruder Trudy가 있는 secure communication model</sub></p>
 
 중요한 점은 security가 application traffic에만 필요한 것이 아니라는 점이다. Secure e-mail이나 electronic commerce뿐 아니라, DNS lookup, routing daemon의 routing information exchange, network management functions도 공격받으면 Internet infrastructure 자체가 흔들린다. 따라서 cryptography는 confidentiality뿐 아니라 authentication과 message integrity의 기반이 된다.
@@ -45,7 +45,7 @@ Figure 8.1은 Chapter 8 전체의 기본 위협 모델이다. Alice와 Bob은 co
 
 `Cryptography`는 sender가 data를 disguise해 intruder가 intercepted data에서 useful information을 얻지 못하게 하고, receiver는 original data를 recover하게 하는 기술이다. 원문 메시지는 `plaintext` 또는 `cleartext`, 암호화된 결과는 `ciphertext`라고 부른다.
 
-<p align="center"><img src="./images/237_Figure_8.2_page_622.png" alt="Figure 8.2" width="760"></p>
+![Figure 8.2](@/assets/images/237_Figure_8.2_page_622.png)
 <p align="center"><sub>Figure 8.2 · PDF p. 622 · plaintext, ciphertext, encryption/decryption algorithm, keys KA/KB의 관계</sub></p>
 
 현대 cryptographic system에서는 encryption algorithm 자체가 공개되어 있는 경우가 많다. Secret은 algorithm이 아니라 `key`에 있다. Alice가 plaintext message `m`과 key `KA`를 encryption algorithm에 넣으면 ciphertext `KA(m)`가 나온다. Bob은 key `KB`로 `KB(KA(m)) = m`을 계산해 원문을 복원한다.
@@ -61,7 +61,7 @@ Figure 8.1은 Chapter 8 전체의 기본 위협 모델이다. Alice와 Bob은 co
 
 `Monoalphabetic cipher`는 각 plaintext letter를 임의의 ciphertext letter에 일대일 대응시킨다. 가능한 mapping은 26!개라 brute-force만 보면 강해 보인다.
 
-<p align="center"><img src="./images/238_Figure_8.3_page_623.png" alt="Figure 8.3" width="760"></p>
+![Figure 8.3](@/assets/images/238_Figure_8.3_page_623.png)
 <p align="center"><sub>Figure 8.3 · PDF p. 623 · 각 plaintext letter를 고정된 ciphertext letter로 치환하는 monoalphabetic cipher</sub></p>
 
 하지만 monoalphabetic cipher는 language statistics에 약하다. English text에서 `e`, `t`가 자주 나오고, `in`, `it`, `the`, `ion`, `ing` 같은 patterns가 자주 나온다는 사실을 이용하면 mapping을 추론할 수 있다. Message에 Bob, Alice 같은 예상 단어가 들어 있다는 정보가 있으면 더 빨리 깨진다.
@@ -76,7 +76,7 @@ Intruder가 가진 정보에 따라 attack model이 달라진다.
 
 `Polyalphabetic encryption`은 여러 monoalphabetic ciphers를 위치별 pattern에 따라 번갈아 사용한다. 같은 plaintext letter라도 위치에 따라 다른 ciphertext가 되므로 simple frequency analysis를 어렵게 만든다.
 
-<p align="center"><img src="./images/239_Figure_8.4_page_625.png" alt="Figure 8.4" width="760"></p>
+![Figure 8.4](@/assets/images/239_Figure_8.4_page_625.png)
 <p align="center"><sub>Figure 8.4 · PDF p. 625 · 두 Caesar ciphers C1/C2를 반복 pattern으로 사용하는 polyalphabetic cipher</sub></p>
 
 이 구간의 핵심은 고전 cipher 자체를 외우는 것이 아니라, 현대 cryptography를 이해하기 위한 기준을 잡는 것이다. Algorithm은 공개되어도 key가 안전해야 하고, attacker가 ciphertext-only보다 더 강한 정보를 가질 수 있음을 가정해야 한다. 이후 block cipher, public key, TLS, IPsec은 모두 이 공격 모델 위에서 설계된다.
@@ -89,7 +89,7 @@ Intruder가 가진 정보에 따라 attack model이 달라진다.
 
 실제 block cipher는 작은 substitution tables와 bit permutation을 여러 rounds 반복해 큰 random permutation처럼 보이게 만든다. 각 round의 목적은 input의 한 bit 변화가 final output의 많은 bits에 영향을 주게 하는 diffusion이다.
 
-<p align="center"><img src="./images/240_Figure_8.5_page_627.png" alt="Figure 8.5" width="760"></p>
+![Figure 8.5](@/assets/images/240_Figure_8.5_page_627.png)
 <p align="center"><sub>Figure 8.5 · PDF p. 627 · 64-bit block을 8-bit chunks로 나누어 tables와 scrambler를 여러 rounds 적용하는 block cipher 예</sub></p>
 
 대표 block cipher는 `DES (Data Encryption Standard)`, `3DES`, `AES (Advanced Encryption Standard)`다. DES는 64-bit block과 56-bit key를 사용하고, AES는 128-bit block과 128/192/256-bit key를 사용할 수 있다. Brute-force attack은 모든 possible keys를 시도하는 방식이며, key length가 `n`이면 possible keys는 `2^n`개다. 따라서 practical security는 algorithm secrecy보다 key length와 key 관리에 크게 의존한다.
@@ -116,7 +116,7 @@ CBC의 효과는 세 가지다. 첫째, 같은 plaintext block이 나와도 앞 
 
 Symmetric key의 근본 문제는 `key distribution`이다. Alice와 Bob이 같은 secret key를 가져야 하는데, 그 secret key를 안전하게 공유하려면 이미 secure channel이 필요하다. `Public key cryptography`는 이 순환 문제를 끊는다. Receiver Bob은 public key와 private key를 만들고, public key는 모두에게 공개하며 private key만 혼자 보관한다.
 
-<p align="center"><img src="./images/241_Figure_8.6_page_630.png" alt="Figure 8.6" width="760"></p>
+![Figure 8.6](@/assets/images/241_Figure_8.6_page_630.png)
 <p align="center"><sub>Figure 8.6 · PDF p. 630 · Bob의 public key로 encrypt하고 Bob의 private key로 decrypt하는 public key cryptography</sub></p>
 
 Alice가 Bob에게 secret message `m`을 보내려면 Bob의 public key `KB+`로 `KB+(m)`을 계산해 보낸다. Bob은 private key `KB-`로 `KB-(KB+(m)) = m`을 얻는다. 이 구조에서는 public key가 공개되어도 private key가 없으면 decrypt할 수 없다.
@@ -181,12 +181,12 @@ RSA security는 public value `n`을 prime factors `p`, `q`로 빠르게 factoriz
 
 `Hash function`은 arbitrary-length input `m`을 fixed-size string `H(m)`으로 바꾼다. Internet checksum이나 CRC도 넓게 보면 hash function이지만, security 용도에는 추가 성질이 필요하다. `Cryptographic hash function`은 서로 다른 두 messages `x`, `y`에 대해 `H(x) = H(y)`가 되도록 찾는 것이 computationally infeasible해야 한다.
 
-<p align="center"><img src="./images/242_Figure_8.7_page_636.png" alt="Figure 8.7" width="760"></p>
+![Figure 8.7](@/assets/images/242_Figure_8.7_page_636.png)
 <p align="center"><sub>Figure 8.7 · PDF p. 636 · 긴 message를 fixed-length hash로 줄이는 many-to-one hash function</sub></p>
 
 이 성질이 중요한 이유는 substitution attack 때문이다. Sender가 `(m, H(m))`을 만들었을 때, intruder가 같은 hash를 갖는 다른 message `y`를 쉽게 만들 수 있으면 Bob은 조작을 감지하지 못한다. 단순 checksum은 이 조건을 만족하지 못한다.
 
-<p align="center"><img src="./images/243_Figure_8.8_page_637.png" alt="Figure 8.8" width="760"></p>
+![Figure 8.8](@/assets/images/243_Figure_8.8_page_637.png)
 <p align="center"><sub>Figure 8.8 · PDF p. 637 · 서로 다른 IOU messages가 같은 simple checksum을 갖는 예</sub></p>
 
 Figure 8.8의 예처럼 `IOU100.99BOB`와 `IOU900.19BOB`가 같은 checksum을 만들 수 있다면 security hash로는 부적합하다. 따라서 integrity에는 stronger hash가 필요하다. 원문은 `MD5`가 128-bit hash를 만들고, `SHA-1 (Secure Hash Algorithm)`이 160-bit message digest를 만든다고 설명한다. 여기서 중요한 포인트는 특정 알고리즘 암기가 아니라, security hash는 accidental error detection용 checksum보다 훨씬 강한 collision resistance가 필요하다는 점이다.
@@ -203,7 +203,7 @@ send:  (m, H(m + s))
 Bob:   recompute H(m + s), compare with received MAC
 ```
 
-<p align="center"><img src="./images/244_Figure_8.9_page_638.png" alt="Figure 8.9" width="760"></p>
+![Figure 8.9](@/assets/images/244_Figure_8.9_page_638.png)
 <p align="center"><sub>Figure 8.9 · PDF p. 638 · shared secret s를 이용해 H(m+s)를 계산하고 비교하는 Message Authentication Code</sub></p>
 
 MAC의 장점은 confidentiality가 필요 없을 때 encryption 없이 integrity와 source authentication을 제공할 수 있다는 것이다. 예를 들어 OSPF link-state messages는 내용 자체를 숨길 필요는 없어도, bogus message를 막아야 한다. 이때 MAC이 적합하다. 단, MAC은 shared authentication key distribution 문제가 남는다. Routers가 같은 authentication key를 공유하려면 manual distribution이나 public key 기반 key distribution이 필요하다.
@@ -218,10 +218,10 @@ MAC은 digital signature가 되기 어렵다. MAC을 검증하려면 Alice도 Bo
 
 실제 signing은 full message를 private key로 encrypt하는 대신, message hash를 sign한다. Bob은 `H(m)`을 만들고 private key `KB-`로 `KB-(H(m))`을 계산해 signature로 붙인다. Alice는 Bob의 public key `KB+`를 signature에 적용해 hash를 얻고, 자신이 받은 cleartext message에 hash function을 적용한 값과 비교한다.
 
-<p align="center"><img src="./images/246_Figure_8.11_page_641.png" alt="Figure 8.11" width="760"></p>
+![Figure 8.11](@/assets/images/246_Figure_8.11_page_641.png)
 <p align="center"><sub>Figure 8.11 · PDF p. 641 · Bob이 message hash를 private key로 sign해 original message와 함께 보내는 흐름</sub></p>
 
-<p align="center"><img src="./images/247_Figure_8.12_page_642.png" alt="Figure 8.12" width="760"></p>
+![Figure 8.12](@/assets/images/247_Figure_8.12_page_642.png)
 <p align="center"><sub>Figure 8.12 · PDF p. 642 · Alice가 Bob의 public key와 hash comparison으로 signature를 검증하는 흐름</sub></p>
 
 Digital signature는 sender authentication과 message integrity를 함께 준다. Signature가 검증되면 private key를 가진 Bob이 sign했음을 확인할 수 있고, message가 바뀌면 hash comparison이 실패한다. 다만 public key infrastructure가 필요하므로 MAC보다 heavier technique이다.
@@ -235,12 +235,12 @@ Digital signature는 sender authentication과 message integrity를 함께 준다
 
 Public key cryptography의 숨은 문제는 “이 public key가 정말 Bob의 public key인가?”다. Trudy가 자신의 public key를 Bob의 key인 것처럼 Alice에게 주고, 자신의 private key로 signature를 만들면 Alice는 Trudy의 public key로 검증하고 Bob이 보낸 것처럼 착각할 수 있다.
 
-<p align="center"><img src="./images/248_Figure_8.13_page_644.png" alt="Figure 8.13" width="760"></p>
+![Figure 8.13](@/assets/images/248_Figure_8.13_page_644.png)
 <p align="center"><sub>Figure 8.13 · PDF p. 644 · Trudy가 자신의 public key를 Bob의 key처럼 속여 digital signature 검증을 통과시키는 공격</sub></p>
 
 이 문제를 해결하는 것이 `CA (Certification Authority)`와 `certificate`다. CA는 entity의 identity를 검증하고, 그 entity의 public key와 identity를 묶은 certificate를 만든 뒤 CA private key로 digitally sign한다. Alice는 CA의 public key로 certificate signature를 확인하고, certificate 안에서 Bob의 public key를 추출한다.
 
-<p align="center"><img src="./images/249_Figure_8.14_page_645.png" alt="Figure 8.14" width="760"></p>
+![Figure 8.14](@/assets/images/249_Figure_8.14_page_645.png)
 <p align="center"><sub>Figure 8.14 · PDF p. 645 · CA가 Bob의 identity와 public key를 묶은 certificate를 private key로 sign하는 구조</sub></p>
 
 Certificate에는 보통 version, serial number, CA signature algorithm, issuer name, validity period, subject name, subject public key 같은 fields가 들어간다. 중요한 trade-off는 trust의 이동이다. Bob의 key를 직접 믿는 대신 CA의 identity verification과 CA private key 보호를 믿는 구조가 된다. TLS와 IPsec에서 certificate가 중요한 이유가 바로 여기에 있다.
@@ -251,17 +251,17 @@ Certificate에는 보통 version, serial number, CA signature algorithm, issuer 
 
 Authentication protocol은 보통 실제 application protocol, routing exchange, reliable data transfer, e-mail protocol이 시작되기 전에 먼저 실행된다. 이 장은 Chapter 3의 rdt 설계처럼 `ap (authentication protocol)`을 단계별로 만들고, 각 버전이 왜 깨지는지 보며 조건을 강화한다.
 
-<p align="center"><img src="./images/250_Figure_8.15_page_646.png" alt="Figure 8.15" width="760"></p>
+![Figure 8.15](@/assets/images/250_Figure_8.15_page_646.png)
 <p align="center"><sub>Figure 8.15 · PDF p. 646 · “I am Alice”만 보내는 ap1.0과 Trudy의 단순 impersonation</sub></p>
 
 `ap1.0`은 Alice가 “I am Alice”라고 말하는 방식이다. 당연히 Trudy도 같은 message를 보낼 수 있으므로 authentication이 아니다.
 
-<p align="center"><img src="./images/251_Figure_8.16_page_647.png" alt="Figure 8.16" width="760"></p>
+![Figure 8.16](@/assets/images/251_Figure_8.16_page_647.png)
 <p align="center"><sub>Figure 8.16 · PDF p. 647 · source IP address를 신뢰하는 ap2.0과 IP spoofing 실패 사례</sub></p>
 
 `ap2.0`은 Alice의 well-known IP address를 확인하는 방식이다. 하지만 IP source address는 packet 생성자가 임의로 넣을 수 있고, first-hop router가 source address filtering을 강제하지 않으면 `IP spoofing`이 가능하다. 따라서 address만으로 identity를 증명할 수 없다.
 
-<p align="center"><img src="./images/252_Figure_8.17_page_648.png" alt="Figure 8.17" width="760"></p>
+![Figure 8.17](@/assets/images/252_Figure_8.17_page_648.png)
 <p align="center"><sub>Figure 8.17 · PDF p. 648 · password를 보내는 ap3.0과 eavesdropping/playback 위험</sub></p>
 
 `ap3.0`은 shared password를 보내는 방식이다. 문제는 password가 network를 지나며 sniffing될 수 있다는 점이다. Telnet처럼 password를 unencrypted로 보내는 protocol에서는 LAN에 붙은 attacker가 password를 훔칠 수 있다.
@@ -270,7 +270,7 @@ Authentication protocol은 보통 실제 application protocol, routing exchange,
 
 Replay를 막으려면 freshness가 필요하다. `Nonce`는 protocol lifetime에서 한 번만 사용하는 number다. Bob은 방금 만든 nonce `R`을 Alice에게 보내고, Alice는 shared symmetric key `KA-B`로 `KA-B(R)`을 만들어 돌려준다. Bob은 decrypt 결과가 자신이 방금 보낸 `R`과 같은지 확인한다.
 
-<p align="center"><img src="./images/253_Figure_8.18_page_650.png" alt="Figure 8.18" width="426"></p>
+![Figure 8.18](@/assets/images/253_Figure_8.18_page_650.png)
 <p align="center"><sub>Figure 8.18 · PDF p. 650 · nonce R과 shared symmetric key KA-B로 liveness를 확인하는 ap4.0</sub></p>
 
 `ap4.0`이 얻는 보장은 두 가지다. Alice가 `KA-B`를 알고 있으므로 claimed identity와 연결되고, Bob이 방금 생성한 nonce `R`에 응답했으므로 live party임을 확인할 수 있다. 이 구조는 TLS handshake의 nonces, WPA four-way handshake, cellular authentication 같은 뒤쪽 protocol에서 반복된다.
@@ -295,7 +295,7 @@ Secure e-mail이 원하는 속성은 네 가지다. Alice의 e-mail 내용을 Tr
 
 Confidentiality만 보면 symmetric key로 message를 encrypt하면 빠르지만 key distribution이 문제다. Public key만 쓰면 Bob의 public key로 message를 encrypt할 수 있지만 long e-mail에는 비효율적이다. 그래서 secure e-mail은 session key 구조를 쓴다.
 
-<p align="center"><img src="./images/254_Figure_8.19_page_652.png" alt="Figure 8.19" width="760"></p>
+![Figure 8.19](@/assets/images/254_Figure_8.19_page_652.png)
 <p align="center"><sub>Figure 8.19 · PDF p. 652 · symmetric session key KS로 e-mail을 encrypt하고 KS는 Bob의 public key로 보호하는 방식</sub></p>
 
 Figure 8.19의 confidentiality-only flow는 다음과 같다.
@@ -310,12 +310,12 @@ Figure 8.19의 confidentiality-only flow는 다음과 같다.
 
 Sender authentication과 message integrity만 필요하다면 Alice는 message digest를 sign한다. Alice는 `H(m)`을 계산하고, 자신의 private key `KA-`로 `KA-(H(m))`을 만든 뒤 original message와 signature를 함께 보낸다. Bob은 Alice의 public key `KA+`로 signed digest를 풀고, 자신이 받은 message의 hash와 비교한다.
 
-<p align="center"><img src="./images/255_Figure_8.20_page_653.png" alt="Figure 8.20" width="760"></p>
+![Figure 8.20](@/assets/images/255_Figure_8.20_page_653.png)
 <p align="center"><sub>Figure 8.20 · PDF p. 653 · hash function과 digital signature로 sender authentication과 message integrity를 제공하는 방식</sub></p>
 
 Confidentiality, sender authentication, message integrity를 모두 제공하려면 두 구조를 결합한다. Alice는 먼저 `m + KA-(H(m))` 형태의 signed package를 만들고, 이 전체 package를 session key `KS`로 encrypt한다. 그리고 `KS`는 Bob의 public key로 encrypt해 함께 보낸다.
 
-<p align="center"><img src="./images/256_Figure_8.21_page_653.png" alt="Figure 8.21" width="760"></p>
+![Figure 8.21](@/assets/images/256_Figure_8.21_page_653.png)
 <p align="center"><sub>Figure 8.21 · PDF p. 653 · symmetric key, public key, hash, digital signature를 결합한 secure e-mail package</sub></p>
 
 이 구조에서 Alice는 public key cryptography를 두 번 쓴다. Alice 자신의 private key로 signed hash를 만들고, Bob의 public key로 session key를 encrypt한다. Bob도 public key cryptography를 두 번 쓴다. 자신의 private key로 session key를 decrypt하고, Alice의 public key로 signature를 verify한다. 이때 Alice가 정말 Bob의 public key를 얻었는지, Bob이 정말 Alice의 public key를 얻었는지가 certificate/PKI 문제로 이어진다.
@@ -324,12 +324,12 @@ Confidentiality, sender authentication, message integrity를 모두 제공하려
 
 `PGP (Pretty Good Privacy)`는 secure e-mail의 대표 구현이다. 기본 설계는 Figure 8.21과 같다. Version에 따라 message digest에는 MD5 또는 SHA, symmetric encryption에는 CAST, triple-DES, IDEA, public key encryption에는 RSA를 사용할 수 있다. PGP는 user에게 digitally signing, encrypting, 둘 다 수행하는 options를 제공한다.
 
-<p align="center"><img src="./images/257_Figure_8.22_page_654.png" alt="Figure 8.22" width="760"></p>
+![Figure 8.22](@/assets/images/257_Figure_8.22_page_654.png)
 <p align="center"><sub>Figure 8.22 · PDF p. 654 · PGP signed message의 형태와 signed message digest</sub></p>
 
 PGP signed message에는 plaintext message와 signature block이 함께 들어간다. Encoded data는 `KA-(H(m))`, 즉 Alice의 private key로 sign된 message digest다. Bob이 integrity와 sender authentication을 verify하려면 Alice의 public key가 필요하다.
 
-<p align="center"><img src="./images/258_Figure_8.23_page_655.png" alt="Figure 8.23" width="760"></p>
+![Figure 8.23](@/assets/images/258_Figure_8.23_page_655.png)
 <p align="center"><sub>Figure 8.23 · PDF p. 655 · plaintext 없이 encrypted payload만 포함하는 secret PGP message</sub></p>
 
 PGP secret message에는 plaintext가 들어가지 않는다. Sender가 confidentiality와 integrity를 모두 원하면, PGP는 encrypted message를 signed message structure 안에 넣는 식으로 두 기능을 결합한다.
@@ -340,7 +340,7 @@ PGP의 public key certification은 conventional CA와 다르게 `web of trust`�
 
 `TLS (Transport Layer Security)`는 TCP connection 위에 confidentiality, data integrity, end-point authentication을 더한 protocol이다. 역사적으로 SSL의 후속이며, HTTPS에서 가장 익숙하게 만난다. TLS는 technically application layer에 구현되지만, developer 관점에서는 TCP socket과 비슷한 `TLS socket`을 제공하는 secure transport처럼 보인다.
 
-<p align="center"><img src="./images/259_Figure_8.24_page_656.png" alt="Figure 8.24" width="640"></p>
+![Figure 8.24](@/assets/images/259_Figure_8.24_page_656.png)
 <p align="center"><sub>Figure 8.24 · PDF p. 656 · TLS가 application layer에 있으면서도 developer에게는 secure TCP처럼 보이는 구조</sub></p>
 
 TLS가 필요한 이유는 Internet commerce 예시로 명확해진다. Bob이 e-commerce site에 order, address, payment card number를 보내는데 confidentiality가 없으면 card information이 노출된다. Data integrity가 없으면 intruder가 order quantity를 바꿀 수 있다. Server authentication이 없으면 Trudy가 Alice Incorporated인 척하며 payment information을 수집할 수 있다.
@@ -351,7 +351,7 @@ Simplified `almost-TLS`는 세 단계로 이해하면 된다: handshake, key der
 
 Handshake에서 client Bob은 TCP connection을 만들고, server Alice가 정말 Alice인지 certificate로 확인하며, 이번 TLS session에만 쓸 `Master Secret (MS)`를 Alice에게 보낸다.
 
-<p align="center"><img src="./images/260_Figure_8.25_page_657.png" alt="Figure 8.25" width="760"></p>
+![Figure 8.25](@/assets/images/260_Figure_8.25_page_657.png)
 <p align="center"><sub>Figure 8.25 · PDF p. 657 · TCP connection 이후 certificate 확인과 Encrypted Master Secret 전달로 시작하는 almost-TLS handshake</sub></p>
 
 Almost-TLS handshake의 큰 흐름은 다음과 같다.
@@ -379,7 +379,7 @@ Key derivation에서는 shared MS 하나를 그대로 쓰지 않고 방향과 �
 
 Data transfer에서 TLS는 TCP byte stream을 그대로 한 번에 encrypt하지 않는다. TLS는 stream을 `TLS records`로 나누고, 각 record에 HMAC을 붙인 뒤 record+HMAC을 encrypt해 TCP에 넘긴다. 이 구조는 integrity check를 session 끝까지 미루지 않고 record 단위로 수행하게 해 준다.
 
-<p align="center"><img src="./images/261_Figure_8.26_page_659.png" alt="Figure 8.26" width="760"></p>
+![Figure 8.26](@/assets/images/261_Figure_8.26_page_659.png)
 <p align="center"><sub>Figure 8.26 · PDF p. 659 · Type, Version, Length, encrypted Data, HMAC으로 구성된 TLS record format</sub></p>
 
 TLS record의 `Type`, `Version`, `Length`는 cleartext이고, `Data`와 `HMAC`은 encrypted payload 안에 있다. Length는 TCP byte stream에서 record boundaries를 찾는 데 필요하다. Type은 handshake, application data, connection closure 같은 record 성격을 나타낸다.
@@ -411,7 +411,7 @@ Connection closure도 보안 대상이다. TLS가 그냥 underlying TCP FIN만 �
 
 `VPN (Virtual Private Network)`은 public Internet 위에 private network처럼 보이는 secure communication path를 만드는 구조다. 기관이 geographically distributed offices와 traveling users를 모두 private physical network로 연결하려면 비용이 크다. 대신 traffic이 public Internet을 지나기 전에 encrypt하고, Internet routers는 outer IP header만 보고 ordinary IP datagram처럼 forwarding한다.
 
-<p align="center"><img src="./images/262_Figure_8.27_page_663.png" alt="Figure 8.27" width="760"></p>
+![Figure 8.27](@/assets/images/262_Figure_8.27_page_663.png)
 <p align="center"><sub>Figure 8.27 · PDF p. 663 · public Internet 위에서 headquarters, branch office, salesperson laptop을 IPsec으로 연결하는 VPN</sub></p>
 
 Figure 8.27에서 headquarters 내부 host들끼리 또는 branch office 내부 host들끼리는 ordinary IPv4를 쓸 수 있다. 하지만 headquarters에서 hotel의 salesperson laptop으로 가는 traffic은 gateway router가 original IPv4 datagram을 IPsec datagram으로 바꾸어 public Internet으로 보낸다. Public Internet routers는 outer IPv4 header를 보고 forwarding할 뿐, payload 안에 original IP datagram이 encrypted되어 있다는 사실을 이해할 필요가 없다.
@@ -431,7 +431,7 @@ IPsec에는 두 principal protocols가 있다.
 
 `SA (Security Association)`는 IPsec datagrams를 보내기 전에 source entity와 destination entity가 만드는 network-layer logical connection이다. SA는 `simplex`, 즉 unidirectional이다. 양방향 secure traffic에는 방향별 SA 두 개가 필요하다.
 
-<p align="center"><img src="./images/263_Figure_8.28_page_665.png" alt="Figure 8.28" width="760"></p>
+![Figure 8.28](@/assets/images/263_Figure_8.28_page_665.png)
 <p align="center"><sub>Figure 8.28 · PDF p. 665 · headquarters router R1에서 branch router R2로 가는 단방향 Security Association</sub></p>
 
 SA에는 datagram을 어떻게 protect할지에 대한 state가 들어 있다.
@@ -453,7 +453,7 @@ IPsec packet format에는 `tunnel mode`와 `transport mode`가 있다. VPN에서
 
 Figure 8.29는 ESP tunnel mode datagram을 보여준다. 핵심은 original IPv4 datagram이 encrypted payload 안으로 들어가고, public Internet에서는 new IP header만 보인다는 점이다.
 
-<p align="center"><img src="./images/264_Figure_8.29_page_666.png" alt="Figure 8.29" width="760"></p>
+![Figure 8.29](@/assets/images/264_Figure_8.29_page_666.png)
 <p align="center"><sub>Figure 8.29 · PDF p. 666 · new IP header, ESP header, encrypted original IP datagram, ESP trailer, ESP MAC으로 구성된 IPsec datagram</sub></p>
 
 Router R1이 original IPv4 datagram을 IPsec datagram으로 바꾸는 절차는 다음과 같다.
@@ -497,7 +497,7 @@ Wireless network에서는 attacker가 sender transmission range 안에 receiver�
 
 802.11 security의 핵심 요구는 두 가지다. 첫째, mobile device와 network가 서로를 인증하는 `mutual authentication`이다. Network는 device identity와 access privileges를 확인해야 하고, device도 자신이 rogue AP/network에 붙는 것이 아닌지 확인해야 한다. 둘째, wireless link에서 AP와 mobile device 사이 user-level data frames를 encrypt해야 한다. 고속 처리가 필요하므로 symmetric key encryption, 보통 AES가 쓰인다.
 
-<p align="center"><img src="./images/265_Figure_8.30_page_671.png" alt="Figure 8.30" width="760"></p>
+![Figure 8.30](@/assets/images/265_Figure_8.30_page_671.png)
 <p align="center"><sub>Figure 8.30 · PDF p. 671 · mobile device, AP, authentication server 사이 WPA mutual authentication과 key derivation 흐름</sub></p>
 
 Figure 8.30의 architecture에는 mobile device, AP, `AS (authentication server)`가 있다. AP는 authentication server와 mobile device 사이 authentication/key derivation messages를 relay하는 pass-through 역할을 한다. Authentication server는 보통 여러 AP에 대한 중앙 authentication service를 제공한다.
@@ -515,7 +515,7 @@ WPA의 큰 흐름은 네 단계다.
 
 WPA의 중심은 mutual authentication과 shared session-key derivation을 수행하는 four-way handshake다. Simplified Figure 8.31에서는 mobile device `M`과 authentication server `AS`가 시작 전에 shared secret `KAS-M`을 알고 있다고 가정한다.
 
-<p align="center"><img src="./images/266_Figure_8.31_page_673.png" alt="Figure 8.31" width="760"></p>
+![Figure 8.31](@/assets/images/266_Figure_8.31_page_673.png)
 <p align="center"><sub>Figure 8.31 · PDF p. 673 · NonceAS, NonceM, KAS-M으로 KM-AP를 derivation하는 WPA2 four-way handshake</sub></p>
 
 핵심은 first two steps다. AS는 `NonceAS`를 만들어 mobile device에 보낸다. Mobile device는 자신의 `NonceM`을 만들고, `NonceAS`, `NonceM`, initial shared secret `KAS-M`, 양쪽 MAC addresses를 사용해 `KM-AP`를 계산한다. 그런 다음 `NonceM`과 `HMAC(f(KAS-M, NonceAS))`를 AS에 보낸다. AS는 자신이 방금 보낸 nonce가 shared secret 기반 HMAC 안에 들어 있음을 확인해 mobile device의 liveness와 identity를 검증하고, 같은 inputs로 `KM-AP`를 계산한다. 이후 AS는 Figure 8.30의 Step 3에서 AP에게 이 session key를 전달한다.
@@ -524,7 +524,7 @@ WPA의 중심은 mutual authentication과 shared session-key derivation을 수�
 
 802.11 security messaging은 `EAP (Extensible Authentication Protocol)`, `EAPoL (EAP over LAN)`, `RADIUS`로 나뉜다.
 
-<p align="center"><img src="./images/267_Figure_8.32_page_674.png" alt="Figure 8.32" width="760"></p>
+![Figure 8.32](@/assets/images/267_Figure_8.32_page_674.png)
 <p align="center"><sub>Figure 8.32 · PDF p. 674 · EAP messages가 wireless link에서는 EAPoL, AP-AS 구간에서는 RADIUS/UDP/IP로 encapsulate되는 구조</sub></p>
 
 EAP는 mobile device와 authentication server 사이 end-to-end authentication message format을 정의한다. Wireless link에서는 EAP messages가 EAPoL로 encapsulate되고, AP에서 decapsulate된 뒤 RADIUS over UDP/IP로 다시 encapsulate되어 authentication server로 간다. RADIUS는 필수는 아니지만 de facto standard이고, DIAMETER가 후속으로 제안되었다.
@@ -533,7 +533,7 @@ EAP는 mobile device와 authentication server 사이 end-to-end authentication m
 
 4G/5G security도 목표는 802.11과 같다. Mobile device와 base station 사이 wireless frames를 encrypt하기 위한 shared symmetric key가 필요하고, network는 mobile device identity/access privileges를 확인해야 하며, mobile device도 rogue cellular base station이 아닌 legitimate network인지 확인해야 한다. 차이는 cellular에서는 device가 home network가 아니라 visited network에 roaming 중일 수 있고, 이때 visited/home networks가 함께 authentication에 참여한다는 점이다.
 
-<p align="center"><img src="./images/268_Figure_8.33_page_676.png" alt="Figure 8.33" width="760"></p>
+![Figure 8.33](@/assets/images/268_Figure_8.33_page_676.png)
 <p align="center"><sub>Figure 8.33 · PDF p. 676 · M, BS, MME, HSS가 참여하는 4G LTE mutual authentication and key agreement</sub></p>
 
 4G AKA에서 mobile device `M`과 home network의 `HSS`는 시작 전부터 shared secret `KHSS-M`을 알고 있다. 이 secret은 mobile device의 SIM card와 home network HSS database에 저장된다. Visited network의 `MME`는 중간에서 messages를 relay하고 authentication decision을 돕지만, `KHSS-M` 자체를 배우지는 않는다.
@@ -558,7 +558,7 @@ Cryptography가 communication channel 자체를 보호한다면, `operational se
 
 `Firewall`은 hardware와 software의 조합으로, organization internal network와 public Internet 사이에서 어떤 packets를 pass/drop할지 결정한다. Firewall의 목표는 세 가지다. 모든 traffic이 firewall을 지나가게 하고, local security policy가 허용한 traffic만 통과시키며, firewall 자체가 compromise되지 않도록 하는 것이다.
 
-<p align="center"><img src="./images/269_Figure_8.34_page_679.png" alt="Figure 8.34" width="760"></p>
+![Figure 8.34](@/assets/images/269_Figure_8.34_page_679.png)
 <p align="center"><sub>Figure 8.34 · PDF p. 679 · administered network와 public Internet 사이 boundary에 놓인 firewall</sub></p>
 
 Firewall은 크게 `traditional packet filters`, `stateful filters`, `application gateways`로 나눌 수 있다.
@@ -571,21 +571,21 @@ Packet filter의 한계는 packet 단위 stateless decision이다. ACK bit가 se
 
 `Application gateway`는 IP/TCP/UDP header를 넘어 application-layer data를 보고 policy decision을 한다. 예를 들어 특정 internal users만 Telnet을 외부로 사용할 수 있게 하려면 user ID/password 같은 application-level identity가 필요하므로 packet filter만으로는 부족하다.
 
-<p align="center"><img src="./images/270_Figure_8.35_page_684.png" alt="Figure 8.35" width="760"></p>
+![Figure 8.35](@/assets/images/270_Figure_8.35_page_684.png)
 <p align="center"><sub>Figure 8.35 · PDF p. 684 · packet filter와 Telnet application gateway를 결합한 firewall 구조</sub></p>
 
 Application gateway는 client와 external server 사이에서 application-specific relay가 된다. Internal user는 먼저 gateway에 접속하고, gateway가 user authorization을 확인한 뒤 external server와 별도 connection을 만든다. 이 구조는 fine-grained control을 제공하지만 application마다 gateway가 필요하고, 모든 data가 gateway를 거치므로 performance penalty가 있으며, client software가 gateway 사용 방식을 알아야 한다.
 
 Proxy는 application gateway의 한 형태로 anonymity/privacy에도 쓰일 수 있다. User가 proxy와 TLS/SSL connection을 맺고, proxy가 대신 target Web site에 request를 보내면 target site는 user IP가 아니라 proxy IP를 본다. Local ISP는 user-proxy 구간이 encrypted되어 있으면 target URL/content를 직접 볼 수 없다. 단, proxy는 user와 target site를 모두 알 수 있으므로 trust boundary가 proxy로 이동한다.
 
-<p align="center"><img src="./images/271_Figure_8.36_page_685.png" alt="Figure 8.36" width="760"></p>
+![Figure 8.36](@/assets/images/271_Figure_8.36_page_685.png)
 <p align="center"><sub>Figure 8.36 · PDF p. 685 · trusted proxy와 SSL을 이용해 local ISP와 target site에 노출되는 정보를 줄이는 구조</sub></p>
 
 #### 8.9.2 Intrusion Detection Systems
 
 Packet filter는 header fields 중심으로 판단한다. 하지만 worms, application vulnerability attacks, network mapping, port scans, DoS patterns를 탐지하려면 packet payload와 packet sequences를 보는 `deep packet inspection`이 필요하다. Suspicious traffic을 발견해 alert를 생성하는 장비가 `IDS`, suspicious traffic을 drop하는 장비가 `IPS`다. 책은 탐지 원리가 핵심이므로 둘을 함께 IDS systems로 다룬다.
 
-<p align="center"><img src="./images/272_Figure_8.37_page_688.png" alt="Figure 8.37" width="760"></p>
+![Figure 8.37](@/assets/images/272_Figure_8.37_page_688.png)
 <p align="center"><sub>Figure 8.37 · PDF p. 688 · filter, application gateway, IDS sensors, DMZ를 함께 배치한 organization network</sub></p>
 
 IDS sensors를 여러 곳에 두는 이유는 processing load와 visibility 때문이다. IDS는 packets를 tens of thousands of signatures와 비교해야 하므로 access link 전체 traffic을 한 sensor가 모두 처리하면 overload될 수 있다. Downstream에 여러 sensors를 두면 각 sensor가 traffic subset만 보고, central IDS processor가 suspicious activity를 통합해 administrator에게 alarm을 보낼 수 있다. Public Web server, FTP server, DNS server처럼 외부와 통신해야 하는 servers는 보통 `DMZ (demilitarized zone)`에 둔다.

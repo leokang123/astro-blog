@@ -51,7 +51,7 @@ TCP와의 가장 큰 차이는 application write와 network packet의 관계다.
 
 UDP/IPv4에서 IPv4 Protocol field 값은 `17`이고, UDP/IPv6에서는 IPv6 Next Header field에도 같은 값 `17`이 사용된다.
 
-<p align="center"><img src="./images/207_Figure_10_1_page_513.png" alt="Figure 10-1" width="760"></p>
+![Figure 10-1](@/assets/images/207_Figure_10_1_page_513.png)
 <p align="center"><sub>Figure 10-1 · PDF p. 513 · 일반적인 UDP/IPv4 encapsulation은 IPv4 header, 8-byte UDP header, UDP data 순서로 구성된다</sub></p>
 
 Figure 10-1은 fragmentation이 없는 전형적 case를 보여 준다. UDP header는 IP payload 안에 들어가고, UDP data는 다시 UDP header 뒤에 붙는다. 나중에 UDP datagram이 MTU보다 커지면 이 하나의 UDP datagram이 여러 IP fragment로 나뉠 수 있는데, 그때 UDP header는 첫 fragment에만 나타난다. 이 점이 firewall/NAT 처리와 공격에서 중요해진다.
@@ -60,7 +60,7 @@ Figure 10-1은 fragmentation이 없는 전형적 case를 보여 준다. UDP head
 
 UDP header는 항상 8 bytes다. Field는 `Source Port Number`, `Destination Port Number`, `Length`, `Checksum` 네 개뿐이다.
 
-<p align="center"><img src="./images/208_Figure_10_2_page_514.png" alt="Figure 10-2" width="760"></p>
+![Figure 10-2](@/assets/images/208_Figure_10_2_page_514.png)
 <p align="center"><sub>Figure 10-2 · PDF p. 514 · UDP header는 source port, destination port, length, checksum 네 field로 이루어진 8-byte header다</sub></p>
 
 Port number는 process를 찾기 위한 추상적 mailbox다. 물리적 장치나 network interface가 아니라, host 안에서 transport protocol implementation이 incoming data를 어떤 socket/process로 넘길지 결정하는 demultiplexing key다. UDP port number는 16-bit 양수이고, source port는 reply가 필요 없으면 `0`으로 둘 수 있다.
@@ -81,7 +81,7 @@ UDP checksum이 덮는 범위는 세 부분이다.
 | UDP data | 전송됨 | application payload 오류 검출 |
 | IP pseudo-header | 전송되지 않음 | source/destination IP, Protocol/Next Header, UDP Length를 포함해 misdelivery 검출 |
 
-<p align="center"><img src="./images/209_Figure_10_3_page_516.png" alt="Figure 10-3" width="720"></p>
+![Figure 10-3](@/assets/images/209_Figure_10_3_page_516.png)
 <p align="center"><sub>Figure 10-3 · PDF p. 516 · UDP/IPv4 checksum은 IPv4 pseudo-header, UDP header, data를 포함해 계산된다</sub></p>
 
 Pseudo-header는 layering violation처럼 보인다. Transport layer인 UDP가 IP layer의 source/destination address와 Protocol field를 checksum에 넣기 때문이다. 하지만 목적은 분명하다. IP가 잘못된 destination으로 datagram을 넘겼거나, UDP가 아닌 transport payload를 UDP로 넘기는 오류를 검출하기 위해서다. Pseudo-header와 pad byte는 checksum 계산에만 쓰이고 packet에 실려 전송되지 않는다.
@@ -119,7 +119,7 @@ Server가 살아 있으면 ICMP traffic은 생기지 않는다. UDP에는 ACK가
 
 UDP가 IPv6 위에서 동작할 때 header 자체는 거의 변하지 않는다. 중요한 차이는 IPv6 address가 128-bit라 pseudo-header가 커지고, IPv6에는 IP-layer header checksum이 없다는 점이다. 그래서 UDP/IPv6에서는 UDP checksum이 mandatory다. UDP checksum을 끄면 IPv6 source/destination address와 transport payload 전체를 end-to-end로 검증하는 장치가 사라진다.
 
-<p align="center"><img src="./images/210_Figure_10_4_page_520.png" alt="Figure 10-4" width="760"></p>
+![Figure 10-4](@/assets/images/210_Figure_10_4_page_520.png)
 <p align="center"><sub>Figure 10-4 · PDF p. 520 · UDP/TCP over IPv6 pseudo-header는 128-bit source/destination address와 32-bit Length를 포함한다</sub></p>
 
 IPv6 pseudo-header의 `Length` field는 32 bits다. UDP header의 Length field는 16 bits라 일반 UDP datagram length를 표현하는 데 충분하지만, IPv6는 `jumbogram`을 지원할 수 있다. IPv6 jumbogram에서는 UDP/IPv6 datagram이 65,535 bytes를 넘을 수 있고, 이때 UDP header의 Length field는 `0`으로 둔다. 실제 length 검증은 IPv6 Jumbo Payload option에서 얻은 payload length에서 extension header 길이를 빼서 계산한다.
@@ -130,7 +130,7 @@ IPv6의 minimum MTU는 1280 bytes다. IPv4가 모든 host가 지원해야 하는
 
 `Teredo`는 IPv6 connectivity가 없는 host가 IPv6 datagram을 UDP/IPv4 payload 안에 encapsulate해 IPv4-only infrastructure와 NAT를 통과하도록 만든 transition mechanism이다. 순수 IPv6 packet을 IPv4 packet에 넣는 6to4 같은 방식은 NAT traversal 문제가 크다. Teredo는 이 문제를 UDP encapsulation과 server/relay 구조로 우회한다.
 
-<p align="center"><img src="./images/211_Figure_10_5_page_522.png" alt="Figure 10-5" width="760"></p>
+![Figure 10-5](@/assets/images/211_Figure_10_5_page_522.png)
 <p align="center"><sub>Figure 10-5 · PDF p. 522 · Teredo는 IPv6 datagram을 UDP/IPv4 payload로 실어 NAT 뒤 client와 IPv6 Internet 사이를 연결한다</sub></p>
 
 Teredo 구성 요소는 세 가지로 정리할 수 있다.
@@ -143,12 +143,12 @@ Teredo 구성 요소는 세 가지로 정리할 수 있다.
 
 Client는 Teredo server의 IPv4 address/name과 UDP port, 보통 `3544`를 알고 시작한다. Qualification procedure에서 client는 link-local IPv6 source address로 ICMPv6 Router Solicitation(RS)을 만들고, 이를 Teredo service port의 UDP/IPv4 datagram 안에 넣어 server로 보낸다. Server는 Router Advertisement(RA)를 돌려주며, client가 NAT 밖에서 보이는 mapped IPv4 address와 UDP port를 알려 준다. Client는 이 정보를 사용해 Teredo IPv6 address를 만든다.
 
-<p align="center"><img src="./images/212_Figure_10_6_page_523.png" alt="Figure 10-6" width="720"></p>
+![Figure 10-6](@/assets/images/212_Figure_10_6_page_523.png)
 <p align="center"><sub>Figure 10-6 · PDF p. 523 · Teredo UDP payload에는 optional Origin Indication, encapsulated IPv6 datagram, optional trailer가 들어갈 수 있다</sub></p>
 
 Teredo encapsulation에는 `Simple Encapsulation`과 `Origin Indication Encapsulation`이 있다. Origin Indication은 UDP header와 encapsulated IPv6 datagram 사이에 origin port와 mapped IPv4 address 정보를 넣는다. 이 정보는 client가 자신의 mapped address/port를 알아 Teredo address를 만들 때 쓰인다. Address와 port는 bitwise inversion으로 obfuscation되는데, 일부 NAT가 payload 안의 주소 정보를 멋대로 rewrite하는 것을 피하려는 목적이다.
 
-<p align="center"><img src="./images/213_Figure_10_7_page_523.png" alt="Figure 10-7" width="760"></p>
+![Figure 10-7](@/assets/images/213_Figure_10_7_page_523.png)
 <p align="center"><sub>Figure 10-7 · PDF p. 523 · Teredo IPv6 address는 2001::/32 prefix, server IPv4 address, flags, mapped port/address를 담는다</sub></p>
 
 Teredo address는 `2001::/32` prefix로 시작하고, Teredo server IPv4 address, 16-bit Flags, mapped UDP port, mapped IPv4 address를 담는다. 마지막 두 값은 client가 NAT 밖에서 어떻게 보이는지 나타내며 bitwise-inverted 형태로 들어간다. Flags에는 NAT type 관련 정보와 random bits가 포함될 수 있고, random bits는 address guessing attack을 줄이기 위한 보안 장치다.
@@ -163,7 +163,7 @@ Teredo extension은 symmetric NAT 같은 까다로운 NAT behavior를 지원하�
 
 `UDP-Lite` 또는 `UDPLite`는 일부 payload bit error를 application이 견딜 수 있는 경우를 위해 만들어진 UDP 변형이다. 일반 UDP checksum은 payload 전체를 덮거나, IPv4에서 sender가 checksum을 아예 생략하는 두 극단만 제공한다. UDP-Lite는 header와 payload 일부만 checksum으로 보호하는 partial checksum을 제공한다.
 
-<p align="center"><img src="./images/214_Figure_10_8_page_526.png" alt="Figure 10-8" width="760"></p>
+![Figure 10-8](@/assets/images/214_Figure_10_8_page_526.png)
 <p align="center"><sub>Figure 10-8 · PDF p. 526 · UDP-Lite는 UDP Length field 대신 Checksum Coverage field를 사용한다</sub></p>
 
 UDP-Lite는 UDP와 별도 transport protocol로 취급된다. IPv4 Protocol value와 IPv6 Next Header value는 `136`이고, 일반 UDP의 `17`과 다르다. Header 크기는 여전히 8 bytes지만, 기존 UDP `Length` field 위치가 `Checksum Coverage` field로 바뀐다. 이 field는 UDP-Lite header 첫 byte부터 몇 byte가 checksum으로 보호되는지 나타낸다.
@@ -197,7 +197,7 @@ Fragmented IP datagram은 final destination에 도착할 때까지 reassembly되
 
 UDP application은 한 번에 큰 datagram을 만들기 쉽기 때문에 fragmentation을 직접 유발하기 쉽다. Ethernet MTU가 1500 bytes이고 IPv4 header가 20 bytes, UDP header가 8 bytes라면, fragmentation 없이 보낼 수 있는 UDP application data는 보통 `1500 - 20 - 8 = 1472 bytes`다. IPv4 option이 있으면 IPv4 header가 더 커져 이 값은 더 줄어든다.
 
-<p align="center"><img src="./images/215_Figure_10_9_page_528.png" alt="Figure 10-9" width="760"></p>
+![Figure 10-9](@/assets/images/215_Figure_10_9_page_528.png)
 <p align="center"><sub>Figure 10-9 · PDF p. 528 · 2992-byte UDP payload를 가진 UDP/IPv4 datagram이 세 개의 IPv4 fragment로 나뉜다</sub></p>
 
 Figure 10-9의 original IPv4 datagram은 IPv4 header 20 bytes + UDP header 8 bytes + UDP payload 2992 bytes = Total Length 3020 bytes다. MTU 1500인 link를 지나야 하므로 세 fragment가 만들어진다. 새로 생긴 fragment마다 IPv4 header 20 bytes가 붙어, 총 전송 byte 수는 3020이 아니라 3060 bytes가 된다. 여기서는 IP-layer overhead가 약 1.3% 증가한다.

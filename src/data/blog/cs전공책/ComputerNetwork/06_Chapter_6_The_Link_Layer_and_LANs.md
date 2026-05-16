@@ -2,12 +2,13 @@
 title: "Chapter 6. The Link Layer and LANs"
 order: 6
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-16T08:19:41+09:00
 description: "Chapter 6. The Link Layer and LANs 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "ComputerNetwork"
+  - cs전공책
+  - ComputerNetwork
 ---
+
 # Chapter 6. The Link Layer and LANs
 
 - 과목: Computer Network
@@ -29,7 +30,7 @@ link layer의 중요한 관점은 “locality”다. network layer는 end-to-end
 
 link layer에서 `node`는 layer 2 protocol을 실행하는 모든 device를 뜻한다. hosts, routers, switches, WiFi access points가 모두 node다. `link`는 end-to-end communication path에서 adjacent nodes를 연결하는 communication channel이다. source host에서 destination host까지 가는 하나의 datagram은 여러 links를 차례로 통과하고, 각 link마다 transmitting node가 datagram을 frame으로 감싸서 보낸다.
 
-<p align="center"><img src="./images/172_Figure_6.1_page_462.png" alt="Figure 6.1" width="720"></p>
+![Figure 6.1](@/assets/images/172_Figure_6.1_page_462.png)
 <p align="center"><sub>Figure 6.1 · PDF p. 462 · wireless host에서 server까지 datagram이 여섯 link-layer hops를 거치는 예</sub></p>
 
 책의 비유로 보면 tourist가 datagram, travel segment가 link, transportation mode가 link-layer protocol, travel agent가 routing protocol이다. Princeton에서 JFK까지 limousine, JFK에서 Geneva까지 plane, Geneva에서 Lausanne까지 train을 타듯이, 하나의 datagram도 각 segment마다 다른 link-layer protocol을 사용할 수 있다. link layer는 “한 adjacent node에서 다음 adjacent node까지” 책임지고, routing protocol은 전체 path를 고른다.
@@ -51,7 +52,7 @@ link-layer protocol이 제공할 수 있는 서비스는 protocol마다 다르�
 
 link layer는 protocol stack에서 software와 hardware가 만나는 지점이다. host의 link-layer 기능 대부분은 `network adapter`, 또는 `NIC (network interface controller)`라 불리는 chip/card에 구현된다. Ethernet capability는 motherboard chipset에 통합되거나 dedicated Ethernet chip으로 제공될 수 있다.
 
-<p align="center"><img src="./images/173_Figure_6.2_page_465.png" alt="Figure 6.2" width="760"></p>
+![Figure 6.2](@/assets/images/173_Figure_6.2_page_465.png)
 <p align="center"><sub>Figure 6.2 · PDF p. 465 · network adapter가 host protocol stack과 physical transmission 사이에서 link-layer 기능을 수행하는 위치</sub></p>
 
 sending side에서 controller는 higher layers가 host memory에 만든 datagram을 가져와 frame fields를 채우고 link-access protocol에 따라 link로 전송한다. receiving side에서 controller는 entire frame을 수신하고, error detection을 수행한 뒤 network-layer datagram을 추출해 host로 올린다. error-detection bits는 sending controller가 frame header에 넣고, receiving controller가 검사한다.
@@ -64,7 +65,7 @@ sending side에서 controller는 higher layers가 host memory에 만든 datagram
 
 link-layer frame은 physical link를 통과하는 동안 signal attenuation, electromagnetic noise 등으로 bit flips가 생길 수 있다. `error detection and correction`의 목표는 receiving node가 받은 `D'`와 `EDC'`를 보고 original data `D`가 손상되었는지 판단하고, 가능한 경우 손상 위치를 찾아 수정하는 것이다.
 
-<p align="center"><img src="./images/174_Figure_6.3_page_466.png" alt="Figure 6.3" width="760"></p>
+![Figure 6.3](@/assets/images/174_Figure_6.3_page_466.png)
 <p align="center"><sub>Figure 6.3 · PDF p. 466 · sender가 data D에 EDC bits를 붙이고 receiver가 D'/EDC'로 오류를 검사하는 구조</sub></p>
 
 중요한 점은 receiver가 묻는 질문이 “error가 발생했는가?”가 아니라 “error가 detected되는가?”라는 점이다. 어떤 error-detection scheme도 모든 possible bit errors를 항상 잡아내지는 못한다. 더 정교한 scheme일수록 undetected error probability를 낮추지만, 더 많은 EDC bits와 계산 overhead가 필요하다.
@@ -73,14 +74,14 @@ link-layer frame은 physical link를 통과하는 동안 signal attenuation, ele
 
 가장 단순한 error detection은 `single parity bit`다. `even parity`에서는 original `d` data bits와 parity bit를 합친 `d + 1` bits 안의 1의 개수가 even이 되도록 parity bit를 고른다. receiver는 받은 bits에서 1의 개수를 세고, even parity인데 1의 개수가 odd이면 error를 detect한다.
 
-<p align="center"><img src="./images/175_Figure_6.4_page_467.png" alt="Figure 6.4" width="509"></p>
+![Figure 6.4](@/assets/images/175_Figure_6.4_page_467.png)
 <p align="center"><sub>Figure 6.4 · PDF p. 467 · one-bit even parity가 data bits의 1 개수를 짝수로 맞추는 방식</sub></p>
 
 single parity bit는 odd number of bit errors는 감지할 수 있지만, even number of bit errors는 놓칠 수 있다. bit errors가 독립적이고 매우 드물면 single parity도 의미가 있지만, 실제 links에서는 errors가 `burst errors`처럼 뭉쳐 발생할 수 있다. 이 경우 single-bit parity의 undetected error probability가 크게 올라간다.
 
 `two-dimensional parity`는 data bits를 rows/columns로 나누고 각 row와 column에 parity를 둔다. single bit error가 발생하면 해당 row parity와 column parity가 동시에 틀어지므로, receiver는 오류가 난 bit의 row/column 교차점을 찾아 수정할 수 있다.
 
-<p align="center"><img src="./images/176_Figure_6.5_page_468.png" alt="Figure 6.5" width="680"></p>
+![Figure 6.5](@/assets/images/176_Figure_6.5_page_468.png)
 <p align="center"><sub>Figure 6.5 · PDF p. 468 · two-dimensional even parity가 single-bit error를 detect하고 correct하는 방식</sub></p>
 
 receiver가 error를 detect할 뿐 아니라 correct하는 능력을 `FEC (forward error correction)`라고 한다. FEC는 retransmission 횟수를 줄이고, receiver가 즉시 error를 고칠 수 있게 한다. 특히 real-time applications나 deep-space links처럼 round-trip propagation delay가 큰 환경에서는 NAK를 보내고 retransmission을 기다리는 것보다 FEC가 훨씬 유리할 수 있다.
@@ -99,7 +100,7 @@ checksum은 overhead가 작고 software implementation이 쉽다. TCP/UDP checks
 
 sender와 receiver는 먼저 `r + 1` bit generator `G`에 합의한다. sender는 data `D` 뒤에 `r` bits인 `R`을 붙여 `D * 2^r XOR R`이 `G`로 나누어떨어지게 만든다. receiver는 받은 `d + r` bits를 같은 `G`로 나누고, remainder가 nonzero이면 error를 detect한다.
 
-<p align="center"><img src="./images/177_Figure_6.6_page_470.png" alt="Figure 6.6" width="760"></p>
+![Figure 6.6](@/assets/images/177_Figure_6.6_page_470.png)
 <p align="center"><sub>Figure 6.6 · PDF p. 470 · data bits D 뒤에 CRC bits R을 붙여 generator G로 나누어떨어지게 만드는 구조</sub></p>
 
 CRC에서 addition/subtraction은 carry/borrow 없는 modulo-2 arithmetic이고, bitwise `XOR`와 같다.
@@ -116,7 +117,7 @@ R = remainder( D * 2^r / G )
 transmitted bits = D * 2^r XOR R
 ```
 
-<p align="center"><img src="./images/178_Figure_6.7_page_471.png" alt="Figure 6.7" width="448"></p>
+![Figure 6.7](@/assets/images/178_Figure_6.7_page_471.png)
 <p align="center"><sub>Figure 6.7 · PDF p. 471 · D=101110, G=1001일 때 CRC remainder R을 계산하는 예</sub></p>
 
 CRC 표준 generator는 8-, 12-, 16-, 32-bit 등으로 정의되어 있고, 많은 IEEE link-level protocols는 `CRC-32`를 사용한다. r-bit CRC는 모든 burst errors of fewer than `r + 1` bits를 detect할 수 있고, 조건이 맞으면 더 긴 burst error도 높은 확률로 detect한다. 또한 odd number of bit errors도 detect할 수 있다. 이 때문에 CRC는 adapter hardware에서 수행되는 link-layer error detection에 잘 맞는다.
@@ -127,7 +128,7 @@ network links는 크게 `point-to-point link`와 `broadcast link`로 나눌 수 
 
 문제는 shared channel에서 둘 이상의 nodes가 동시에 frames를 보내면 `collision`이 발생한다는 점이다. collision이 발생하면 receivers는 보통 어떤 frame도 해석할 수 없고, collision interval 동안 broadcast channel capacity가 낭비된다. 따라서 active nodes의 transmissions를 조정하는 `multiple access protocol`이 필요하다.
 
-<p align="center"><img src="./images/179_Figure_6.8_page_473.png" alt="Figure 6.8" width="760"></p>
+![Figure 6.8](@/assets/images/179_Figure_6.8_page_473.png)
 <p align="center"><sub>Figure 6.8 · PDF p. 473 · wired shared channel, wireless, satellite 등 multiple access가 필요한 다양한 broadcast channels</sub></p>
 
 이상적인 multiple access protocol은 다음 성질을 갖는 것이 좋다.
@@ -151,7 +152,7 @@ multiple access protocols는 거의 모두 세 부류로 나눌 수 있다.
 
 `TDM (time-division multiplexing)`은 time을 frames와 slots로 나누고, 각 node에게 slot을 할당한다. 여기서 TDM frame은 link-layer frame과 다른 의미다. node는 자기 slot이 돌아왔을 때만 packet bits를 전송한다. `FDM (frequency-division multiplexing)`은 channel bandwidth를 frequency bands로 나누고 각 node에게 하나씩 할당한다.
 
-<p align="center"><img src="./images/180_Figure_6.9_page_475.png" alt="Figure 6.9" width="760"></p>
+![Figure 6.9](@/assets/images/180_Figure_6.9_page_475.png)
 <p align="center"><sub>Figure 6.9 · PDF p. 475 · 네 nodes가 TDM slots 또는 FDM frequency bands를 나누어 쓰는 예</sub></p>
 
 TDM/FDM의 장점은 collisions가 없고 공정하다는 점이다. N nodes가 있다면 각 node는 dedicated rate `R/N bps`를 얻는다. 하지만 큰 단점도 있다. 어떤 node가 유일하게 active해도 `R/N bps`보다 더 쓸 수 없고, 자기 turn 또는 frequency allocation에 묶인다. bursty traffic이 많은 LAN에서는 이 낭비가 크다.
@@ -164,24 +165,24 @@ TDM/FDM의 장점은 collisions가 없고 공정하다는 점이다. N nodes가 
 
 `slotted ALOHA`는 time을 frame transmission time과 같은 slots로 나누고, nodes가 slot 시작점에서만 frame을 보낼 수 있다고 가정한다. collision이 없으면 성공이고, collision이 있으면 subsequent slots에서 probability `p`로 재전송한다. decentralized이고 단순하며, active node가 하나뿐이면 full rate를 쓸 수 있다. 하지만 multiple active nodes가 있으면 collision slots와 empty slots가 생긴다.
 
-<p align="center"><img src="./images/181_Figure_6.10_page_478.png" alt="Figure 6.10" width="760"></p>
+![Figure 6.10](@/assets/images/181_Figure_6.10_page_478.png)
 <p align="center"><sub>Figure 6.10 · PDF p. 478 · slotted ALOHA에서 collision, empty, successful slots가 섞이는 예</sub></p>
 
 slotted ALOHA의 efficiency는 long-run fraction of successful slots다. N active nodes가 각 slot에서 probability `p`로 전송한다고 하면, 어떤 slot이 successful일 확률은 `Np(1-p)^(N-1)`이다. N이 매우 클 때 최대 efficiency는 `1/e ≈ 0.37`이다. 즉 channel 자체는 R bps라도 장기적으로 useful throughput은 최대 약 `0.37R`에 그친다.
 
 `pure ALOHA`는 slot synchronization이 없다. frame이 도착하면 node가 즉시 전송한다. 어떤 frame이 time `t0`에 시작되면, 다른 node가 `[t0-1, t0]` 또는 `[t0, t0+1]`에 전송을 시작해도 overlap collision이 발생한다. 이 때문에 vulnerability interval이 slotted ALOHA의 두 배가 되고, 최대 efficiency는 `1/(2e)`로 slotted ALOHA의 절반이다.
 
-<p align="center"><img src="./images/182_Figure_6.11_page_480.png" alt="Figure 6.11" width="760"></p>
+![Figure 6.11](@/assets/images/182_Figure_6.11_page_480.png)
 <p align="center"><sub>Figure 6.11 · PDF p. 480 · pure ALOHA에서 앞뒤 한 frame time 안의 전송 시작이 collision을 만드는 구조</sub></p>
 
 `CSMA (carrier sense multiple access)`는 “listen before speaking” 규칙을 넣는다. node는 channel을 먼저 듣고, 다른 frame이 전송 중이면 기다린 뒤 idle일 때 전송한다. 하지만 carrier sensing이 있어도 collision이 완전히 사라지지는 않는다. propagation delay 때문에 한 node가 이미 전송을 시작했어도, 그 signal이 멀리 있는 node에 아직 도착하지 않았으면 그 node는 channel을 idle로 오해하고 전송할 수 있다.
 
-<p align="center"><img src="./images/183_Figure_6.12_page_482.png" alt="Figure 6.12" width="760"></p>
+![Figure 6.12](@/assets/images/183_Figure_6.12_page_482.png)
 <p align="center"><sub>Figure 6.12 · PDF p. 482 · propagation delay 때문에 CSMA에서도 두 nodes의 transmissions가 충돌하는 space-time 예</sub></p>
 
 `CSMA/CD (CSMA with collision detection)`는 “말하다가 겹치면 멈추기”까지 수행한다. adapter는 frame을 전송하면서 channel을 계속 감시하고, collision signal energy를 감지하면 frame transmission을 abort한다. damaged frame 전체를 끝까지 보내지 않으므로 channel 낭비가 줄어든다.
 
-<p align="center"><img src="./images/184_Figure_6.13_page_483.png" alt="Figure 6.13" width="760"></p>
+![Figure 6.13](@/assets/images/184_Figure_6.13_page_483.png)
 <p align="center"><sub>Figure 6.13 · PDF p. 483 · CSMA/CD에서 collision을 감지한 뒤 transmissions를 중단하는 흐름</sub></p>
 
 CSMA/CD adapter 동작은 다음처럼 요약된다.
@@ -218,7 +219,7 @@ Efficiency ≈ 1 / (1 + 5 dprop / dtrans)
 
 DOCSIS는 multiple access protocol들의 혼합 사례다. downstream과 upstream을 여러 frequency channels로 나누는 데 `FDM`을 사용하고, upstream channel 안에서는 time intervals/minislots를 사용하는 TDM-like 구조가 있다.
 
-<p align="center"><img src="./images/185_Figure_6.14_page_487.png" alt="Figure 6.14" width="760"></p>
+![Figure 6.14](@/assets/images/185_Figure_6.14_page_487.png)
 <p align="center"><sub>Figure 6.14 · PDF p. 487 · CMTS가 downstream MAP message로 upstream minislots 사용 권한을 cable modems에 할당하는 구조</sub></p>
 
 downstream은 CMTS가 single transmitter라 multiple access problem이 없다. 반면 upstream은 여러 cable modems가 같은 frequency channel을 공유하므로 collision 가능성이 있다. CMTS는 downstream control message인 `MAP message`로 어느 cable modem이 어느 minislot에 upstream data를 보낼 수 있는지 명시한다. 이렇게 assigned minislots에서는 collision을 피할 수 있다.
@@ -231,14 +232,14 @@ downstream은 CMTS가 single transmitter라 multiple access problem이 없다. �
 
 Broadcast link와 multiple access를 본 뒤, 책은 switched LAN으로 넘어간다. Switch는 link layer 장비이므로 network-layer datagram이 아니라 link-layer frame을 다루며, IP address가 아니라 MAC address를 보고 frame을 전달한다. 따라서 switch는 OSPF 같은 routing algorithm으로 layer-2 switch 사이의 경로를 계산하지 않는다. 아래 예시는 여러 부서 LAN, 서버, 외부 인터넷으로 향하는 router가 switch들로 묶인 전형적인 institutional network다.
 
-<p align="center"><img src="./images/186_Figure_6.15_page_488.png" alt="Figure 6.15" width="760"></p>
+![Figure 6.15](@/assets/images/186_Figure_6.15_page_488.png)
 <p align="center"><sub>Figure 6.15 · PDF p. 488 · 네 개의 switch로 부서 LAN, 서버, 외부 인터넷 라우터를 연결한 switched LAN</sub></p>
 
 #### 6.4.1 Link-Layer Addressing and ARP
 
 Link-layer address는 흔히 LAN address, physical address, MAC address라고 부른다. 엄밀히 말하면 MAC address는 host나 router 전체에 붙는 것이 아니라 adapter, 즉 network interface에 붙는다. Host나 router가 여러 interface를 가지면 IP address도 여러 개일 수 있고 MAC address도 여러 개다. 반면 host/router와 연결되는 switch interface에는 일반적으로 MAC address가 필요하지 않다. Switch는 중간에서 투명하게 frame을 운반하므로, host가 중간 switch를 목적지로 명시해 frame을 보내지 않기 때문이다.
 
-<p align="center"><img src="./images/187_Figure_6.16_page_490.png" alt="Figure 6.16" width="596"></p>
+![Figure 6.16](@/assets/images/187_Figure_6.16_page_490.png)
 <p align="center"><sub>Figure 6.16 · PDF p. 490 · LAN에 연결된 각 interface가 고유한 MAC address를 갖는 모습</sub></p>
 
 Ethernet과 802.11 wireless LAN에서 MAC address는 보통 6 bytes, 즉 48 bits다. 표기는 `1A-23-F9-CD-06-9B`처럼 byte마다 두 자리 hexadecimal로 적는다. IEEE가 MAC address 공간을 관리하며, 제조사는 보통 앞 24 bits에 해당하는 OUI 범위를 배정받고 뒤 24 bits를 조합해 adapter마다 고유한 주소를 만든다. 원래 MAC address는 permanent address로 설계되었지만, 실제 시스템에서는 software로 바꾸는 것도 가능하다.
@@ -251,12 +252,12 @@ Frame을 받은 adapter는 destination MAC address가 자신의 MAC address와 �
 
 Address Resolution Protocol (ARP)는 같은 subnet 안에서 IP address를 MAC address로 바꾸는 프로토콜이다. DNS가 host name을 IP address로 바꾸는 것과 비슷하지만 범위가 다르다. DNS는 Internet 어디의 host name도 다룰 수 있지만, ARP는 같은 subnet에 있는 host나 router interface의 IP address만 MAC address로 resolve한다.
 
-<p align="center"><img src="./images/188_Figure_6.17_page_492.png" alt="Figure 6.17" width="760"></p>
+![Figure 6.17](@/assets/images/188_Figure_6.17_page_492.png)
 <p align="center"><sub>Figure 6.17 · PDF p. 492 · 같은 LAN의 각 interface가 IP address와 MAC address를 함께 갖는 예</sub></p>
 
 각 host와 router는 memory에 ARP table을 둔다. ARP table은 IP address에서 MAC address로 가는 mapping과 TTL을 저장한다. TTL은 mapping이 언제 삭제될지를 나타내며, 전형적인 만료 시간은 entry가 ARP table에 들어간 뒤 약 20분이다. Table에 subnet의 모든 node가 반드시 들어 있는 것은 아니다. 아직 통신하지 않은 node는 없을 수 있고, 오래된 entry는 expire될 수 있다.
 
-<p align="center"><img src="./images/189_Figure_6.18_page_493.png" alt="Figure 6.18" width="760"></p>
+![Figure 6.18](@/assets/images/189_Figure_6.18_page_493.png)
 <p align="center"><sub>Figure 6.18 · PDF p. 493 · 특정 host가 가진 ARP table의 IP-to-MAC mapping과 TTL</sub></p>
 
 ARP 동작은 query와 response로 나뉜다. Sender의 ARP table에 목적지 IP에 대한 entry가 없으면 sender는 ARP query packet을 만들고, 이를 destination MAC address `FF-FF-FF-FF-FF-FF`인 broadcast frame에 넣어 subnet 전체에 보낸다. 같은 subnet의 모든 adapter가 이 frame을 받아 ARP module로 넘기지만, packet 안의 target IP address와 자신의 IP address가 일치하는 node만 ARP response packet을 돌려준다. 이 response는 broadcast가 아니라 querying host로 향하는 standard unicast frame이다. Sender는 response로 얻은 mapping을 ARP table에 저장한 뒤, 원래 보내려던 IP datagram을 목적지 MAC address가 들어간 frame에 넣어 보낸다.
@@ -267,7 +268,7 @@ ARP는 plug-and-play 성격이 강하다. System administrator가 ARP table을 �
 
 목적지가 같은 subnet에 있으면 sender는 ARP로 final destination의 MAC address를 알아내 frame을 보낸다. 그러나 목적지가 다른 subnet에 있으면 destination MAC address는 final host의 MAC address가 아니라 first-hop router interface의 MAC address다. 예를 들어 `111.111.111.111`이 `222.222.222.222`로 IP datagram을 보낼 때, Subnet 1의 Ethernet frame destination MAC은 `222.222.222.222`의 adapter가 아니라 router interface `111.111.111.110`의 adapter MAC이다.
 
-<p align="center"><img src="./images/190_Figure_6.19_page_494.png" alt="Figure 6.19" width="760"></p>
+![Figure 6.19](@/assets/images/190_Figure_6.19_page_494.png)
 <p align="center"><sub>Figure 6.19 · PDF p. 494 · 두 subnet이 router로 연결될 때 ARP와 frame 목적지 MAC이 바뀌는 구조</sub></p>
 
 이 구분이 중요하다. Sender가 다른 subnet에 있는 final host의 MAC address를 Ethernet frame에 넣으면, Subnet 1의 어떤 adapter도 그 MAC address를 자기 주소로 인식하지 않으므로 datagram은 router까지 가지 못한다. Sender는 먼저 ARP를 사용해 first-hop router interface의 MAC address를 얻고, IP datagram의 destination IP는 그대로 `222.222.222.222`로 유지한 채 link-layer frame만 router interface MAC으로 보낸다. Router는 frame을 받아 IP datagram을 꺼내고, forwarding table로 나갈 interface를 정한 뒤, 다음 subnet에서 다시 새 frame에 encapsulate한다. 이때 최종 subnet에서는 ARP를 통해 final destination MAC address를 얻는다. 즉, IP datagram의 source/destination IP는 end-to-end 의미를 유지하지만, link-layer frame의 source/destination MAC은 hop마다 바뀐다.
@@ -282,7 +283,7 @@ Ethernet은 wired LAN 시장에서 사실상 지배적인 기술이 되었다. �
 
 Ethernet frame은 network-layer packet, 대표적으로 IP datagram을 data field에 실어 보낸다. 같은 Ethernet LAN 안에서 adapter A가 adapter B로 datagram을 보낸다고 하면, A는 datagram을 Ethernet frame으로 encapsulate하고 physical layer로 넘기며, B는 frame을 받아 IP datagram을 꺼내 network layer로 올린다.
 
-<p align="center"><img src="./images/191_Figure_6.20_page_497.png" alt="Figure 6.20" width="760"></p>
+![Figure 6.20](@/assets/images/191_Figure_6.20_page_497.png)
 <p align="center"><sub>Figure 6.20 · PDF p. 497 · Ethernet frame의 preamble, address, type, data, CRC fields</sub></p>
 
 Ethernet frame의 주요 fields는 다음과 같다.
@@ -306,7 +307,7 @@ Ethernet은 link layer에서 unreliable service도 제공한다. Receiver adapte
 
 Ethernet은 단일 표준 하나가 아니라 `10BASE-T`, `100BASE-T`, `1000BASE-LX`, `10GBASE-T`, `40GBASE-T`처럼 여러 속도와 물리 매체 조합을 가진 계열이다. 이름의 앞부분은 speed를 나타내고, `BASE`는 baseband Ethernet을 뜻하며, 뒷부분은 physical media를 나타낸다. `T`는 보통 twisted-pair copper wires를 뜻한다. Ethernet은 link-layer specification이면서 동시에 physical-layer specification의 묶음이기도 하다.
 
-<p align="center"><img src="./images/192_Figure_6.21_page_500.png" alt="Figure 6.21" width="760"></p>
+![Figure 6.21](@/assets/images/192_Figure_6.21_page_500.png)
 <p align="center"><sub>Figure 6.21 · PDF p. 500 · 100 Mbps Ethernet에서 공통 MAC protocol/frame format 위에 다양한 physical layer가 붙는 구조</sub></p>
 
 중요한 지속성은 Ethernet MAC protocol과 frame format이다. 100 Mbps Ethernet은 기존 MAC protocol과 frame format을 유지하면서 copper/fiber용 고속 physical layer를 정의했다. Gigabit Ethernet도 standard Ethernet frame format을 사용해 10BASE-T, 100BASE-T 장비와 backward compatibility를 유지한다.
@@ -321,7 +322,7 @@ Link-layer switch의 역할은 incoming frame을 받아 적절한 outgoing link�
 
 Switch의 `filtering`은 frame을 어떤 interface로 보낼지 말지, 즉 drop할지를 결정하는 기능이다. `forwarding`은 frame을 어느 interface로 보낼지 결정하고 output buffer로 옮기는 기능이다. 두 기능 모두 `switch table`을 사용한다. Switch table entry는 보통 `(MAC address, interface, time)`으로 구성된다. 여기서 interface는 그 MAC address가 있는 LAN segment로 향하는 switch interface이고, time은 entry가 table에 들어온 시각이다.
 
-<p align="center"><img src="./images/193_Figure_6.22_page_502.png" alt="Figure 6.22" width="760"></p>
+![Figure 6.22](@/assets/images/193_Figure_6.22_page_502.png)
 <p align="center"><sub>Figure 6.22 · PDF p. 502 · 특정 switch가 가진 switch table 일부</sub></p>
 
 Frame의 destination MAC address가 `DD-DD-DD-DD-DD-DD`이고 frame이 interface `x`로 들어왔다고 하자. Switch는 destination MAC으로 table을 조회하고 세 가지 중 하나를 수행한다.
@@ -347,7 +348,7 @@ incoming frame마다:
 aging time 동안 해당 source MAC frame이 다시 오지 않으면 entry를 삭제한다.
 ```
 
-<p align="center"><img src="./images/194_Figure_6.23_page_504.png" alt="Figure 6.23" width="760"></p>
+![Figure 6.23](@/assets/images/194_Figure_6.23_page_504.png)
 <p align="center"><sub>Figure 6.23 · PDF p. 504 · frame의 source MAC을 보고 switch가 adapter 위치를 학습한 예</sub></p>
 
 Self-learning의 직관은 단순하다. 어떤 source MAC을 가진 frame이 interface 2에서 들어왔다는 것은, 그 MAC address를 가진 adapter가 interface 2 방향에 있다는 증거다. 모든 host가 언젠가 frame을 보내면 switch table은 점점 완성된다. Host가 교체되거나 이동하면 aging time 이후 오래된 MAC entry가 사라진다. 이 때문에 switch는 plug-and-play device로 동작한다. LAN segments를 switch interfaces에 연결하기만 하면 되고, host 제거/추가 때마다 switch table을 직접 고칠 필요가 없다. 또한 switch interface는 full-duplex로 send와 receive를 동시에 할 수 있다.
@@ -362,7 +363,7 @@ Switch는 bus나 hub 기반 broadcast link에 비해 세 가지 중요한 장점
 
 Switch와 router는 모두 store-and-forward packet switch지만 기준 계층이 다르다. Switch는 layer-2 packet switch로 MAC address를 보고 frame을 forward한다. Router는 layer-3 packet switch로 IP address를 보고 datagram을 forward한다.
 
-<p align="center"><img src="./images/195_Figure_6.24_page_507.png" alt="Figure 6.24" width="760"></p>
+![Figure 6.24](@/assets/images/195_Figure_6.24_page_507.png)
 <p align="center"><sub>Figure 6.24 · PDF p. 507 · host, switch, router가 packet을 어느 계층까지 처리하는지 비교</sub></p>
 
 Switch의 장점은 plug-and-play이고, layer 2까지만 처리하므로 filtering/forwarding rate를 높게 만들기 쉽다는 점이다. 단점은 broadcast frame의 cycle을 막기 위해 active topology가 spanning tree로 제한되고, 큰 switched network에서는 host/router의 ARP tables가 커지며 ARP traffic이 많아질 수 있다는 점이다. 또한 broadcast storm에 취약하다. 어떤 host가 끝없이 Ethernet broadcast frames를 보내면 switches가 이를 계속 퍼뜨려 전체 network가 무너질 수 있다.
@@ -375,7 +376,7 @@ VLAN은 하나의 physical LAN infrastructure 위에 여러 virtual LAN을 정�
 
 `port-based VLAN`에서는 switch ports를 group으로 나누고 각 group이 하나의 VLAN, 즉 하나의 broadcast domain이 된다. 같은 VLAN 안의 ports는 마치 자기들만 switch에 연결된 것처럼 통신하고, broadcast traffic도 그 VLAN 안에만 머문다.
 
-<p align="center"><img src="./images/196_Figure_6.25_page_509.png" alt="Figure 6.25" width="723"></p>
+![Figure 6.25](@/assets/images/196_Figure_6.25_page_509.png)
 <p align="center"><sub>Figure 6.25 · PDF p. 509 · 하나의 switch에서 EE VLAN과 CS VLAN을 port group으로 나눈 예</sub></p>
 
 VLAN은 traffic isolation, switch 활용, 사용자 관리 문제를 동시에 완화한다. 예를 들어 port 8의 사용자가 EE에서 CS로 이동하면 cable을 다시 꽂는 대신 switch management software에서 port-to-VLAN mapping만 바꾸면 된다. Switch hardware는 같은 VLAN에 속한 ports 사이에서만 frames를 전달한다.
@@ -384,12 +385,12 @@ VLAN은 traffic isolation, switch 활용, 사용자 관리 문제를 동시에 �
 
 여러 VLAN switches를 연결할 때 VLAN마다 별도 cable을 두면 VLAN 수가 늘수록 ports가 낭비된다. 이를 해결하는 방식이 `VLAN trunking`이다. Trunk port는 모든 VLAN에 속하며, 여러 VLAN의 frames를 하나의 trunk link로 운반한다.
 
-<p align="center"><img src="./images/197_Figure_6.26_page_511.png" alt="Figure 6.26" width="760"></p>
+![Figure 6.26](@/assets/images/197_Figure_6.26_page_511.png)
 <p align="center"><sub>Figure 6.26 · PDF p. 511 · 두 VLAN switch를 VLAN별 cables 또는 trunk link로 연결하는 방식 비교</sub></p>
 
 Trunk link를 지나는 frame에는 어느 VLAN의 frame인지 표시가 필요하다. IEEE `802.1Q`는 기존 Ethernet frame header에 4-byte VLAN tag를 추가한 extended Ethernet frame format을 정의한다. Sending-side switch가 trunk로 내보낼 때 tag를 붙이고, receiving-side switch가 tag를 해석한 뒤 제거한다.
 
-<p align="center"><img src="./images/198_Figure_6.27_page_511.png" alt="Figure 6.27" width="760"></p>
+![Figure 6.27](@/assets/images/198_Figure_6.27_page_511.png)
 <p align="center"><sub>Figure 6.27 · PDF p. 511 · 기존 Ethernet frame과 802.1Q-tagged VLAN frame의 차이</sub></p>
 
 802.1Q VLAN tag에는 fixed hexadecimal value `81-00`을 갖는 2-byte `Tag Protocol Identifier (TPID)`와 2-byte `Tag Control Information`이 들어간다. Tag Control Information 안에는 12-bit `VLAN identifier`와 3-bit priority field가 있다. VLAN은 port-based 외에도 MAC-based VLAN, network-layer protocol 기반 VLAN 등으로 정의할 수 있고, IP routers를 넘어 확장되어 떨어진 LAN islands를 하나의 VLAN처럼 묶는 방식도 가능하다.
@@ -406,12 +407,12 @@ Trunk link를 지나는 frame에는 어느 VLAN의 frame인지 표시가 필요�
 
 MPLS-capable devices 사이의 link-layer frame에는 layer-2 header와 IP header 사이에 작은 MPLS header가 들어간다. MPLS header에는 `Label`, 3-bit `Exp`, stack의 끝을 표시하는 `S` bit, `TTL` field가 있다.
 
-<p align="center"><img src="./images/199_Figure_6.28_page_513.png" alt="Figure 6.28" width="760"></p>
+![Figure 6.28](@/assets/images/199_Figure_6.28_page_513.png)
 <p align="center"><sub>Figure 6.28 · PDF p. 513 · link-layer header와 IP header 사이에 들어가는 MPLS header</sub></p>
 
 MPLS-enhanced frame은 양쪽 router가 모두 MPLS capable일 때만 보낼 수 있다. 그렇지 않은 router는 IP header가 있어야 할 위치에서 MPLS header를 보게 되어 처리할 수 없다. MPLS-capable router는 `label-switched router (LSR)`라고 부르며, MPLS frame을 받으면 label을 forwarding table에서 lookup하고 적절한 output interface로 넘긴다. 이때 IP destination address를 꺼내 longest prefix match를 하지 않아도 된다.
 
-<p align="center"><img src="./images/200_Figure_6.29_page_514.png" alt="Figure 6.29" width="760"></p>
+![Figure 6.29](@/assets/images/200_Figure_6.29_page_514.png)
 <p align="center"><sub>Figure 6.29 · PDF p. 514 · MPLS-capable routers가 labels를 바꾸며 IP devices 사이를 연결하는 예</sub></p>
 
 MPLS forwarding에서는 router가 incoming label을 보고 outbound label과 output interface를 정한다. 예를 들어 어떤 LSR은 label 10이 붙은 frame을 받으면 label을 6으로 바꿔 interface 1로 내보내고, 다른 destination에는 label 12를 9로 바꿔 보낼 수 있다. 중요한 점은 MPLS-capable routers 내부에서는 IP header를 건드리지 않고도 IP devices를 서로 연결한다는 것이다. 외부에서 보면 MPLS infrastructure가 switched LAN이나 ATM network처럼 IP devices를 이어 주는 link-layer technology처럼 보인다.
@@ -428,7 +429,7 @@ Large-scale Internet companies는 수만에서 수십만 hosts를 담는 massive
 
 Data center의 핵심 작업 단위는 hosts다. Data center hosts는 보통 commodity servers이며 `blades`라고도 부른다. Servers는 racks에 쌓이고, 각 rack 위에는 `Top of Rack (TOR) switch`가 있어 rack 내부 hosts를 서로 연결하고 다른 switches와도 연결한다. 각 host는 TOR switch에 network interface로 연결되고 data-center-internal IP address를 가진다.
 
-<p align="center"><img src="./images/201_Figure_6.30_page_517.png" alt="Figure 6.30" width="760"></p>
+![Figure 6.30](@/assets/images/201_Figure_6.30_page_517.png)
 <p align="center"><sub>Figure 6.30 · PDF p. 517 · border router, load balancer, tier switches, TOR switches로 구성된 hierarchical data center network</sub></p>
 
 Data center traffic은 두 종류다. 하나는 external clients와 internal hosts 사이의 traffic이고, 다른 하나는 internal hosts끼리의 traffic이다. 외부 연결을 위해 data center에는 public Internet에 연결되는 `border routers`가 있다. 내부에서는 racks와 border routers를 잇는 interconnection network가 필요하다.
@@ -447,7 +448,7 @@ Hierarchy는 scale 문제를 풀지만 host-to-host capacity가 제한될 수 �
 
 해결 방향은 세 가지다. 더 빠른 switches/routers를 배치할 수 있지만 비용이 크다. 관련 services와 data를 같은 rack 또는 가까운 rack에 배치해 inter-rack traffic을 줄일 수 있지만, cloud workloads는 placement flexibility가 중요해서 한계가 있다. 가장 중요한 방향은 TOR-tier2, tier2-tier1 사이 연결성을 높여 multiple link-disjoint and switch-disjoint paths를 제공하는 것이다.
 
-<p align="center"><img src="./images/202_Figure_6.31_page_520.png" alt="Figure 6.31" width="760"></p>
+![Figure 6.31](@/assets/images/202_Figure_6.31_page_520.png)
 <p align="center"><sub>Figure 6.31 · PDF p. 520 · racks 사이에 더 많은 disjoint paths를 제공하는 highly interconnected data center topology</sub></p>
 
 연결성이 커지면 capacity와 reliability가 함께 증가한다. 여러 paths가 있으면 link 하나가 병목이 되거나 failure가 나도 traffic을 다른 path로 보낼 수 있다. 이때 `multi-path routing`이 data center network의 기본 기능이 된다. `ECMP (Equal Cost Multi Path)`는 source와 destination 사이의 equal-cost paths 중 next hop을 randomized selection으로 고르는 단순한 방식이고, 더 세밀한 load balancing이나 packet-level multipath routing 설계도 존재한다.
@@ -468,7 +469,7 @@ Data center networking의 trend는 cost reduction, virtualization, physical cons
 
 이 절은 Chapter 1-6의 protocols가 실제 Web page download에서 어떻게 이어지는지 한 번에 보여준다. 예시는 Bob의 laptop이 school Ethernet switch에 연결되고, school router를 거쳐 Comcast ISP, DNS server, Google network의 `www.google.com` Web server까지 가는 상황이다.
 
-<p align="center"><img src="./images/203_Figure_6.32_page_524.png" alt="Figure 6.32" width="760"></p>
+![Figure 6.32](@/assets/images/203_Figure_6.32_page_524.png)
 <p align="center"><sub>Figure 6.32 · PDF p. 524 · DHCP, DNS, ARP, routing, TCP, HTTP가 함께 등장하는 Web page request 시나리오</sub></p>
 
 #### 6.7.1 Getting Started: DHCP, UDP, IP, and Ethernet

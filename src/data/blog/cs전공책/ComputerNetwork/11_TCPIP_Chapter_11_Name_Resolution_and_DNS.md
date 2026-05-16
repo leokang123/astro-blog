@@ -57,7 +57,7 @@ Application은 resolver를 통해 DNS를 사용한다. Resolver는 보통 OS lib
 
 `DNS name space`는 DNS에서 쓰는 모든 이름의 집합이다. 이 공간은 case-insensitive이고, file system directory처럼 tree hierarchy를 이룬다. 최상단에는 이름 없는 root가 있고, 그 아래에 `TLD (Top-Level Domain)`가 있다. TLD에는 `gTLD`, `ccTLD`, `IDN ccTLD`, infrastructure TLD인 `ARPA` 등이 포함된다.
 
-<p align="center"><img src="./images/216_Figure_11_1_page_552.png" alt="Figure 11-1" width="760"></p>
+![Figure 11-1](@/assets/images/216_Figure_11_1_page_552.png)
 <p align="center"><sub>Figure 11-1 · PDF p. 552 · DNS name space는 unnamed root 아래 TLD, ccTLD, IDN ccTLD, ARPA가 놓이는 계층형 tree다</sub></p>
 
 Figure 11-1은 DNS가 flat namespace가 아니라 root에서 아래로 내려가는 tree임을 보여 준다. 이 구조 덕분에 `.edu`, `.com`, `.kr`, `.arpa` 같은 상위 domain과 그 아래 subdomain을 서로 다른 관리 주체가 나누어 운영할 수 있다.
@@ -118,7 +118,7 @@ DNS protocol은 크게 두 계열이다. 첫째는 일반적인 name lookup에 �
 
 완전한 resolution은 local site/ISP의 DNS server, root server, gTLD server, authoritative name server를 차례로 거칠 수 있다. root server와 gTLD server는 이름 공간의 상위 갈림길을 제공하고, 실제 domain의 address 정보는 해당 domain의 authoritative server에서 얻는다. root나 TLD server 중 일부는 여러 물리 server가 같은 IP address를 공유하는 `IP anycast addressing`으로 운영되어, 논리적으로는 하나의 server처럼 보이지만 실제 요청은 가까운 instance로 갈 수 있다.
 
-<p align="center"><img src="./images/217_Figure_11_2_page_558.png" alt="Figure 11-2" width="760"></p>
+![Figure 11-2](@/assets/images/217_Figure_11_2_page_558.png)
 <p align="center"><sub>Figure 11-2 · PDF p. 558 · A.HOME에서 EXAMPLE.COM 주소를 얻기 위한 recursive DNS query 흐름</sub></p>
 
 Figure 11-2의 흐름은 cache가 없을 때의 전형적인 `recursive DNS query`다.
@@ -140,7 +140,7 @@ Figure 11-2의 흐름은 cache가 없을 때의 전형적인 `recursive DNS quer
 
 DNS는 query, response, zone transfer, notification, dynamic update에 하나의 기본 message format을 사용한다. 메시지는 고정 길이 `12-byte header`와 네 개의 variable-length section으로 구성된다. 일반 DNS에서는 section 이름이 `Question`, `Answer`, `Authority`, `Additional Information`이고, `DNS UPDATE`에서는 같은 count field가 `Zone`, `Prerequisite`, `Update`, `Additional Information`의 count로 해석된다.
 
-<p align="center"><img src="./images/218_Figure_11_3_page_560.png" alt="Figure 11-3" width="760"></p>
+![Figure 11-3](@/assets/images/218_Figure_11_3_page_560.png)
 <p align="center"><sub>Figure 11-3 · PDF p. 560 · DNS fixed 12-byte header와 flags/count fields</sub></p>
 
 Header의 핵심 field는 다음과 같다.
@@ -191,7 +191,7 @@ DNS message의 variable-length section에서 각 question과 RR은 자신이 가
 
 Data label은 먼저 1-byte length를 두고, 그 뒤에 length만큼 label byte를 둔다. 전체 name은 length가 0인 label로 끝나며, 이 0-length label은 nameless root를 뜻한다.
 
-<p align="center"><img src="./images/219_Figure_11_4_page_562.png" alt="Figure 11-4" width="620"></p>
+![Figure 11-4](@/assets/images/219_Figure_11_4_page_562.png)
 <p align="center"><sub>Figure 11-4 · PDF p. 562 · `www.pearson.com`을 label sequence로 encoding하는 방식</sub></p>
 
 `www.pearson.com`은 wire format에서 `3 www 7 pearson 3 com 0`처럼 표현된다. 각 label length는 0-63 byte 범위여야 하므로 label 자체도 최대 63 bytes다. padding은 없기 때문에 name 전체 길이가 odd byte가 될 수도 있다. label은 binary byte를 담을 수 있지만, interoperable하게 쓰려면 RFC 1035식 제한, 즉 letter로 시작하고 letter 또는 digit으로 끝나며 내부에는 letters, digits, hyphen만 쓰는 규칙을 따르는 편이 안전하다. `Internationalized Domain Names (IDN)`도 실제 DNS wire format에서는 Unicode를 그대로 넣기보다 ASCII 기반 `punycode`를 사용한다.
@@ -200,7 +200,7 @@ Data label은 먼저 1-byte length를 두고, 그 뒤에 length만큼 label byte
 
 DNS response는 answer, authority, additional section에서 같은 domain suffix를 반복하는 일이 많다. 이를 매번 data label로 쓰면 512-byte UDP 제한 안에서 낭비가 크므로, DNS는 `compression label`을 제공한다.
 
-<p align="center"><img src="./images/220_Figure_11_5_page_563.png" alt="Figure 11-5" width="640"></p>
+![Figure 11-5](@/assets/images/220_Figure_11_5_page_563.png)
 <p align="center"><sub>Figure 11-5 · PDF p. 563 · compression label이 공통 suffix `edu`를 pointer로 재사용하는 예</sub></p>
 
 Compression label은 label length byte 위치에서 상위 2 bits를 `11`로 세운다. 나머지 6 bits와 다음 byte의 8 bits를 합쳐 14-bit offset을 만들고, DNS message 시작점으로부터 그 offset에 있는 data label sequence를 참조한다. 따라서 compression pointer는 message 시작 기준 최대 16,383 bytes 위치까지 가리킬 수 있다. Figure 11-5에서는 `usc.edu`를 먼저 data label로 encoding한 뒤 `ucla.edu`의 `edu` 부분을 offset pointer로 재사용한다. 작은 예에서는 4 bytes 정도만 아끼지만, 긴 suffix가 여러 번 반복되는 real response에서는 message size와 UDP truncation 가능성을 줄이는 데 중요하다.
@@ -215,7 +215,7 @@ EDNS0는 request 또는 response의 Additional Data section에 `OPT pseudo-RR` �
 
 DNS의 well-known port는 UDP와 TCP 모두 `53`이다. 일반 query/response는 보통 UDP를 사용한다. UDP는 connection setup이 없고 짧은 query에 적합하지만, 기본 DNS response size가 512 bytes로 제한된다.
 
-<p align="center"><img src="./images/221_Figure_11_6_page_564.png" alt="Figure 11-6" width="700"></p>
+![Figure 11-6](@/assets/images/221_Figure_11_6_page_564.png)
 <p align="center"><sub>Figure 11-6 · PDF p. 564 · UDP/IPv4 datagram 안에 들어가는 DNS message 구조</sub></p>
 
 Resolver가 UDP로 query를 보냈는데 response의 `TC` bit가 set되어 있으면, 실제 response가 너무 커서 잘린 것이다. 이때 resolver는 같은 request를 TCP로 다시 보낼 수 있고, 현재 DNS implementation은 TCP 지원이 필수인 방향으로 정리되어 있다. TCP는 큰 DNS message를 여러 segment로 나눌 수 있으므로 zone transfer나 큰 response에 적합하다.
@@ -236,7 +236,7 @@ UDP를 쓸 때는 transport layer가 reliability를 보장하지 않으므로 re
 
 Question section은 DNS message가 묻고 있는 question들을 담는다. 보통 question은 하나지만 protocol상 여러 개도 가능하다. Dynamic update에서는 같은 구조가 `Zone section`으로 사용되며 field 이름만 달리 해석된다.
 
-<p align="center"><img src="./images/222_Figure_11_7_page_565.png" alt="Figure 11-7" width="520"></p>
+![Figure 11-7](@/assets/images/222_Figure_11_7_page_565.png)
 <p align="center"><sub>Figure 11-7 · PDF p. 565 · DNS Question section format: QNAME, QTYPE, QCLASS</sub></p>
 
 Question entry는 `Query Name (QNAME)`, `Query Type (QTYPE)`, `Query Class (QCLASS)`로 구성된다. `QNAME`은 앞에서 설명한 label encoding을 사용한다. `QCLASS`는 TCP/IP 환경에서 보통 Internet class인 `1`이고, 일부 경우 no class `254`, all classes `255`가 쓰인다. `QTYPE`은 원하는 RR type을 지정한다. 가장 흔한 값은 IPv4 address를 요구하는 `A`, IPv6 address를 요구하는 `AAAA`이며, `ANY` query는 같은 class와 name에 match되는 모든 RR type을 요구한다. Question은 cache되는 data가 아니므로 `TTL` field가 없다.
@@ -245,7 +245,7 @@ Question entry는 `Query Name (QNAME)`, `Query Type (QTYPE)`, `Query Class (QCLA
 
 Answer, Authority, Additional Information section은 `Resource Record (RR)`들의 집합이다. RR owner name은 wildcard domain name을 가질 수 있으며, wildcard는 leftmost label이 `*`인 형태다.
 
-<p align="center"><img src="./images/223_Figure_11_8_page_566.png" alt="Figure 11-8" width="720"></p>
+![Figure 11-8](@/assets/images/223_Figure_11_8_page_566.png)
 <p align="center"><sub>Figure 11-8 · PDF p. 566 · DNS Resource Record format: NAME, TYPE, CLASS, TTL, RDLENGTH, RDATA</sub></p>
 
 RR format은 `NAME`, `TYPE`, `CLASS`, `TTL`, `RDLENGTH`, `RDATA`로 구성된다.
@@ -296,27 +296,27 @@ NS record만으로는 query를 바로 보낼 수 없다. NS record의 RDATA는 "
 
 본문의 packet example은 `berkeley.edu.`의 A record를 조회하는 단순한 case로 DNS query/response가 실제 UDP/IPv4 packet 안에서 어떻게 움직이는지 보여 준다.
 
-<p align="center"><img src="./images/224_Figure_11_9_page_570.png" alt="Figure 11-9" width="760"></p>
+![Figure 11-9](@/assets/images/224_Figure_11_9_page_570.png)
 <p align="center"><sub>Figure 11-9 · PDF p. 570 · local DNS server GW.HOME과 ISP DNS server를 거치는 simple query/response topology</sub></p>
 
 Windows client `A.HOME`은 먼저 resolver cache를 flush한 뒤 `nslookup`으로 `berkeley.edu.`의 A record를 질의한다. Local server는 `gw`이고 address는 `10.0.0.1`이다. 결과가 `Non-authoritative answer`로 표시되는 것은 authoritative server가 직접 준 답이 아니라 caching server가 제공한 답이라는 뜻이다.
 
-<p align="center"><img src="./images/225_Figure_11_10_page_571.png" alt="Figure 11-10" width="720"></p>
+![Figure 11-10](@/assets/images/225_Figure_11_10_page_571.png)
 <p align="center"><sub>Figure 11-10 · PDF p. 571 · `berkeley.edu.` IPv4 address를 묻는 UDP/IPv4 DNS standard query</sub></p>
 
 첫 query packet은 client `10.0.0.120`에서 local DNS server `10.0.0.1`로 간다. UDP source port는 ephemeral port `56288`, destination port는 well-known DNS port `53`이다. Ethernet frame 전체는 72 bytes이며, Ethernet header 14 bytes, IPv4 header 20 bytes, UDP header 8 bytes, DNS fixed header 12 bytes, query type 2 bytes, query class 2 bytes, `berkeley`와 `edu` data labels, trailing 0 byte로 구성된다. DNS header의 Transaction ID는 `0x0002`, flag는 기본적으로 `recursion requested`만 설정되고, question 하나만 가진 standard query다.
 
-<p align="center"><img src="./images/226_Figure_11_11_page_572.png" alt="Figure 11-11" width="720"></p>
+![Figure 11-11](@/assets/images/226_Figure_11_11_page_572.png)
 <p align="center"><sub>Figure 11-11 · PDF p. 572 · GW.HOME이 recursion 과정에서 ISP name server로 보낸 DNS request</sub></p>
 
 Local DNS server가 답을 모르기 때문에 upstream ISP DNS server `206.13.28.12`에 새 query를 보낸다. 이때 source IPv4 address는 GW.HOME의 ISP-side address `70.231.136.162`이고, source port와 Transaction ID는 새로 생성된다. 즉 client가 만든 DNS Transaction ID가 end-to-end로 authoritative server까지 보존되는 것이 아니라, recursive server가 자신의 upstream query를 별도 transaction으로 만든다.
 
-<p align="center"><img src="./images/227_Figure_11_12_page_573.png" alt="Figure 11-12" width="720"></p>
+![Figure 11-12](@/assets/images/227_Figure_11_12_page_573.png)
 <p align="center"><sub>Figure 11-12 · PDF p. 573 · ISP DNS server가 GW.HOME으로 돌려준 standard DNS response</sub></p>
 
 ISP server의 response는 UDP source port `53`, destination은 GW.HOME의 ephemeral port다. Transaction ID는 GW.HOME이 보낸 query와 일치한다. Flags 값에는 response, recursion requested, recursion available이 반영된다. Answer section에는 `A` record 하나가 들어 있고, TTL은 10 minutes, RDLENGTH는 IPv4 address 크기인 4 bytes, RDATA는 `169.229.131.81`이다. Authority flag가 set되어 있지 않고 authority section도 비어 있으므로 이 response도 authoritative answer가 아니라 cached data에 기반한 답이다.
 
-<p align="center"><img src="./images/228_Figure_11_13_page_574.png" alt="Figure 11-13" width="720"></p>
+![Figure 11-13](@/assets/images/228_Figure_11_13_page_574.png)
 <p align="center"><sub>Figure 11-13 · PDF p. 574 · GW.HOME이 원래 client A.HOME으로 돌려주는 recursive DNS transaction의 최종 response</sub></p>
 
 마지막 response는 GW.HOME `10.0.0.1`에서 client `10.0.0.120`으로 돌아간다. 이 response의 Transaction ID는 original client query의 `0x0002`와 맞아야 한다. Client 입장에서는 local DNS server와의 round trip만 보이지만, 실제 지연의 대부분은 local server와 ISP server 사이의 upstream transaction에서 발생할 수 있다.
@@ -371,7 +371,7 @@ SOA의 zone update parameter는 secondary server 운영과 직접 연결된다.
 
 `expire`가 지나도록 secondary가 primary와 동기화하지 못하면, 그 secondary는 해당 zone에 대한 query에 더 이상 응답하지 않아야 한다. 낡은 authoritative data를 계속 제공하는 것보다 zone service를 중단하는 편이 일관성 면에서 낫기 때문이다.
 
-<p align="center"><img src="./images/229_Figure_11_14_page_582.png" alt="Figure 11-14" width="760"></p>
+![Figure 11-14](@/assets/images/229_Figure_11_14_page_582.png)
 <p align="center"><sub>Figure 11-14 · PDF p. 582 · IPv6로 SOA RR을 질의했을 때 answer, authority, additional RR이 함께 오는 response</sub></p>
 
 Figure 11-14의 SOA response는 DNS가 IPv6 transport 위에서도 IPv4/IPv6 data를 함께 제공할 수 있음을 보여 준다. Query는 IPv6 address를 가진 authoritative server로 UDP/IPv6를 통해 전송되지만, Additional section에는 name server들의 A record와 AAAA record가 모두 들어갈 수 있다. Packet 안의 AAAA RDATA는 textual `::` 축약형이 아니라 full 128-bit address로 encoded된다. Question section의 `berkeley.edu` label은 answer section에서 compression target으로 재사용되어 message size를 줄인다.
@@ -468,7 +468,7 @@ _Service._Proto.Name TTL IN SRV Prio Weight Port Target
 
 `NAPTR (Name Authority Pointer)` RR은 `DDDS (Dynamic Delegation Discovery System)`를 DNS 위에서 구현할 때 transformation rule을 담는 record다. DDDS는 application이 제공한 string을 database에서 동적으로 얻은 rewrite rule로 변환하고, 최종적으로 URI, domain name, SRV lookup key 같은 resource locator를 얻는 general algorithm이다.
 
-<p align="center"><img src="./images/230_Figure_11_15_page_589.png" alt="Figure 11-15" width="620"></p>
+![Figure 11-15](@/assets/images/230_Figure_11_15_page_589.png)
 <p align="center"><sub>Figure 11-15 · PDF p. 589 · DDDS algorithm에서 AUS에 rewrite rule을 반복 적용해 terminal result를 얻는 흐름</sub></p>
 
 DDDS의 입력은 application마다 정의되는 `AUS (Application-Unique String)`다. 첫 `Well-Known Rule`을 AUS에 적용해 database lookup key를 만들고, database에서 ordered set of rules를 가져온다. DNS가 database로 쓰이는 경우 key는 domain name이고, rule은 NAPTR RR에 저장된다. Rule은 AUS에 적용되는 string rewrite pattern이며, 이전 rewrite 결과가 아니라 원래 AUS에 적용된다는 점이 중요하다. Non-terminal rule이면 새 key를 얻어 다시 database lookup을 하고, terminal rule이면 최종 output을 얻는다. Non-terminal record들은 loop를 만들 수도 있으므로 implementation은 반복 제한과 error handling을 고려해야 한다.
@@ -564,12 +564,12 @@ Update operation도 RR format으로 encoding된다.
 | Delete all RRSets from a name | class `ANY`, type `ANY`, empty RDATA, TTL/RDLENGTH 0 |
 | Delete RR from RRSet | class `NONE`, 삭제할 RR type, matching RDATA |
 
-<p align="center"><img src="./images/231_Figure_11_16_page_596.png" alt="Figure 11-16" width="720"></p>
+![Figure 11-16](@/assets/images/231_Figure_11_16_page_596.png)
 <p align="center"><sub>Figure 11-16 · PDF p. 596 · `vista.dyn.home`의 A/AAAA address를 dynamic update로 등록하는 DNS UPDATE message</sub></p>
 
 Figure 11-16은 Windows host가 `ipconfig /registerdns` 등을 통해 자신의 name/address를 local dynamic DNS zone에 등록하는 예다. DNS server `10.0.0.1`은 dynamic update를 허용하도록 설정되어 있고, zone section에는 update 대상 zone을 식별하는 SOA-related entry가 들어간다. Prerequisite section의 CNAME/type과 class `NONE (254)`, zero-length RDATA는 "해당 RRSet이 없어야 한다"는 조건을 표현한다. Update section은 기존 AAAA/A RRSet을 삭제한 뒤, `vista.dyn.home`에 새 IPv4 address `10.0.0.57`과 IPv6 address를 추가한다.
 
-<p align="center"><img src="./images/232_Figure_11_17_page_597.png" alt="Figure 11-17" width="720"></p>
+![Figure 11-17](@/assets/images/232_Figure_11_17_page_597.png)
 <p align="center"><sub>Figure 11-17 · PDF p. 597 · dynamic update request에 대한 compact response</sub></p>
 
 DNS UPDATE response는 transaction ID와 status flag 중심으로 작다. Figure 11-17에서는 Transaction ID `0x4089`가 request와 response를 match하고, Flags field가 no error를 나타낸다. Update는 zone contents를 직접 바꾸므로 access control이 중요하다. Server가 아무 client의 update를 받아 주면 공격자가 DNS data를 마음대로 바꿀 수 있다. 운영에서는 client IP allowlist 같은 약한 방식부터 TSIG, SIG(0) 같은 transaction authentication까지 여러 수준의 통제가 사용된다.
@@ -580,7 +580,7 @@ DNS UPDATE response는 transaction ID와 status flag 중심으로 작다. Figure
 
 전통적으로 slave는 `SOA serial number`를 주기적으로 poll해 zone transfer 필요 여부를 판단했다. 이후 `DNS NOTIFY`가 추가되어, master가 zone 변경을 감지하면 slave에게 update 사실을 알려 transfer를 시작하게 할 수 있다. 실제 transfer는 전체 zone을 보내는 `AXFR` 또는 변경분만 보내는 `IXFR`로 수행된다.
 
-<p align="center"><img src="./images/233_Figure_11_18_page_598.png" alt="Figure 11-18" width="560"></p>
+![Figure 11-18](@/assets/images/233_Figure_11_18_page_598.png)
 <p align="center"><sub>Figure 11-18 · PDF p. 598 · DNS NOTIFY, SOA serial check, AXFR/IXFR zone transfer의 기본 관계</sub></p>
 
 흐름은 다음처럼 연결된다.
@@ -596,12 +596,12 @@ DNS UPDATE response는 transaction ID와 status flag 중심으로 작다. Figure
 
 `AXFR (All Zone Transfer)`는 complete zone contents를 요청하는 DNS query type이다. Full transfer는 zone이 클 수 있고 reliable copy가 필요하므로 TCP를 사용한다. Slave server는 SOA의 `refresh` interval마다 primary를 확인하고, 실패하면 `retry` interval에 따라 다시 시도하며, `expire` interval 안에 refresh하지 못하면 해당 zone data를 버려 사실상 그 zone에 대해 응답하지 못하게 된다.
 
-<p align="center"><img src="./images/234_Figure_11_19_page_599.png" alt="Figure 11-19" width="720"></p>
+![Figure 11-19](@/assets/images/234_Figure_11_19_page_599.png)
 <p align="center"><sub>Figure 11-19 · PDF p. 599 · TCP 위에서 type AXFR question으로 full zone transfer를 요청하는 DNS message</sub></p>
 
 Figure 11-19의 AXFR request는 먼저 TCP three-way handshake를 수행한 뒤, DNS standard query 형식으로 `home.` zone에 대한 type `AXFR`, class `IN` question을 보낸다. DNS message 자체는 일반 query와 같은 framing을 쓰지만, transport가 TCP이고 query type이 AXFR라는 점이 다르다.
 
-<p align="center"><img src="./images/235_Figure_11_20_page_600.png" alt="Figure 11-20" width="720"></p>
+![Figure 11-20](@/assets/images/235_Figure_11_20_page_600.png)
 <p align="center"><sub>Figure 11-20 · PDF p. 600 · AXFR response가 zone의 모든 record를 TCP connection으로 전달하는 모습</sub></p>
 
 Response에는 zone contents 전체가 들어간다. Client는 data를 ACK한 뒤 TCP FIN/ACK handshake로 connection을 정상 종료한다. 과거에는 많은 DNS server에서 zone transfer가 넓게 열려 있었지만, 현재는 보통 해당 zone의 authorized secondary server로 제한한다. Zone 전체 host 목록은 attacker에게 service/host target map을 제공할 수 있기 때문에 privacy와 security 면에서 민감하다.
@@ -610,12 +610,12 @@ Response에는 zone contents 전체가 들어간다. Client는 data를 ACK한 �
 
 `IXFR (Incremental Zone Transfer)`는 zone 전체가 아니라 변경분만 전달해 transfer cost를 줄인다. Requester는 자신이 가진 현재 zone serial number를 제공하고, server는 그 serial 이후 변경분을 보낼 수 있으면 incremental response를 보낸다. 변경분을 제공할 수 없거나 차이가 너무 크면 AXFR로 fallback할 수 있다.
 
-<p align="center"><img src="./images/236_Figure_11_21_page_601.png" alt="Figure 11-21" width="700"></p>
+![Figure 11-21](@/assets/images/236_Figure_11_21_page_601.png)
 <p align="center"><sub>Figure 11-21 · PDF p. 601 · TCP로 운반되는 IXFR request와 serial number 기반 변경 확인</sub></p>
 
 IXFR request는 type `IXFR`를 사용하고, Authority section에 requester가 가진 SOA serial number를 포함한다. 본문 예시에서는 `dig +short @10.0.0.1 -t ixfr=1997022700 home.`처럼 server와 starting serial을 지정한다.
 
-<p align="center"><img src="./images/237_Figure_11_22_page_602.png" alt="Figure 11-22" width="700"></p>
+![Figure 11-22](@/assets/images/237_Figure_11_22_page_602.png)
 <p align="center"><sub>Figure 11-22 · PDF p. 602 · requester의 serial이 current일 때 IXFR response가 SOA만 돌려주는 경우</sub></p>
 
 Figure 11-22에서는 request serial이 server의 current serial과 같기 때문에 실제 변경분이 없다. Response의 answer section에는 complete SOA field를 가진 SOA RR만 있고, additional answer는 없다. 이 경우 requester는 최신 상태라고 간주되며 추가 transfer가 필요 없다.
@@ -624,7 +624,7 @@ Figure 11-22에서는 request serial이 server의 current serial과 같기 때�
 
 Polling만 사용하면 slave가 refresh interval마다 master를 확인해야 하고, zone이 바뀌지 않은 동안에도 useless poll이 발생한다. `DNS NOTIFY`는 master가 SOA serial 증가 같은 zone change를 감지했을 때 interested slave set에 notification을 보내, 필요한 시점에 transfer를 시작하게 한다.
 
-<p align="center"><img src="./images/238_Figure_11_23_page_603.png" alt="Figure 11-23" width="700"></p>
+![Figure 11-23](@/assets/images/238_Figure_11_23_page_603.png)
 <p align="center"><sub>Figure 11-23 · PDF p. 603 · zone file update를 알리는 DNS NOTIFY와 UDP retransmission 예</sub></p>
 
 NOTIFY message는 기본적으로 UDP/IPv4 DNS query message이며, Flags field가 zone change notification을 나타낸다. Query section에는 SOA type/class가 들어가고, Answer section에는 TTL 0의 current SOA RR, 특히 serial number가 들어간다. Notified server는 이 정보를 보고 zone transfer가 필요할 수 있음을 판단한다.
@@ -635,7 +635,7 @@ UDP는 unreliable하므로 response가 없으면 retransmission이 필요하다.
 
 DNS server는 query에 match되는 모든 RR을 아무 순서로 돌려줄 수도 있지만, 실제 운영에서는 성능, privacy, traffic distribution을 위해 어떤 data를 어떤 순서로 반환할지 조정한다. 같은 name에 여러 A/AAAA record가 있을 때 client application은 흔히 response의 첫 address부터 시도하므로, record order 자체가 routing-like behavior를 유도할 수 있다.
 
-<p align="center"><img src="./images/239_Figure_11_24_page_605.png" alt="Figure 11-24" width="760"></p>
+![Figure 11-24](@/assets/images/239_Figure_11_24_page_605.png)
 <p align="center"><sub>Figure 11-24 · PDF p. 605 · 요청 source에 따라 multihomed host M의 적절한 address를 먼저 돌려줄 수 있는 enterprise topology</sub></p>
 
 Figure 11-24에서 multihomed host `M`은 DMZ/public network와 intranet/internal network에 각각 address를 가진다. DMZ의 A/B나 Internet의 R은 M의 DMZ address로 가는 편이 자연스럽고, internal host C는 M의 internal address로 가는 편이 더 효율적이다. DNS server가 query source IP prefix를 보고 같은 prefix에 가까운 returned address record를 앞쪽에 배치하면, 단순 client도 "가까운" address를 먼저 시도하게 된다. BIND류 설정에서는 `sortlist` 또는 `rrset-order` 같은 directive로 이런 behavior를 제어할 수 있다.
@@ -677,7 +677,7 @@ Home gateway나 firewall에 colocated된 `DNS proxy`도 transparency 문제를 �
 
 `DNS64`는 IPv6-only client가 IPv4-only service에 접근할 수 있게 돕는 DNS translation mechanism이다. Chapter 7의 IPv4/IPv6 translator와 함께 배치되며, DNS A record를 synthetic AAAA record로 바꿔 IPv6-only client에게 제공한다.
 
-<p align="center"><img src="./images/240_Figure_11_25_page_608.png" alt="Figure 11-25" width="760"></p>
+![Figure 11-25](@/assets/images/240_Figure_11_25_page_608.png)
 <p align="center"><sub>Figure 11-25 · PDF p. 608 · DNS64가 A record를 synthetic AAAA record로 변환하고 IPv4/IPv6 translator와 함께 동작하는 구조</sub></p>
 
 DNS64 recursive-resolver mode의 흐름은 다음과 같다.

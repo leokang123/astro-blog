@@ -196,7 +196,7 @@ Extensibility는 OS가 computing technology 변화에 따라 기능을 확장할
 
 Kernel 안에서도 Windows는 loadable drivers를 가진 layered design을 사용한다. I/O system에 drivers를 추가하면 new file systems, new I/O devices, new networking support를 system running 중에도 추가할 수 있다. Drivers는 I/O만 담당하지 않는다. Pico Provider나 anti-malware drivers도 loadable driver의 예다.
 
-<p align="center"><img src="./images/378_Figure_21.1_page_976.png" alt="Windows block diagram" width="760"></p>
+![Windows block diagram](@/assets/images/378_Figure_21.1_page_976.png)
 <p align="center"><sub>Figure 21.1 · PDF p. 976 · user-mode processes/services와 kernel-mode executive, managers, drivers, HAL, Hyper-V hypervisor의 Windows 10 계층 구조</sub></p>
 
 Figure 21.1은 Windows 10 architecture를 한눈에 보여 준다. User mode에는 environment subsystems, system processes, services, applications가 있고, `subsystem dlls`와 `ntdll.dll`을 통해 kernel services에 접근한다. Kernel mode에는 `executive`와 I/O manager, object manager, process manager, power manager, memory manager, ALPC, plug and play manager, window manager, drivers가 있다. 아래에는 `HAL`, `HAL Extensions`, Hyper-V hypervisor, hardware가 놓인다.
@@ -338,7 +338,7 @@ User-mode code는 open operation으로 얻은 `handle`을 통해 dispatcher obje
 
 Windows는 hardware/software interrupts를 `IRQL(interrupt request level)`로 prioritization한다. 대부분 ISA에서는 16 levels, legacy IA-32에서는 32 levels가 있다. IRQL 0은 `PASSIVE_LEVEL`이고 normal threads가 실행되는 기본 level이다. 그 위에 APC/DPC software interrupt levels가 있고, hardware interrupts, clock interrupt, IPI, `HIGH_LEVEL`이 이어진다.
 
-<p align="center"><img src="./images/379_Figure_21.2_page_988.png" alt="Windows x86 IRQLs" width="760"></p>
+![Windows x86 IRQLs](@/assets/images/379_Figure_21.2_page_988.png)
 <p align="center"><sub>Figure 21.2 · PDF p. 988 · Windows x86 interrupt-request levels에서 passive, APC, DPC, hardware IRQ, clock, IPI, high level의 우선순위</sub></p>
 
 Figure 21.2의 핵심은 IRQL이 “현재 processor가 어떤 interrupt까지 막고 있는가”를 결정한다는 점이다. Processor의 current IRQL 이하 interrupt는 IRQL이 내려갈 때까지 blocked된다.
@@ -396,10 +396,10 @@ Shared memory는 `section object`로 구현된다. Process는 section object han
 
 `no-access page`는 접근 시 exception을 발생시킨다. Guard pages로 stack overflow를 감지하거나, allocation 끝에 no-access page를 붙여 heap buffer overrun을 잡는 데 쓰인다. `copy-on-write`는 두 processes가 같은 section object data의 독립 copy를 원할 때 physical memory를 절약한다. 처음에는 shared copy를 mapping하고, write 시점에 MM이 private page를 만든다.
 
-<p align="center"><img src="./images/380_Figure_21.3_page_995.png" alt="Windows page-table layout" width="760"></p>
+![Windows page-table layout](@/assets/images/380_Figure_21.3_page_995.png)
 <p align="center"><sub>Figure 21.3 · PDF p. 995 · IA-32 PAE/AMD64 계열에서 page directory, PDE, PTE table, PTE가 계층적으로 4 KB pages를 가리키는 구조</sub></p>
 
-<p align="center"><img src="./images/381_Figure_21.4_page_996.png" alt="IA-32 address translation" width="760"></p>
+![IA-32 address translation](@/assets/images/381_Figure_21.4_page_996.png)
 <p align="center"><sub>Figure 21.4 · PDF p. 996 · IA-32 virtual address를 top-level pointer, PDE index, PTE index, page offset으로 나누어 physical address를 찾는 방식</sub></p>
 
 Windows는 hierarchical page table을 사용한다. IA-32 PAE/AMD64에서 PDE/PTE는 8 bytes이고, 한 page에 512 entries가 들어간다. IA-32는 top-level 2 bits, second-level 9 bits, PTE index 9 bits, page offset 12 bits로 4 KB page 안 byte를 찾는다. AMD64는 네 levels로 9+9+9+9+12, 즉 48-bit virtual address를 translate한다. Future PML5는 더 큰 virtual address space를 지원한다.
@@ -420,7 +420,7 @@ Windows physical pages는 일곱 states 중 하나를 가진다.
 
 Valid pages는 process page tables에 있고, 다른 states의 pages는 state별 lists에 유지된다. Vista 이후 Windows는 standby pages를 aggressive recycling에서 보호하고 performance를 높이기 위해 eight prioritized standby lists를 둔다. Lists는 `PFN(page frame number) database` entries를 연결해 만든다. PFN database는 physical pages를 대표하고, PTEs는 virtual pages를 대표한다는 차이를 기억해야 한다.
 
-<p align="center"><img src="./images/382_Figure_21.5_page_999.png" alt="Page-file PTE" width="760"></p>
+![Page-file PTE](@/assets/images/382_Figure_21.5_page_999.png)
 <p align="center"><sub>Figure 21.5 · PDF p. 999 · valid bit이 0인 page-file PTE가 protection, page-file offset, page-file selector, bookkeeping bits를 담는 방식</sub></p>
 
 PTE의 valid bit이 0이면 hardware는 나머지 bits를 무시하고 MM이 자체 encoding에 사용한다. Page-file PTE는 protection bits, page-file offset, paging file selector를 담아 secondary storage의 page 위치를 찾게 한다. Zero-on-demand page, section object mapped page, page file에 written page 등이 invalid PTE bits로 표현된다.
@@ -513,7 +513,7 @@ Cache manager는 private working set을 유지한다. Cache는 256 KB blocks로 
 
 File read path는 다음처럼 진행된다.
 
-<p align="center"><img src="./images/383_Figure_21.6_page_1007.png" alt="Windows file I/O" width="760"></p>
+![Windows file I/O](@/assets/images/383_Figure_21.6_page_1007.png)
 <p align="center"><sub>Figure 21.6 · PDF p. 1007 · cached file read에서 I/O manager, file system, cache manager, VM manager, disk driver가 협력하는 흐름</sub></p>
 
 File이 cacheable이면 file system은 cache manager에게 requested data가 cached file views에 있는지 묻는다. Cache miss이면 cache block과 VACB entry를 만들고 view를 map한다. Data copy 중 page fault가 나면 MM이 noncached read request를 I/O manager에 보내고, disk driver stack이 data를 cache manager page에 직접 읽는다. 이후 VACB가 그 page를 가리키고, data가 caller buffer로 copy된다.
@@ -794,7 +794,7 @@ Fibers는 Win32 APIs를 많이 쓰는 code에는 권장되지 않는다. 여러 
 
 `UMS(User-Mode Scheduling)`는 fibers의 한계를 해결하려고 Windows 7에서 도입되었다. UMS는 Windows thread를 `KT(kernel thread)`와 `UT(user thread)`의 결합으로 본다. 각 UT는 자체 stack/registers와 `TEB`를 가지고, user-mode scheduler가 UT와 TEB를 바꿔 가며 schedule할 수 있다.
 
-<p align="center"><img src="./images/387_Figure_21.10_page_1033.png" alt="User-mode scheduling" width="760"></p>
+![User-mode scheduling](@/assets/images/387_Figure_21.10_page_1033.png)
 <p align="center"><sub>Figure 21.10 · PDF p. 1033 · UT가 kernel에 진입해 KT가 block될 때 primary thread가 user-mode scheduler로 돌아가 다른 UT를 고르는 UMS 구조</sub></p>
 
 UMS에서 UT가 kernel에 들어가 KT가 block되면, kernel은 `primary thread`라는 scheduling thread로 switch하고 user-mode scheduler로 되돌아가 다른 UT를 고르게 한다. Blocked KT가 완료되면 대응하는 UT가 user-mode completion list에 queue된다. Scheduler는 다음 UT를 고를 때 completion list를 확인할 수 있다.

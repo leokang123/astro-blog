@@ -2,7 +2,7 @@
 title: "01_TCPIP_Chapter_1_Introduction"
 order: 1
 pubDatetime: 2026-05-16T06:31:12+09:00
-modDatetime: 2026-05-16T06:31:31+09:00
+modDatetime: 2026-05-16T08:19:17+09:00
 description: ""
 tags:
   - 일반
@@ -52,7 +52,7 @@ Internet은 datagram 방식을 택했다. datagram은 source와 destination 정�
 
 message boundary 또는 record marker는 application이 여러 번 write한 경계가 receiver에게 그대로 보이는지의 문제다. TCP 같은 streaming protocol은 byte stream을 제공하고 write boundary를 보존하지 않는다. 따라서 application이 message 단위를 알아야 한다면 length prefix, delimiter, fixed-size record 같은 framing 규칙을 application-layer protocol이 직접 마련해야 한다.
 
-<p align="center"><img src="./images/001_Figure_1_1_page_44.png" alt="Figure 1-1" width="760"></p>
+![Figure 1-1](@/assets/images/001_Figure_1_1_page_44.png)
 <p align="center"><sub>Figure 1-1 · PDF p. 44 · message boundary를 보존하는 protocol과 보존하지 않는 streaming protocol의 차이</sub></p>
 
 Figure 1-1은 sender가 세 번 write한 data가 receiver에서 반드시 세 번 read되는 것은 아니라는 점을 보여준다. message boundary를 보존하는 protocol은 write 경계를 receiver에게 전달하지만, TCP 같은 stream protocol은 receiver가 요청한 byte 수만큼 읽게 하므로 application-level framing이 필요하다.
@@ -89,7 +89,7 @@ layering의 장점은 separation of concerns다. 각 layer가 자기 역할에 �
 
 가장 널리 알려진 protocol layering model은 ISO의 OSI(Open Systems Interconnection) model이다. OSI model은 7개의 logical layer를 제시하지만, Internet의 TCP/IP architecture는 보통 더 단순한 5-layer 관점으로 설명된다. OSI 자체가 Internet에서 그대로 채택된 것은 아니지만, OSI terminology와 layer number는 여전히 network 설명에서 자주 쓰이고, ISO protocol suite의 일부 아이디어나 protocol, 예를 들어 IS-IS는 TCP/IP 환경에서도 사용된다.
 
-<p align="center"><img src="./images/002_Figure_1_2_page_48.png" alt="Figure 1-2" width="760"></p>
+![Figure 1-2](@/assets/images/002_Figure_1_2_page_48.png)
 <p align="center"><sub>Figure 1-2 · PDF p. 48 · ISO OSI seven-layer model과 각 layer의 대표 책임</sub></p>
 
 OSI model을 아래에서 위로 읽으면 각 layer의 관심사가 분리된다.
@@ -114,7 +114,7 @@ multiplexing은 각 layer마다 다른 identifier를 사용한다. link layer의
 
 PDU(protocol data unit)는 특정 layer가 다루는 message object다. layer N의 PDU가 아래 layer N-1로 내려가면, layer N-1은 그 PDU를 opaque data로 취급하고 자기 header를 붙여 새로운 PDU를 만든다. 이것이 encapsulation이다. receiver에서는 반대로 header를 해석해 demux identifier를 확인하고, payload를 upper layer로 넘기는 decapsulation이 일어난다.
 
-<p align="center"><img src="./images/003_Figure_1_3_page_50.png" alt="Figure 1-3" width="720"></p>
+![Figure 1-3](@/assets/images/003_Figure_1_3_page_50.png)
 <p align="center"><sub>Figure 1-3 · PDF p. 50 · lower layer가 upper-layer PDU를 opaque data로 감싸는 encapsulation 구조</sub></p>
 
 encapsulation의 핵심은 "아래 layer는 위 layer의 내부 의미를 모른다"는 점이다. IP는 TCP segment 안의 application byte stream을 이해하지 않고, Ethernet은 IP datagram 안의 transport header를 이해하지 않아도 된다. 이 불투명성 덕분에 layer를 독립적으로 발전시킬 수 있지만, header overhead가 쌓이고 layer boundary를 넘는 최적화는 어려워진다.
@@ -131,7 +131,7 @@ IP header + transport PDU                  = IP datagram
 Link header + IP datagram + optional trailer = link-layer frame
 ```
 
-<p align="center"><img src="./images/004_Figure_1_4_page_51.png" alt="Figure 1-4" width="760"></p>
+![Figure 1-4](@/assets/images/004_Figure_1_4_page_51.png)
 <p align="center"><sub>Figure 1-4 · PDF p. 51 · end host, router, switch/bridge가 protocol stack의 서로 다른 subset을 구현하는 모습</sub></p>
 
 pure layering 관점에서는 모든 networked device가 모든 layer를 구현할 필요가 없다. end host는 application까지 모든 layer를 구현하지만, switch/bridge는 보통 link layer 이하를 처리하고, router는 network layer까지 처리한다. router는 서로 다른 link-layer network를 연결해야 하므로 각 interface가 속한 link technology의 link/physical layer도 구현해야 한다.
@@ -150,7 +150,7 @@ TCP/IP suite라는 이름은 TCP와 IP만을 뜻하지 않는다. Internet에서
 
 TCP/IP layering은 OSI보다 단순하지만 실제 구현은 깔끔한 5층 도식만으로 설명되지 않는다. 특히 ARP, ICMP, IGMP, IPsec처럼 특정 layer의 보조 기능을 수행하지만 전통적인 layer 칸에 딱 맞지 않는 adjunct/helper protocol이 중요하다.
 
-<p align="center"><img src="./images/005_Figure_1_5_page_53.png" alt="Figure 1-5" width="760"></p>
+![Figure 1-5](@/assets/images/005_Figure_1_5_page_53.png)
 <p align="center"><sub>Figure 1-5 · PDF p. 53 · ARPANET Reference Model(ARM) 기반 TCP/IP suite layering과 adjunct protocol</sub></p>
 
 Figure 1-5의 아래쪽에는 unofficial layer 2.5가 있다. 대표 protocol은 ARP(Address Resolution Protocol)다. ARP는 IPv4에서 IP layer address와 link-layer address를 mapping하기 위해 사용되며, Ethernet/Wi-Fi 같은 multi-access link-layer network에서 중요하다. IPv6에서는 같은 address-mapping 성격의 기능이 ICMPv6의 Neighbor Discovery로 들어간다.
@@ -181,7 +181,7 @@ IP layer는 destination IP address를 확인한다. destination이 자기 주소
 
 transport layer에서는 TCP/UDP 같은 protocol이 port number를 사용해 receiving application으로 demux한다. 결과적으로 TCP/IP stack은 "주소가 나를 향하는가"와 "어떤 protocol/entity가 처리해야 하는가"를 매 layer에서 함께 확인한다.
 
-<p align="center"><img src="./images/006_Figure_1_6_page_56.png" alt="Figure 1-6" width="720"></p>
+![Figure 1-6](@/assets/images/006_Figure_1_6_page_56.png)
 <p align="center"><sub>Figure 1-6 · PDF p. 56 · Ethernet frame에서 application까지 이어지는 TCP/IP demultiplexing 흐름</sub></p>
 
 Figure 1-6을 bottom-up으로 읽으면 demux path가 선명하다. incoming Ethernet frame은 link-layer destination address를 통과한 뒤 Type field로 ARP/IPv4/IPv6 중 하나를 고른다. IPv4/IPv6는 destination network-layer address와 checksum/header validity를 확인한 뒤 Protocol/Next Header field로 ICMP, UDP, TCP, IGMP, SCTP, DCCP 등을 고른다. TCP/UDP/SCTP/DCCP는 port number로 DNS server, Web server 같은 application endpoint를 선택한다.

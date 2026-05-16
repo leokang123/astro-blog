@@ -80,7 +80,7 @@ VM implementation의 기본 구성은 다음과 같다.
 | `VMM/hypervisor` | host와 guests 사이에서 virtual hardware interface를 제공하고 guest 실행을 관리한다. |
 | `guest` | virtual copy of host 위에서 실행되는 OS 또는 application environment. 대부분 guest process는 guest OS다. |
 
-<p align="center"><img src="./images/346_Figure_18.1_page_839.png" alt="System models" width="760"></p>
+![System models](@/assets/images/346_Figure_18.1_page_839.png)
 <p align="center"><sub>Figure 18.1 · PDF p. 839 · nonvirtual machine과 virtual machine model에서 kernel/processes와 VMM의 위치 차이</sub></p>
 
 Figure 18.1의 핵심은 VMM이 physical hardware 위에 여러 virtual machines를 만들고, 각 VM이 자기 kernel과 processes를 갖는다는 점이다. Nonvirtual machine에서는 한 kernel이 hardware를 직접 관리하지만, virtual machine model에서는 VMM이 hardware를 multiplexing하고 각 guest OS가 자신만의 machine을 가진 것처럼 동작한다.
@@ -175,7 +175,7 @@ Real machine에서 user mode에서 kernel mode로 넘어가게 만드는 events,
 4. VMM이 guest kernel이 하려던 action을 guest behalf로 emulate한다.
 5. VCPU state를 update하고 guest에게 control을 돌려준다.
 
-<p align="center"><img src="./images/347_Figure_18.2_page_845.png" alt="Trap-and-emulate" width="760"></p>
+![Trap-and-emulate](@/assets/images/347_Figure_18.2_page_845.png)
 <p align="center"><sub>Figure 18.2 · PDF p. 845 · guest privileged instruction이 trap을 일으키고 VMM이 emulate한 뒤 VCPU를 갱신하는 구조</sub></p>
 
 Trap-and-emulate의 장점은 nonprivileged instructions가 hardware에서 native로 실행되어 성능이 좋다는 점이다. 단점은 privileged instructions마다 trap과 emulation overhead가 발생한다는 점이다. 또한 physical CPU가 여러 VMs 사이에서 multiprogrammed되므로 VM 성능이 예측하기 어렵게 느려질 수 있다.
@@ -195,7 +195,7 @@ Trap-and-emulate는 privileged/nonprivileged instructions가 clean하게 분리�
 | virtual user mode | guest instructions를 physical CPU에서 native로 실행 |
 | virtual kernel mode | VMM이 guest의 다음 instructions를 읽고, special instructions는 equivalent native code로 변환 |
 
-<p align="center"><img src="./images/348_Figure_18.3_page_846.png" alt="Binary translation" width="760"></p>
+![Binary translation](@/assets/images/348_Figure_18.3_page_846.png)
 <p align="center"><sub>Figure 18.3 · PDF p. 846 · VMM이 guest kernel instruction stream을 읽어 special instruction을 translation code로 대체하는 구조</sub></p>
 
 VMM의 translation code는 guest binary instructions를 on demand로 읽고, 원래 code 대신 실행할 native binary code를 생성한다. 이 방식만 단순히 쓰면 느리지만, VMware 방식처럼 translated replacement code를 cache하면 성능을 크게 개선할 수 있다. 한 번 translated된 instruction은 이후 translation cache에서 실행되어 다시 번역할 필요가 없다.
@@ -222,7 +222,7 @@ Modern CPU virtualization support의 핵심 기능은 다음과 같다.
 
 Memory management에서도 AMD `RVI`와 Intel `EPT`가 VMM의 software NPT 부담을 줄인다. CPU가 nested page tables를 hardware로 구현해 guest virtual address에서 final host physical address까지 translation한다. 단, TLB miss가 발생하면 guest page tables와 host/VMM page tables를 모두 traverse해야 하므로 더 큰 penalty가 생길 수 있다.
 
-<p align="center"><img src="./images/349_Figure_18.4_page_849.png" alt="Nested page tables" width="560"></p>
+![Nested page tables](@/assets/images/349_Figure_18.4_page_849.png)
 <p align="center"><sub>Figure 18.4 · PDF p. 849 · guest virtual address가 guest paging structure와 VMM nested page table을 거쳐 host physical address로 변환되는 과정</sub></p>
 
 I/O 역시 hardware assistance가 중요하다. 일반 DMA controller는 target memory address와 source I/O device만 받아 OS 개입 없이 data를 전송한다. Hardware assistance가 없다면 guest가 VMM이나 다른 guest memory를 건드리는 DMA transfer를 설정할 수 있다. Intel `VT-d` 같은 hardware-assisted DMA에서는 VMM이 protection domains를 설정해 각 guest가 소유한 physical memory regions와 I/O devices를 연결하고, hardware가 DMA request address를 올바른 host physical address로 변환한다.
@@ -249,7 +249,7 @@ VM이 더 이상 필요 없으면 delete할 수 있다. VMM은 사용된 disk sp
 
 `type 0 hypervisor`는 오래전부터 partitions, domains 같은 이름으로 존재한 hardware feature다. VMM은 firmware에 encoded되어 boot time에 load되고, 각 partition에서 실행할 guest images를 load한다. Hardware/firmware 기반이므로 OS가 특별히 수정될 필요가 없고, guest는 자신에게 dedicated hardware가 있다고 믿는다.
 
-<p align="center"><img src="./images/350_Figure_18.5_page_851.png" alt="Type 0 hypervisor" width="760"></p>
+![Type 0 hypervisor](@/assets/images/350_Figure_18.5_page_851.png)
 <p align="center"><sub>Figure 18.5 · PDF p. 851 · firmware hypervisor가 CPUs, memory, I/O를 partition별 guest에 나누어 제공하는 type 0 구조</sub></p>
 
 Type 0의 feature set은 hardware implementation 때문에 다른 hypervisor types보다 작을 수 있다. 예를 들어 system을 four virtual systems로 나누고 각 partition에 dedicated CPUs, memory, I/O devices를 줄 수 있다. 이 경우 guest는 실제로 dedicated hardware를 가지므로 구현이 단순하다.
@@ -284,7 +284,7 @@ General-purpose OS가 VMM 기능을 제공하는 type 1도 있다. Red Hat Enter
 
 Xen은 paravirtualization의 대표 사례였다. Xen은 real device처럼 보이는 virtual devices 대신 clean/simple device abstractions를 제공해 efficient I/O와 guest-VMM communication을 가능하게 했다. 각 guest/device마다 shared memory의 circular buffer를 두고, read/write data를 그 buffer에 넣었다.
 
-<p align="center"><img src="./images/351_Figure_18.6_page_853.png" alt="Xen I/O circular buffer" width="760"></p>
+![Xen I/O circular buffer](@/assets/images/351_Figure_18.6_page_853.png)
 <p align="center"><sub>Figure 18.6 · PDF p. 853 · Xen이 guest와 VMM 사이 I/O requests/responses를 shared circular buffer로 주고받는 구조</sub></p>
 
 Memory management에서도 Xen은 nested page tables를 쓰지 않았다. Guest마다 read-only page tables를 두고, page-table change가 필요할 때 guest가 hypervisor VMM에 `hypercall`을 호출하도록 했다. Guest kernel code를 Xen-specific methods로 수정해야 했지만, multiple page-table changes를 asynchronously queue한 뒤 완료를 확인하는 방식으로 성능을 최적화할 수 있었다.
@@ -311,7 +311,7 @@ Emulation은 legacy programs의 수명을 늘리고, 실제 old machine 없이 o
 
 Solaris `containers` 또는 `zones`가 대표 예다. Solaris 10부터 하나의 kernel만 설치하고 hardware는 virtualize하지 않는다. 대신 OS와 devices를 virtualize하여 zone 안 processes가 자신들만 system에 있는 것처럼 느끼게 한다. 각 zone은 applications, network stacks, network addresses/ports, user accounts 등을 가질 수 있고, CPU/memory resources를 zones와 system-wide processes 사이에서 나눌 수 있다.
 
-<p align="center"><img src="./images/352_Figure_18.7_page_856.png" alt="Solaris zones" width="760"></p>
+![Solaris zones](@/assets/images/352_Figure_18.7_page_856.png)
 <p align="center"><sub>Figure 18.7 · PDF p. 856 · 하나의 Solaris kernel 위에서 global zone과 두 zones가 virtual platform을 공유하는 구조</sub></p>
 
 Containers는 full VM보다 훨씬 lightweight하다. System resources를 덜 쓰고 instantiate/destroy가 빠르며, VM보다는 processes에 더 가깝다. 그래서 cloud computing에서 널리 쓰인다. FreeBSD `jails`, AIX의 유사 기능, Linux `LXC`가 같은 계열이다.
@@ -406,7 +406,7 @@ Live migration이 가능한 이유는 guest와 VMM 사이 interface가 well-defi
 | 6 | 반복 주기가 충분히 짧아지면 source가 guest를 freeze하고 final VCPU state, other state, final dirty pages를 보낸 뒤 target에서 guest 실행 |
 | 7 | target이 guest running을 acknowledge하면 source가 original guest를 terminate |
 
-<p align="center"><img src="./images/353_Figure_18.8_page_862.png" alt="Live migration" width="760"></p>
+![Live migration](@/assets/images/353_Figure_18.8_page_862.png)
 <p align="center"><sub>Figure 18.8 · PDF p. 862 · source VMM이 memory pages와 final CPU state를 target VMM에 넘겨 running guest를 이전하는 단계</sub></p>
 
 Figure 18.8은 live migration이 “한 번에 복사하고 끝”이 아니라 read-write pages와 dirty pages를 여러 번 반복 전송한 뒤, 마지막 짧은 freeze window에서 final state를 넘기는 방식임을 보여 준다.
@@ -421,7 +421,7 @@ Live migration은 data center 운영 방식을 바꾼다. Virtualization managem
 
 `VMware Workstation`은 Intel x86-compatible hardware를 isolated VMs로 abstract하는 commercial application이며, 전형적 `type 2 hypervisor`다. Windows나 Linux 같은 host OS 위 application으로 실행되고, 여러 guest operating systems를 independent VMs로 동시에 실행하게 한다.
 
-<p align="center"><img src="./images/354_Figure_18.9_page_864.png" alt="VMware Workstation architecture" width="760"></p>
+![VMware Workstation architecture](@/assets/images/354_Figure_18.9_page_864.png)
 <p align="center"><sub>Figure 18.9 · PDF p. 864 · Linux host OS 위 virtualization layer가 FreeBSD, Windows NT, Windows XP guests를 각각 virtual CPU/memory/devices와 함께 실행하는 구조</sub></p>
 
 Figure 18.9에서 virtualization layer는 physical hardware를 abstract하여 각 VM에 virtual CPU, virtual memory, virtual disk drives, virtual network interfaces를 제공한다. Guest가 소유하고 관리한다고 믿는 physical disk는 실제로는 host file system 안의 file이다. 따라서 identical guest를 만들려면 그 file을 copy하면 되고, disaster protection이나 relocation도 file copy/move로 단순해진다. 이 점이 VM이 system administration과 resource management를 쉽게 만드는 핵심이다.
@@ -432,7 +432,7 @@ Figure 18.9에서 virtualization layer는 physical hardware를 abstract하여 �
 
 JVM은 abstract computer specification이다. 주요 구성은 `class loader`와 Java interpreter다. Class loader는 Java program과 Java API의 compiled `.class` files를 load하고, `verifier`는 `.class` file이 valid Java bytecode인지 확인한다. Verifier는 stack overflow/underflow를 막고, pointer arithmetic 같은 illegal memory access 가능성을 차단한다.
 
-<p align="center"><img src="./images/355_Figure_18.10_page_865.png" alt="Java virtual machine" width="760"></p>
+![Java virtual machine](@/assets/images/355_Figure_18.10_page_865.png)
 <p align="center"><sub>Figure 18.10 · PDF p. 865 · Java program과 Java API의 .class files가 class loader를 거쳐 Java interpreter에서 실행되는 JVM 구조</sub></p>
 
 JVM은 memory도 자동 관리한다. `garbage collection`은 더 이상 사용되지 않는 objects의 memory를 reclaim해 system에 돌려준다. Java performance 연구에서 garbage collection algorithms는 큰 비중을 차지한다.

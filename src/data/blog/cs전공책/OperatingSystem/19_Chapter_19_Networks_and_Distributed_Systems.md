@@ -87,7 +87,7 @@ Nodes의 구성은 크게 세 가지로 볼 수 있다.
 | `peer-to-peer(P2P)` | 모든 nodes가 동등한 책임을 가지며 client와 server 역할을 모두 수행 |
 | hybrid | service 성격에 따라 client-server와 P2P 특징을 섞음 |
 
-<p align="center"><img src="./images/356_Figure_19.1_page_872.png" alt="Client-server distributed system" width="760"></p>
+![Client-server distributed system](@/assets/images/356_Figure_19.1_page_872.png)
 <p align="center"><sub>Figure 19.1 · PDF p. 872 · 서로 다른 sites의 client와 server가 network를 통해 resources를 공유하는 구조</sub></p>
 
 Figure 19.1은 distributed system에서 resource가 특정 site에 있어도 다른 site의 client가 network communication으로 접근할 수 있음을 보여 준다. Low level에서는 messages가 systems 사이를 이동하고, 그 위에 file storage, application execution, `RPC(remote procedure calls)` 같은 higher-level functionality가 쌓인다.
@@ -131,7 +131,7 @@ LAN은 여러 small computers가 각자 applications를 실행하면서도 disks
 
 Typical LAN은 workstations, servers, laptops, tablets, smartphones, shared peripherals, 그리고 다른 networks로 연결해 주는 routers를 포함할 수 있다.
 
-<p align="center"><img src="./images/357_Figure_19.2_page_874.png" alt="Local-area network" width="760"></p>
+![Local-area network](@/assets/images/357_Figure_19.2_page_874.png)
 <p align="center"><sub>Figure 19.2 · PDF p. 874 · wireless access point, LAN, router, WAN link가 연결된 local-area network 예</sub></p>
 
 Ethernet은 businesses/organizations에서 nonmobile computers와 peripherals를 연결하는 데 흔하다. Coaxial, twisted pair, fiber optic cables를 사용하며, multiaccess bus 구조라 central controller 없이 new hosts를 쉽게 추가할 수 있다. Ethernet protocol은 IEEE 802.3으로 정의된다.
@@ -144,7 +144,7 @@ WAN은 geographically dispersed sites 간 communication과 sharing을 위해 등
 
 WAN links에는 telephone lines, leased lines, optical cable, microwave links, radio waves, satellite channels 등이 있다. 이 links를 제어하고 traffic을 전달하는 핵심 장치가 `routers`다.
 
-<p align="center"><img src="./images/358_Figure_19.3_page_875.png" alt="Wide-area network routers" width="760"></p>
+![Wide-area network routers](@/assets/images/358_Figure_19.3_page_875.png)
 <p align="center"><sub>Figure 19.3 · PDF p. 875 · WAN에서 hosts와 routers가 regional/global networks를 통해 traffic을 전달하는 구조</sub></p>
 
 Internet WAN에서는 geographically separate hosts가 통신한다. Hosts는 speed, CPU type, OS가 서로 다를 수 있고, 보통 LAN에 붙어 있으며, LAN은 regional networks와 routers를 통해 Internet에 연결된다. Residences도 telephone/cable/ISP-provided routers를 통해 central services에 연결된다.
@@ -191,7 +191,7 @@ Communication network 설계의 어려움은 asynchronous operations를 slow/err
 
 `OSI(Open Systems Interconnection)` model은 networking을 이해하기 위한 7-layer conceptual model이다.
 
-<p align="center"><img src="./images/361_Figure_19.6_page_881.png" alt="OSI protocol stack" width="560"></p>
+![OSI protocol stack](@/assets/images/361_Figure_19.6_page_881.png)
 <p align="center"><sub>Figure 19.6 · PDF p. 881 · application부터 physical layer까지 OSI protocol stack의 역할 계층</sub></p>
 
 | OSI layer | 핵심 역할 |
@@ -208,7 +208,7 @@ Layering의 중요한 동작은 encapsulation이다. Message가 내려가면서 
 
 OSI model은 실제 Internet의 지배 protocol stack은 아니지만 networking logic을 설명하기 좋다. 실제 Internet에서는 `TCP/IP model`이 널리 쓰인다.
 
-<p align="center"><img src="./images/363_Figure_19.8_page_882.png" alt="OSI and TCP/IP stacks" width="760"></p>
+![OSI and TCP/IP stacks](@/assets/images/363_Figure_19.8_page_882.png)
 <p align="center"><sub>Figure 19.8 · PDF p. 882 · OSI 7 layers와 TCP/IP stack의 application, TCP/UDP, IP 대응 관계</sub></p>
 
 TCP/IP application layer에는 `HTTP`, `FTP`, `SSH`, `DNS`, `SMTP` 등이 있다. Transport layer에는 unreliable/connectionless `UDP`와 reliable/connection-oriented `TCP`가 있다. `IP`는 IP datagrams 또는 packets를 Internet을 통해 route한다. TCP/IP는 link/physical layer를 formal하게 지정하지 않으므로 다양한 physical networks 위에서 traffic을 운반할 수 있다.
@@ -237,7 +237,7 @@ Broadcast는 local network의 모든 hosts가 받는 special address를 사용�
 
 Ethernet packet은 data-link layer의 header/trailer를 포함한다.
 
-<p align="center"><img src="./images/364_Figure_19.9_page_884.png" alt="Ethernet packet" width="760"></p>
+![Ethernet packet](@/assets/images/364_Figure_19.9_page_884.png)
 <p align="center"><sub>Figure 19.9 · PDF p. 884 · preamble, destination/source address, data, checksum으로 구성된 Ethernet packet 구조</sub></p>
 
 Destination이 same local network에 있으면 sender는 ARP cache에서 MAC address를 찾아 packet을 wire에 올리고, destination Ethernet device가 자기 address를 보고 packet을 읽어 protocol stack 위로 넘긴다. Destination이 다른 network에 있으면 source는 local router로 packet을 보내고, routers가 WAN을 따라 destination network까지 전달한다. Data-link header는 next router의 Ethernet address에 맞춰 hop마다 바뀔 수 있지만, upper-level headers는 destination protocol stack이 처리할 때까지 유지된다.
@@ -252,7 +252,7 @@ Transport layer는 process 식별뿐 아니라 packet stream reliability도 제�
 
 `UDP(User Datagram Protocol)`는 unreliable transport protocol이다. UDP header는 source port number, destination port number, length, checksum 네 fields만 가진다. 빠르게 packet을 보낼 수 있지만 lower layers가 delivery를 보장하지 않으므로 packets가 lost되거나 out of order로 도착할 수 있다. Error handling은 application이 직접 해야 한다.
 
-<p align="center"><img src="./images/365_Figure_19.10_page_885.png" alt="UDP dropped packet" width="760"></p>
+![UDP dropped packet](@/assets/images/365_Figure_19.10_page_885.png)
 <p align="center"><sub>Figure 19.10 · PDF p. 885 · UDP에서 server가 보낸 datagrams 중 하나가 router overload로 drop되는 예</sub></p>
 
 UDP는 `connectionless protocol`이다. Transmission 시작 전에 connection setup으로 state를 만들지 않고, 끝날 때 teardown도 없다. Client가 요청을 보내면 server가 datagrams를 보내고, 중간에 packet이 drop되면 client는 남은 packets만 사용하거나 application-level logic으로 missing packet을 요청해야 한다.
@@ -272,7 +272,7 @@ TCP reliability의 핵심 mechanisms는 다음과 같다.
 | flow control | receiver capacity를 넘지 않도록 sender rate 조정 |
 | congestion control | routers/network congestion을 추정해 packet send rate 조정 |
 
-<p align="center"><img src="./images/367_Figure_19.11_page_887.png" alt="TCP dropped packets" width="760"></p>
+![TCP dropped packets](@/assets/images/367_Figure_19.11_page_887.png)
 <p align="center"><sub>Figure 19.11 · PDF p. 887 · TCP에서 lost data packet과 lost ACK가 timeout, retransmission, duplicate discard로 처리되는 흐름</sub></p>
 
 Figure 19.11의 핵심은 TCP가 loss를 “없애는” 것이 아니라 감지하고 복구한다는 점이다. Data packet 127이 lost되면 receiver는 ACK를 보낼 수 없고, sender는 timeout 후 retransmit한다. Data packet 128의 ACK가 lost되면 sender가 packet 128을 다시 보내고, receiver는 sequence number를 보고 duplicate를 버리면서 ACK를 다시 보낸다.
@@ -445,7 +445,7 @@ DFS architecture는 목표에 따라 달라진다.
 
 Client-server DFS에서 server는 attached storage에 files와 metadata를 저장한다. Clients는 network를 통해 server에 연결되고, NFS 같은 protocol로 files에 접근한다. Server는 authentication, permissions checking, file delivery를 수행한다. Client가 file을 수정하면 master copy를 가진 server에 changes를 전달해야 하며, client/server versions는 network traffic과 server workload를 최소화하면서 consistent해야 한다.
 
-<p align="center"><img src="./images/368_Figure_19.12_page_896.png" alt="Client-server DFS" width="680"></p>
+![Client-server DFS](@/assets/images/368_Figure_19.12_page_896.png)
 <p align="center"><sub>Figure 19.12 · PDF p. 896 · 여러 clients가 network를 통해 file server에 접근하는 client-server DFS 구조</sub></p>
 
 `NFS(Network File System)`는 Sun Microsystems가 open protocol로 개발했고, early adoption을 촉진했다. NFS의 핵심 목표는 server failure에 대한 simple and fast crash recovery였다. 이를 위해 NFS server는 `stateless`로 설계되었다. 어떤 client가 어떤 file을 access하는지, open file descriptors나 file pointers 같은 state를 server가 추적하지 않는다.
@@ -462,7 +462,7 @@ Client-server DFS는 local file systems 위에서 동작한다. Server disk part
 
 Data 양, I/O workload, processing이 커지면 DFS는 fault-tolerant하고 scalable해야 한다. Large bottlenecks를 허용할 수 없고, component failures는 예외가 아니라 정상적으로 예상해야 한다. 이 요구에서 cluster-based DFS가 등장했다.
 
-<p align="center"><img src="./images/369_Figure_19.13_page_898.png" alt="Cluster-based DFS" width="760"></p>
+![Cluster-based DFS](@/assets/images/369_Figure_19.13_page_898.png)
 <p align="center"><sub>Figure 19.13 · PDF p. 898 · metadata server가 file-to-chunk mapping을 관리하고 여러 data servers가 replicated chunks를 저장하는 cluster-based DFS 구조</sub></p>
 
 GFS와 HDFS의 기본 model은 metadata server와 여러 data servers다. Metadata server는 어떤 data servers가 어떤 file chunks를 가지고 있는지 mapping하고, directory/file hierarchy도 관리한다. File chunks는 data servers에 저장되고, component failure와 faster access를 위해 여러 copies로 replicated된다.

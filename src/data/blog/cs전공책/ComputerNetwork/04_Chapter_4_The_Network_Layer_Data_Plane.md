@@ -2,12 +2,13 @@
 title: "Chapter 4. The Network Layer: Data Plane"
 order: 4
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-16T08:19:31+09:00
 description: "Chapter 4. The Network Layer: Data Plane 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "ComputerNetwork"
+  - cs전공책
+  - ComputerNetwork
 ---
+
 # Chapter 4. The Network Layer: Data Plane
 
 - 과목: Computer Network
@@ -29,7 +30,7 @@ Chapter 4의 흐름은 다섯 축이다. 첫째, forwarding/routing과 data plan
 
 network layer는 sender host의 transport-layer segment를 network-layer `datagram`으로 encapsulation하고, 여러 routers를 통과시킨 뒤, destination host에서 다시 segment를 꺼내 transport layer로 올린다. router는 application layer나 transport layer를 실행하지 않고, truncated protocol stack처럼 network/link/physical layer 중심으로 datagram을 forwarding한다.
 
-<p align="center"><img src="./images/119_Figure_4.1_page_316.png" alt="Figure 4.1" width="720"></p>
+![Figure 4.1](@/assets/images/119_Figure_4.1_page_316.png)
 <p align="center"><sub>Figure 4.1 · PDF p. 316 · network layer가 hosts와 routers에 걸쳐 datagram forwarding을 담당하는 위치</sub></p>
 
 #### 4.1.1 Forwarding and Routing: The Data and Control Planes
@@ -45,14 +46,14 @@ forwarding은 자동차가 하나의 interchange에 들어와 어떤 출구로 �
 
 forwarding의 핵심 자료구조는 `forwarding table`이다. router는 arriving packet header의 하나 이상의 field 값을 보고 forwarding table을 index한다. table entry는 이 packet을 어떤 output link interface로 보낼지를 알려준다. traditional IP forwarding에서는 주로 destination IP address를 기준으로 table lookup을 하지만, Section 4.4의 generalized forwarding에서는 여러 header fields를 match해 block, duplicate, rewrite 같은 action도 수행할 수 있다.
 
-<p align="center"><img src="./images/120_Figure_4.2_page_318.png" alt="Figure 4.2" width="760"></p>
+![Figure 4.2](@/assets/images/120_Figure_4.2_page_318.png)
 <p align="center"><sub>Figure 4.2 · PDF p. 318 · traditional approach에서 각 router의 routing algorithm이 local forwarding table 값을 계산한다</sub></p>
 
 traditional control plane에서는 각 router 안에 routing component가 있고, routers끼리 `routing protocol` messages를 교환해 forwarding table을 계산한다. 이 방식에서는 forwarding과 routing이 같은 physical router 안에 들어 있다. 사람이 모든 router에 직접 forwarding table을 설정할 수도 이론상 가능하지만, topology 변화에 느리고 오류가 많기 때문에 실제 networks는 routing algorithms/protocols를 사용한다.
 
 `SDN (Software-Defined Networking)` approach에서는 data plane과 control plane을 더 명시적으로 분리한다. router는 forwarding만 수행하고, 별도의 remote controller가 forwarding table을 계산해 routers에 내려준다. router와 controller는 forwarding table과 routing information을 담은 messages를 교환한다. 여기서 network가 software-defined라고 불리는 이유는 forwarding behavior를 결정하는 controller logic이 software로 구현되고, 점점 더 open implementation 형태로 발전했기 때문이다.
 
-<p align="center"><img src="./images/121_Figure_4.3_page_319.png" alt="Figure 4.3" width="760"></p>
+![Figure 4.3](@/assets/images/121_Figure_4.3_page_319.png)
 <p align="center"><sub>Figure 4.3 · PDF p. 319 · SDN approach에서 remote controller가 forwarding table을 계산하고 routers에 배포한다</sub></p>
 
 #### 4.1.2 Network Service Model
@@ -73,7 +74,7 @@ Internet network layer의 service model은 `best-effort service`다. best-effort
 
 router의 forwarding function은 incoming link에서 packet을 받아 appropriate outgoing link로 넘기는 실제 data-plane 동작이다. high-level router architecture는 네 component로 나뉜다.
 
-<p align="center"><img src="./images/122_Figure_4.4_page_322.png" alt="Figure 4.4" width="760"></p>
+![Figure 4.4](@/assets/images/122_Figure_4.4_page_322.png)
 <p align="center"><sub>Figure 4.4 · PDF p. 322 · input ports, switching fabric, output ports, routing processor로 이루어진 router architecture</sub></p>
 
 | Router component | 역할 |
@@ -91,7 +92,7 @@ data plane은 nanosecond time scale에서 동작하지만, routing protocols 실
 
 input port는 physical/link-layer processing뿐 아니라 lookup과 forwarding decision을 수행한다. forwarding table은 traditional router에서는 routing processor가 routing protocol로 계산하고, SDN router에서는 remote controller가 계산해 보낸다. 중요한 구현 포인트는 forwarding table이 routing processor에서 input line cards로 복사되어 각 input port가 local lookup을 수행한다는 점이다. 매 packet마다 centralized routing processor를 호출하면 line-rate forwarding이 불가능해지므로, forwarding decision은 input port 가까이에서 처리한다.
 
-<p align="center"><img src="./images/123_Figure_4.5_page_325.png" alt="Figure 4.5" width="760"></p>
+![Figure 4.5](@/assets/images/123_Figure_4.5_page_325.png)
 <p align="center"><sub>Figure 4.5 · PDF p. 325 · input port가 line termination, link-layer processing, lookup/forwarding/queueing을 수행하는 구조</sub></p>
 
 destination-based forwarding의 naive한 방법은 32-bit IP address마다 forwarding table entry를 두는 것이다. 하지만 가능한 IPv4 address가 2^32개이므로 불가능하다. 대신 router는 address range를 prefix로 표현하고, destination address와 table entry의 prefix를 비교한다.
@@ -125,7 +126,7 @@ input port의 `match`와 `action`은 generalized forwarding의 기본형이다. 
 
 `switching fabric`은 input port에서 output port로 packet을 실제로 이동시키는 router 내부의 핵심이다. 책은 세 가지 switching technique을 비교한다.
 
-<p align="center"><img src="./images/124_Figure_4.6_page_328.png" alt="Figure 4.6" width="760"></p>
+![Figure 4.6](@/assets/images/124_Figure_4.6_page_328.png)
 <p align="center"><sub>Figure 4.6 · PDF p. 328 · memory, bus, interconnection network를 이용한 세 가지 switching 방식</sub></p>
 
 | 방식 | 동작 | 병목과 trade-off |
@@ -140,7 +141,7 @@ input port의 `match`와 `action`은 generalized forwarding의 기본형이다. 
 
 output port는 switching fabric에서 받은 packets를 output memory에 저장하고, outgoing link로 전송한다. 여기에는 packet scheduling, de-queueing, link-layer encapsulation, physical-layer transmission이 포함된다.
 
-<p align="center"><img src="./images/125_Figure_4.7_page_330.png" alt="Figure 4.7" width="760"></p>
+![Figure 4.7](@/assets/images/125_Figure_4.7_page_330.png)
 <p align="center"><sub>Figure 4.7 · PDF p. 330 · output port가 queued packets를 선택해 link-layer/physical-layer transmission으로 내보내는 구조</sub></p>
 
 #### 4.2.4 Where Does Queuing Occur?
@@ -151,14 +152,14 @@ queue 발생 위치는 traffic load, switching fabric speed, line speed의 상�
 
 **Input Queueing과 HOL blocking.** switching fabric이 충분히 빠르지 않거나, crossbar에서 여러 input packets가 같은 output port를 원하면 input port에서 packet이 기다린다. 이때 `HOL blocking (head-of-the-line blocking)`이 생길 수 있다. input queue의 맨 앞 packet이 busy output port를 기다리면, 그 뒤에 있는 packet은 자신의 output port가 free여도 앞 packet 때문에 fabric을 통과하지 못한다.
 
-<p align="center"><img src="./images/126_Figure_4.8_page_332.png" alt="Figure 4.8" width="760"></p>
+![Figure 4.8](@/assets/images/126_Figure_4.8_page_332.png)
 <p align="center"><sub>Figure 4.8 · PDF p. 332 · input queue 맨 앞 packet이 막혀 뒤 packet까지 기다리는 HOL blocking</sub></p>
 
 HOL blocking은 input-queued switch의 throughput을 크게 낮출 수 있다. 원문은 특정 가정하에서 input link arrival rate가 capacity의 약 58%에 도달해도 input queue가 unbounded하게 커질 수 있음을 언급한다. 요점은 “fabric이 parallelism을 제공해도 queue head의 output contention이 뒤 packet까지 묶는다”는 것이다.
 
 **Output Queueing.** switching fabric이 `N * Rline`만큼 빠르더라도, N input ports에서 같은 output port로 packets가 몰리면 output queue가 생긴다. output link는 한 packet time에 하나만 전송할 수 있는데, fabric은 그 사이 여러 packets를 output port로 가져올 수 있기 때문이다.
 
-<p align="center"><img src="./images/127_Figure_4.9_page_333.png" alt="Figure 4.9" width="760"></p>
+![Figure 4.9](@/assets/images/127_Figure_4.9_page_333.png)
 <p align="center"><sub>Figure 4.9 · PDF p. 333 · 여러 input ports의 packets가 하나의 output port로 몰릴 때 output queue가 형성되는 흐름</sub></p>
 
 output buffer가 부족하면 router는 packet을 drop하거나 이미 queued된 packet을 제거해 새 packet을 받을 수 있다. 가장 단순한 정책은 buffer가 꽉 찼을 때 arriving packet을 버리는 `drop-tail`이다. 반대로 buffer가 full이 되기 전에 packet을 drop하거나 mark해 sender에게 congestion signal을 주는 방식도 있다. 이런 proactive dropping/marking 정책을 `AQM (Active Queue Management)`라고 하며, `RED (Random Early Detection)`, `PIE`, `CoDel` 같은 알고리즘이 여기에 속한다. ECN bits를 mark하는 방식은 Chapter 3의 ECN congestion indication과 직접 연결된다.
@@ -179,7 +180,7 @@ B = RTT * C / sqrt(N)
 
 `bufferbloat`는 buffer가 너무 커서 persistent queueing delay가 생기는 현상이다. 예를 들어 home router outgoing link에 queue가 계속 남아 있으면 bottleneck link는 full로 사용되지만, queueing delay가 상시 붙는다. ACK clocking 때문에 하나가 빠질 때마다 새 packet이 들어와 queue length가 유지될 수도 있다. 이 경우 throughput은 괜찮아 보여도 interactive user는 큰 delay를 경험한다.
 
-<p align="center"><img src="./images/128_Figure_4.10_page_335.png" alt="Figure 4.10" width="760"></p>
+![Figure 4.10](@/assets/images/128_Figure_4.10_page_335.png)
 <p align="center"><sub>Figure 4.10 · PDF p. 335 · ACK clocking과 큰 buffer가 persistent queue를 만들어 bufferbloat delay를 유발하는 예</sub></p>
 
 #### 4.2.5 Packet Scheduling
@@ -188,12 +189,12 @@ B = RTT * C / sqrt(N)
 
 **FIFO/FCFS.** `FIFO (First-In-First-Out)` 또는 `FCFS (First-Come-First-Served)`는 packet이 도착한 순서대로 전송한다. 단일 queue에서 가장 단순하고 예측하기 쉽지만, traffic class별 priority나 bandwidth share를 표현하지 못한다.
 
-<p align="center"><img src="./images/129_Figure_4.11_page_336.png" alt="Figure 4.11" width="760"></p>
+![Figure 4.11](@/assets/images/129_Figure_4.11_page_336.png)
 <p align="center"><sub>Figure 4.11 · PDF p. 336 · arriving packets가 단일 FIFO queue에서 순서대로 service를 기다리는 추상 모델</sub></p>
 
 **Priority Queueing.** `priority queueing`은 arriving packets를 priority classes로 분류하고, nonempty queues 중 가장 높은 priority class의 packet을 먼저 전송한다. 예를 들어 network management traffic, real-time VoIP packets을 일반 email traffic보다 높은 priority로 줄 수 있다. 같은 priority class 안에서는 보통 FIFO를 사용한다. non-preemptive priority queue에서는 이미 packet transmission이 시작되면 더 높은 priority packet이 도착해도 현재 transmission을 중단하지 않는다.
 
-<p align="center"><img src="./images/131_Figure_4.13_page_337.png" alt="Figure 4.13" width="760"></p>
+![Figure 4.13](@/assets/images/131_Figure_4.13_page_337.png)
 <p align="center"><sub>Figure 4.13 · PDF p. 337 · high-priority queue와 low-priority queue를 분리해 scheduling하는 priority queueing model</sub></p>
 
 priority scheduling은 QoS와 traffic management에 강력하지만, policy 문제도 만든다. ISP가 IP header fields나 TCP/UDP port numbers를 기준으로 특정 service/company/source traffic에 우선권을 주거나 block/throttle할 수 있기 때문이다. 이 지점이 `net neutrality` 논쟁과 연결된다. 원문은 미국 정책 변천을 소개하지만, 핵심 개념은 packet scheduling mechanism이 technical policy enforcement 도구가 될 수 있다는 점이다.
@@ -207,7 +208,7 @@ class i service share = wi / sum(wj for active queued classes)
 class i throughput >= R * wi / sum(wj)
 ```
 
-<p align="center"><img src="./images/134_Figure_4.16_page_341.png" alt="Figure 4.16" width="760"></p>
+![Figure 4.16](@/assets/images/134_Figure_4.16_page_341.png)
 <p align="center"><sub>Figure 4.16 · PDF p. 341 · WFQ가 class별 weight에 따라 outgoing link service share를 나누는 구조</sub></p>
 
 정리하면 FIFO는 단순성, priority queueing은 우선순위, round robin은 class 간 순환 공정성, WFQ는 weighted bandwidth share를 제공한다. router data plane에서 scheduling은 단순히 “어떤 packet을 먼저 보낼까”가 아니라 delay-sensitive traffic, fairness, congestion signal, policy enforcement가 만나는 지점이다.
@@ -220,7 +221,7 @@ class i throughput >= R * wi / sum(wj)
 
 Internet network-layer packet은 `datagram`이라고 부른다. IPv4 datagram header는 router가 forwarding, loop prevention, transport demultiplexing, error detection을 수행하는 데 필요한 fields를 담는다.
 
-<p align="center"><img src="./images/135_Figure_4.17_page_342.png" alt="Figure 4.17" width="760"></p>
+![Figure 4.17](@/assets/images/135_Figure_4.17_page_342.png)
 <p align="center"><sub>Figure 4.17 · PDF p. 342 · IPv4 datagram header의 주요 fields와 payload 구조</sub></p>
 
 | IPv4 field | 역할 |
@@ -256,7 +257,7 @@ global Internet의 각 interface address는 원칙적으로 globally unique해�
 
 `subnet`은 router를 거치지 않고 서로 도달할 수 있는 interfaces의 집합이다. 예를 들어 같은 Ethernet LAN 또는 wireless access point에 붙은 host interfaces와 router interface는 하나의 subnet을 이룬다. `223.1.1.0/24`에서 `/24`는 왼쪽 24 bits가 subnet address라는 뜻이며, `subnet mask`라고도 부른다.
 
-<p align="center"><img src="./images/136_Figure_4.18_page_346.png" alt="Figure 4.18" width="760"></p>
+![Figure 4.18](@/assets/images/136_Figure_4.18_page_346.png)
 <p align="center"><sub>Figure 4.18 · PDF p. 346 · router interfaces와 host interfaces가 subnet별 IPv4 address prefix를 공유하는 예</sub></p>
 
 subnet을 찾는 절차는 다음처럼 생각할 수 있다.
@@ -269,7 +270,7 @@ subnet을 찾는 절차는 다음처럼 생각할 수 있다.
 
 point-to-point router link도 subnet이다. Figure 4.20처럼 세 routers가 서로 point-to-point links로 연결되어 있고 각 router가 host-facing LAN도 갖는다면, host LAN subnets뿐 아니라 router-to-router links도 각각 별도 subnet을 이룬다.
 
-<p align="center"><img src="./images/138_Figure_4.20_page_348.png" alt="Figure 4.20" width="760"></p>
+![Figure 4.20](@/assets/images/138_Figure_4.20_page_348.png)
 <p align="center"><sub>Figure 4.20 · PDF p. 348 · host LAN subnets와 router-to-router point-to-point link subnets가 함께 존재하는 구조</sub></p>
 
 Internet address assignment는 `CIDR (Classless Interdomain Routing)`를 사용한다. CIDR은 address를 `a.b.c.d/x` 형태로 표현하며, 왼쪽 x bits를 `network prefix`로 본다. organization은 보통 contiguous address block, 즉 common prefix를 공유하는 address range를 할당받는다. 외부 routers는 destination이 그 organization 안에 있는지 판단할 때 x leading prefix bits만 보면 되므로 forwarding table size가 크게 줄어든다.
@@ -284,12 +285,12 @@ CIDR 이전의 `classful addressing`은 network portion 길이를 8, 16, 24 bits
 
 `address aggregation`, `route aggregation`, `route summarization`은 여러 networks를 하나의 더 짧은 prefix로 advertise하는 기술이다. 예를 들어 ISP가 `200.23.16.0/20`을 Internet에 advertise하면, 외부 routers는 그 block 안의 여러 organizations 세부 subnet을 몰라도 해당 ISP로 traffic을 보낼 수 있다.
 
-<p align="center"><img src="./images/139_Figure_4.21_page_350.png" alt="Figure 4.21" width="760"></p>
+![Figure 4.21](@/assets/images/139_Figure_4.21_page_350.png)
 <p align="center"><sub>Figure 4.21 · PDF p. 350 · ISP가 여러 organizations의 address blocks를 하나의 aggregate prefix로 advertise하는 구조</sub></p>
 
 하지만 더 specific route가 별도로 advertise될 수도 있다. Figure 4.22처럼 `200.23.16.0/20` aggregate와 `200.23.18.0/23` more-specific prefix가 동시에 보이면, routers는 `longest prefix matching`으로 더 긴 prefix인 `/23` route를 선택한다. 이 때문에 Section 4.2.1의 longest prefix matching은 forwarding lookup의 구현 세부가 아니라 CIDR routing의 핵심 규칙이다.
 
-<p align="center"><img src="./images/140_Figure_4.22_page_350.png" alt="Figure 4.22" width="760"></p>
+![Figure 4.22](@/assets/images/140_Figure_4.22_page_350.png)
 <p align="center"><sub>Figure 4.22 · PDF p. 350 · aggregate route보다 더 specific한 prefix가 있으면 longest prefix matching으로 더 specific route가 선택된다</sub></p>
 
 IPv4에는 `broadcast address`도 있다. `255.255.255.255` destination address로 datagram을 보내면 같은 subnet의 모든 hosts에 전달된다. routers가 neighboring subnets로 forward할 수도 있지만, 보통은 그렇게 하지 않는다.
@@ -312,7 +313,7 @@ DHCP는 `plug-and-play` 또는 `zeroconf` protocol이라고도 불린다. laptop
 
 DHCP는 client-server protocol이다. subnet에 DHCP server가 직접 있을 수도 있고, 없으면 router가 `DHCP relay agent`로 동작해 다른 subnet의 DHCP server와 통신하게 할 수 있다.
 
-<p align="center"><img src="./images/141_Figure_4.23_page_353.png" alt="Figure 4.23" width="760"></p>
+![Figure 4.23](@/assets/images/141_Figure_4.23_page_353.png)
 <p align="center"><sub>Figure 4.23 · PDF p. 353 · DHCP server가 특정 subnet에 있고 router가 다른 subnets의 relay agent 역할을 할 수 있는 구성</sub></p>
 
 새로 들어온 host가 DHCP로 주소를 얻는 절차는 네 단계다. client는 처음에 자신의 IP address도, DHCP server address도 모르므로 broadcast를 사용한다.
@@ -335,7 +336,7 @@ DHCP는 client-server protocol이다. subnet에 DHCP server가 직접 있을 수
    requested parameters 확정
 ```
 
-<p align="center"><img src="./images/142_Figure_4.24_page_354.png" alt="Figure 4.24" width="640"></p>
+![Figure 4.24](@/assets/images/142_Figure_4.24_page_354.png)
 <p align="center"><sub>Figure 4.24 · PDF p. 354 · DHCP discover, offer, request, ACK로 이어지는 client-server interaction</sub></p>
 
 DHCP ACK를 받으면 client는 lease duration 동안 할당된 IP address를 사용할 수 있고, 필요하면 lease renewal을 수행한다. DHCP의 한계도 있다. node가 새 subnet에 붙을 때 새 IP address를 받으면 기존 TCP connection은 유지되기 어렵다. Chapter 7의 cellular mobility는 이동 중에도 IP address와 ongoing TCP connections를 유지하는 별도 mechanism을 다룬다.
@@ -346,7 +347,7 @@ DHCP ACK를 받으면 client는 lease duration 동안 할당된 IP address를 �
 
 Figure 4.25의 home network는 private address block `10.0.0.0/24`를 사용한다. 더 넓게는 `10.0.0.0/8` 같은 address ranges가 private network용으로 예약되어 있다. private address는 해당 private realm 안에서만 의미가 있으므로 global Internet으로 그대로 나가면 안 된다. 외부 Internet에서 보면 NAT-enabled router는 내부 network 전체를 숨기고 하나의 device처럼 보인다.
 
-<p align="center"><img src="./images/143_Figure_4.25_page_356.png" alt="Figure 4.25" width="760"></p>
+![Figure 4.25](@/assets/images/143_Figure_4.25_page_356.png)
 <p align="center"><sub>Figure 4.25 · PDF p. 356 · NAT router가 private LAN address/port와 public WAN address/port를 translation table로 매핑하는 방식</sub></p>
 
 NAT의 핵심은 `NAT translation table`에 IP address뿐 아니라 transport-layer port number까지 함께 저장한다는 점이다.
@@ -389,7 +390,7 @@ IPv6의 큰 변화는 세 가지다.
 | streamlined 40-byte header | fixed-length 40-byte header로 router processing을 단순화한다. IPv4의 일부 fields는 제거되거나 optional next header로 이동한다. |
 | flow labeling | `flow label`로 special handling이 필요한 datagram flow를 식별할 수 있게 한다. QoS/real-time service 가능성을 염두에 둔 설계다. |
 
-<p align="center"><img src="./images/144_Figure_4.26_page_360.png" alt="Figure 4.26" width="760"></p>
+![Figure 4.26](@/assets/images/144_Figure_4.26_page_360.png)
 <p align="center"><sub>Figure 4.26 · PDF p. 360 · fixed-length 40-byte IPv6 datagram header와 128-bit source/destination addresses</sub></p>
 
 IPv6 header fields는 IPv4와 이름이 비슷해도 처리 철학이 다르다.
@@ -417,7 +418,7 @@ IPv6에서 빠진 IPv4 기능도 중요하다.
 
 tunneling에서는 IPv6 routers 사이에 IPv4-only routers 구간이 있을 때, sending-side IPv6 node가 전체 IPv6 datagram을 IPv4 datagram payload 안에 넣어 보낸다. IPv4 tunnel 내부 routers는 payload가 IPv6 datagram이라는 사실을 몰라도 된다. receiving-side IPv6 node는 IPv4 datagram의 protocol number 41을 보고 payload가 IPv6 datagram임을 인식한 뒤, 내부 IPv6 datagram을 꺼내 정상적으로 forwarding한다.
 
-<p align="center"><img src="./images/145_Figure_4.27_page_363.png" alt="Figure 4.27" width="760"></p>
+![Figure 4.27](@/assets/images/145_Figure_4.27_page_363.png)
 <p align="center"><sub>Figure 4.27 · PDF p. 363 · IPv6 datagram을 IPv4 datagram 안에 encapsulation해 IPv4 tunnel을 통과시키는 방식</sub></p>
 
 IPv6 사례의 큰 교훈은 network-layer protocol을 바꾸는 일이 매우 어렵다는 점이다. network layer는 Internet의 foundation에 가까워서, 새 protocol을 배포하려면 hosts, routers, operational practices가 광범위하게 바뀌어야 한다. 반대로 application-layer protocol은 Web, streaming, messaging처럼 훨씬 빠르게 배포될 수 있다. 이 차이는 왜 QUIC 같은 기능이 application layer에서 빠르게 진화할 수 있었는지와도 연결된다.
@@ -428,7 +429,7 @@ destination-based forwarding은 destination IP address를 `match`하고 특정 o
 
 match 대상은 destination IP address 하나가 아니라 link-layer, network-layer, transport-layer fields가 될 수 있다. action도 단순 forwarding을 넘어 drop, duplicate, multicast, load balancing, NAT처럼 header rewrite, DPI server로 redirect 등을 포함할 수 있다. 따라서 generalized forwarding device는 layer 2 switch나 layer 3 router라고만 부르기보다 `packet switch`라고 부르는 것이 자연스럽다.
 
-<p align="center"><img src="./images/146_Figure_4.28_page_365.png" alt="Figure 4.28" width="760"></p>
+![Figure 4.28](@/assets/images/146_Figure_4.28_page_365.png)
 <p align="center"><sub>Figure 4.28 · PDF p. 365 · remote controller가 각 packet switch의 match-plus-action flow table을 계산하고 배포하는 generalized forwarding 구조</sub></p>
 
 OpenFlow는 match-plus-action forwarding abstraction과 controller-based SDN을 널리 알린 대표 standard다. OpenFlow의 forwarding table은 `flow table`이라고 부르며, 각 entry는 세 부분으로 구성된다.
@@ -445,7 +446,7 @@ flow table은 packet switch behavior를 programming하는 API처럼 볼 수 있�
 
 OpenFlow 1.0은 incoming port ID와 11개의 packet-header fields를 match할 수 있다. fields는 link layer, network layer, transport layer에 걸쳐 있다. 이는 strict layering principle을 과감하게 넘어서지만, 실제 data-plane policy를 표현하는 데 강력하다.
 
-<p align="center"><img src="./images/147_Figure_4.29_page_366.png" alt="Figure 4.29" width="760"></p>
+![Figure 4.29](@/assets/images/147_Figure_4.29_page_366.png)
 <p align="center"><sub>Figure 4.29 · PDF p. 366 · OpenFlow 1.0 flow table이 ingress port와 layer 2/3/4 header fields를 match하는 범위</sub></p>
 
 | Layer | Match examples |
@@ -474,7 +475,7 @@ flow table entry의 action list는 match된 packet에 수행할 processing을 �
 
 Figure 4.30의 network는 three packet switches `s1`, `s2`, `s3`, six hosts `h1`-`h6`, 그리고 OpenFlow controller로 구성된다. 같은 physical topology라도 flow table entries를 어떻게 설치하느냐에 따라 전혀 다른 logical behavior를 만들 수 있다.
 
-<p align="center"><img src="./images/148_Figure_4.30_page_368.png" alt="Figure 4.30" width="760"></p>
+![Figure 4.30](@/assets/images/148_Figure_4.30_page_368.png)
 <p align="center"><sub>Figure 4.30 · PDF p. 368 · OpenFlow controller가 세 packet switches의 flow tables로 network-wide behavior를 만드는 예시 topology</sub></p>
 
 **Simple Forwarding.** h5/h6에서 h3/h4로 가는 traffic을 s3-s2 direct link가 아니라 s3 -> s1 -> s2 path로 보내고 싶다면, 각 switch에 source/destination prefix와 ingress port를 match하는 entries를 넣으면 된다.
@@ -524,7 +525,7 @@ middleboxes는 Internet architecture의 오래된 구분을 흔든다. 전통적
 
 Internet architecture의 중요한 직관은 `IP hourglass`다. physical/link layers에는 Ethernet, WiFi, cellular, optical 등 많은 기술이 있고, transport/application layers에도 TCP, UDP, QUIC, HTTP, DASH 등 많은 protocols가 있다. 하지만 network layer의 narrow waist에는 universal protocol인 IP가 있다. 모든 Internet-connected devices가 IP를 구현하면, 위아래의 다양한 기술이 IP라는 공통 service interface를 통해 연결될 수 있다.
 
-<p align="center"><img src="./images/149_Figure_4.31_page_373.png" alt="Figure 4.31" width="448"></p>
+![Figure 4.31](@/assets/images/149_Figure_4.31_page_373.png)
 <p align="center"><sub>Figure 4.31 · PDF p. 373 · 다양한 lower/upper protocols 사이에서 IP가 narrow waist 역할을 하는 Internet hourglass</sub></p>
 
 `end-to-end argument`는 어떤 기능이 application endpoints의 지식과 도움 없이는 완전하고 올바르게 구현될 수 없다면, 그 기능을 network 내부에 넣어도 완전한 해결이 되기 어렵다는 주장이다. reliable data transfer가 대표 예다. link layer가 local error control을 제공할 수 있어도, router crash, path break, queue loss 같은 end-to-end 문제를 완전히 해결하려면 endpoints의 TCP가 ACK, retransmission, sequence number로 reliability를 구현해야 한다.

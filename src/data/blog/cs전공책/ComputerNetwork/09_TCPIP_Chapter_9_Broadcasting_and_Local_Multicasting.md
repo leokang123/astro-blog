@@ -74,7 +74,7 @@ IPv4에는 두 종류의 중요한 broadcast address가 있다.
 
 Broadcast ping 예시는 동작을 잘 보여 준다. `ping -b 10.0.0.127`처럼 directed broadcast address로 ICMPv4 Echo Request를 보내면, 같은 subnet에서 broadcast Echo Request에 응답하는 host들이 Echo Reply를 보낸다. sender는 요청을 하나만 보냈지만 여러 reply가 돌아오므로 ping은 추가 응답을 `DUP!`로 표시할 수 있다.
 
-<p align="center"><img src="./images/189_Figure_9_1_page_477.png" alt="Figure 9-1" width="760"></p>
+![Figure 9-1](@/assets/images/189_Figure_9_1_page_477.png)
 <p align="center"><sub>Figure 9-1 · PDF p. 477 · subnet-directed broadcast Echo Request는 IPv4 destination은 broadcast address, Ethernet destination은 ff:ff:ff:ff:ff:ff를 사용한다.</sub></p>
 
 이때 IPv4 implementation은 local routing table과 interface configuration을 보고 `10.0.0.127`이 subnet-directed broadcast address임을 판단한다. 그 결과 ARP로 각 host의 MAC address를 묻지 않고 link-layer broadcast address `ff:ff:ff:ff:ff:ff`로 frame을 보낸다. sender는 어떤 host가 응답할지 미리 모른다. 단지 해당 destination이 broadcast address라는 사실만 알고, 응답 host들은 자기 unicast IPv4 address를 source로 Echo Reply를 돌려보낸다.
@@ -124,14 +124,14 @@ IEEE 802, 특히 Ethernet/Wi-Fi에서 IP multicast를 효율적으로 실으려�
 
 IPv4 multicast address는 `224.0.0.0`부터 `239.255.255.255`까지이며, high-order 4 bits가 `1110`이다. 따라서 multicast group ID를 표현하는 데 28 bits가 있다. 하지만 Ethernet IPv4 multicast address mapping은 lower-order 23 bits만 MAC suffix로 복사한다.
 
-<p align="center"><img src="./images/190_Figure_9_2_page_482.png" alt="Figure 9-2" width="760"></p>
+![Figure 9-2](@/assets/images/190_Figure_9_2_page_482.png)
 <p align="center"><sub>Figure 9-2 · PDF p. 482 · IPv4 multicast address의 lower 23 bits가 01:00:5e prefix 뒤 MAC suffix로 복사된다.</sub></p>
 
 이 mapping은 nonunique하다. IPv4 multicast group은 2^28개인데 MAC suffix 공간은 2^23개뿐이므로, `2^28 / 2^23 = 32`개의 IPv4 multicast group address가 같은 Ethernet multicast MAC address로 접힌다. 예를 들어 `224.128.64.32`와 `224.0.64.32`는 둘 다 `01:00:5e:00:40:20`으로 mapping될 수 있다. 따라서 NIC가 MAC address 기준으로 filtering을 잘해도 IP layer에서 추가 filtering이 필요하다.
 
 IPv6 multicast MAC mapping은 prefix `33:33` 뒤에 IPv6 multicast address의 low-order 32 bits를 붙인다. IPv6 multicast address는 `ff`로 시작하고, 이어지는 8 bits는 flags와 scope에 사용된다. 나머지 112 bits가 multicast group 표현 공간인데, MAC mapping에는 lower 32 bits만 쓰인다.
 
-<p align="center"><img src="./images/191_Figure_9_3_page_483.png" alt="Figure 9-3" width="760"></p>
+![Figure 9-3](@/assets/images/191_Figure_9_3_page_483.png)
 <p align="center"><sub>Figure 9-3 · PDF p. 483 · IPv6 multicast address는 low-order 32 bits만 33:33 prefix 뒤 MAC suffix로 복사된다.</sub></p>
 
 IPv6에서도 mapping은 nonunique하다. 이론적으로 `2^112 / 2^32 = 2^80`개의 IPv6 multicast group이 같은 MAC address로 mapping될 수 있다. 이 숫자는 매우 크지만, 실무적으로 기억할 점은 “multicast MAC address만으로는 IP multicast group을 완전히 식별할 수 없다”는 것이다.
@@ -144,7 +144,7 @@ Broadcast example과 mDNS multicast example의 responder 집합이 다를 수 �
 
 IPv6에서도 비슷하게 ICMPv6 Echo Request를 multicast address `ff02::fb`로 보낼 수 있다. 이 주소는 mDNS의 IPv6 link-local scope multicast address다. IPv6에서는 interface마다 여러 address가 있을 수 있으므로 `ping6 -I eth0 ff02::fb`처럼 outgoing interface를 명시하는 것이 중요하다.
 
-<p align="center"><img src="./images/192_Figure_9_4_page_484.png" alt="Figure 9-4" width="760"></p>
+![Figure 9-4](@/assets/images/192_Figure_9_4_page_484.png)
 <p align="center"><sub>Figure 9-4 · PDF p. 484 · ICMPv6 Echo Request가 eth0의 link-local source address에서 ff02::fb multicast address로 전송된다.</sub></p>
 
 Figure 9-4의 IPv6 예시에서 request destination은 `ff02::fb`이고, 이 주소는 MAC `33:33:00:00:00:fb`로 mapping된다. Echo Reply는 multicast address로 돌아오지 않고 원래 sender의 link-local unicast address로 직접 돌아온다. 또한 responder는 source address selection 규칙에 따라 같은 scope의 link-local IPv6 address를 source로 사용한다.
@@ -171,7 +171,7 @@ SSM까지 고려하면 단순히 group에 join하는 것뿐 아니라, 특정 so
 
 Multicast가 broadcast보다 효율적이려면, 관심 없는 host가 packet을 가능한 낮은 layer에서 버릴 수 있어야 한다. 수신 filtering은 여러 layer에서 단계적으로 일어난다.
 
-<p align="center"><img src="./images/193_Figure_9_5_page_489.png" alt="Figure 9-5" width="760"></p>
+![Figure 9-5](@/assets/images/193_Figure_9_5_page_489.png)
 <p align="center"><sub>Figure 9-5 · PDF p. 489 · NIC, driver, IP, UDP 각 layer가 MAC/IP/port 기준으로 수신 packet을 filtering한다.</sub></p>
 
 Switched Ethernet에서 broadcast/multicast frame은 VLAN 안의 spanning tree를 따라 필요한 segment로 복제된다. 각 host의 NIC는 frame CRC를 확인하고, destination MAC address가 자신의 unicast MAC, broadcast MAC, 또는 관심 multicast MAC인지 판단한다. 문제는 multicast filtering이 완전하지 않다는 점이다.
@@ -195,14 +195,14 @@ UDP broadcast application을 예로 들면, 50 hosts 중 20 hosts만 application
 
 Version evolution은 기능 확장 방향을 보여 준다. `IGMPv1`은 기본 membership reporting을 제공했고, `IGMPv2`는 leave를 더 빠르게 처리할 수 있게 했다. IPv6의 `MLDv1`은 대체로 IGMPv2와 대응된다. `IGMPv3`와 `MLDv2`는 source selection을 추가해 `Source-Specific Multicast (SSM)`을 지원한다. IPv4에서 IGMP는 IPv4 header의 Protocol 값 2를 쓰는 별도 protocol이고, IPv6에서 MLD는 `ICMPv6` message family 안에 포함된다.
 
-<p align="center"><img src="./images/195_Figure_9_6_page_492.png" alt="Figure 9-6" width="700"></p>
+![Figure 9-6](@/assets/images/195_Figure_9_6_page_492.png)
 <p align="center"><sub>Figure 9-6 · PDF p. 492 · multicast router의 query와 host의 IGMP/MLD report 흐름</sub></p>
 
 Router는 주기적으로 `Query`를 보내 receiver가 아직 존재하는지 확인한다. Host는 membership이 있으면 `Report`로 응답하고, application이 group에 join하거나 leave하는 등 local reception state가 바뀌면 unsolicited report를 보낼 수도 있다. IGMPv3 report는 `224.0.0.22`로, MLDv2 report는 `ff02::16`으로 보내진다. Multicast router 자신도 multicast group member가 될 수 있으므로, 그림에서 router와 host의 역할은 완전히 분리된 장비 종류라기보다 protocol role에 가깝다.
 
 IGMPv1/v2와 MLDv1에는 `report suppression`이 있었다. 같은 group에 대해 다른 host의 report를 들으면 자기 report를 생략해 traffic을 줄이는 방식이다. Host들은 query를 받으면 random delay timer를 걸고, 그 사이 같은 group report가 들리면 응답을 억제한다. IGMPv3/MLDv2에서는 source filtering과 host tracking, snooping bridge 환경의 복잡성 때문에 suppression이 제거되었다. 다만 같은 LAN에 old host/router가 섞일 수 있으므로 IGMPv3/MLDv2 implementation은 older version message를 감지하면 backward compatibility mode로 동작해야 한다.
 
-<p align="center"><img src="./images/196_Figure_9_7_page_493.png" alt="Figure 9-7" width="760"></p>
+![Figure 9-7](@/assets/images/196_Figure_9_7_page_493.png)
 <p align="center"><sub>Figure 9-7 · PDF p. 493 · IGMP는 IPv4 datagram에, MLD는 ICMPv6/Hop-by-Hop option과 함께 encapsulation된다</sub></p>
 
 IGMP packet은 IPv4 datagram 안에 들어가며 IPv4 Protocol 값은 2이다. Local link 제어 traffic이므로 `TTL = 1`을 사용하고, router가 빠르게 확인할 수 있도록 IPv4 `Router Alert` option을 포함한다. 책의 예에서는 DS Field가 `0x30 (CS6)`로 표시된다. MLD는 ICMPv6 message이므로 IPv6 Hop Limit을 1로 두고, Hop-by-Hop extension header에 `Router Alert` option을 넣는다. 이 두 protocol 모두 local subnet control plane traffic이기 때문에 일반 end-to-end data traffic처럼 멀리 전달되면 안 된다.
@@ -218,7 +218,7 @@ Host의 `group member part`는 application의 multicast socket 상태를 network
 
 IGMPv3 report는 여러 `group record`의 vector이다. 각 group record는 multicast group address와 optional source address list를 담는다. 이 구조 덕분에 host는 "group G를 듣고 싶다"뿐 아니라 "group G에서 source S1, S2만 듣고 싶다" 또는 "group G에서 source S3만 빼고 듣고 싶다"를 표현할 수 있다.
 
-<p align="center"><img src="./images/198_Figure_9_9_page_495.png" alt="Figure 9-9" width="700"></p>
+![Figure 9-9](@/assets/images/198_Figure_9_9_page_495.png)
 <p align="center"><sub>Figure 9-9 · PDF p. 495 · IGMPv3 group record의 record type, multicast address, source address list 구조</sub></p>
 
 Group join/leave semantics도 source filter로 표현된다. 아무 source나 허용하는 일반 ASM join은 `exclude mode`와 empty source list로 나타낼 수 있다. 반대로 group을 떠나는 것은 `include mode`와 empty source list로 볼 수 있다. SSM은 이미 single source를 전제로 하므로 IGMPv3의 일부 exclude 관련 record type을 쓰지 않는다.
@@ -244,7 +244,7 @@ Multicast router의 `multicast router part`는 group, interface, source list 조
 
 IGMPv3 query는 group address와 optional source list를 함께 담을 수 있다.
 
-<p align="center"><img src="./images/199_Figure_9_10_page_497.png" alt="Figure 9-10" width="760"></p>
+![Figure 9-10](@/assets/images/199_Figure_9_10_page_497.png)
 <p align="center"><sub>Figure 9-10 · PDF p. 497 · IGMPv3 query format: group address, QRV, QQIC, optional source list 포함</sub></p>
 
 Query에는 세 가지 variant가 있다.
@@ -259,7 +259,7 @@ General query에서는 Group Address field를 `0`으로 둔다. Specific query�
 
 `Max Resp Code`는 receiver가 report를 보내기 전 최대 지연 시간을 나타낸다. 값이 128 미만이면 100ms 단위의 선형 값이고, 128 이상이면 exponent/mantissa encoding을 사용한다.
 
-<p align="center"><img src="./images/200_Figure_9_11_page_497.png" alt="Figure 9-11" width="560"></p>
+![Figure 9-11](@/assets/images/200_Figure_9_11_page_497.png)
 <p align="center"><sub>Figure 9-11 · PDF p. 497 · Max Resp Code의 exponential encoding은 긴 응답 지연 범위를 작은 field에 담는다</sub></p>
 
 작은 Max Resp Code는 leave latency를 줄인다. 즉 마지막 listener가 사라진 뒤 router가 해당 traffic forwarding을 멈추기까지의 시간이 짧아진다. 반대로 큰 값은 host들이 더 넓은 random window 안에서 report를 보내게 하므로 IGMP/MLD report burst를 줄일 수 있다. 이것은 responsiveness와 control traffic load 사이의 trade-off다.
@@ -274,7 +274,7 @@ MLD query는 `ff02::1` All Nodes로 보내지고 Hop Limit은 1이다. IPv6 dest
 
 MLDv2 report는 SSDP group `ff02::c`에 대한 관심을 `exclude mode`와 empty source list로 표현한다. MLDv1 report는 관심 group 자체를 IPv6 destination으로 사용한다. MLDv2는 하나의 report에서 여러 multicast address record를 담을 수 있어, `ff02::16`, solicited-node address, `ff02::2` All Routers, `ff02::202` ONC RPC 같은 여러 group 관심을 한 번에 전달할 수 있다.
 
-<p align="center"><img src="./images/205_Figure_9_16_page_502.png" alt="Figure 9-16" width="760"></p>
+![Figure 9-16](@/assets/images/205_Figure_9_16_page_502.png)
 <p align="center"><sub>Figure 9-16 · PDF p. 502 · IGMPv3 general membership query는 224.0.0.1로 전송되고 Router Alert option을 포함한다</sub></p>
 
 IGMPv3 general query 예시에서는 source `10.0.0.1`, destination `224.0.0.1`, destination MAC `01:00:5e:00:00:01`이 사용된다. IPv4 TTL은 1이고, IPv4 header는 Router Alert option 때문에 기본 20 bytes보다 4 bytes 큰 24 bytes다. Group Address field가 `0.0.0.0`이므로 이는 모든 group에 대한 general query다.

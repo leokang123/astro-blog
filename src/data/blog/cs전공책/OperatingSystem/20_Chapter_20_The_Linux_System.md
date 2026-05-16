@@ -152,7 +152,7 @@ Linux system은 전통적 UNIX처럼 세 가지 주요 code body로 구성된다
 | `system libraries` | applications가 kernel과 상호작용하는 standard functions 제공. 핵심은 `libc` |
 | `system utilities` | initialization, configuration, administration, daemons, file management, shell 등 user-mode programs |
 
-<p align="center"><img src="./images/370_Figure_20.1_page_921.png" alt="Components of the Linux system" width="760"></p>
+![Components of the Linux system](@/assets/images/370_Figure_20.1_page_921.png)
 <p align="center"><sub>Figure 20.1 · PDF p. 921 · Linux kernel, loadable modules, system shared libraries, user/system utilities의 계층 구조</sub></p>
 
 Figure 20.1의 가장 중요한 구분은 kernel과 그 밖의 user-mode components다. Kernel code는 privileged `kernel mode`에서 실행되어 physical resources에 full access를 가진다. Linux에서는 user code가 kernel에 built-in되지 않는다. Kernel mode가 필요 없는 OS support code는 system libraries에 들어가 user mode에서 실행된다.
@@ -382,7 +382,7 @@ Linux는 interrupt service routine을 두 부분으로 나눈다.
 
 Bottom-half scheduler는 bottom halves가 자신을 interrupt하지 않도록 보장한다. Top half가 exit할 때 queued bottom halves가 실행될 수 있다. 어떤 bottom half가 실행 중일 때 같은 bottom half가 다시 requested되면 현재 실행이 끝날 때까지 deferred된다.
 
-<p align="center"><img src="./images/371_Figure_20.2_page_934.png" alt="Interrupt protection levels" width="760"></p>
+![Interrupt protection levels](@/assets/images/371_Figure_20.2_page_934.png)
 <p align="center"><sub>Figure 20.2 · PDF p. 934 · user mode, preemptible kernel service, bottom-half, top-half interrupt handlers의 interrupt protection priority 계층</sub></p>
 
 Figure 20.2는 kernel code가 priority levels를 통해 interrupt와 preemption을 제어하는 구조를 보여 준다. 각 level은 더 높은 level code에 의해 interrupt될 수 있지만, 같은 level이나 낮은 level code에 의해 interrupt되지는 않는다.
@@ -410,7 +410,7 @@ Linux는 hardware constraint 때문에 physical memory를 architecture-specific 
 | `ZONE_NORMAL` | kernel이 정상적으로 직접 mapping해서 사용하는 일반 physical pages |
 | `ZONE_HIGHMEM` | kernel address space에 직접 mapping되지 않는 physical memory. 32-bit systems에서 중요 |
 
-<p align="center"><img src="./images/372_Figure_20.3_page_935.png" alt="x86-32 memory zones" width="760"></p>
+![x86-32 memory zones](@/assets/images/372_Figure_20.3_page_935.png)
 <p align="center"><sub>Figure 20.3 · PDF p. 935 · Intel x86-32에서 ZONE_DMA, ZONE_NORMAL, ZONE_HIGHMEM이 physical address range와 대응되는 방식</sub></p>
 
 Figure 20.3은 x86-32에서 lower 16 MB는 `ZONE_DMA`, 16-896 MB는 `ZONE_NORMAL`, 896 MB 이상은 `ZONE_HIGHMEM`으로 나뉘는 예를 보여 준다. Modern x86-64에서는 보통 legacy용 작은 `ZONE_DMA`와 대부분의 `ZONE_NORMAL`만 있고 high memory가 필요하지 않다. Kernel은 zone마다 free-page list를 유지하고, memory request가 오면 용도에 맞는 zone에서 page를 제공한다.
@@ -419,7 +419,7 @@ Linux physical-memory manager의 중심은 `page allocator`다. 각 zone마다 a
 
 Buddy system의 기본 아이디어는 인접한 allocatable memory regions를 buddy pair로 묶는 것이다. 두 buddy가 모두 free되면 더 큰 free region으로 합쳐지고, 작은 요청을 만족할 free region이 없으면 큰 region을 둘로 쪼갠다. Separate linked lists가 가능한 크기별 free regions를 관리하며, Linux에서 이 mechanism의 최소 할당 단위는 single physical page다.
 
-<p align="center"><img src="./images/373_Figure_20.4_page_936.png" alt="Buddy system split" width="760"></p>
+![Buddy system split](@/assets/images/373_Figure_20.4_page_936.png)
 <p align="center"><sub>Figure 20.4 · PDF p. 936 · 16 KB free region을 8 KB, 4 KB buddy blocks로 쪼개 4 KB allocation을 만족하는 과정</sub></p>
 
 Figure 20.4의 중요한 점은 buddy system이 “contiguous memory를 보존하려는 allocator”라는 것이다. 큰 free block을 유지하다가 필요한 크기까지 재귀적으로 split하고, later free 시 buddy가 모두 비어 있으면 merge한다. 따라서 fragmentation을 줄이면서 contiguous page allocation을 지원할 수 있다.
@@ -437,7 +437,7 @@ Kernel memory allocation은 최종적으로 boot-time static reservation 또는 
 
 `slab allocation`은 kernel data structures를 위한 allocator다. `slab`은 one or more physically contiguous pages로 구성되고, `cache`는 one or more slabs로 구성된다. 각 unique kernel data structure type마다 cache가 하나씩 존재할 수 있다. 예를 들어 process descriptor(`struct task_struct`), file object, inode 등에 대한 cache가 따로 있다.
 
-<p align="center"><img src="./images/374_Figure_20.5_page_937.png" alt="Slab allocator" width="760"></p>
+![Slab allocator](@/assets/images/374_Figure_20.5_page_937.png)
 <p align="center"><sub>Figure 20.5 · PDF p. 937 · kernel objects가 type/size별 cache와 slabs 안에 저장되는 Linux slab allocator 구조</sub></p>
 
 Slab allocator는 object construction cost를 줄이는 데 강하다. Cache가 만들어질 때 objects가 cache 안에 준비되고, request가 오면 free object를 used로 표시해 제공한다. Slab 상태는 `full`, `empty`, `partial`로 나뉜다. Allocator는 먼저 partial slab의 free object를 찾고, 없으면 empty slab을 사용하며, 그것도 없으면 page allocator에서 contiguous pages를 받아 새 slab을 만든다.
@@ -518,7 +518,7 @@ Linux binary loader는 binary file을 곧장 physical memory에 모두 읽어 �
 
 ELF loader는 header를 읽고 page-aligned sections를 별도 virtual memory regions로 mapping한다. 초기 mapping에는 stack, program text, initialized data, uninitialized data, runtime data area가 포함된다.
 
-<p align="center"><img src="./images/375_Figure_20.6_page_942.png" alt="ELF memory layout" width="760"></p>
+![ELF memory layout](@/assets/images/375_Figure_20.6_page_942.png)
 <p align="center"><sub>Figure 20.6 · PDF p. 942 · ELF loader가 process virtual address space에 kernel area, stack, memory-mapped regions, data/text regions를 배치하는 방식</sub></p>
 
 Figure 20.6에서 kernel virtual memory는 user-mode code에 invisible한 privileged region이다. User-mode virtual memory의 위쪽에는 downward-growing stack이 있고, `exec()`에 전달된 arguments와 environment variables가 stack에 복사된다. 아래쪽에는 program text, initialized data, uninitialized data가 놓인다. Program text와 read-only data는 write-protected region으로 mapping되고, uninitialized data는 private demand-zero region으로 만들어진다.
@@ -581,7 +581,7 @@ Ext3 file system은 여러 `block groups`로 나뉜다. Data blocks는 가능하
 
 Block group 내부에서는 free-block bitmap을 사용한다. New file의 first blocks를 할당할 때는 block group beginning에서 search하고, existing file을 확장할 때는 most recently allocated block 근처에서 search를 이어 간다. Search는 먼저 bitmap에서 entire free byte를 찾고, 실패하면 free bit를 찾는다. Free byte search는 가능하면 at least eight blocks 단위로 disk space를 할당하기 위한 것이다.
 
-<p align="center"><img src="./images/376_Figure_20.7_page_947.png" alt="ext3 allocation" width="760"></p>
+![ext3 allocation](@/assets/images/376_Figure_20.7_page_947.png)
 <p align="center"><sub>Figure 20.7 · PDF p. 947 · ext3가 fragmented free blocks와 continuous free blocks를 bitmap 기반으로 선택하고 preallocate하는 정책</sub></p>
 
 Figure 20.7의 핵심은 ext3가 완벽한 연속성만 고집하지 않는다는 점이다. Search 시작점 근처에 fragmented free blocks가 있으면 seek 없이 읽을 가능성이 높으므로 어느 정도 받아들인다. 반대로 가까운 곳에 없으면 entire free byte를 찾아 continuous allocation을 시도한다. Free byte를 찾은 뒤에는 allocation을 backward로 확장해 gap을 줄이고, forward로 up to eight blocks를 preallocate한다. Preallocation은 interleaved writes의 fragmentation과 allocation CPU cost를 줄이고, file close 시 사용하지 않은 preallocated blocks는 free-space bitmap으로 반환된다.
@@ -625,7 +625,7 @@ Linux devices는 세 classes로 나뉜다.
 | `character device` | fixed block random access가 아니라 serial stream 중심 | mouse, keyboard, terminal |
 | `network device` | user가 직접 read/write하지 않고 networking subsystem의 connection을 통해 indirect access | Ethernet/Wi-Fi interface 등 |
 
-<p align="center"><img src="./images/377_Figure_20.8_page_950.png" alt="Device-driver block structure" width="760"></p>
+![Device-driver block structure](@/assets/images/377_Figure_20.8_page_950.png)
 <p align="center"><sub>Figure 20.8 · PDF p. 950 · file system, block/character device files, network socket이 각각 driver subsystem으로 연결되는 Linux device-driver 구조</sub></p>
 
 Figure 20.8은 user application이 같은 “file-like” 입구를 사용하더라도 내부 경로가 달라지는 것을 보여 준다. File system path는 block-device side와 연결되고, character device file은 TTY driver와 line discipline을 거칠 수 있으며, network socket은 protocol driver와 network-device driver로 이어진다.

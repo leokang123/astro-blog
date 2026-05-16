@@ -75,14 +75,14 @@ Storage organization은 보통 다음 계층으로 이해한다.
 | `volume` | file system을 담는 logical storage unit. Volume manager에 따라 여러 partitions/disks에 걸칠 수 있음 |
 | `file system` | volume 위에 directories/files/metadata를 배치하고 naming/access를 제공하는 구조 |
 
-<p align="center"><img src="./images/314_Figure_15.1_page_731.png" alt="Typical storage device organization" width="760"></p>
+![Typical storage device organization](@/assets/images/314_Figure_15.1_page_731.png)
 <p align="center"><sub>Figure 15.1 · PDF p. 731 · storage device가 partitions와 volumes를 거쳐 file systems를 담는 전형적 구성</sub></p>
 
 Figure 15.1의 핵심은 device, partition, volume, file system이 항상 1:1로만 대응하지 않는다는 점이다. 하나의 disk가 여러 partitions를 가질 수 있고, volume은 여러 partitions에 걸칠 수도 있으며, computer system은 여러 종류의 file systems를 동시에 사용할 수 있다.
 
 현대 OS에는 general-purpose file systems뿐 아니라 special-purpose file systems도 많다. Solaris 예시는 하나의 system 안에서 ufs, zfs 같은 persistent file systems와 tmpfs, procfs, objfs, ctfs, lofs 같은 special-purpose file systems가 함께 mount될 수 있음을 보여 준다.
 
-<p align="center"><img src="./images/315_Figure_15.2_page_732.png" alt="Solaris file systems" width="760"></p>
+![Solaris file systems](@/assets/images/315_Figure_15.2_page_732.png)
 <p align="center"><sub>Figure 15.2 · PDF p. 732 · Solaris에서 여러 file-system types가 서로 다른 mount points에 동시에 존재하는 예</sub></p>
 
 대표 예시는 다음처럼 정리할 수 있다.
@@ -113,12 +113,12 @@ Mount procedure의 기본 입력은 두 가지다.
 
 OS는 mount 전에 device가 valid file system을 포함하는지 확인한다. Device driver에게 device directory를 읽게 하고, directory가 expected format인지 검사한다. 이후 OS는 내부 directory structure에 “이 mount point에는 이 file system이 mounted되어 있다”는 정보를 기록한다. 그래서 pathname traversal 중 mount point를 만나면 다른 file system으로 넘어갈 수 있고, file-system type이 달라도 하나의 namespace처럼 탐색할 수 있다.
 
-<p align="center"><img src="./images/316_Figure_15.3_page_733.png" alt="Existing file system and unmounted volume" width="760"></p>
+![Existing file system and unmounted volume](@/assets/images/316_Figure_15.3_page_733.png)
 <p align="center"><sub>Figure 15.3 · PDF p. 733 · 기존 file system과 아직 namespace에 연결되지 않은 unmounted volume</sub></p>
 
 Figure 15.3은 기존 `/users` subtree와 별도의 unmounted volume을 보여 준다. 이 시점에는 unmounted volume 안의 files는 일반 pathname으로 접근할 수 없다.
 
-<p align="center"><img src="./images/317_Figure_15.4_page_733.png" alt="Volume mounted at /users" width="450"></p>
+![Volume mounted at /users](@/assets/images/317_Figure_15.4_page_733.png)
 <p align="center"><sub>Figure 15.4 · PDF p. 733 · `/device/dsk`의 volume을 `/users`에 mount하여 기존 namespace에 붙인 결과</sub></p>
 
 Figure 15.4처럼 `/device/dsk`의 volume을 `/users`에 mount하면, `/users` 아래 path traversal은 mounted volume의 root로 넘어간다. Unmount하면 Figure 15.3의 원래 상황으로 돌아간다.
@@ -187,7 +187,7 @@ Modern operating systems는 여러 file-system types를 동시에 지원해야 �
 
 모든 file-system type마다 directory/file routines를 system-call layer에 직접 붙이는 방식은 단순하지만 좋지 않다. OS는 대신 object-oriented style의 data structures와 procedures를 사용해 generic file-system operations와 implementation details를 분리한다. 이 구조가 `VFS(virtual file system)`다.
 
-<p align="center"><img src="./images/318_Figure_15.5_page_737.png" alt="Virtual file system" width="760"></p>
+![Virtual file system](@/assets/images/318_Figure_15.5_page_737.png)
 <p align="center"><sub>Figure 15.5 · PDF p. 737 · file-system interface 아래 VFS layer가 여러 local/remote file-system implementations를 공통 interface로 연결하는 구조</sub></p>
 
 VFS architecture는 세 계층으로 볼 수 있다.
@@ -295,12 +295,12 @@ NFS는 interconnected workstations를 independent file systems를 가진 indepen
 
 Remote directory를 local machine에서 transparent하게 접근하려면 client가 먼저 mount operation을 수행해야 한다. 이 operation은 remote directory를 local file system의 directory 위에 mount한다. Mount가 끝나면 mounted directory는 local file system의 integral subtree처럼 보이고, local directory는 새로 mounted directory의 root name이 된다. 단, mount operation 자체는 transparent하지 않다. Remote directory의 location 또는 host name을 명시해야 한다.
 
-<p align="center"><img src="./images/319_Figure_15.6_page_744.png" alt="Three independent file systems" width="760"></p>
+![Three independent file systems](@/assets/images/319_Figure_15.6_page_744.png)
 <p align="center"><sub>Figure 15.6 · PDF p. 744 · U, S1, S2 세 machine이 각각 독립 file systems를 가진 초기 상태</sub></p>
 
 Figure 15.6에서는 U, S1, S2가 서로 독립된 file systems를 가진다. 이 상태에서는 각 machine의 local files만 접근 가능하다.
 
-<p align="center"><img src="./images/320_Figure_15.7_page_744.png" alt="Mounting in NFS" width="756"></p>
+![Mounting in NFS](@/assets/images/320_Figure_15.7_page_744.png)
 <p align="center"><sub>Figure 15.7 · PDF p. 744 · S1의 remote directory를 U의 local path에 mount하고, 그 위에 S2를 cascading mount하는 NFS 예</sub></p>
 
 Figure 15.7(a)는 `S1:/usr/shared`를 `U:/usr/local` 위에 mount한 결과다. U의 users는 `/usr/local/dir1` prefix로 S1의 remote files에 접근한다. 원래 U의 `/usr/local` subtree는 mount 동안 보이지 않는다. Figure 15.7(b)는 `S2:/usr/dir2`를 이미 remote mount된 `U:/usr/local/dir1` 위에 다시 mount하는 cascading mount를 보여 준다.
@@ -354,7 +354,7 @@ Stateless server 철학은 write semantics에도 영향을 준다. RPC가 synchr
 
 NFS write procedure call 하나는 atomic하며 같은 file에 대한 다른 write calls와 intermix되지 않는다. 하지만 NFS protocol 자체는 concurrency-control mechanisms를 제공하지 않는다. 하나의 `write()` system call은 여러 RPC writes로 나뉠 수 있고, 두 users가 같은 remote file에 write하면 data가 intermix될 수 있다. Lock management는 inherently stateful하기 때문에 NFS 밖의 service가 제공해야 한다. Solaris는 별도 locking을 제공하며, users는 NFS scope 밖의 mechanisms로 shared files 접근을 조정해야 한다.
 
-<p align="center"><img src="./images/321_Figure_15.8_page_747.png" alt="NFS architecture" width="760"></p>
+![NFS architecture](@/assets/images/321_Figure_15.8_page_747.png)
 <p align="center"><sub>Figure 15.8 · PDF p. 747 · client system call이 VFS, NFS client, RPC/XDR, server VFS, UNIX file system을 거쳐 처리되는 구조</sub></p>
 
 Figure 15.8의 operation path는 다음과 같다.

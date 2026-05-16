@@ -55,7 +55,7 @@ Process의 현재 실행 상태는 적어도 두 가지로 설명된다.
 
 Process는 memory 안에서 보통 다음 영역으로 나뉜다.
 
-<p align="center"><img src="./images/048_Figure_3.1_page_144.png" alt="Layout of a process in memory" width="759"></p>
+![Layout of a process in memory](@/assets/images/048_Figure_3.1_page_144.png)
 <p align="center"><sub>Figure 3.1 · PDF p. 144 · process address space의 text, data, heap, stack 배치</sub></p>
 
 | 영역 | 역할 | 크기 변화 |
@@ -79,7 +79,7 @@ JVM(Java Virtual Machine) 예시는 process 개념을 한 번 더 넓힌다. `ja
 
 Process는 실행 중 계속 state를 바꾼다. 원문은 기본 state를 다섯 가지로 설명한다.
 
-<p align="center"><img src="./images/049_Figure_3.2_page_147.png" alt="Diagram of process state" width="760"></p>
+![Diagram of process state](@/assets/images/049_Figure_3.2_page_147.png)
 <p align="center"><sub>Figure 3.2 · PDF p. 147 · new, ready, running, waiting, terminated 사이의 process state transition</sub></p>
 
 | State | 의미 | 대표 전이 |
@@ -96,7 +96,7 @@ State 이름은 운영체제마다 다를 수 있지만, 개념 자체는 대부
 
 운영체제는 각 process를 `process control block (PCB)` 또는 `task control block`으로 표현한다. PCB는 process를 멈췄다가 다시 시작하기 위한 최소 실행 문맥과 관리 정보를 담는 record다.
 
-<p align="center"><img src="./images/050_Figure_3.3_page_147.png" alt="Process control block" width="314"></p>
+![Process control block](@/assets/images/050_Figure_3.3_page_147.png)
 <p align="center"><sub>Figure 3.3 · PDF p. 147 · process state, process number, program counter, registers 등을 담는 PCB</sub></p>
 
 PCB에 들어가는 대표 정보는 다음과 같다.
@@ -143,14 +143,14 @@ Process의 성격도 scheduling에 중요하다.
 
 Process가 system에 들어오면 먼저 `ready queue`에 놓인다. Ready queue는 CPU core에 배정될 준비가 된 process들의 queue다. 보통 linked list로 구현되며, ready-queue header는 첫 PCB를 가리키고 각 PCB는 다음 PCB를 가리키는 pointer field를 가진다.
 
-<p align="center"><img src="./images/051_Figure_3.4_page_150.png" alt="Ready queue and wait queues" width="760"></p>
+![Ready queue and wait queues](@/assets/images/051_Figure_3.4_page_150.png)
 <p align="center"><sub>Figure 3.4 · PDF p. 150 · ready queue와 wait queue가 PCB linked list로 연결되는 방식</sub></p>
 
 System에는 ready queue 말고도 여러 `wait queue`가 있다. Process가 CPU를 배정받아 실행되다가 disk I/O 같은 느린 device request를 내면, completion까지 CPU를 붙잡고 있을 이유가 없다. 이 process는 해당 event를 기다리는 wait queue로 이동한다.
 
 Scheduling 흐름은 queueing diagram으로 보면 더 명확하다.
 
-<p align="center"><img src="./images/052_Figure_3.5_page_151.png" alt="Queueing diagram of process scheduling" width="760"></p>
+![Queueing diagram of process scheduling](@/assets/images/052_Figure_3.5_page_151.png)
 <p align="center"><sub>Figure 3.5 · PDF p. 151 · ready queue, CPU, I/O wait queue, child termination wait queue, interrupt wait queue 사이의 이동</sub></p>
 
 대표 흐름은 다음과 같다.
@@ -172,7 +172,7 @@ Scheduling 흐름은 queueing diagram으로 보면 더 명확하다.
 
 Interrupt나 system call이 발생하면 CPU core는 현재 실행하던 user process에서 kernel routine으로 넘어간다. 이때 운영체제는 현재 process의 context를 저장해야 한다. Context에는 CPU registers, process state, memory-management information 등이 포함되며, 일반적으로 PCB에 저장된다.
 
-<p align="center"><img src="./images/053_Figure_3.6_page_152.png" alt="Context switch" width="760"></p>
+![Context switch](@/assets/images/053_Figure_3.6_page_152.png)
 <p align="center"><sub>Figure 3.6 · PDF p. 152 · process P0의 state를 저장하고 process P1의 state를 복원하는 context switch</sub></p>
 
 `context switch`는 현재 process의 state save와 다음 process의 state restore를 수행하는 작업이다. Kernel은 old process의 context를 그 process의 PCB에 저장하고, scheduler가 선택한 new process의 context를 PCB에서 load한다.
@@ -193,7 +193,7 @@ Mobile system의 multitasking은 resource constraint와 연결된다. 초기 iOS
 
 실행 중인 process는 새 process를 만들 수 있다. 새 process를 만든 쪽은 `parent process`, 만들어진 쪽은 `child process`다. Child도 다시 child를 만들 수 있으므로 process들은 tree 구조를 이룬다. UNIX, Linux, Windows 같은 운영체제는 process를 보통 unique integer인 `process identifier (pid)`로 식별한다. Kernel은 이 pid를 index처럼 사용해 process attribute에 접근할 수 있다.
 
-<p align="center"><img src="./images/054_Figure_3.7_page_154.png" alt="Linux process tree" width="760"></p>
+![Linux process tree](@/assets/images/054_Figure_3.7_page_154.png)
 <p align="center"><sub>Figure 3.7 · PDF p. 154 · `systemd`를 root로 하는 Linux process tree와 pid 관계</sub></p>
 
 Linux에서는 `systemd`가 pid 1을 가지며, boot 이후 user process들의 root parent 역할을 한다. 예전 UNIX 계열에서는 `init`이 같은 역할을 했다. `logind`, `sshd`, shell(`bash`, `tcsh`), `ps`, `vim` 같은 process는 parent-child 관계로 이어진다. `ps -el`로 process 목록을 볼 수 있고, Linux의 `pstree`는 process tree를 직접 표시한다.
@@ -218,7 +218,7 @@ UNIX에서 새 process는 `fork()` system call로 생성된다. `fork()`는 pare
 | parent process | child의 pid, 즉 0보다 큰 integer |
 | error | 음수 값 |
 
-<p align="center"><img src="./images/055_Figure_3.8_page_156.png" alt="UNIX fork example" width="640"></p>
+![UNIX fork example](@/assets/images/055_Figure_3.8_page_156.png)
 <p align="center"><sub>Figure 3.8 · PDF p. 156 · `fork()`로 child를 만들고 child에서 `execlp()`를 호출하는 UNIX 예제</sub></p>
 
 Figure 3.8의 흐름은 UNIX process creation의 핵심 idiom이다.
@@ -229,7 +229,7 @@ Figure 3.8의 흐름은 UNIX process creation의 핵심 idiom이다.
 4. Parent에서는 `pid > 0`이므로 `wait(NULL);`로 child completion을 기다린다.
 5. Child가 종료되면 parent가 `Child Complete`를 출력하고 종료한다.
 
-<p align="center"><img src="./images/056_Figure_3.9_page_157.png" alt="Process creation using fork" width="560"></p>
+![Process creation using fork](@/assets/images/056_Figure_3.9_page_157.png)
 <p align="center"><sub>Figure 3.9 · PDF p. 157 · `fork()` 이후 parent와 child가 갈라지고 child가 `exec()`로 새 program을 실행하는 흐름</sub></p>
 
 `exec()` system call은 현재 process의 memory space를 새 program으로 overlay한다. 즉 `exec()`를 호출한 process의 기존 memory image는 새 binary file로 대체되고, 정상적으로 성공하면 원래 code로 return하지 않는다. Parent와 child가 처음에는 같은 program image를 공유하듯 출발하지만, 보통 child가 `exec()`를 호출해 완전히 다른 program으로 바뀌는 이유가 여기에 있다.
@@ -247,7 +247,7 @@ Windows API의 process creation은 `CreateProcess()` function을 사용한다. P
 | 새 program 실행 | 보통 child가 `exec()` 호출 | creation 시 command/application 지정 |
 | parent waiting | `wait()` | `WaitForSingleObject()` |
 
-<p align="center"><img src="./images/057_Figure_3.10_page_158.png" alt="Windows CreateProcess example" width="720"></p>
+![Windows CreateProcess example](@/assets/images/057_Figure_3.10_page_158.png)
 <p align="center"><sub>Figure 3.10 · PDF p. 158 · Windows API `CreateProcess()`로 `mspaint.exe` child process를 만드는 예제</sub></p>
 
 Figure 3.10의 예제는 `STARTUPINFO`와 `PROCESS_INFORMATION` 구조체를 준비한 뒤 `CreateProcess()`를 호출한다. `STARTUPINFO`는 새 process의 window size, appearance, standard input/output handle 같은 시작 속성을 담고, `PROCESS_INFORMATION`은 새 process와 primary thread에 대한 handle 및 identifier를 담는다. `ZeroMemory()`는 이 구조체들을 초기화한다.
@@ -309,7 +309,7 @@ Concurrent하게 실행되는 process는 크게 두 종류로 볼 수 있다.
 
 Cooperating processes는 data를 보내고 받기 위한 `interprocess communication (IPC)` mechanism이 필요하다. 원문은 IPC의 fundamental model을 두 가지로 나눈다.
 
-<p align="center"><img src="./images/058_Figure_3.11_page_163.png" alt="IPC communication models" width="760"></p>
+![IPC communication models](@/assets/images/058_Figure_3.11_page_163.png)
 <p align="center"><sub>Figure 3.11 · PDF p. 163 · shared memory와 message passing의 communication model 비교</sub></p>
 
 | IPC model | 방식 | 장점 | 비용/주의점 |
@@ -363,10 +363,10 @@ int out = 0;
 
 Producer는 `in`이 가리키는 위치에 item을 넣고 `in = (in + 1) % BUFFER_SIZE`로 이동한다. Consumer는 `out`이 가리키는 위치에서 item을 꺼내고 `out = (out + 1) % BUFFER_SIZE`로 이동한다.
 
-<p align="center"><img src="./images/059_Figure_3.12_page_165.png" alt="Shared-memory producer" width="760"></p>
+![Shared-memory producer](@/assets/images/059_Figure_3.12_page_165.png)
 <p align="center"><sub>Figure 3.12 · PDF p. 165 · bounded buffer에 item을 넣는 shared-memory producer loop</sub></p>
 
-<p align="center"><img src="./images/060_Figure_3.13_page_165.png" alt="Shared-memory consumer" width="640"></p>
+![Shared-memory consumer](@/assets/images/060_Figure_3.13_page_165.png)
 <p align="center"><sub>Figure 3.13 · PDF p. 165 · bounded buffer에서 item을 꺼내는 shared-memory consumer loop</sub></p>
 
 Figure 3.12와 Figure 3.13의 scheme은 동시에 최대 `BUFFER_SIZE - 1`개의 item만 저장한다. 한 칸을 비워 두는 이유는 `in == out`을 empty로 해석해야 하기 때문이다. 모든 `BUFFER_SIZE` slot을 쓰려면 별도의 count 변수나 full flag 같은 추가 상태가 필요하다.
@@ -460,10 +460,10 @@ Message passing의 `send()`와 `receive()`는 blocking 또는 nonblocking으로 
 
 `send()`와 `receive()`가 모두 blocking이면 sender와 receiver 사이에 `rendezvous`가 생긴다. Producer-consumer problem은 blocking send/receive로 매우 단순해진다. Producer는 item을 만들고 `send(next_produced)`에서 delivery까지 기다리며, consumer는 `receive(next_consumed)`에서 item이 올 때까지 기다린다.
 
-<p align="center"><img src="./images/061_Figure_3.14_page_169.png" alt="Message-passing producer" width="760"></p>
+![Message-passing producer](@/assets/images/061_Figure_3.14_page_169.png)
 <p align="center"><sub>Figure 3.14 · PDF p. 169 · blocking `send()`를 사용하는 message-passing producer</sub></p>
 
-<p align="center"><img src="./images/062_Figure_3.15_page_169.png" alt="Message-passing consumer" width="560"></p>
+![Message-passing consumer](@/assets/images/062_Figure_3.15_page_169.png)
 <p align="center"><sub>Figure 3.15 · PDF p. 169 · blocking `receive()`를 사용하는 message-passing consumer</sub></p>
 
 ### Buffering
@@ -495,12 +495,12 @@ POSIX shared memory 사용 흐름은 다음과 같다.
 
 `MAP_SHARED` flag는 shared-memory object의 변경이 같은 object를 공유하는 모든 process에게 보이도록 한다. Shared memory object를 열 때 name을 쓰기 때문에, producer와 consumer는 같은 name으로 같은 shared region을 찾는다.
 
-<p align="center"><img src="./images/063_Figure_3.16_page_171.png" alt="POSIX shared-memory producer" width="640"></p>
+![POSIX shared-memory producer](@/assets/images/063_Figure_3.16_page_171.png)
 <p align="center"><sub>Figure 3.16 · PDF p. 171 · `shm_open()`, `ftruncate()`, `mmap()`으로 shared memory를 만들고 쓰는 producer</sub></p>
 
 Figure 3.16의 producer는 `OS`라는 shared-memory object를 만들고, 크기를 4096 bytes로 잡은 뒤 `mmap()`으로 pointer `ptr`을 얻는다. 이후 `sprintf(ptr, "%s", message_0);`처럼 pointer가 가리키는 memory에 string을 쓰고, 쓴 byte 수만큼 pointer를 증가시켜 다음 문자열을 이어 쓴다. 중요한 점은 `write()` system call로 kernel에 매번 data를 넘기는 것이 아니라, mapping된 memory address에 ordinary memory write처럼 접근한다는 것이다.
 
-<p align="center"><img src="./images/064_Figure_3.17_page_172.png" alt="POSIX shared-memory consumer" width="640"></p>
+![POSIX shared-memory consumer](@/assets/images/064_Figure_3.17_page_172.png)
 <p align="center"><sub>Figure 3.17 · PDF p. 172 · 같은 shared-memory object를 열어 읽고 `shm_unlink()`로 제거하는 consumer</sub></p>
 
 Figure 3.17의 consumer는 같은 name `OS`로 object를 `O_RDONLY` mode로 열고, `mmap()`으로 자기 address space에 attach한다. `printf("%s", (char *)ptr);`로 shared memory 내용을 출력한 뒤 `shm_unlink(name);`으로 segment를 제거한다. 여기서 producer와 consumer가 같은 physical shared object를 서로 다른 virtual address space에 mapping해 사용한다는 점이 shared-memory IPC의 핵심이다.
@@ -544,7 +544,7 @@ Mach message는 두 부분으로 구성된다.
 
 Message는 `simple message` 또는 `complex message`일 수 있다. Simple message는 kernel이 해석하지 않는 ordinary user data를 담는다. Complex message는 out-of-line data pointer나 port rights transfer를 포함할 수 있다. Large data를 보낼 때 out-of-line data는 data 전체를 message에 복사해 넣는 대신 memory location pointer를 전달하므로 비용을 줄일 수 있다.
 
-<p align="center"><img src="./images/065_Figure_3.18_page_175.png" alt="Mach message passing" width="640"></p>
+![Mach message passing](@/assets/images/065_Figure_3.18_page_175.png)
 <p align="center"><sub>Figure 3.18 · PDF p. 175 · client와 server가 `mach_msg()`로 message를 send/receive하는 예제</sub></p>
 
 Mach의 표준 send/receive API는 `mach_msg()`다. Parameter에 `MACH_SEND_MSG`를 주면 send, `MACH_RCV_MSG`를 주면 receive가 된다. User program의 `mach_msg()`는 kernel system call인 `mach_msg_trap()`으로 들어가고, kernel 내부에서 실제 message passing이 처리된다.
@@ -575,7 +575,7 @@ Windows는 Mach처럼 `port object`로 process 사이 connection을 establish/ma
 
 Client가 subsystem service를 원하면 server의 connection-port object handle을 열고 connection request를 보낸다. Server는 channel을 만들고 client에게 handle을 돌려준다. Channel은 private communication ports의 pair로 구성된다. 하나는 client-to-server messages, 다른 하나는 server-to-client messages를 담당한다. Callback mechanism도 있어, client/server가 reply를 기다릴 상황에서도 request를 받을 수 있다.
 
-<p align="center"><img src="./images/066_Figure_3.19_page_177.png" alt="Windows ALPC" width="760"></p>
+![Windows ALPC](@/assets/images/066_Figure_3.19_page_177.png)
 <p align="center"><sub>Figure 3.19 · PDF p. 177 · connection port, communication ports, shared section object를 사용하는 Windows ALPC 구조</sub></p>
 
 ALPC channel이 만들어질 때 message-passing technique은 data size에 따라 달라진다.
@@ -613,15 +613,15 @@ pipe(int fd[])
 
 `fd[0]`은 read end, `fd[1]`은 write end다. UNIX는 pipe를 special type of file로 취급하므로 ordinary `read()`와 `write()` system calls로 접근할 수 있다.
 
-<p align="center"><img src="./images/067_Figure_3.20_page_178.png" alt="Ordinary pipe file descriptors" width="760"></p>
+![Ordinary pipe file descriptors](@/assets/images/067_Figure_3.20_page_178.png)
 <p align="center"><sub>Figure 3.20 · PDF p. 178 · parent와 child가 ordinary pipe의 read/write file descriptor를 공유하는 구조</sub></p>
 
 Ordinary pipe는 만든 process 밖에서는 접근할 수 없다. 일반적으로 parent process가 pipe를 만들고, `fork()`로 child를 만든 뒤 parent-child 사이 communication에 사용한다. Child는 parent의 open files를 inherit하므로, special file인 pipe의 file descriptors도 함께 inherit한다.
 
-<p align="center"><img src="./images/068_Figure_3.21_page_179.png" alt="UNIX ordinary pipe part 1" width="760"></p>
+![UNIX ordinary pipe part 1](@/assets/images/068_Figure_3.21_page_179.png)
 <p align="center"><sub>Figure 3.21 · PDF p. 179 · UNIX ordinary pipe 예제의 include, buffer, file descriptor 준비</sub></p>
 
-<p align="center"><img src="./images/069_Figure_3.22_page_180.png" alt="UNIX ordinary pipe part 2" width="640"></p>
+![UNIX ordinary pipe part 2](@/assets/images/069_Figure_3.22_page_180.png)
 <p align="center"><sub>Figure 3.22 · PDF p. 180 · `pipe()`, `fork()`, `close()`, `write()`, `read()`로 parent-child pipe 통신 수행</sub></p>
 
 Figure 3.21과 Figure 3.22의 UNIX example은 parent가 `"Greetings"` message를 pipe에 쓰고 child가 읽는 흐름이다.
@@ -640,13 +640,13 @@ Windows ordinary pipe는 `anonymous pipe`라고 부른다. UNIX counterpart처�
 
 Windows pipe 생성 API는 `CreatePipe()`이며, read handle, write handle, inheritance를 위한 `SECURITY_ATTRIBUTES`, pipe size를 parameter로 받는다. UNIX에서는 child가 parent의 pipe를 자동으로 inherit하지만, Windows에서는 programmer가 child가 inherit할 attribute와 handle을 명시해야 한다.
 
-<p align="center"><img src="./images/070_Figure_3.23_page_181.png" alt="Windows anonymous pipe parent part 1" width="760"></p>
+![Windows anonymous pipe parent part 1](@/assets/images/070_Figure_3.23_page_181.png)
 <p align="center"><sub>Figure 3.23 · PDF p. 181 · Windows anonymous pipe parent process의 handle과 structure 준비</sub></p>
 
-<p align="center"><img src="./images/071_Figure_3.24_page_182.png" alt="Windows anonymous pipe parent part 2" width="640"></p>
+![Windows anonymous pipe parent part 2](@/assets/images/071_Figure_3.24_page_182.png)
 <p align="center"><sub>Figure 3.24 · PDF p. 182 · `CreatePipe()`, handle inheritance, `CreateProcess()`, `WriteFile()` 흐름</sub></p>
 
-<p align="center"><img src="./images/072_Figure_3.25_page_183.png" alt="Windows anonymous pipe child" width="760"></p>
+![Windows anonymous pipe child](@/assets/images/072_Figure_3.25_page_183.png)
 <p align="center"><sub>Figure 3.25 · PDF p. 183 · child process가 standard input handle로 pipe를 읽는 Windows anonymous pipe 예제</sub></p>
 
 Figure 3.23-3.25의 Windows example은 parent가 anonymous pipe를 만들고 child의 standard input을 pipe read end로 redirect한다.
@@ -688,7 +688,7 @@ Shared memory와 message passing은 client-server system에도 사용할 수 있
 
 `socket`은 communication endpoint다. Network를 통해 communication하는 process pair는 각 process마다 socket 하나씩, 즉 socket pair를 사용한다. Socket은 `IP address + port number`로 식별된다.
 
-<p align="center"><img src="./images/073_Figure_3.26_page_185.png" alt="Socket communication" width="739"></p>
+![Socket communication](@/assets/images/073_Figure_3.26_page_185.png)
 <p align="center"><sub>Figure 3.26 · PDF p. 185 · client socket과 web server socket이 IP address와 port number로 연결되는 구조</sub></p>
 
 Socket communication은 일반적으로 client-server architecture를 따른다.
@@ -718,7 +718,7 @@ Java는 socket interface를 비교적 쉽게 보여준다.
 
 원문 예제는 TCP socket을 쓰는 date server/client다. Server는 port `6013`을 listen하고, client가 연결하면 현재 date/time string을 보내고 connection을 닫는다.
 
-<p align="center"><img src="./images/074_Figure_3.27_page_186.png" alt="Date server" width="720"></p>
+![Date server](@/assets/images/074_Figure_3.27_page_186.png)
 <p align="center"><sub>Figure 3.27 · PDF p. 186 · Java `ServerSocket`으로 port 6013을 listen하고 date를 반환하는 server</sub></p>
 
 Figure 3.27의 server 흐름은 다음과 같다.
@@ -730,7 +730,7 @@ Figure 3.27의 server 흐름은 다음과 같다.
 5. `pout.println(new java.util.Date().toString());`로 date를 socket에 쓴다.
 6. `client.close();`로 client socket을 닫고 다시 listen loop로 돌아간다.
 
-<p align="center"><img src="./images/075_Figure_3.28_page_187.png" alt="Date client" width="720"></p>
+![Date client](@/assets/images/075_Figure_3.28_page_187.png)
 <p align="center"><sub>Figure 3.28 · PDF p. 187 · Java `Socket`으로 loopback address의 date server에 연결하는 client</sub></p>
 
 Figure 3.28의 client는 `new Socket("127.0.0.1", 6013)`으로 server에 연결한다. `127.0.0.1`은 `loopback` address로, host가 자기 자신을 가리킬 때 쓴다. Client는 socket input stream을 `BufferedReader`로 감싸고, server가 보낸 line을 읽어 출력한 뒤 socket을 닫는다. 같은 host에서 client와 server를 실험할 때 loopback을 쓰고, 다른 host의 server에 연결하려면 해당 host의 IP address나 hostname을 쓰면 된다.

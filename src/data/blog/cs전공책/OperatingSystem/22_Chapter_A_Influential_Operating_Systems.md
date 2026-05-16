@@ -45,7 +45,7 @@ Chapter A는 현대 운영체제의 핵심 개념들이 갑자기 등장한 것�
 
 초기 OS를 공부하는 이유는 오래된 기능 자체가 아니라 `feature migration` 때문이다. 과거에는 거대한 mainframe에서만 가능했던 기능이 시간이 지나면서 작은 시스템으로 이동한다. Figure A.1은 이 흐름을 보여 준다. `time sharing`, `multiuser`, `multiprocessor`, `networked`, `fault tolerant`, `UNIX`, `LINUX` 같은 기능과 계열이 mainframe에서 minicomputer, desktop, handheld, smartphone으로 확산된다.
 
-<p align="center"><img src="./images/391_Figure_A.1_page_1044.png" alt="Figure A.1" width="760"></p>
+![Figure A.1](@/assets/images/391_Figure_A.1_page_1044.png)
 <p align="center"><sub>Figure A.1 · PDF p. 1044 · operating-system concepts and features가 큰 시스템에서 작은 시스템으로 이동하는 흐름</sub></p>
 
 대표 사례는 `MULTICS`에서 `UNIX`로 이어지는 흐름이다. MULTICS는 1965-1970년에 MIT에서 computing utility를 목표로 개발되었고, GE-645 같은 대형 mainframe에서 실행되었다. Bell Laboratories는 MULTICS 개발에 참여하다가 이후 PDP-11 minicomputer용 `UNIX`를 설계했다. UNIX의 많은 개념은 다시 microcomputer의 UNIX-like OS, Microsoft Windows, Windows XP, macOS, Linux, handheld environments로 이동했다.
@@ -74,12 +74,12 @@ compiler도 등장했다. 예를 들어 FORTRAN program을 실행하려면 compi
 
 이 idle time을 줄이기 위해 `automatic job sequencing`이 등장했고, 여기서 초기 OS인 `resident monitor`가 만들어졌다. Resident monitor는 memory에 상주하며 한 job이 끝나면 다음 job으로 control을 넘긴다. Figure A.2는 resident monitor가 loader, job sequencing, control-card interpreter, user program area로 구성된 memory layout을 보여 준다.
 
-<p align="center"><img src="./images/392_Figure_A.2_page_1047.png" alt="Figure A.2" width="426"></p>
+![Figure A.2](@/assets/images/392_Figure_A.2_page_1047.png)
 <p align="center"><sub>Figure A.2 · PDF p. 1047 · resident monitor가 memory에 상주하며 loader와 control-card interpreter를 통해 job을 이어 실행하는 구조</sub></p>
 
 Resident monitor가 무엇을 실행할지 알기 위해 `control cards`가 사용되었다. 예를 들어 `$FTN`은 FORTRAN compiler 실행, `$ASM`은 assembler 실행, `$RUN`은 user program 실행을 뜻한다. `$JOB`, `$END`는 job boundary를 나타내며 account number, job name, resource accounting 같은 정보를 담을 수 있다. IBM의 `JCL(Job Control Language)`은 `//`로 control card를 구분했다.
 
-<p align="center"><img src="./images/393_Figure_A.3_page_1048.png" alt="Figure A.3" width="760"></p>
+![Figure A.3](@/assets/images/393_Figure_A.3_page_1048.png)
 <p align="center"><sub>Figure A.3 · PDF p. 1048 · batch job card deck에서 $JOB, $FTN, $LOAD, $RUN, data, $END가 순서대로 배치되는 예</sub></p>
 
 Resident monitor의 구성요소는 다음처럼 볼 수 있다.
@@ -98,7 +98,7 @@ Batch system이 automatic job sequencing을 제공해도 느린 mechanical I/O �
 
 `off-line I/O`는 이 문제를 줄이기 위해 card reader와 line printer를 main CPU에서 분리했다. Cards를 먼저 magnetic tape로 복사하고, CPU는 tape에서 빠르게 input을 읽는다. Output도 tape에 쓰고 나중에 printer로 출력한다. Figure A.4는 CPU가 card reader/printer를 직접 다루는 on-line 방식과 tape를 거치는 off-line 방식을 비교한다.
 
-<p align="center"><img src="./images/394_Figure_A.4_page_1049.png" alt="Figure A.4" width="760"></p>
+![Figure A.4](@/assets/images/394_Figure_A.4_page_1049.png)
 <p align="center"><sub>Figure A.4 · PDF p. 1049 · card reader와 line printer를 CPU에 직접 붙인 on-line I/O와 tape를 경유하는 off-line I/O 비교</sub></p>
 
 Off-line operation의 장점은 여러 reader-to-tape, tape-to-printer system을 하나의 CPU에 붙여 CPU를 더 바쁘게 만들 수 있다는 점이다. 단점은 job turnaround time이 길어진다는 것이다. Job은 tape에 먼저 쌓이고, tape가 충분히 차면 rewind, unload, transport, mount 과정을 거쳐 CPU로 간다. Batch system에서는 이 지연이 어느 정도 받아들여질 수 있었다.
@@ -107,7 +107,7 @@ Disk가 등장하면서 tape의 sequential-access 한계가 줄었다. Tape는 �
 
 이 방식이 `spooling(simultaneous peripheral operation on-line)`이다. Disk를 큰 buffer처럼 사용해 input을 가능한 한 미리 읽고, output은 device가 받을 수 있을 때까지 disk에 보관한다. Figure A.5는 disk가 CPU와 느린 I/O devices 사이의 buffer 역할을 하는 spooling 구조를 보여 준다.
 
-<p align="center"><img src="./images/395_Figure_A.5_page_1050.png" alt="Figure A.5" width="760"></p>
+![Figure A.5](@/assets/images/395_Figure_A.5_page_1050.png)
 <p align="center"><sub>Figure A.5 · PDF p. 1050 · disk를 buffer로 사용해 card reader, CPU, line printer의 동작을 겹치는 spooling 구조</sub></p>
 
 Spooling은 한 job의 computation과 다른 job의 I/O를 겹치게 한다. Spooler가 어떤 job의 input을 읽는 동안, 다른 job의 output을 print queue에 쌓고, 또 다른 job이 CPU에서 실행될 수 있다. Disk space와 몇 개의 table 비용으로 CPU와 I/O device utilization을 모두 높일 수 있다. 이 때문에 spooling은 자연스럽게 `multiprogramming`으로 이어졌고, multiprogramming은 현대 OS의 기반이 되었다.

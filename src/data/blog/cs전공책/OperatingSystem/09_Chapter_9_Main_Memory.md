@@ -104,12 +104,12 @@ Memory management는 성능만이 아니라 protection 문제이기도 하다. U
 
 가장 단순한 protection 구조는 `base register`와 `limit register`다. `base`는 process가 접근할 수 있는 가장 작은 legal physical address, `limit`은 접근 가능한 range의 크기다.
 
-<p align="center"><img src="./images/192_Figure_9.1_page_457.png" alt="Base and limit registers" width="652"></p>
+![Base and limit registers](@/assets/images/192_Figure_9.1_page_457.png)
 <p align="center"><sub>Figure 9.1 · PDF p. 457 · base와 limit register가 process별 logical address space의 물리 범위를 제한하는 구조</sub></p>
 
 예를 들어 `base = 300040`, `limit = 120900`이면 process는 physical address `300040`부터 `420939`까지 접근할 수 있다. CPU hardware는 user mode에서 생성된 모든 address를 이 range와 비교한다.
 
-<p align="center"><img src="./images/193_Figure_9.2_page_458.png" alt="Hardware address protection" width="760"></p>
+![Hardware address protection](@/assets/images/193_Figure_9.2_page_458.png)
 <p align="center"><sub>Figure 9.2 · PDF p. 458 · user mode address가 base 이상이고 base+limit 미만인지 검사해 illegal access를 trap으로 처리하는 hardware protection</sub></p>
 
 검사는 개념적으로 다음 조건이다.
@@ -129,7 +129,7 @@ Program은 보통 disk 위의 binary executable file로 존재한다. 실행하�
 
 Source program의 address는 대개 `count` 같은 `symbolic address`다. Compiler는 이를 “module 시작부터 14 bytes” 같은 `relocatable address`로 bind할 수 있다. Linker 또는 loader는 relocatable address를 `74014` 같은 `absolute address`로 다시 bind한다. 각 binding은 하나의 address space를 다른 address space로 mapping하는 일이다.
 
-<p align="center"><img src="./images/194_Figure_9.3_page_459.png" alt="Multistep processing of a user program" width="560"></p>
+![Multistep processing of a user program](@/assets/images/194_Figure_9.3_page_459.png)
 <p align="center"><sub>Figure 9.3 · PDF p. 459 · source program이 object file, executable file, in-memory program으로 바뀌며 address binding이 일어나는 단계</sub></p>
 
 Address binding 시점은 세 가지로 나뉜다.
@@ -151,12 +151,12 @@ CPU가 생성하는 주소는 `logical address`라고 하고, memory unit이 실
 
 Run-time mapping은 hardware 장치인 `MMU`가 수행한다.
 
-<p align="center"><img src="./images/195_Figure_9.4_page_460.png" alt="Memory management unit" width="760"></p>
+![Memory management unit](@/assets/images/195_Figure_9.4_page_460.png)
 <p align="center"><sub>Figure 9.4 · PDF p. 460 · CPU가 만든 logical address를 MMU가 physical address로 변환해 memory에 전달하는 구조</sub></p>
 
 가장 단순한 MMU scheme은 앞의 base-register scheme을 일반화한 것이다. 여기서 base register는 `relocation register`로 볼 수 있다. CPU가 logical address를 생성하면 MMU가 relocation register 값을 더해 physical address를 만든다.
 
-<p align="center"><img src="./images/196_Figure_9.5_page_461.png" alt="Dynamic relocation" width="760"></p>
+![Dynamic relocation](@/assets/images/196_Figure_9.5_page_461.png)
 <p align="center"><sub>Figure 9.5 · PDF p. 461 · relocation register 값 14000을 logical address 346에 더해 physical address 14346으로 변환하는 dynamic relocation</sub></p>
 
 예를 들어 `relocation register = 14000`이면 user program이 logical address `0`을 참조할 때 physical address `14000`으로, logical address `346`을 참조할 때 physical address `14346`으로 변환된다.
@@ -200,7 +200,7 @@ Dynamic loading과 달리 `dynamic linking`과 `shared libraries`는 일반적�
 
 Contiguous allocation에서 process가 자기 memory 밖을 접근하지 못하게 하려면 Section 9.1의 `relocation register`와 `limit register`를 결합하면 된다. `relocation register`는 가장 작은 physical address를 담고, `limit register`는 process가 생성할 수 있는 logical address range를 담는다.
 
-<p align="center"><img src="./images/197_Figure_9.6_page_463.png" alt="Relocation and limit registers" width="760"></p>
+![Relocation and limit registers](@/assets/images/197_Figure_9.6_page_463.png)
 <p align="center"><sub>Figure 9.6 · PDF p. 463 · logical address가 limit보다 작은지 확인한 뒤 relocation 값을 더해 physical address를 만드는 protection 구조</sub></p>
 
 CPU가 만든 logical address는 먼저 limit과 비교된다. 주소가 `limit`보다 작으면 MMU가 `relocation` 값을 더해 physical address를 만들고 memory로 보낸다. 범위를 넘으면 addressing error trap이 발생한다.
@@ -220,7 +220,7 @@ CPU scheduler가 process를 선택하면 dispatcher는 context switch의 일부�
 
 `variable-partition scheme`에서는 memory를 process 크기에 맞는 variable-sized partitions로 나누고, 각 partition에는 정확히 하나의 process를 둔다. OS는 memory의 어느 부분이 occupied인지, 어느 부분이 available인지 table로 관리한다. 처음에는 user processes가 사용할 memory 전체가 하나의 큰 available block, 즉 `hole`이다. 시간이 지나 processes가 들어오고 나가면 memory에는 다양한 크기의 holes가 흩어진다.
 
-<p align="center"><img src="./images/198_Figure_9.7_page_464.png" alt="Variable partition" width="760"></p>
+![Variable partition](@/assets/images/198_Figure_9.7_page_464.png)
 <p align="center"><sub>Figure 9.7 · PDF p. 464 · process가 종료되고 새 process가 들어오면서 variable partitions와 holes가 생기는 모습</sub></p>
 
 Process가 도착하면 OS는 process의 memory requirement와 available memory를 보고 allocation 여부를 결정한다. 충분한 memory가 있으면 process를 memory에 load하고 CPU 경쟁에 참여시킨다. Process가 terminate하면 그 memory는 release되고, OS는 이를 다른 process에 줄 수 있다.
@@ -284,7 +284,7 @@ logical address = (page number p, page offset d)
 
 `page number p`는 per-process `page table`의 index로 사용된다. Page table entry는 해당 page가 들어 있는 physical `frame number f`를 담는다. `page offset d`는 page 내부 위치이므로 변하지 않는다.
 
-<p align="center"><img src="./images/199_Figure_9.8_page_467.png" alt="Paging hardware" width="760"></p>
+![Paging hardware](@/assets/images/199_Figure_9.8_page_467.png)
 <p align="center"><sub>Figure 9.8 · PDF p. 467 · page number로 page table을 조회하고 frame number와 offset을 결합해 physical address를 만드는 paging hardware</sub></p>
 
 MMU의 logical-to-physical translation은 다음 순서다.
@@ -299,7 +299,7 @@ page_table[p]    = f
 physical address = (f, d)
 ```
 
-<p align="center"><img src="./images/200_Figure_9.9_page_468.png" alt="Paging model" width="760"></p>
+![Paging model](@/assets/images/200_Figure_9.9_page_468.png)
 <p align="center"><sub>Figure 9.9 · PDF p. 468 · programmer가 보는 logical pages가 physical memory의 frames에 흩어져 배치되는 paging model</sub></p>
 
 Page size와 frame size는 hardware가 정하며, 보통 2의 거듭제곱이다. Logical address space 크기가 `2^m`, page size가 `2^n` bytes라면 logical address의 상위 `m - n` bits가 page number, 하위 `n` bits가 page offset이 된다.
@@ -311,7 +311,7 @@ Page size와 frame size는 hardware가 정하며, 보통 2의 거듭제곱이다
 
 Page size를 2의 거듭제곱으로 잡으면 bit slicing만으로 page number와 offset을 분리할 수 있어 address translation이 단순해진다.
 
-<p align="center"><img src="./images/201_Figure_9.10_page_469.png" alt="Paging example" width="640"></p>
+![Paging example](@/assets/images/201_Figure_9.10_page_469.png)
 <p align="center"><sub>Figure 9.10 · PDF p. 469 · 32-byte physical memory와 4-byte pages에서 logical address를 physical address로 변환하는 예</sub></p>
 
 Figure 9.10의 작은 예에서 page size는 4 bytes이므로 offset은 2 bits다. Logical address `0`은 page `0`, offset `0`이고, page table에서 page `0`은 frame `5`에 있다. 따라서 physical address는 `(5 × 4) + 0 = 20`이다. Logical address `3`은 page `0`, offset `3`이므로 physical address `23`이 된다. Logical address `4`는 page `1`, offset `0`이고 page `1`이 frame `6`에 있으므로 physical address `24`로 mapping된다.
@@ -333,7 +333,7 @@ Page size 선택에는 trade-off가 있다.
 
 Process가 도착하면 OS는 process size를 pages 단위로 본다. Process가 `n` pages를 요구하면 적어도 `n` free frames가 필요하다. 충분하면 OS는 각 page를 free frame에 load하고, 각 mapping을 process page table에 기록한다.
 
-<p align="center"><img src="./images/202_Figure_9.11_page_470.png" alt="Free frame allocation" width="760"></p>
+![Free frame allocation](@/assets/images/202_Figure_9.11_page_470.png)
 <p align="center"><sub>Figure 9.11 · PDF p. 470 · free-frame list에서 frames를 골라 새 process pages에 할당하고 page table을 채우는 과정</sub></p>
 
 Paging의 중요한 성질은 programmer’s view와 actual physical memory의 분리다. Programmer는 memory를 자기 program만 담긴 하나의 연속된 logical space처럼 본다. 실제로는 user program pages가 physical memory 곳곳에 흩어져 있고, 그 사이에는 다른 programs도 있다. 이 차이는 address-translation hardware가 숨기며, mapping은 OS가 통제한다. User process는 자기 page table에 없는 memory를 address할 방법이 없으므로, 정의상 자신이 소유하지 않은 memory에 접근할 수 없다.
@@ -354,7 +354,7 @@ Page table을 main memory에 두면 data 하나를 읽기 위해 memory access�
 
 이를 해결하는 hardware cache가 `translation look-aside buffer (TLB)`다. TLB는 작고 빠른 associative memory이며, page-table entries 일부를 저장한다. 각 TLB entry는 key/tag와 value로 구성된다. CPU가 logical address를 생성하면 MMU는 먼저 page number가 TLB에 있는지 검사한다.
 
-<p align="center"><img src="./images/203_Figure_9.12_page_473.png" alt="Paging hardware with TLB" width="760"></p>
+![Paging hardware with TLB](@/assets/images/203_Figure_9.12_page_473.png)
 <p align="center"><sub>Figure 9.12 · PDF p. 473 · TLB hit이면 page table memory access 없이 frame number를 얻고, miss이면 page table을 조회한 뒤 TLB를 갱신하는 구조</sub></p>
 
 TLB lookup은 현대 hardware에서 instruction pipeline의 일부로 수행되어, hit이면 paging이 없는 경우와 비교해 거의 추가 penalty가 없다. 하지만 pipeline step 안에 lookup을 끝내야 하므로 TLB는 작게 유지된다. 보통 32-1,024 entries 정도이고, instruction TLB와 data TLB를 분리하거나 multi-level TLB를 두는 CPUs도 있다.
@@ -395,7 +395,7 @@ Protection은 더 세분화할 수 있다. Hardware가 `read-only`, `read-write`
 
 Page table entry에는 일반적으로 `valid-invalid bit`도 있다. `valid`이면 해당 page가 process의 logical address space에 속하는 legal page이고, `invalid`이면 그 page는 process logical address space 밖이다.
 
-<p align="center"><img src="./images/204_Figure_9.13_page_475.png" alt="Valid-invalid bit" width="760"></p>
+![Valid-invalid bit](@/assets/images/204_Figure_9.13_page_475.png)
 <p align="center"><sub>Figure 9.13 · PDF p. 475 · page table entry의 valid-invalid bit로 legal page와 invalid page reference를 구분하는 예</sub></p>
 
 예를 들어 14-bit address space가 `0`부터 `16383`까지이고, program이 실제로 `0`부터 `10468`까지만 사용한다고 하자. Page size가 2 KB이면 pages 0-5는 valid로 표시되고, pages 6-7은 invalid로 표시된다. Pages 6 또는 7을 참조하면 invalid page reference trap이 발생한다.
@@ -410,7 +410,7 @@ Paging은 common code sharing을 쉽게 만든다. 여러 processes가 같은 li
 
 공유하려는 code가 `reentrant code`라면 physical memory에는 code pages 한 copy만 두고, 각 process의 page table이 같은 frames를 가리키게 만들 수 있다. Reentrant code는 execution 중 자기 자신을 수정하지 않는 non-self-modifying code다. 각 process는 자기 registers와 data storage를 따로 가지므로, code pages만 공유하고 process-specific data는 분리할 수 있다.
 
-<p align="center"><img src="./images/205_Figure_9.14_page_476.png" alt="Shared libc pages" width="720"></p>
+![Shared libc pages](@/assets/images/205_Figure_9.14_page_476.png)
 <p align="center"><sub>Figure 9.14 · PDF p. 476 · 여러 processes의 page tables가 같은 physical libc pages를 가리켜 standard C library를 공유하는 구조</sub></p>
 
 이 방식에서는 40 processes가 `libc`를 사용해도 physical memory에는 2 MB copy 하나만 있으면 된다. Standard C library뿐 아니라 compilers, window systems, database systems처럼 많이 쓰이는 programs도 shared pages의 대상이 될 수 있다. Section 9.1.5의 `shared libraries`는 보통 shared pages로 구현된다.
@@ -427,7 +427,7 @@ Paging의 기본 구조는 단순하지만, modern systems의 logical address sp
 
 간단한 해결은 page table을 smaller pieces로 나누는 것이다. `two-level paging`에서는 page table 자체도 paging된다.
 
-<p align="center"><img src="./images/206_Figure_9.15_page_478.png" alt="Two-level page table" width="760"></p>
+![Two-level page table](@/assets/images/206_Figure_9.15_page_478.png)
 <p align="center"><sub>Figure 9.15 · PDF p. 478 · outer page table이 inner page-table pages를 가리키는 two-level page-table scheme</sub></p>
 
 32-bit logical address와 4 KB page size에서는 logical address가 20-bit page number와 12-bit offset으로 나뉜다. Page table도 paging하므로 20-bit page number를 다시 10-bit outer index와 10-bit inner index로 나눈다.
@@ -441,7 +441,7 @@ Paging의 기본 구조는 단순하지만, modern systems의 logical address sp
 
 `p1`은 outer page table의 index이고, `p2`는 inner page table page 안의 displacement다. Translation은 outer page table에서 시작해 안쪽으로 들어가므로 이 구조를 `forward-mapped page table`이라고도 한다.
 
-<p align="center"><img src="./images/207_Figure_9.16_page_479.png" alt="Two-level address translation" width="760"></p>
+![Two-level address translation](@/assets/images/207_Figure_9.16_page_479.png)
 <p align="center"><sub>Figure 9.16 · PDF p. 479 · 32-bit two-level paging에서 p1으로 outer table을 찾고 p2로 inner table entry를 찾아 frame을 얻는 과정</sub></p>
 
 하지만 64-bit logical address space에서는 two-level paging이 충분하지 않다. Page size가 4 KB이면 page table은 최대 `2^52` entries를 가질 수 있다. Inner page table을 한 page 크기, 즉 `2^10`개의 4-byte entries로 맞추면 outer page table은 `2^42` entries, `2^44` bytes가 된다. Outer page table 자체가 너무 크다.
@@ -458,7 +458,7 @@ Outer page table을 다시 paging하면 three-level paging이 되지만, 64-bit 
 | mapped page frame | 대응되는 physical frame number |
 | next pointer | collision chain의 다음 element |
 
-<p align="center"><img src="./images/208_Figure_9.17_page_479.png" alt="Hashed page table" width="760"></p>
+![Hashed page table](@/assets/images/208_Figure_9.17_page_479.png)
 <p align="center"><sub>Figure 9.17 · PDF p. 479 · virtual page number를 hash해 collision chain에서 matching page를 찾고 frame number를 얻는 hashed page table</sub></p>
 
 Algorithm은 다음과 같다.
@@ -476,7 +476,7 @@ Algorithm은 다음과 같다.
 
 `inverted page table`은 방향을 뒤집는다. Process별로 virtual pages 수만큼 entries를 두는 대신, system 전체에 physical frame마다 하나의 entry만 둔다. 각 entry는 그 real memory frame에 저장된 page의 virtual address와 owner process 정보를 담는다. 즉 page table 크기는 virtual address space 크기가 아니라 physical memory frame 수에 비례한다.
 
-<p align="center"><img src="./images/209_Figure_9.18_page_480.png" alt="Inverted page table" width="760"></p>
+![Inverted page table](@/assets/images/209_Figure_9.18_page_480.png)
 <p align="center"><sub>Figure 9.18 · PDF p. 480 · process id와 page number로 inverted page table을 검색해 physical frame index를 찾는 구조</sub></p>
 
 Inverted page table은 여러 address spaces가 하나의 table에 섞이므로 각 entry에 `address-space identifier (ASID)` 또는 process id가 필요하다. 단순화하면 virtual address는 다음 triple로 볼 수 있다.
@@ -515,7 +515,7 @@ virtual address reference
 
 Process instructions와 data는 실행되려면 memory에 있어야 한다. 하지만 process 전체 또는 일부는 임시로 memory에서 `backing store`로 나갔다가, 이후 계속 실행하기 위해 다시 memory로 들어올 수 있다. 이것이 `swapping`이다. Swapping은 모든 processes의 total physical address space가 실제 physical memory보다 커지는 것을 허용하므로, system의 degree of multiprogramming을 높인다.
 
-<p align="center"><img src="./images/210_Figure_9.19_page_482.png" alt="Standard swapping" width="760"></p>
+![Standard swapping](@/assets/images/210_Figure_9.19_page_482.png)
 <p align="center"><sub>Figure 9.19 · PDF p. 482 · disk backing store를 이용해 process P1을 swap out하고 process P2를 swap in하는 standard swapping</sub></p>
 
 ### 9.5.1 Standard Swapping
@@ -539,7 +539,7 @@ Linux와 Windows를 포함한 대부분의 systems는 process 전체가 아니�
 | `page out` | page를 memory에서 backing store로 내보냄 |
 | `page in` | page를 backing store에서 memory로 가져옴 |
 
-<p align="center"><img src="./images/211_Figure_9.20_page_484.png" alt="Swapping with paging" width="760"></p>
+![Swapping with paging](@/assets/images/211_Figure_9.20_page_484.png)
 <p align="center"><sub>Figure 9.20 · PDF p. 484 · processes A와 B의 일부 pages만 page out/page in하는 swapping with paging</sub></p>
 
 Swapping with paging은 Chapter 10의 `virtual memory`와 잘 결합된다. Virtual memory에서는 process 전체를 memory에 올리지 않고 필요한 pages만 memory에 유지하며, page fault가 나면 필요한 page를 page in할 수 있다.
@@ -562,7 +562,7 @@ Intel architecture 예시는 특정 chip history를 외우기 위한 부분이 �
 
 IA-32 memory management는 `segmentation`과 `paging` 두 단계로 나뉜다. CPU가 logical address를 만들면 segmentation unit이 이를 `linear address`로 바꾼다. 그 linear address가 paging unit으로 들어가 physical address로 변환된다. 이 두 unit이 합쳐져 MMU 역할을 한다.
 
-<p align="center"><img src="./images/212_Figure_9.21_page_485.png" alt="IA-32 address translation" width="760"></p>
+![IA-32 address translation](@/assets/images/212_Figure_9.21_page_485.png)
 <p align="center"><sub>Figure 9.21 · PDF p. 485 · IA-32에서 logical address가 segmentation unit을 거쳐 linear address가 되고, paging unit을 거쳐 physical address가 되는 흐름</sub></p>
 
 ```text
@@ -585,7 +585,7 @@ IA-32에서 segment는 최대 4 GB까지 가능하고, process당 최대 16 K se
 
 `LDT (local descriptor table)`와 `GDT (global descriptor table)`의 각 entry는 8-byte `segment descriptor`이며, segment의 base location, limit, protection 정보 등을 담는다.
 
-<p align="center"><img src="./images/213_Figure_9.22_page_486.png" alt="IA-32 segmentation" width="760"></p>
+![IA-32 segmentation](@/assets/images/213_Figure_9.22_page_486.png)
 <p align="center"><sub>Figure 9.22 · PDF p. 486 · selector가 descriptor table entry를 고르고 segment base와 offset을 더해 32-bit linear address를 만드는 과정</sub></p>
 
 IA-32 logical address는 `(selector, offset)` pair다. Selector는 16-bit이고 다음 fields로 나뉜다.
@@ -608,7 +608,7 @@ IA-32 4-KB page:
 |      10 bits      |    10 bits    | 12 bits  |
 ```
 
-<p align="center"><img src="./images/214_Figure_9.23_page_487.png" alt="IA-32 paging" width="723"></p>
+![IA-32 paging](@/assets/images/214_Figure_9.23_page_487.png)
 <p align="center"><sub>Figure 9.23 · PDF p. 487 · CR3가 page directory를 가리키고, page directory와 page table을 거쳐 4-KB page frame을 찾는 IA-32 paging</sub></p>
 
 상위 10 bits는 IA-32가 `page directory`라고 부르는 outer page table entry를 선택한다. `CR3 register`는 current process의 page directory를 가리킨다. Page directory entry는 inner page table을 가리키고, 다음 10 bits가 page table entry를 고른다. 하위 12 bits는 4-KB page 내부 offset이다.
@@ -619,7 +619,7 @@ IA-32 page tables 자체도 disk로 swap될 수 있다. Page directory entry의 
 
 32-bit architecture의 4-GB memory limitation을 완화하기 위해 IA-32는 `page address extension (PAE)`를 도입했다. PAE는 two-level paging을 three-level scheme으로 확장하고, top two bits가 `page directory pointer table`을 가리키게 한다.
 
-<p align="center"><img src="./images/215_Figure_9.24_page_488.png" alt="Page address extensions" width="760"></p>
+![Page address extensions](@/assets/images/215_Figure_9.24_page_488.png)
 <p align="center"><sub>Figure 9.24 · PDF p. 488 · PAE에서 page directory pointer table을 추가해 IA-32 physical address space를 확장하는 구조</sub></p>
 
 PAE는 page-directory/page-table entries를 32 bits에서 64 bits로 키웠고, page tables와 page frames의 base address field를 20 bits에서 24 bits로 확장했다. 여기에 12-bit offset을 더하면 36-bit address space가 되어 최대 64 GB physical memory를 지원할 수 있다. 단, PAE 사용에는 OS support가 필요하다.
@@ -628,7 +628,7 @@ PAE는 page-directory/page-table entries를 32 bits에서 64 bits로 키웠고, 
 
 `x86-64`는 IA-32 instruction set을 확장한 64-bit architecture다. 이론적으로 64-bit address space는 `2^64` bytes를 표현할 수 있지만, 현재 설계에서는 실제로 모든 64 bits를 address representation에 쓰지는 않는다. x86-64는 현재 48-bit virtual address를 제공하고, 4 KB, 2 MB, 1 GB page sizes를 지원하며, four-level paging hierarchy를 사용한다. PAE를 사용할 수 있어 virtual address는 48 bits지만 physical address는 52 bits, 즉 4,096 TB까지 지원한다.
 
-<p align="center"><img src="./images/216_Figure_9.25_page_488.png" alt="x86-64 linear address" width="760"></p>
+![x86-64 linear address](@/assets/images/216_Figure_9.25_page_488.png)
 <p align="center"><sub>Figure 9.25 · PDF p. 488 · x86-64에서 48-bit linear address를 four-level paging index와 offset으로 나누는 구조</sub></p>
 
 4-KB pages 기준으로 x86-64 linear address는 다음처럼 읽으면 된다.
@@ -654,7 +654,7 @@ ARMv8에는 세 가지 `translation granules`가 있다.
 
 4-KB와 16-KB granules에서는 최대 four levels of paging을 사용할 수 있고, 64-KB granules에서는 최대 three levels of paging을 사용할 수 있다. ARMv8은 64-bit architecture지만 현재는 48 bits만 사용한다.
 
-<p align="center"><img src="./images/217_Figure_9.26_page_490.png" alt="ARM 4-KB translation granule" width="760"></p>
+![ARM 4-KB translation granule](@/assets/images/217_Figure_9.26_page_490.png)
 <p align="center"><sub>Figure 9.26 · PDF p. 490 · ARMv8 4-KB translation granule에서 48-bit address를 level 0-3 indexes와 offset으로 나누는 구조</sub></p>
 
 4-KB granule에서 address는 level 0, level 1, level 2, level 3 indexes와 12-bit offset으로 나뉜다.
@@ -666,7 +666,7 @@ ARMv8 4-KB translation granule:
 | 63-48  |     47-39     |     38-30     |     29-21     |     20-12     | 11-0   |
 ```
 
-<p align="center"><img src="./images/218_Figure_9.27_page_490.png" alt="ARM four-level hierarchical paging" width="760"></p>
+![ARM four-level hierarchical paging](@/assets/images/218_Figure_9.27_page_490.png)
 <p align="center"><sub>Figure 9.27 · PDF p. 490 · TTBR이 level 0 table을 가리키고, table entries가 다음 table 또는 큰 region을 가리키는 ARMv8 four-level hierarchical paging</sub></p>
 
 `TTBR (translation table base register)`는 current thread의 level 0 table을 가리킨다. 모든 four levels를 사용하면 offset bits 0-11은 4-KB page 내부 offset이다. 하지만 level 1과 level 2 table entries는 다음 table을 가리키는 대신 큰 region을 직접 가리킬 수도 있다. Level-1 entry가 1-GB region을 가리키면 low-order 30 bits가 1-GB region 내부 offset이 되고, level-2 entry가 2-MB region을 가리키면 low-order 21 bits가 2-MB region 내부 offset이 된다.
