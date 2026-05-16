@@ -2,7 +2,7 @@
 title: "Chapter 6. The Link Layer and LANs"
 order: 6
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-17T01:47:56+09:00
+modDatetime: 2026-05-17T03:56:46+09:00
 description: "Chapter 6. The Link Layer and LANs 정리 노트입니다."
 tags:
   - cs전공책
@@ -545,3 +545,4 @@ Chapter 6의 중심은 link layer가 adjacent nodes 사이에서 network-layer d
 Error detection/correction에서는 parity, two-dimensional parity, Internet checksum, CRC를 다뤘다. Multiple access에서는 channel partitioning(`TDM`, `FDM`, `CDMA`), random access(`ALOHA`, `slotted ALOHA`, `CSMA`, `CSMA/CD`), taking-turns(`polling`, `token passing`)를 비교했고, DOCSIS가 여러 방식을 섞어 쓰는 실제 사례임을 보았다.
 
 Switched LAN에서는 MAC address와 IP address가 왜 별도로 필요한지, `ARP`가 같은 subnet에서 IP-to-MAC mapping을 어떻게 수행하는지, Ethernet frame format과 service model이 무엇인지 정리했다. Switch는 `switch table`을 self-learning으로 만들고, filtering/forwarding을 수행하며, VLAN은 하나의 physical LAN 위에 여러 broadcast domains를 만든다. 마지막으로 MPLS, data center networking, Web request 흐름을 통해 link layer가 다른 계층들과 어떻게 맞물리는지 확인했다.
+

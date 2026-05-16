@@ -2,12 +2,13 @@
 title: "Chapter 5. The Internet Protocol"
 order: 5
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-17T02:37:10+09:00
 description: "Chapter 5. The Internet Protocol 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "ComputerNetwork"
+  - cs전공책
+  - ComputerNetwork
 ---
+
 # Chapter 5. The Internet Protocol
 
 - 과목: Computer Network
