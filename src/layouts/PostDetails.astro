@@ -10,6 +10,7 @@ import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
+import { getFirstPostImage } from "@/utils/getFirstPostImage";
 import siteHref from "@/utils/siteHref";
 import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
@@ -47,9 +48,8 @@ if (typeof initOgImage === "string") {
   ogImageUrl = initOgImage.src; // Local asset
 }
 
-// Use dynamic OG image if enabled and no remote|local ogImage
-if (!ogImageUrl && SITE.dynamicOgImage) {
-  ogImageUrl = `${getPath(post.id, post.filePath)}/index.png`;
+if (!ogImageUrl) {
+  ogImageUrl = getFirstPostImage(post);
 }
 
 // Resolve OG image URL (or fallback to SITE.ogImage / default `og.png`)
