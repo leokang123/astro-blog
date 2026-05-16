@@ -2,7 +2,7 @@
 title: "Chapter 4. The Network Layer: Data Plane"
 order: 4
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T08:19:31+09:00
+modDatetime: 2026-05-17T02:02:51+09:00
 description: "Chapter 4. The Network Layer: Data Plane 정리 노트입니다."
 tags:
   - cs전공책

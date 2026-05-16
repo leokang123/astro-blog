@@ -2,7 +2,7 @@
 title: "01_TCPIP_Chapter_1_Introduction"
 order: 1
 pubDatetime: 2026-05-16T06:31:12+09:00
-modDatetime: 2026-05-16T08:19:17+09:00
+modDatetime: 2026-05-17T01:19:27+09:00
 description: ""
 tags:
   - 일반

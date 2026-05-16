@@ -2,12 +2,13 @@
 title: "Chapter 21. Windows 10"
 order: 21
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-17T00:31:16+09:00
 description: "Chapter 21. Windows 10 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "OperatingSystem"
+  - cs전공책
+  - OperatingSystem
 ---
+
 # Chapter 21. Windows 10
 
 - 과목: Operating System
@@ -892,3 +893,4 @@ UMS와 fibers는 둘 다 user-mode scheduling과 관련 있지만 같은 것이 
 17. Win32에서 process 간 kernel object sharing을 하는 세 가지 방법은 무엇인가?
 18. `critical section`, `SRW lock`, `thread pool`, `fiber`, `UMS`의 차이를 설명하라.
 19. `VirtualAlloc()`, `CreateFileMapping()`, heap, TLS, AWE는 각각 어떤 memory use case에 적합한가?
+

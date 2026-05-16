@@ -2,12 +2,13 @@
 title: "Chapter 20. The Linux System"
 order: 20
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-17T00:31:20+09:00
 description: "Chapter 20. The Linux System 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "OperatingSystem"
+  - cs전공책
+  - OperatingSystem
 ---
+
 # Chapter 20. The Linux System
 
 - 과목: Operating System
@@ -824,3 +825,5 @@ Root UID는 powerful하지만, modern Linux security가 root 하나만으로 끝
 14. Linux IPC에서 signal, wait queue, pipe, shared memory, semaphore는 각각 어떤 종류의 communication에 적합한가?
 15. Linux network stack에서 `socket interface`, protocol drivers, network-device drivers, `skbuff`는 어떻게 연결되는가?
 16. Linux access control에서 real UID, effective UID, saved UID, fsuid/fsgid가 필요한 이유를 설명하라.
+
+

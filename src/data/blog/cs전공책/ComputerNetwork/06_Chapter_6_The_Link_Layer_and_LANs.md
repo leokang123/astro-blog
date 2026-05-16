@@ -2,7 +2,7 @@
 title: "Chapter 6. The Link Layer and LANs"
 order: 6
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T08:19:41+09:00
+modDatetime: 2026-05-17T01:47:56+09:00
 description: "Chapter 6. The Link Layer and LANs 정리 노트입니다."
 tags:
   - cs전공책

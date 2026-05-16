@@ -2,12 +2,13 @@
 title: "Chapter 6. Synchronization Tools"
 order: 6
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+modDatetime: 2026-05-17T00:39:05+09:00
 description: "Chapter 6. Synchronization Tools 정리 노트입니다."
 tags:
-  - "cs전공책"
-  - "OperatingSystem"
+  - cs전공책
+  - OperatingSystem
 ---
+
 # Chapter 6. Synchronization Tools
 
 - 과목: Operating System
