@@ -2,12 +2,12 @@
 title: "Chapter 2. Application Layer"
 order: 2
 pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+modDatetime: 2026-05-18T03:03:12+09:00
 description: "Computer Networking Top-Down 정리: Chapter 2. Application Layer"
 tags:
-  - "ComputerNetwork"
-  - "CS"
-  - "TopDown"
+  - ComputerNetwork
+  - CS
+  - TopDown
 ---
 
 ## 개요
@@ -790,3 +790,4 @@ socket assignments는 Section 2.7의 API를 실제 protocol 구현으로 확장�
 Wireshark Lab: HTTP는 packet trace에서 basic GET/reply interaction, HTTP message format, large HTML file retrieval, embedded URLs, persistent/non-persistent connections, authentication/security 관련 headers를 직접 관찰하게 한다. 이 lab은 Section 2.2의 message format을 실제 traffic으로 확인하는 역할을 한다.
 
 Wireshark Lab: DNS는 client가 local DNS server에 query를 보내고 response를 받는 단순한 외형과, 그 뒤에서 hierarchy가 recursive/iterative resolution을 수행할 수 있다는 내부 구조를 연결한다. Section 2.4의 DNS query/reply format, resource records, caching을 실제 packets에서 확인하는 것이 목표다.
+오늘밤은 근들근들 

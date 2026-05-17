@@ -2,11 +2,12 @@
 title: "Chapter 1. Introduction"
 order: 1
 pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+modDatetime: 2026-05-18T03:03:26+09:00
 description: "Database System Concepts 정리: Chapter 1. Introduction"
+featured: true
 tags:
-  - "Database"
-  - "CS"
+  - Database
+  - CS
 ---
 
 ## 개요
