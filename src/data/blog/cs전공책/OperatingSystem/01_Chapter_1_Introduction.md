@@ -6,7 +6,7 @@ modDatetime: 2026-05-17T00:58:44+09:00
 description: "Chapter 1. Introduction 정리 노트입니다."
 featured: true
 tags:
-  - cs전공책
+  - CS
   - OperatingSystem
 ---
 
