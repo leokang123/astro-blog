@@ -100,7 +100,7 @@ Typical file attributes는 다음과 같다.
 | `Protection` | read/write/execute 등 누가 무엇을 할 수 있는지 나타내는 access-control information |
 | `Timestamps`, `user identification` | creation, last modification, last use, owner/user 정보. protection/security/usage monitoring에 활용 |
 
-![File attributes example](@/assets/images/285_Figure_13.1_page_661.png)
+![File attributes example](@/assets/images/cs-operating-system-285-figure-13-1-page-661.png)
 <p align="center"><sub>Figure 13.1 · PDF p. 661 · file name, type, size, timestamps 같은 attributes가 user-visible metadata로 표시되는 예</sub></p>
 
 File attributes에 대한 정보는 directory structure에 저장된다. Directory entry는 보통 file name과 unique identifier를 담고, identifier가 나머지 attributes를 찾게 한다. File metadata는 file마다 1KB 이상일 수 있고, files가 많으면 directory 자체도 megabytes/gigabytes가 될 수 있다. Directory는 files와 같은 volatility를 가져야 하므로 device에 저장되고, 필요할 때 piecemeal로 memory에 올라온다.
@@ -149,7 +149,7 @@ File system design에서는 OS가 file types를 recognize/support할지 결정�
 
 가장 흔한 file type 구현은 file name extension이다. Name과 extension을 period로 나누어, user와 OS/application이 name만 보고 type을 추정한다. `resume.docx`, `server.c`, `ReaderThread.cpp` 같은 names가 예다.
 
-![Common file types](@/assets/images/287_Figure_13.3_page_667.png)
+![Common file types](@/assets/images/cs-operating-system-287-figure-13-3-page-667.png)
 <p align="center"><sub>Figure 13.3 · PDF p. 667 · executable, source code, archive, multimedia 등 common file types와 usual extensions</sub></p>
 
 Extensions는 system이 강하게 enforce할 수도 있고, applications를 위한 hint일 수도 있다. `.com`, `.exe`, `.sh`는 executable candidates로 취급될 수 있고, Java compiler는 `.java`, word processor는 `.doc`/`.docx`를 기대할 수 있다. 하지만 extension이 OS에 의해 enforce되지 않으면 application programmer가 해석할 뿐이다.
@@ -184,7 +184,7 @@ File에 저장된 information은 memory로 읽혀 사용된다. 이 information�
 
 Sequential file에서 read/write의 핵심은 current position이다. `read next()`는 file의 next portion을 읽고 file pointer를 자동 advance한다. `write next()`는 file end에 append하고 newly written material의 end로 pointer를 advance한다. File은 beginning으로 reset될 수 있고, 일부 systems는 n records forward/backward skip을 제공하기도 한다.
 
-![Sequential-access file](@/assets/images/288_Figure_13.4_page_669.png)
+![Sequential-access file](@/assets/images/cs-operating-system-288-figure-13-4-page-669.png)
 <p align="center"><sub>Figure 13.4 · PDF p. 669 · current position에서 read/write가 진행되고 rewind로 beginning으로 돌아가는 sequential-access file model</sub></p>
 
 Sequential access는 tape model에 기반하지만, random-access device에서도 잘 동작한다. 즉 storage device가 disk라고 해서 application이 반드시 direct access를 써야 하는 것은 아니다.
@@ -203,7 +203,7 @@ Fixed logical record length가 `L`이고 record number가 `N`이면, record N re
 
 Direct-access file 위에 sequential access를 simulate하는 것은 쉽다. Current position 변수 `cp`를 두고 `read_next`를 `read cp; cp = cp + 1`로 구현하면 된다.
 
-![Sequential access on direct-access file](@/assets/images/289_Figure_13.5_page_671.png)
+![Sequential access on direct-access file](@/assets/images/cs-operating-system-289-figure-13-5-page-671.png)
 <p align="center"><sub>Figure 13.5 · PDF p. 671 · direct-access file 위에서 current position 변수로 sequential access를 흉내 내는 방식</sub></p>
 
 반대로 sequential-access file 위에 direct-access file을 simulate하는 것은 매우 비효율적이고 clumsy하다. 이 차이는 “더 강한 access capability를 가진 abstraction 위에 약한 abstraction을 얹기는 쉽지만, 반대는 어렵다”는 설계 감각을 보여준다.
@@ -216,7 +216,7 @@ Retail-price file 예시는 indexed access의 이점을 보여준다. 각 record
 
 Large file에서는 index file 자체도 memory에 두기 어려울 수 있다. 이때 index에 대한 index를 만든다. Primary index가 secondary index blocks를 가리키고, secondary index blocks가 actual file blocks를 가리킨다. IBM `ISAM (indexed sequential-access method)`은 small master index → secondary index blocks → actual file blocks 구조를 사용한다. Defined key로 file을 sorted 상태로 유지하고, master index와 secondary index에서 binary search를 수행한 뒤 target block을 sequentially search한다. 원문 예시에서는 어떤 record도 key로부터 at most two direct-access reads로 찾을 수 있다.
 
-![Index and relative files](@/assets/images/290_Figure_13.6_page_672.png)
+![Index and relative files](@/assets/images/cs-operating-system-290-figure-13-6-page-672.png)
 <p align="center"><sub>Figure 13.6 · PDF p. 672 · index file이 key를 relative file의 record 위치로 연결해 direct access를 돕는 구조</sub></p>
 
 ## 13.3 Directory Structure
@@ -238,7 +238,7 @@ Directory가 지원해야 하는 기본 operations는 다음과 같다.
 
 `single-level directory`는 모든 files가 같은 directory에 들어가는 가장 단순한 구조다.
 
-![Single-level directory](@/assets/images/291_Figure_13.7_page_673.png)
+![Single-level directory](@/assets/images/cs-operating-system-291-figure-13-7-page-673.png)
 <p align="center"><sub>Figure 13.7 · PDF p. 673 · 모든 files가 하나의 directory namespace에 놓이는 single-level directory</sub></p>
 
 장점은 구현과 이해가 쉽다는 것이다. 하지만 files 수가 늘거나 users가 여러 명이면 한계가 크다. 모든 files가 같은 directory에 있으므로 names가 globally unique해야 한다. 서로 다른 users가 `test.txt`나 `prog2.c` 같은 같은 이름을 쓰면 충돌한다. 또한 한 user만 있어도 files가 hundreds/thousands로 늘면 names를 기억하고 관리하기 어렵다.
@@ -247,7 +247,7 @@ Directory가 지원해야 하는 기본 operations는 다음과 같다.
 
 `two-level directory`는 user마다 별도 `UFD (user file directory)`를 만들고, `MFD (master file directory)`가 user name 또는 account number로 각 UFD를 가리키게 한다.
 
-![Two-level directory](@/assets/images/292_Figure_13.8_page_673.png)
+![Two-level directory](@/assets/images/cs-operating-system-292-figure-13-8-page-673.png)
 <p align="center"><sub>Figure 13.8 · PDF p. 673 · MFD가 각 user의 UFD를 가리키고 각 UFD가 해당 user files를 담는 구조</sub></p>
 
 User가 file을 참조하면 자기 UFD만 search한다. 따라서 user A와 user B가 각각 `test.txt`를 가져도 충돌하지 않는다. File create/delete도 해당 user의 UFD 안에서만 검사하므로 다른 user의 same-name file을 실수로 삭제하지 않는다.
@@ -262,7 +262,7 @@ System files, 예를 들어 loaders, compilers, utilities, libraries를 모든 U
 
 Two-level directory를 generalize하면 arbitrary height의 `tree-structured directory`가 된다. 이 구조가 가장 흔하다. Tree는 root directory를 가지며, every file은 unique path name을 가진다.
 
-![Tree-structured directory](@/assets/images/293_Figure_13.9_page_675.png)
+![Tree-structured directory](@/assets/images/cs-operating-system-293-figure-13-9-page-675.png)
 <p align="center"><sub>Figure 13.9 · PDF p. 675 · root 아래 subdirectories와 files가 arbitrary height tree를 이루는 directory structure</sub></p>
 
 Directory 또는 subdirectory는 files와 subdirectories의 set을 담는다. 많은 implementations에서 directory는 special file로 취급된다. Directory entry마다 file인지 subdirectory인지 나타내는 bit를 둘 수 있고, create/delete directory에는 special system calls가 사용된다.
@@ -286,7 +286,7 @@ Tree-structured system에서는 다른 user files도 path name으로 access할 �
 
 Tree는 file/directory sharing을 금지한다. 공동 프로젝트에서 두 programmers가 같은 project subdirectory를 각자 home directory 아래에 두고 싶다면, directory가 두 위치에 동시에 존재해야 한다. `acyclic graph`는 cycles 없이 shared files/subdirectories를 허용하는 tree의 자연스러운 일반화다.
 
-![Acyclic-graph directory](@/assets/images/294_Figure_13.10_page_677.png)
+![Acyclic-graph directory](@/assets/images/cs-operating-system-294-figure-13-10-page-677.png)
 <p align="center"><sub>Figure 13.10 · PDF p. 677 · cycles 없이 동일 file/subdirectory가 여러 directories에서 공유되는 acyclic-graph directory</sub></p>
 
 Shared file은 두 copies와 다르다. 두 copies는 한쪽 변경이 다른 쪽에 반영되지 않지만, shared file은 actual file이 하나뿐이므로 한 사용자의 변경이 즉시 다른 사용자에게 보인다. Shared subdirectory에서는 한 사용자가 새 file을 만들면 공유된 모든 위치에서 보인다.
@@ -308,7 +308,7 @@ Deletion도 복잡하다. 누군가 shared file을 delete했다고 바로 file s
 
 Links를 허용하면 tree structure가 graph structure로 바뀐다. 문제는 cycles를 막지 않으면 `general graph directory`가 되어 traversal과 deletion이 어려워진다는 점이다.
 
-![General graph directory](@/assets/images/295_Figure_13.11_page_680.png)
+![General graph directory](@/assets/images/cs-operating-system-295-figure-13-11-page-680.png)
 <p align="center"><sub>Figure 13.11 · PDF p. 680 · links가 cycles를 만들 수 있는 general graph directory 구조</sub></p>
 
 Acyclic graph의 장점은 traversal과 “더 이상 file reference가 없는지” 판단하는 algorithms가 비교적 단순하다는 점이다. Shared section을 두 번 traverse하지 않으면 된다. 하지만 cycles가 있으면 correctness 문제가 생긴다. Poorly designed search algorithm은 cycle을 계속 돌며 infinite loop에 빠질 수 있다. Arbitrary limit을 두어 search 중 접근할 directories 수를 제한하는 방법도 있지만 근본 해결은 아니다.
@@ -363,7 +363,7 @@ UNIX-style protection은 owner, group, other 각각에 대해 `rwx` 세 bits를 
 
 Sara가 `book.tex`를 쓰고, Jim/Dawn/Jill은 read/write만 가능하며, all other users는 read-only로 두는 예를 생각해 보자. 새 group `text`를 만들고 Jim/Dawn/Jill을 넣은 뒤, `book.tex`에 owner Sara는 all bits, group text는 r/w, other는 r만 설정한다. Temporary visitor에게 Chapter 1만 access를 주고 싶다면 group에 넣을 수 없다. Group에 넣으면 모든 chapters 접근이 가능해지기 때문이다. 이때 file-specific ACL이 유용하다.
 
-![Windows ACL management](@/assets/images/296_Figure_13.12_page_685.png)
+![Windows ACL management](@/assets/images/cs-operating-system-296-figure-13-12-page-685.png)
 <p align="center"><sub>Figure 13.12 · PDF p. 685 · file-specific users/groups에 대해 allow/deny permissions를 설정하는 ACL 관리 예</sub></p>
 
 ACL과 basic permissions가 충돌할 때 precedence도 정책 문제다. 예를 들어 group permission은 read-only인데 특정 user ACL은 read/write를 허용한다면 write를 허용해야 하는가? Solaris 등은 ACL이 더 fine-grained이고 default가 아니므로 ACL에 precedence를 둔다. 이는 더 specific한 rule이 우선한다는 일반 원칙과 맞다.
@@ -390,14 +390,14 @@ Writes to memory-mapped file이 반드시 secondary storage에 즉시 synchronou
 
 Multiple processes는 같은 file을 동시에 map할 수 있다. 이 경우 한 process의 writes는 virtual memory의 shared data를 modify하고, 같은 file section을 map한 다른 processes도 볼 수 있다. 구현은 각 process의 virtual memory map이 같은 physical page, 즉 disk block copy를 담은 page를 가리키는 방식이다.
 
-![Memory-mapped files](@/assets/images/297_Figure_13.13_page_687.png)
+![Memory-mapped files](@/assets/images/cs-operating-system-297-figure-13-13-page-687.png)
 <p align="center"><sub>Figure 13.13 · PDF p. 687 · 여러 process virtual memory mappings가 같은 physical pages와 disk file blocks에 연결되는 memory-mapped file 구조</sub></p>
 
 Memory-mapping system calls는 `copy-on-write`도 지원할 수 있다. Processes가 file을 read-only로 share하다가 어떤 process가 modify하면 그 process만 private copy를 갖게 한다. Shared data에 대한 coordination은 Chapter 6의 mutual exclusion mechanisms를 사용해야 한다.
 
 Shared memory는 종종 memory-mapped files로 구현된다. Communicating processes가 같은 file 또는 shared-memory object를 각자 virtual address space에 memory-map하면, 그 mapped file region이 processes 사이 shared memory가 된다.
 
-![Shared memory using memory-mapped I/O](@/assets/images/298_Figure_13.14_page_687.png)
+![Shared memory using memory-mapped I/O](@/assets/images/cs-operating-system-298-figure-13-14-page-687.png)
 <p align="center"><sub>Figure 13.14 · PDF p. 687 · 두 processes가 같은 memory-mapped file을 통해 shared memory region을 공유하는 구조</sub></p>
 
 POSIX shared-memory object도 이런 방식으로 이해할 수 있다. Shared object를 만들고 communicating processes가 그 object를 address space에 map하면, file-system-like object가 IPC shared memory region 역할을 한다.

@@ -26,7 +26,7 @@ Internet은 전 세계의 computing devices를 연결하는 computer network다.
 
 end system은 communication links와 packet switches의 네트워크를 통해 서로 연결된다. communication link는 coaxial cable, copper wire, optical fiber, radio spectrum 같은 physical media로 만들어지며, link가 데이터를 밀어 넣는 속도는 transmission rate, 즉 bits/second 단위로 표현된다. 송신 end system은 긴 데이터를 그대로 흘려보내지 않고 segment로 나눈 뒤 각 segment에 header bytes를 붙여 packet을 만든다. 수신 end system은 도착한 packet을 다시 원래 데이터로 재조립한다.
 
-![Some pieces of the Internet](@/assets/images/001_figure_1-1_page_14.png)
+![Some pieces of the Internet](@/assets/images/cs-computer-network-001-figure-1-1-page-14.png)
 *Figure 1.1 · PDF p. 14 · Internet을 이루는 host, server, router, link-layer switch, ISP, datacenter, access network의 큰 그림*
 
 packet switch는 들어온 packet을 적절한 outgoing communication link로 넘기는 장치다. 대표적인 packet switch는 router와 link-layer switch다. link-layer switch는 주로 access network에서, router는 주로 network core에서 사용된다. packet이 송신 end system에서 수신 end system까지 지나가는 communication links와 packet switches의 순서를 route 또는 path라고 한다.
@@ -47,7 +47,7 @@ application program이 Internet에게 데이터를 보내 달라고 요청하는
 
 protocol은 단순히 “규칙”이라는 말보다 더 구체적이다. network protocol은 둘 이상의 communicating entities가 교환하는 message의 format과 order, 그리고 message 송수신이나 timeout 같은 event가 발생했을 때 수행할 action을 정의한다.
 
-![Human protocol and network protocol](@/assets/images/002_figure_1-2_page_18.png)
+![Human protocol and network protocol](@/assets/images/cs-computer-network-002-figure-1-2-page-18.png)
 *Figure 1.2 · PDF p. 18 · 사람의 인사/응답 흐름과 TCP connection request, HTTP GET 흐름을 나란히 보여주는 protocol 예시*
 
 사람 사이의 “Hi”와 응답, 질문, 답변도 protocol처럼 볼 수 있다. 정해진 message가 있고, 각 message를 받았을 때 다음 action이 정해져 있으며, 응답이 없으면 포기하거나 다른 행동을 한다. networking에서도 마찬가지다. 예를 들어 Web browser가 URL을 요청할 때 먼저 server에 connection request message를 보내고 reply를 기다린다. 연결이 가능하다는 reply를 받은 뒤 HTTP GET message로 원하는 Web page 이름을 보내면 server가 file을 반환한다.
@@ -62,14 +62,14 @@ network edge는 사용자가 직접 만나는 end systems, 즉 hosts가 있는 �
 
 access network는 end system을 path상의 첫 router, 즉 edge router에 물리적으로 연결하는 네트워크다. 사용자가 보는 “인터넷 접속”은 대부분 이 access network를 통해 network core로 들어가는 과정이다. 같은 Internet이라도 home, enterprise, mobile wide-area 환경에서 access 방식이 다르며, 이 차이는 transmission rate, 공유 여부, 거리, 이동성, 비용, 장애 특성을 바꾼다.
 
-![Access networks](@/assets/images/004_figure_1-4_page_23.png)
+![Access networks](@/assets/images/cs-computer-network-004-figure-1-4-page-23.png)
 *Figure 1.4 · PDF p. 23 · home, enterprise, mobile network가 first router/ISP 쪽으로 연결되는 access network 위치*
 
 home access의 대표 방식은 DSL, cable, FTTH, 5G fixed wireless다. DSL(digital subscriber line)은 기존 telephone line을 사용한다. DSL modem은 digital data를 전화선 위의 high-frequency tone으로 바꾸고, central office(CO)의 DSLAM(digital subscriber line access multiplexer)이 여러 집의 analog signal을 다시 digital format으로 변환해 Internet으로 보낸다. 한 전화선에서 ordinary telephone, upstream data, downstream data를 서로 다른 frequency band로 나누므로 frequency-division multiplexing(FDM)의 직관적 예가 된다. downstream rate가 upstream보다 큰 asymmetric access인 경우가 많고, CO와 집 사이 거리와 전기적 간섭이 실제 rate를 제한한다.
 
 cable Internet access는 cable TV infrastructure를 사용한다. fiber가 cable head end에서 neighborhood junction까지 가고, 마지막 구간은 coaxial cable이 집까지 이어지는 hybrid fiber coax(HFC) 구조가 흔하다. cable modem termination system(CMTS)은 여러 cable modem에서 온 analog signal을 digital signal로 바꾸며, DSL처럼 downstream/upstream channel이 나뉘고 보통 asymmetric하다.
 
-![Hybrid fiber-coaxial access network](@/assets/images/006_figure_1-6_page_25.png)
+![Hybrid fiber-coaxial access network](@/assets/images/cs-computer-network-006-figure-1-6-page-25.png)
 *Figure 1.6 · PDF p. 25 · fiber node와 coaxial cable을 함께 쓰는 HFC 구조와 CMTS 위치*
 
 cable access의 핵심 특징은 shared broadcast medium이라는 점이다. head end가 보낸 downstream packet은 여러 집 방향의 link로 흘러가고, 집에서 보낸 upstream packet은 shared upstream channel을 사용한다. 따라서 동시에 많은 사용자가 큰 video file을 받으면 각 사용자가 체감하는 rate는 aggregate downstream rate보다 낮아질 수 있다. 반대로 소수 사용자가 Web browsing처럼 bursty하게 요청하면 각 사용자가 순간적으로 높은 rate를 누릴 수도 있다. shared upstream에서는 collision을 피하기 위한 multiple access protocol이 필요하며, 이는 Chapter 6의 link layer로 이어진다.
@@ -78,7 +78,7 @@ FTTH(fiber to the home)는 optical fiber path를 집까지 제공해 gigabits pe
 
 enterprise와 campus에서는 LAN(local area network)이 end system을 edge router로 연결한다. Ethernet은 twisted-pair copper wire로 end system을 Ethernet switch에 연결하고, 그 switch 또는 switch network가 larger Internet으로 이어진다. WiFi(IEEE 802.11)는 wireless user가 access point를 통해 enterprise/home network에 붙는 방식이다. WiFi는 보통 수십 미터 범위의 local-area wireless access이고, cellular 3G/4G LTE/5G는 base station을 통해 수십 킬로미터 범위의 wide-area wireless access를 제공한다.
 
-![Typical home network](@/assets/images/009_figure_1-9_page_29.png)
+![Typical home network](@/assets/images/cs-computer-network-009-figure-1-9-page-29.png)
 *Figure 1.9 · PDF p. 29 · broadband access, home router, wireless access point, wired/wireless devices가 결합된 home network*
 
 #### physical media의 관점
@@ -107,7 +107,7 @@ network application이 만든 message는 e-mail, image, audio file, control mess
 
 대부분의 packet switch는 store-and-forward transmission을 사용한다. 즉 router는 packet의 첫 bit가 도착하자마자 바로 다음 link로 흘려보내지 않고, packet 전체를 먼저 받은 뒤 buffer에 저장하고 나서 outbound link로 forwarding한다. router가 header를 검사하고 error/queue 처리와 forwarding 결정을 하기 위해 packet 단위의 처리가 필요하기 때문이다.
 
-![Store-and-forward packet switching](@/assets/images/011_figure_1-11_page_35.png)
+![Store-and-forward packet switching](@/assets/images/cs-computer-network-011-figure-1-11-page-35.png)
 *Figure 1.11 · PDF p. 35 · router가 packet 전체를 받은 뒤 다음 link로 forwarding하는 store-and-forward 동작*
 
 propagation delay를 무시하고 `N`개의 link가 모두 rate `R`이며 packet 하나의 길이가 `L`이면, store-and-forward만 고려한 end-to-end delay는 다음처럼 잡힌다.
@@ -122,7 +122,7 @@ $$
 
 packet switch의 각 outgoing link에는 output buffer 또는 output queue가 있다. 어떤 packet이 나가야 할 link가 이미 다른 packet을 전송 중이면, 새 packet은 output buffer에서 기다린다. 이때 발생하는 queuing delay는 traffic pattern에 따라 변하는 variable delay다. buffer는 유한하므로 congestion이 심해 buffer가 꽉 차면 arriving packet 또는 이미 queued packet 중 하나가 drop되어 packet loss가 발생한다.
 
-![Packet switching and output queue](@/assets/images/012_figure_1-12_page_36.png)
+![Packet switching and output queue](@/assets/images/cs-computer-network-012-figure-1-12-page-36.png)
 *Figure 1.12 · PDF p. 36 · 빠른 access link에서 들어온 packet들이 더 느린 output link 앞에서 queue를 만드는 상황*
 
 router는 packet header의 destination IP address를 보고 forwarding table을 검색한 뒤 적절한 outbound link로 packet을 보낸다. forwarding table은 destination address 또는 address prefix를 outbound link에 mapping한다. “각 router가 어떻게 forwarding table을 갖게 되는가”는 routing protocols의 문제이며, shortest path 등을 계산해 router의 forwarding table을 자동 설정하는 방식은 Chapter 5의 control plane 주제다.
@@ -135,7 +135,7 @@ packet switching은 resource를 미리 예약하지 않는다. session의 packet
 
 FDM(frequency-division multiplexing)과 TDM(time-division multiplexing)은 circuit을 link 안에 구현하는 대표 방식이다. FDM은 link의 frequency spectrum을 여러 band로 나누고 각 connection에 band를 지속적으로 배정한다. TDM은 time을 frame과 slot으로 나누고 각 connection에 반복되는 slot을 배정한다.
 
-![FDM and TDM](@/assets/images/014_figure_1-14_page_40.png)
+![FDM and TDM](@/assets/images/cs-computer-network-014-figure-1-14-page-40.png)
 *Figure 1.14 · PDF p. 40 · FDM은 주파수 일부를 계속 할당하고, TDM은 반복 frame의 특정 time slot을 할당한다*
 
 circuit switching의 계산 감각은 reservation rate를 먼저 구하는 것이다. 예를 들어 link rate가 1.536 Mbps이고 TDM이 24 slots를 쓰면 circuit 하나의 rate는 `1.536 Mbps / 24 = 64 kbps`다. 640,000 bits file은 전송에 10초가 걸리고, connection setup 0.5초를 더하면 총 10.5초가 된다. 여기서 전송 시간은 path의 link 수와 무관하게 circuit rate로 결정되고, 별도로 propagation delay가 더해진다.
@@ -160,7 +160,7 @@ Internet은 access ISPs가 서로 직접 완전 mesh로 연결된 구조가 아�
 
 access ISP는 end users와 content providers를 Internet에 붙인다. 더 넓은 reachability를 위해 access ISP는 regional ISP나 tier-1 ISP 같은 provider에게 돈을 내고 연결한다. tier-1 ISPs는 hierarchy의 상단에 있으며 서로 settlement-free peering을 한다. PoP(points of presence)는 customer ISP가 provider network에 접속할 수 있는 router 집합의 위치다. multi-homing은 한 ISP가 둘 이상의 provider에 연결해 failure가 나도 Internet reachability를 유지하는 방식이다. peering은 같은 계층의 ISPs가 upstream provider를 거치지 않고 직접 traffic을 교환해 비용과 경로를 줄이는 방식이며, IXP(Internet Exchange Point)는 여러 ISP가 한 장소에서 peering할 수 있게 해 주는 meeting point다.
 
-![Interconnection of ISPs](@/assets/images/015_figure_1-15_page_45.png)
+![Interconnection of ISPs](@/assets/images/cs-computer-network-015-figure-1-15-page-45.png)
 *Figure 1.15 · PDF p. 45 · tier-1 ISP, regional ISP, access ISP, IXP, content-provider network가 결합된 Internet interconnection 구조*
 
 최근의 큰 변화는 content-provider network다. Google 같은 대형 content provider는 전 세계 data centers를 private TCP/IP network로 연결하고, lower-tier ISP나 IXP와 직접 peering하여 upper-tier ISP를 우회하려 한다. 목적은 transit 비용을 줄이는 것뿐 아니라 end user에게 service가 전달되는 경로와 품질을 더 직접적으로 통제하는 것이다. 이 구조는 Chapter 2의 CDN, video streaming, large-scale content delivery와 연결된다.
@@ -173,7 +173,7 @@ Internet service가 이상적이라면 임의의 두 end system 사이에 원하
 
 packet은 source host에서 여러 router를 거쳐 destination host에 도착한다. packet이 한 node(host 또는 router)에서 다음 node로 넘어갈 때마다 nodal processing delay, queuing delay, transmission delay, propagation delay가 누적된다. 이 네 항목의 합이 total nodal delay다.
 
-![Nodal delay at router A](@/assets/images/016_figure_1-16_page_47.png)
+![Nodal delay at router A](@/assets/images/cs-computer-network-016-figure-1-16-page-47.png)
 *Figure 1.16 · PDF p. 47 · router A에서 processing, queueing, transmission, propagation delay가 생기는 위치*
 
 processing delay(`d_proc`)는 packet header를 검사하고 outbound link를 결정하며 bit-level error를 확인하는 시간이다. 고속 router에서는 보통 microseconds 이하이지만, router가 초당 처리할 수 있는 packet 수, 즉 maximum throughput에는 영향을 준다.
@@ -202,7 +202,7 @@ $$
 
 을 traffic intensity라고 한다. `La/R > 1`이면 평균 유입률이 link가 내보낼 수 있는 rate보다 커서 queue가 무한히 커지려 하고 delay는 폭발한다. 그래서 traffic engineering의 기본 규칙은 traffic intensity가 1을 넘지 않게 설계하는 것이다.
 
-![Queuing delay and traffic intensity](@/assets/images/018_figure_1-18_page_51.png)
+![Queuing delay and traffic intensity](@/assets/images/cs-computer-network-018-figure-1-18-page-51.png)
 *Figure 1.18 · PDF p. 51 · traffic intensity가 1에 가까워질수록 average queuing delay가 급격히 증가하는 관계*
 
 `La/R <= 1`이어도 arrival pattern이 중요하다. packet이 정확히 `L/R` 간격으로 주기적으로 오면 queue가 거의 생기지 않을 수 있다. 반면 여러 packet이 burst로 몰려오면 같은 평균 rate에서도 뒤쪽 packet은 앞 packet들이 전송될 때까지 기다린다. 실제 Internet traffic은 random하고 bursty하므로 `La/R` 하나만으로 delay를 완전히 설명할 수는 없지만, intensity가 1에 가까워질수록 작은 traffic 증가가 큰 delay 증가로 이어진다는 직관은 매우 중요하다.
@@ -235,7 +235,7 @@ $$
 
 가장 작은 rate의 link가 bottleneck link다. 예를 들어 server access link가 2 Mbps이고 client access link가 1 Mbps이면, core가 충분히 빠르더라도 throughput은 1 Mbps이고 32 million bits MP3 file은 약 32초가 걸린다. 실제 계산에는 store-and-forward, processing, protocol overhead가 더해질 수 있지만, bottleneck 직관은 변하지 않는다.
 
-![End-to-end throughput](@/assets/images/020_figure_1-20_page_57.png)
+![End-to-end throughput](@/assets/images/cs-computer-network-020-figure-1-20-page-57.png)
 *Figure 1.20 · PDF p. 57 · access link가 bottleneck인 경우와 여러 download가 core link를 공유해 bottleneck이 바뀌는 경우*
 
 현대 Internet core는 많은 경우 high-speed link로 over-provisioned되어 있어 단일 download의 bottleneck은 server/client access network가 되는 일이 많다. 그러나 여러 flows가 같은 core link를 공유하면 이야기가 달라진다. 예를 들어 10개의 downloads가 모두 rate `R = 5 Mbps`인 common core link를 지나고 그 link가 공평하게 나뉜다면 각 download는 500 kbps만 얻는다. 따라서 throughput은 path의 link rates뿐 아니라 intervening traffic, 즉 같은 link를 공유하는 다른 flow의 존재에도 의존한다.
@@ -256,7 +256,7 @@ layering의 장점은 modularity다. 어떤 layer의 implementation을 바꾸더
 
 Internet protocol stack은 application, transport, network, link, physical의 다섯 layer로 구성된다. 여러 layer의 protocols를 합쳐 protocol stack이라고 부르며, 이 책도 top-down 방식으로 application layer부터 아래로 내려가며 설명한다.
 
-![Internet protocol stack](@/assets/images/023_figure_1-23_page_61.png)
+![Internet protocol stack](@/assets/images/cs-computer-network-023-figure-1-23-page-61.png)
 *Figure 1.23 · PDF p. 61 · Internet의 five-layer protocol stack: application, transport, network, link, physical*
 
 | Layer | PDU 이름 | 대표 protocol/기능 | 핵심 service model |
@@ -281,7 +281,7 @@ physical layer는 frame 안의 individual bits를 다음 node까지 실제 mediu
 
 encapsulation은 상위 layer의 data unit을 하위 layer의 payload로 넣고, 하위 layer가 자기 header를 붙이는 과정이다. sending host에서 application-layer message `M`은 transport layer로 내려가고, transport layer는 transport header `Ht`를 붙여 segment를 만든다. network layer는 여기에 network header `Hn`을 붙여 datagram을 만들고, link layer는 link header `Hl`을 붙여 frame을 만든다.
 
-![Encapsulation across hosts, switches, and routers](@/assets/images/024_figure_1-24_page_63.png)
+![Encapsulation across hosts, switches, and routers](@/assets/images/cs-computer-network-024-figure-1-24-page-63.png)
 *Figure 1.24 · PDF p. 63 · host, link-layer switch, router가 구현하는 layer 차이와 encapsulation/de-encapsulation 흐름*
 
 간단한 구조는 다음처럼 볼 수 있다.
@@ -311,7 +311,7 @@ denial-of-service(DoS) attack은 legitimate users가 network, host, service를 �
 
 bandwidth flooding은 Section 1.4의 traffic intensity와 직접 연결된다. server access rate가 `R` bps이면 공격자는 대략 `R` bps에 가까운 aggregate traffic을 target으로 보내 access link를 clog하려 한다. 단일 source 공격은 upstream router가 차단하기 쉬울 수 있지만, DDoS(distributed DoS)는 attacker가 여러 compromised hosts, 즉 zombies를 제어하여 target으로 동시에 traffic을 보낸다.
 
-![Distributed denial-of-service attack](@/assets/images/025_figure_1-25_page_67.png)
+![Distributed denial-of-service attack](@/assets/images/cs-computer-network-025-figure-1-25-page-67.png)
 *Figure 1.25 · PDF p. 67 · attacker가 여러 zombie hosts를 동원해 victim으로 traffic을 집중시키는 DDoS 구조*
 
 DDoS가 어려운 이유는 공격 traffic이 여러 위치에서 분산되어 오고, 각 source만 보면 정상적인 traffic처럼 보일 수 있기 때문이다. defense도 공격 유형에 따라 달라진다. vulnerability attack은 patching/input validation이 중요하고, bandwidth flooding은 filtering, rate limiting, traffic scrubbing, over-provisioning이 관여하며, connection flooding은 transport protocol state 관리와 SYN flood 방어 같은 Chapter 3/8의 주제로 이어진다.
@@ -389,7 +389,7 @@ Chapter 1의 summary와 review questions는 이 장을 “mini-course”처럼 �
 
 본문 초반에는 source host가 long message를 segments/packets로 나눈다고 설명했고, 문제 P31은 message segmentation이 왜 중요한지 다시 묻는다. 핵심은 store-and-forward network에서 큰 message 하나를 통째로 보내면 각 switch가 message 전체를 받은 뒤 다음 link로 보내야 하므로 pipeline이 거의 생기지 않는다는 점이다. 반대로 message를 smaller packets로 나누면 첫 packet이 다음 link로 forwarded되는 동안 source는 둘째 packet을 보낼 수 있어 links가 겹쳐 일한다.
 
-![Message segmentation](@/assets/images/027_figure_1-27_page_86.png)
+![Message segmentation](@/assets/images/cs-computer-network-027-figure-1-27-page-86.png)
 *Figure 1.27 · PDF p. 86 · message를 통째로 보내는 경우와 작은 packets로 segmentation해 pipeline되는 경우*
 
 segmentation의 장점은 end-to-end delay 감소, link 활용도 증가, packet loss 시 재전송 범위 축소다. 단점은 각 packet마다 header가 붙어 overhead가 늘고, receiver가 reassembly를 해야 하며, packet ordering/loss 처리 같은 transport-layer logic이 필요해진다는 점이다. 이 trade-off는 Chapter 3의 TCP segment, sequence number, reliable data transfer에서 본격적으로 다룬다.

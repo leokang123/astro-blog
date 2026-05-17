@@ -68,7 +68,7 @@ For any node x:
 
 즉 `x`를 기준으로 왼쪽 subtree에는 `x.key` 이하의 key만, 오른쪽 subtree에는 `x.key` 이상의 key만 온다. 이 조건은 root에서만 성립하면 되는 것이 아니라 모든 node에 대해 재귀적으로 성립해야 한다. CLRS의 부등호가 `<=`, `>=`인 점도 중요하다. Plain BST 정의 자체는 duplicate keys를 배제하지 않으며, 같은 key를 어느 방향에 둘지는 구현 정책과 이후 문제에서 다시 다룬다.
 
-![Figure 12.1](@/assets/images/049_figure_12-1_page_308.png)
+![Figure 12.1](@/assets/images/cs-algorithm-049-figure-12-1-page-308.png)
 *Figure 12.1 · PDF p. 308 · 같은 key 집합도 height가 다른 binary search tree로 표현될 수 있음을 보여주는 예*
 
 Figure 12.1의 두 tree는 같은 key 집합 `{2, 5, 5, 6, 7, 8}`을 저장하지만 모양이 다르다. (a)는 height 2이고, (b)는 height 4인 덜 효율적인 모양이다. 이 그림이 말하는 것은 “BST property가 정렬 관계는 보장하지만 balance는 보장하지 않는다”는 점이다. 그래서 대부분의 search-tree operation의 worst-case running time은 node 수 `n`보다 height `h`에 의해 결정된다.
@@ -117,7 +117,7 @@ T(0) = c
 
 BST에서 query operation은 `SEARCH`, `MINIMUM`, `MAXIMUM`, `SUCCESSOR`, `PREDECESSOR`다. 이 절의 목표는 높이가 `h`인 임의의 BST에서 각 query를 `O(h)` time에 수행할 수 있음을 보이는 것이다.
 
-![Figure 12.2](@/assets/images/050_figure_12-2_page_311.png)
+![Figure 12.2](@/assets/images/cs-algorithm-050-figure-12-2-page-311.png)
 *Figure 12.2 · PDF p. 311 · BST에서 search path, minimum/maximum, successor case를 보여주는 query 예*
 
 #### Searching
@@ -245,7 +245,7 @@ TREE-INSERT(T, z)
 
 `x`는 현재 내려가고 있는 node이고, `y`는 `x`의 parent를 추적하는 trailing pointer다. Search처럼 root에서 시작해 `z.key`와 현재 key를 비교하며 left 또는 right로 내려간다. 결국 `x`가 `NIL`이 되면 그 자리가 새 node가 들어갈 leaf position이다. 이미 `x`는 `NIL`이라 parent를 알 수 없으므로, 한 단계 뒤를 따라오던 `y`가 필요하다.
 
-![Figure 12.3](@/assets/images/051_figure_12-3_page_316.png)
+![Figure 12.3](@/assets/images/cs-algorithm-051-figure-12-3-page-316.png)
 *Figure 12.3 · PDF p. 316 · key 13을 삽입할 위치까지 내려가는 path와 새 link*
 
 Figure 12.3에서 lightly shaded nodes는 root에서 insertion position까지 내려간 simple path를 나타낸다. Dashed line은 삽입으로 새로 추가되는 parent-child link다. 삽입도 하나의 downward path만 따라가므로 `O(h)` time이다.
@@ -299,7 +299,7 @@ TREE-DELETE(T, z)
 12      y.left.p = y
 ```
 
-![Figure 12.4](@/assets/images/052_figure_12-4_page_318.png)
+![Figure 12.4](@/assets/images/cs-algorithm-052-figure-12-4-page-318.png)
 *Figure 12.4 · PDF p. 318 · BST node deletion의 네 가지 pointer 재배치 case*
 
 CLRS의 code는 deletion을 다음 네 case로 조직한다.
@@ -448,7 +448,7 @@ Equal keys는 plain `TREE-INSERT`에서 나쁜 shape를 만들기 쉽다. CLRS p
 
 `radix tree`는 문자열, 특히 bit strings를 lexicographic order로 정렬할 때 등장하는 tree 구조다. Depth `i`의 node에서 key의 `i`번째 bit가 `0`이면 left, `1`이면 right로 간다. Node 자체에 key 문자열을 저장하지 않아도 root에서 그 node까지의 path가 key를 결정한다.
 
-![Figure 12.5](@/assets/images/053_figure_12-5_page_326.png)
+![Figure 12.5](@/assets/images/cs-algorithm-053-figure-12-5-page-326.png)
 *Figure 12.5 · PDF p. 326 · bit strings를 path로 표현하는 radix tree 예*
 
 Figure 12.5는 bit strings `1011`, `10`, `011`, `100`, `0`을 저장한다. Heavily shaded nodes는 실제 key가 아니라 다른 key로 가는 path를 만들기 위해 필요한 내부 node다. Lexicographic sort는 radix tree를 왼쪽부터 traversal하면서 실제 key가 있는 node를 출력하면 된다. 모든 string 길이의 합이 `n`이면 tree를 만들고 traversal하는 총 작업도 `Θ(n)` time에 가능하다.

@@ -6,7 +6,7 @@ description: "취업 준비를 하면서, 블로그 형태로 따로 기록을 �
 tags:
   - "일반"
   - "옵시디언"
-banner: "@/assets/images/whitelodge.jpg"
+banner: "@/assets/images/legacy-obsidian-whitelodge.jpg"
 ---
 
 # 블로그 업로드 및 Todoist 자동화
@@ -35,7 +35,7 @@ banner: "@/assets/images/whitelodge.jpg"
 
 추가로, 첨부 이미지와 리소스 파일도 함께 복사되도록 하여 문서 내부의 이미지 참조가 배포 환경에서도 정상적으로 동작하도록 구성하였다. 마지막으로 Quartz가 변환한 정적 결과물은 `public` 디렉토리에 생성되며, 이를 GitHub Pages 아티팩트로 업로드한 뒤 실제 배포 단계에서 웹사이트로 게시되도록 설정하였다.
 
-![CleanShot_20260415015924](@/assets/images/cleanshot_20260415015924.png)
+![CleanShot_20260415015924](@/assets/images/legacy-obsidian-cleanshot-20260415015924.png)
 
 ## Todoist 자동화
 
@@ -45,7 +45,7 @@ banner: "@/assets/images/whitelodge.jpg"
 
 연동에는 **Todoist Obsidian Sync** 플러그인을 사용하였다. 이 플러그인에서는 Todoist API 키를 입력해 계정을 연결할 수 있으며, 이후 Obsidian 내부에서 Todoist의 작업 목록을 불러와 표시할 수 있다.
 
-![CleanShot_20260415015823](@/assets/images/cleanshot_20260415015823.png)
+![CleanShot_20260415015823](@/assets/images/legacy-obsidian-cleanshot-20260415015823.png)
 
 예를 들어 아래와 같이 설정하면 오늘 일정과 미처 끝내지 못한 작업을 함께 표시할 수 있다.
 ````sh

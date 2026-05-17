@@ -60,7 +60,7 @@ T[k] = pointer to element with key k
 T[k] = NIL if key k is absent
 ```
 
-![Figure 11.1](@/assets/images/043_figure_11-1_page_275.png)
+![Figure 11.1](@/assets/images/cs-algorithm-043-figure-11-1-page-275.png)
 *Figure 11.1 · PDF p. 275 · universe `U`의 각 key를 direct-address table `T`의 같은 index에 대응시키는 구조*
 
 Figure 11.1에서는 `U = {0,1,...,9}`이고 실제 key set은 `K = {2,3,5,8}`이다. 따라서 `T[2]`, `T[3]`, `T[5]`, `T[8]`만 element를 가리키고 나머지 slots는 `NIL`이다.
@@ -125,7 +125,7 @@ h : U -> {0, 1, ..., m-1}
 
 여기서 `m`은 hash table `T[0..m-1]`의 slot 수이고, 보통 `m << |U|`이다. Key `k`가 slot `h(k)`로 간다고 말하며, `h(k)`를 key `k`의 hash value라고 한다.
 
-![Figure 11.2](@/assets/images/044_figure_11-2_page_277.png)
+![Figure 11.2](@/assets/images/cs-algorithm-044-figure-11-2-page-277.png)
 *Figure 11.2 · PDF p. 277 · hash function `h`가 큰 universe의 keys를 작은 hash-table slots로 mapping하는 구조*
 
 Figure 11.2에서 `k_2`와 `k_5`가 같은 slot으로 mapping된다. 이런 상황을 `collision`이라고 한다.
@@ -147,7 +147,7 @@ CLRS는 두 가지 큰 방법을 다룬다.
 
 `chaining`에서는 hash table의 각 slot `T[j]`가 linked list의 head를 가리킨다. 그 list에는 `h(k) = j`인 모든 elements가 들어간다. 해당 slot에 아무 원소도 없으면 `T[j] = NIL`이다.
 
-![Figure 11.3](@/assets/images/045_figure_11-3_page_278.png)
+![Figure 11.3](@/assets/images/cs-algorithm-045-figure-11-3-page-278.png)
 *Figure 11.3 · PDF p. 278 · 같은 hash value를 가진 keys를 각 table slot의 linked list에 연결하는 chaining*
 
 Figure 11.3에서는 `h(k_1) = h(k_4)`인 keys가 같은 chain에 있고, `h(k_5) = h(k_7) = h(k_2)`인 keys도 같은 chain에 있다.
@@ -347,7 +347,7 @@ h(k) = floor(m * (kA mod 1))
 
 이 방법의 장점은 `m` 선택이 division method보다 덜 민감하다는 것이다. 보통 `m = 2^p`로 잡으면 machine word 연산으로 효율적으로 구현할 수 있다.
 
-![Figure 11.4](@/assets/images/046_figure_11-4_page_285.png)
+![Figure 11.4](@/assets/images/cs-algorithm-046-figure-11-4-page-285.png)
 *Figure 11.4 · PDF p. 285 · multiplication method에서 `k * s`의 lower word `r0`에서 상위 `p` bits를 hash value로 추출하는 과정*
 
 Machine word size가 `w` bits이고 `m = 2^p`라고 하자. `A`를
@@ -569,7 +569,7 @@ h(k,i) = (h1(k) + i h2(k)) mod m
 
 Initial position은 `h1(k)`이고, step size는 `h2(k)`다. Key마다 시작점과 offset이 달라질 수 있어 linear/quadratic probing보다 훨씬 많은 probe sequences를 만든다.
 
-![Figure 11.5](@/assets/images/047_figure_11-5_page_294.png)
+![Figure 11.5](@/assets/images/cs-algorithm-047-figure-11-5-page-294.png)
 *Figure 11.5 · PDF p. 294 · double hashing에서 key 14가 slots 1, 5를 거쳐 9에 삽입되는 probe sequence*
 
 Double hashing이 table 전체를 검사하려면 `h2(k)`가 table size `m`과 relatively prime이어야 한다. 대표적 선택은 다음과 같다.
@@ -650,7 +650,7 @@ Perfect hashing은 universal hashing을 두 level에서 사용한다.
 2. Second level: slot `j`로 모인 `n_j`개 keys를 secondary table `S_j`에 다시 hash한다.
 3. 각 secondary table에서는 collision이 없도록 hash function `h_j`를 고른다.
 
-![Figure 11.6](@/assets/images/048_figure_11-6_page_299.png)
+![Figure 11.6](@/assets/images/cs-algorithm-048-figure-11-6-page-299.png)
 *Figure 11.6 · PDF p. 299 · first-level table `T`와 slot별 secondary table `S_j`를 사용하는 perfect hashing*
 
 Figure 11.6에서 outer hash function은 key를 primary slot으로 보내고, 각 slot `j`는 자기만의 secondary table `S_j`와 secondary hash function `h_j`를 가진다. Searching은 두 번의 hash와 두 번의 table access로 끝난다.

@@ -108,7 +108,7 @@ I/O devices는 크게 storage devices, transmission devices, human-interface dev
 
 `port`는 device와 machine 사이의 connection point다. Devices가 common wires를 공유하면 `bus`라고 한다. Bus는 wires뿐 아니라 그 위에서 어떤 messages를 어떤 timing/voltage pattern으로 보낼 수 있는지 정의한 protocol까지 포함한다. Devices가 chain처럼 연결되어 하나의 computer port로 이어지면 `daisy chain`이라고 하며, 대개 bus처럼 동작한다.
 
-![Typical PC bus structure](@/assets/images/267_Figure_12.1_page_619.png)
+![Typical PC bus structure](@/assets/images/cs-operating-system-267-figure-12-1-page-619.png)
 <p align="center"><sub>Figure 12.1 · PDF p. 619 · processor-memory subsystem, PCIe bus, expansion bus, SAS controller와 devices가 연결되는 PC bus 구조</sub></p>
 
 Figure 12.1은 fast devices가 `PCIe bus`로 processor-memory subsystem에 연결되고, 느린 devices는 expansion bus를 통해 연결되는 전형적 구조를 보여준다. PCIe는 lanes를 사용해 packets를 양방향 byte stream으로 보낸다. Lane 수와 generation에 따라 throughput이 달라지지만, 여기서 중요한 점은 bus가 단순 wires가 아니라 signaling method, speed, throughput, connection method를 모두 포함하는 interface라는 것이다.
@@ -156,7 +156,7 @@ Polling은 기본 operation 자체는 싸다. 많은 architecture에서 device r
 
 `interrupt`는 asynchronous event나 urgent condition을 처리하기 위해 CPU execution을 잠시 전환시키는 mechanism이다. CPU hardware는 instruction 실행 사이에 `interrupt-request line`을 감지한다. Controller가 이 line에 signal을 assert하면 CPU는 state를 save하고 fixed address 또는 vector를 통해 `interrupt-handler routine`으로 jump한다. Handler는 원인을 처리하고 state를 restore한 뒤 `return from interrupt` instruction으로 이전 execution state로 돌아간다.
 
-![Interrupt-driven I/O cycle](@/assets/images/269_Figure_12.3_page_622.png)
+![Interrupt-driven I/O cycle](@/assets/images/cs-operating-system-269-figure-12-3-page-622.png)
 <p align="center"><sub>Figure 12.3 · PDF p. 622 · device driver가 I/O를 시작하고 controller interrupt가 handler로 이어진 뒤 CPU가 interrupted task로 돌아가는 흐름</sub></p>
 
 Interrupt-driven I/O의 핵심은 CPU가 I/O completion을 계속 묻는 대신, controller가 input ready, output complete, error 같은 사건이 발생했을 때 CPU를 깨운다는 것이다. 현대 single-user systems도 초당 많은 interrupts를 처리하고, servers는 훨씬 더 많은 interrupts를 처리하므로 efficient interrupt handling은 성능에 중요하다.
@@ -174,7 +174,7 @@ CPU와 interrupt-controller hardware는 이를 위해 `maskable interrupt`, `non
 
 `interrupt vector`는 interrupt number를 specialized handler address로 연결하는 table이다. 이 덕분에 single handler가 모든 devices를 뒤질 필요가 줄어든다. Devices/handlers 수가 vector entries보다 많으면 `interrupt chaining`을 사용한다. Vector entry가 handler list head를 가리키고, request를 service할 수 있는 handler를 찾을 때까지 차례로 호출한다.
 
-![Intel Pentium event-vector table](@/assets/images/271_Figure_12.5_page_624.png)
+![Intel Pentium event-vector table](@/assets/images/cs-operating-system-271-figure-12-5-page-624.png)
 <p align="center"><sub>Figure 12.5 · PDF p. 624 · exception과 maskable interrupts를 vector number로 구분해 handler dispatch를 가능하게 하는 event-vector table</sub></p>
 
 Interrupt priority는 low-priority interrupt handling을 defer하면서도 high-priority interrupt는 받을 수 있게 한다. High-priority interrupt가 low-priority handler execution을 preempt할 수도 있다. OS는 boot time에 hardware buses를 probe해 devices를 찾고, corresponding interrupt handlers를 interrupt vector에 설치한다.
@@ -191,7 +191,7 @@ Interrupt handling은 시간 제약이 크므로 많은 systems는 `FLIH (first-
 
 DMA transfer 시작 시 host는 memory에 `DMA command block`을 쓴다. 이 block은 source pointer, destination pointer, byte count를 포함한다. 더 복잡한 command block은 noncontiguous address list를 포함해 `scatter-gather` transfer를 수행할 수 있다. CPU는 command block address를 DMA controller에 알려 주고 다른 일을 계속한다. DMA controller는 memory bus에 address를 내보내며 main CPU 도움 없이 transfer를 진행한다.
 
-![Steps in a DMA transfer](@/assets/images/272_Figure_12.6_page_627.png)
+![Steps in a DMA transfer](@/assets/images/cs-operating-system-272-figure-12-6-page-627.png)
 <p align="center"><sub>Figure 12.6 · PDF p. 627 · DMA controller가 CPU 대신 memory bus를 사용해 device와 memory 사이 transfer를 수행하는 단계</sub></p>
 
 Device controller와 DMA controller는 `DMA-request`와 `DMA-acknowledge` wires로 handshaking한다. Device controller가 transfer할 word가 있다고 DMA-request를 올리면, DMA controller는 memory bus를 seize하고 address를 내보낸 뒤 DMA-acknowledge를 보낸다. Device controller는 acknowledge를 보고 data word를 memory로 transfer하고 request를 내린다. 전체 transfer가 끝나면 DMA controller가 CPU에 interrupt를 건다.
@@ -217,14 +217,14 @@ I/O hardware의 electronic details는 복잡하지만, OS 관점에서 기억해
 
 Application이 disk 종류를 몰라도 file을 열 수 있고, 새로운 devices를 OS 전체 재작성 없이 추가할 수 있는 이유는 abstraction, encapsulation, software layering 때문이다. OS는 I/O devices의 세부 차이를 몇 가지 general kinds로 추상화하고, 각 kind를 standardized functions, 즉 interface로 access하게 한다. Device-specific differences는 `device drivers` 안에 숨겨진다.
 
-![Kernel I/O structure](@/assets/images/273_Figure_12.7_page_629.png)
+![Kernel I/O structure](@/assets/images/cs-operating-system-273-figure-12-7-page-629.png)
 <p align="center"><sub>Figure 12.7 · PDF p. 629 · kernel I/O subsystem, device drivers, controllers, hardware devices가 계층적으로 연결되는 구조</sub></p>
 
 Figure 12.7의 핵심은 applications/kernel이 SAS, keyboard, mouse, PCIe, 802.11, USB device의 개별 controller details를 직접 다루지 않는다는 점이다. Device-driver layer가 hardware differences를 숨기고, kernel I/O subsystem은 standard interface를 통해 devices를 다룬다. Hardware manufacturers는 기존 host controller interface, 예를 들어 SATA와 compatible하게 device를 만들거나, popular OS용 driver를 제공함으로써 OS vendor가 직접 support code를 만들 때까지 기다리지 않아도 된다.
 
 다만 각 OS는 device-driver interface standard가 다르다. 같은 device가 Windows, Linux, AIX, macOS용 drivers를 따로 제공할 수 있는 이유다.
 
-![Characteristics of I/O devices](@/assets/images/274_Figure_12.8_page_630.png)
+![Characteristics of I/O devices](@/assets/images/cs-operating-system-274-figure-12-8-page-630.png)
 <p align="center"><sub>Figure 12.8 · PDF p. 630 · data-transfer mode, access method, transfer schedule, sharing, speed, direction에 따른 I/O device 특성 분류</sub></p>
 
 Device differences는 다음 차원에서 나타난다.
@@ -280,7 +280,7 @@ System clock은 drift할 수 있다. Timer ticks로 time-of-day clock을 유지�
 
 Application interface에서 중요한 선택은 `blocking I/O`, `nonblocking I/O`, `asynchronous I/O`다.
 
-![Synchronous and asynchronous I/O](@/assets/images/275_Figure_12.9_page_635.png)
+![Synchronous and asynchronous I/O](@/assets/images/cs-operating-system-275-figure-12-9-page-635.png)
 <p align="center"><sub>Figure 12.9 · PDF p. 635 · synchronous I/O는 completion까지 기다리고 asynchronous I/O는 request 후 application execution과 I/O가 겹치는 구조</sub></p>
 
 `blocking system call`에서는 calling thread execution이 suspend된다. Thread는 run queue에서 wait queue로 옮겨지고, system call이 complete되면 run queue로 돌아와 return values를 받는다. Physical I/O는 본질적으로 asynchronous하고 unpredictable하지만, OS가 blocking system call을 제공하는 이유는 blocking application code가 nonblocking/asynchronous code보다 작성하기 쉽기 때문이다.
@@ -323,7 +323,7 @@ I/O scheduling은 세 목표를 가진다.
 
 Kernel은 보통 device마다 wait queue를 유지한다. Blocking I/O system call이 발생하면 request가 해당 device queue에 들어가고, I/O scheduler가 queue order를 재배열한다. Asynchronous I/O를 지원하는 kernel은 동시에 여러 I/O requests를 추적해야 하므로 `device-status table` 같은 구조를 사용한다.
 
-![Device-status table](@/assets/images/276_Figure_12.10_page_637.png)
+![Device-status table](@/assets/images/cs-operating-system-276-figure-12-10-page-637.png)
 <p align="center"><sub>Figure 12.10 · PDF p. 637 · 각 device의 상태와 active/pending I/O request를 추적하는 device-status table</sub></p>
 
 Device-status table entry는 device type, address, state, 예를 들어 not functioning, idle, busy를 담는다. Device가 busy라면 active request type과 parameters도 entry에 저장된다. Chapter 11의 disk scheduling algorithms는 이 I/O scheduling이 storage device에서 어떻게 구체화되는지 보여주는 예다.
@@ -334,7 +334,7 @@ Device-status table entry는 device type, address, state, 예를 들어 not func
 
 첫째, `speed mismatch`를 완화한다. 예를 들어 Internet으로 받은 file을 SSD에 저장할 때 network는 drive보다 훨씬 느릴 수 있다. Main memory buffer는 network에서 들어오는 bytes를 모으고, buffer가 가득 차면 drive에 한 번에 write한다. Drive write 중에도 network는 계속 data를 받을 장소가 필요하므로 `double buffering`을 사용한다. 한 buffer가 drive로 쓰이는 동안 다른 buffer가 network input을 받는다.
 
-![I/O device and interface speeds](@/assets/images/277_Figure_12.11_page_638.png)
+![I/O device and interface speeds](@/assets/images/cs-operating-system-277-figure-12-11-page-638.png)
 <p align="center"><sub>Figure 12.11 · PDF p. 638 · PC/data-center devices와 interfaces의 큰 speed 차이가 buffering 필요성을 만든다</sub></p>
 
 둘째, transfer size가 다른 devices를 맞춘다. Networking에서는 large message를 small packets로 fragment하고, receiving side에서 reassembly buffer에 packets를 모아 original data image를 만든다.
@@ -367,7 +367,7 @@ Protected memory를 사용하는 OS는 많은 hardware/application errors가 전
 
 I/O protection은 user process가 illegal I/O instructions로 system을 방해하지 못하게 하는 문제다. 기본 원칙은 모든 I/O instructions를 `privileged instructions`로 정의하는 것이다. User program은 직접 I/O instruction을 실행하지 않고 system call을 통해 OS에게 대신 I/O를 요청한다.
 
-![System call for I/O](@/assets/images/278_Figure_12.12_page_641.png)
+![System call for I/O](@/assets/images/cs-operating-system-278-figure-12-12-page-641.png)
 <p align="center"><sub>Figure 12.12 · PDF p. 641 · user process가 system call을 통해 kernel mode OS에게 I/O 수행을 요청하는 보호 구조</sub></p>
 
 OS는 monitor mode에서 request validity를 검사하고, 유효하면 requested I/O를 수행한 뒤 user로 돌아간다. Memory-mapped I/O와 I/O port memory locations도 memory-protection system으로 user access를 제한해야 한다.
@@ -388,7 +388,7 @@ UNIX는 user files, raw devices, process address spaces 같은 다양한 entitie
 
 UNIX는 이런 차이를 uniform structure 안에 캡슐화하기 위해 object-oriented technique을 사용한다. Open-file record는 type별 routine pointers를 담은 `dispatch table`을 가진다.
 
-![UNIX I/O kernel structure](@/assets/images/279_Figure_12.13_page_642.png)
+![UNIX I/O kernel structure](@/assets/images/cs-operating-system-279-figure-12-13-page-642.png)
 <p align="center"><sub>Figure 12.13 · PDF p. 642 · UNIX open-file table이 file-system record와 networking socket record를 dispatch table로 연결하는 구조</sub></p>
 
 Figure 12.13에서 file-system record와 networking socket record는 각각 read/write/select/ioctl/close function pointers를 가진다. User process는 file descriptor를 통해 접근하지만 kernel 내부에서는 entity type에 맞는 routine이 dispatch된다.
@@ -446,7 +446,7 @@ UNIX는 device names를 regular file-system name space 안에 포함한다. UNIX
 
 Typical blocking `read()` request의 life cycle은 다음과 같다.
 
-![Life cycle of an I/O request](@/assets/images/280_Figure_12.14_page_646.png)
+![Life cycle of an I/O request](@/assets/images/cs-operating-system-280-figure-12-14-page-646.png)
 <p align="center"><sub>Figure 12.14 · PDF p. 646 · blocking read request가 system call, kernel I/O subsystem, driver, controller, interrupt를 거쳐 완료되는 생애주기</sub></p>
 
 1. Process가 이미 open된 file descriptor에 blocking `read()` system call을 발행한다.
@@ -468,7 +468,7 @@ Typical blocking `read()` request의 life cycle은 다음과 같다.
 
 각 STREAMS component는 read queue와 write queue 한 쌍을 가진다. Queues 사이 data transfer는 message passing으로 수행된다.
 
-![STREAMS structure](@/assets/images/281_Figure_12.15_page_648.png)
+![STREAMS structure](@/assets/images/cs-operating-system-281-figure-12-15-page-648.png)
 <p align="center"><sub>Figure 12.15 · PDF p. 648 · stream head, STREAMS modules, driver end가 read/write queues와 message passing으로 연결되는 구조</sub></p>
 
 Modules는 STREAMS processing 기능을 제공하며 `ioctl()` system call로 stream에 push된다. 예를 들어 process가 USB keyboard를 stream으로 열고, input editing module을 push할 수 있다.
@@ -491,7 +491,7 @@ Interrupt handling은 현대 computer가 초당 많은 interrupts를 처리할 �
 
 Network traffic은 context-switch rate를 크게 만들 수 있다. Remote login에서 사용자가 한 character를 입력하면 local machine에서 keyboard interrupt, driver/kernel/user process 전달, network I/O system call, packet construction, network driver/controller transfer, completion interrupt가 발생한다. Remote machine에서도 packet receive interrupt, protocol unpacking, daemon/subdaemon 전달이 이어진다. Receiver가 character를 echo하면 이 작업이 다시 한 번 발생한다.
 
-![Intercomputer communications](@/assets/images/282_Figure_12.16_page_650.png)
+![Intercomputer communications](@/assets/images/cs-operating-system-282-figure-12-16-page-650.png)
 <p align="center"><sub>Figure 12.16 · PDF p. 650 · 한 character가 원격 로그인에서 양쪽 시스템의 driver, kernel, daemon, network를 거치며 context/state switches를 만드는 흐름</sub></p>
 
 Interrupt burden을 줄이기 위해 일부 systems는 terminal I/O용 `front-end processors`를 사용한다. Terminal concentrator는 hundreds of remote terminals traffic을 large computer의 one port로 multiplex할 수 있다. `I/O channel`은 mainframes/high-end systems에서 I/O work를 main CPU에서 offload하는 dedicated special-purpose CPU다. Channels는 data flow를 유지하고 main CPU는 data processing에 집중하게 한다. Device controllers와 DMA controllers의 더 일반적이고 강력한 형태로 볼 수 있다.
@@ -509,14 +509,14 @@ I/O efficiency를 높이는 원칙은 다음과 같다.
 
 I/O functionality를 어디에 구현할지는 중요한 trade-off다. Mouse driver처럼 단순한 device도 있지만, Windows disk device driver처럼 RAID arrays, error handling, data recovery, disk performance optimization까지 수행하는 복잡한 driver도 있다.
 
-![Device functionality progression](@/assets/images/283_Figure_12.17_page_651.png)
+![Device functionality progression](@/assets/images/cs-operating-system-283-figure-12-17-page-651.png)
 <p align="center"><sub>Figure 12.17 · PDF p. 651 · I/O 기능이 application code에서 kernel, device driver, controller/device hardware로 이동할 때 efficiency와 flexibility가 어떻게 변하는지</sub></p>
 
 새로운 I/O algorithm은 보통 application level에서 실험하기 쉽다. Application code는 flexible하고 bug가 system crash로 이어질 가능성이 낮으며, driver reload/reboot 없이 빠르게 수정할 수 있다. 하지만 context switches overhead가 있고, internal kernel data structures나 efficient in-kernel messaging/threading/locking을 활용하기 어렵다. `FUSE`는 file systems를 user mode에서 작성하고 실행할 수 있게 하는 예다.
 
 Algorithm이 가치 있음을 보이면 kernel implementation으로 옮겨 performance를 높일 수 있다. 대신 kernel은 크고 복잡하며, bug가 data corruption이나 system crash로 이어질 수 있으므로 debugging 부담이 크다. 가장 높은 performance는 device/controller hardware implementation에서 얻을 수 있지만, bug fix와 개선이 어렵고 development time/cost가 커지며 flexibility가 낮아진다. 예를 들어 hardware RAID controller가 kernel에게 individual block reads/writes의 order/location을 조정할 방법을 제공하지 않으면, kernel이 workload 정보를 알고 있어도 성능 최적화를 적용하기 어렵다.
 
-![I/O performance of storage and network latency](@/assets/images/284_Figure_12.18_page_652.png)
+![I/O performance of storage and network latency](@/assets/images/cs-operating-system-284-figure-12-18-page-652.png)
 <p align="center"><sub>Figure 12.18 · PDF p. 652 · storage capacity와 I/O latency의 관계, 그리고 network latency가 I/O에 추가하는 성능 비용</sub></p>
 
 NVM devices는 speed와 종류가 빠르게 증가하고 있으며, 일부 next-generation devices는 DRAM speed에 가까워지고 있다. 이는 I/O subsystem과 OS algorithms에 압력을 준다. Device가 빨라질수록 기존 kernel path의 context switch, interrupt, memory copy, locking, queueing overhead가 더 잘 드러난다. Network latency는 storage I/O에 별도의 performance tax를 추가한다.

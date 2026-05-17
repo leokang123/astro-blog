@@ -51,12 +51,12 @@ Steps 1-3만으로 optimal value를 구할 수 있다. 실제 solution 자체가
 
 `rod-cutting problem`은 길이 `n`인 rod와 price table `p_i`가 주어졌을 때, rod를 여러 조각으로 잘라 팔아 얻을 수 있는 maximum revenue `r_n`을 구하는 문제다. 각 cut은 free라고 가정한다. 만약 `p_n` 자체가 충분히 크다면 optimal solution은 rod를 전혀 자르지 않는 것이다.
 
-![Figure 15.1](@/assets/images/071_figure_15-1_page_381.png)
+![Figure 15.1](@/assets/images/cs-algorithm-071-figure-15-1-page-381.png)
 *Figure 15.1 · PDF p. 381 · rod length별 sample price table*
 
 Figure 15.1의 sample price table에서는 길이 1부터 10까지 가격이 주어진다. 예를 들어 길이 4의 rod는 자르지 않으면 revenue `p_4 = 9`지만, 길이 2 두 조각으로 자르면 `p_2 + p_2 = 5 + 5 = 10`이 되어 더 좋다.
 
-![Figure 15.2](@/assets/images/072_figure_15-2_page_382.png)
+![Figure 15.2](@/assets/images/cs-algorithm-072-figure-15-2-page-382.png)
 *Figure 15.2 · PDF p. 382 · 길이 4 rod를 자르는 8가지 방법과 optimal decomposition*
 
 길이 `n`의 rod는 각 위치 `1, 2, ..., n-1`에서 cut할지 말지를 독립적으로 선택할 수 있으므로 총 `2^{n-1}`가지 cutting patterns가 있다. 길이 4에서는 Figure 15.2처럼 8가지가 있고, optimal은 `4 = 2 + 2`다.
@@ -96,7 +96,7 @@ CUT-ROD(p, n)
 
 이 procedure는 정답은 맞지만 매우 느리다. 같은 `CUT-ROD(p, j)`를 여러 경로에서 반복 호출하기 때문이다.
 
-![Figure 15.3](@/assets/images/073_figure_15-3_page_385.png)
+![Figure 15.3](@/assets/images/cs-algorithm-073-figure-15-3-page-385.png)
 *Figure 15.3 · PDF p. 385 · `CUT-ROD(p, 4)`의 recursion tree와 중복 subproblems*
 
 Figure 15.3에서 label은 remaining rod length다. 같은 label의 nodes가 여러 번 등장한다는 것은 같은 subproblem을 반복해서 푼다는 뜻이다. 총 호출 수 `T(n)`은
@@ -156,7 +156,7 @@ Subproblem size `j`를 1부터 `n`까지 증가시키면, `r[j]`를 계산할 �
 
 `subproblem graph`는 distinct subproblems와 dependency를 나타내는 directed graph다. Vertex는 subproblem 하나, edge `(x, y)`는 subproblem `x`를 풀기 위해 subproblem `y`의 answer가 직접 필요함을 뜻한다.
 
-![Figure 15.4](@/assets/images/074_figure_15-4_page_388.png)
+![Figure 15.4](@/assets/images/cs-algorithm-074-figure-15-4-page-388.png)
 *Figure 15.4 · PDF p. 388 · rod cutting `n = 4`의 subproblem graph*
 
 Figure 15.4는 Figure 15.3의 recursion tree에서 같은 label의 nodes를 하나로 collapse한 것이다. DP는 이 collapsed graph의 vertices를 한 번씩만 푼다.
@@ -284,7 +284,7 @@ MATRIX-CHAIN-ORDER(p)
 14 return m and s
 ```
 
-![Figure 15.5](@/assets/images/075_figure_15-5_page_397.png)
+![Figure 15.5](@/assets/images/cs-algorithm-075-figure-15-5-page-397.png)
 *Figure 15.5 · PDF p. 397 · `MATRIX-CHAIN-ORDER`가 만든 `m` table과 `s` table*
 
 Figure 15.5는 dimensions `<30, 35, 15, 5, 10, 20, 25>`를 가진 6개 matrices에 대한 결과다. `m[1,6] = 15,125`가 전체 optimal scalar multiplications 수다. Table은 main diagonal이 수평이 되도록 회전되어 있으며, 아래 row에서 짧은 chains를 먼저 채우고 위쪽으로 갈수록 긴 chains를 채운다.
@@ -375,7 +375,7 @@ Optimal substructure는 직관적으로 비슷해 보여도 깨질 수 있다. C
 
 Shortest path는 optimal substructure를 가진다. `u`에서 `v`까지의 shortest path가 중간 vertex `w`를 지난다면, `u`에서 `w`까지의 subpath와 `w`에서 `v`까지의 subpath도 각각 shortest path여야 한다. 더 짧은 subpath가 있다면 그것을 cut-and-paste해서 전체 path를 더 짧게 만들 수 있기 때문이다.
 
-![Figure 15.6](@/assets/images/076_figure_15-6_page_403.png)
+![Figure 15.6](@/assets/images/cs-algorithm-076-figure-15-6-page-403.png)
 *Figure 15.6 · PDF p. 403 · longest simple path가 optimal substructure를 갖지 않는 반례*
 
 Longest simple path는 다르다. Figure 15.6에서 `q -> r -> t`는 `q`에서 `t`까지의 longest simple path지만, 그 subpath `q -> r`은 `q`에서 `r`까지의 longest simple path가 아니다. `q -> s -> t -> r`이 더 길기 때문이다. 또한 `r -> t`도 `r -> q -> s -> t`보다 짧다.
@@ -390,7 +390,7 @@ Shortest path에서는 이런 충돌이 없다. 두 shortest subpaths가 splice 
 
 Matrix-chain multiplication에서 `m[3,4]` 같은 table entry는 여러 상위 subproblems를 계산할 때 반복 참조된다. 예를 들어 Figure 15.5의 table에서는 `m[3,4]`가 `m[2,4]`, `m[1,4]`, `m[3,5]`, `m[3,6]` 계산 중에 필요하다.
 
-![Figure 15.7](@/assets/images/077_figure_15-7_page_406.png)
+![Figure 15.7](@/assets/images/cs-algorithm-077-figure-15-7-page-406.png)
 *Figure 15.7 · PDF p. 406 · `RECURSIVE-MATRIX-CHAIN(p,1,4)`의 recursion tree와 repeated subproblems*
 
 Figure 15.7은 `RECURSIVE-MATRIX-CHAIN(p, 1, 4)`의 recursion tree다. Node label `i..j`는 subproblem `m[i,j]`를 뜻한다. 같은 label이 여러 번 나타나므로 naive recursion은 같은 값을 계속 다시 계산한다. Memoization을 쓰면 shaded subtree처럼 이미 계산된 subproblem은 table lookup 하나로 대체된다.
@@ -549,7 +549,7 @@ LCS-LENGTH(X, Y)
 
 각 table entry를 `Θ(1)`에 계산하므로 running time은 `Θ(mn)`이다. `c[m,n]`에는 LCS length가 들어 있다.
 
-![Figure 15.8](@/assets/images/078_figure_15-8_page_416.png)
+![Figure 15.8](@/assets/images/cs-algorithm-078-figure-15-8-page-416.png)
 *Figure 15.8 · PDF p. 416 · `LCS-LENGTH`가 만든 `c` table과 `b` arrows*
 
 Figure 15.8은 `X = <A, B, C, B, D, A, B>`, `Y = <B, D, C, A, B, A>`에 대한 tables다. 오른쪽 아래 `c[7,6] = 4`이므로 LCS length는 4다. Shaded arrows를 따라가면 diagonal arrow가 나오는 지점들이 LCS characters를 구성하고, 결과 중 하나는 `BCBA`다.
@@ -607,7 +607,7 @@ E[search cost in T]
 = 1 + Σ_{i=1}^{n} depth_T(k_i) p_i + Σ_{i=0}^{n} depth_T(d_i) q_i          (15.11)
 ```
 
-![Figure 15.9](@/assets/images/079_figure_15-9_page_419.png)
+![Figure 15.9](@/assets/images/cs-algorithm-079-figure-15-9-page-419.png)
 *Figure 15.9 · PDF p. 419 · 같은 probabilities에 대한 두 BST와 expected search cost 비교*
 
 Figure 15.9(a)의 expected search cost는 `2.80`이고, Figure 15.9(b)는 `2.75`로 더 낮으며 이 instance의 optimal tree다. 이 예시는 두 가지 오해를 막아 준다. Optimal BST는 반드시 height가 가장 작은 tree가 아니며, probability가 가장 큰 key를 root에 두는 greedy rule도 항상 맞지 않는다. Figure에서는 `k_5`가 가장 큰 `p_i`를 갖지만 optimal root는 `k_2`다.
@@ -692,7 +692,7 @@ OPTIMAL-BST(p, q, n)
 
 `e`와 `w`는 empty subtree `e[n+1,n]`, `e[1,0]` 같은 base cases가 필요하므로 dimensions가 `1..n+1`, `0..n`이다. `root`는 actual keys가 있는 intervals에만 필요하므로 `1..n, 1..n`이다.
 
-![Figure 15.10](@/assets/images/080_figure_15-10_page_424.png)
+![Figure 15.10](@/assets/images/cs-algorithm-080-figure-15-10-page-424.png)
 *Figure 15.10 · PDF p. 424 · `OPTIMAL-BST`가 계산한 `e`, `w`, `root` tables*
 
 Figure 15.10은 Figure 15.9의 probability distribution에 대해 계산한 tables다. Matrix-chain table처럼 diagonals가 수평이 되도록 회전되어 있고, rows는 bottom-up으로 짧은 intervals부터 긴 intervals까지 채워진다. `e[1,5] = 2.75`가 전체 optimal expected cost이며, `root[1,5] = 2`라서 root는 `k_2`다.
@@ -729,7 +729,7 @@ Chapter 15 뒤의 problems는 dynamic programming의 기본 패턴이 다른 도
 | 15-2 Longest palindrome subsequence | 문자열 interval `i..j`에서 양끝 문자가 같으면 둘 다 포함하고 내부 `i+1..j-1`로, 다르면 한쪽 끝을 버리는 LCS형 recurrence를 쓴다. |
 | 15-3 Bitonic euclidean traveling-salesman problem | 일반 euclidean TSP는 NP-hard지만, x-coordinate으로 정렬하고 두 monotone chains의 frontier를 state로 잡으면 `O(n^2)` DP가 가능하다. |
 
-![Figure 15.11](@/assets/images/081_figure_15-11_page_426.png)
+![Figure 15.11](@/assets/images/cs-algorithm-081-figure-15-11-page-426.png)
 *Figure 15.11 · PDF p. 426 · shortest closed tour와 shortest bitonic tour 비교*
 
 Figure 15.11은 같은 7개 points에서 unrestricted shortest tour와 bitonic restriction을 둔 tour가 다름을 보여 준다. Bitonic tour는 leftmost point에서 rightward로 rightmost point까지 갔다가 leftward로 돌아오는 형태라, 제한 덕분에 polynomial DP가 가능해진다.

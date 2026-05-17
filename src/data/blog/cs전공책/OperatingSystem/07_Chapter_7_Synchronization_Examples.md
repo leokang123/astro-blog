@@ -70,12 +70,12 @@ semaphore full = 0;
 
 Producer는 먼저 empty slot이 있는지 `wait(empty)`로 확인하고, 그 다음 `wait(mutex)`로 buffer pool에 exclusive하게 들어간다. Item을 넣은 뒤 `signal(mutex)`로 critical section을 나가고, `signal(full)`로 full buffer가 하나 늘었음을 알린다.
 
-![Producer process](@/assets/images/163_Figure_7.1_page_376.png)
+![Producer process](@/assets/images/cs-operating-system-163-figure-7-1-page-376.png)
 <p align="center"><sub>Figure 7.1 · PDF p. 376 · bounded-buffer producer가 empty slot과 mutex를 얻은 뒤 item을 추가하는 구조</sub></p>
 
 Consumer는 대칭적으로 먼저 full slot이 있는지 `wait(full)`로 확인하고, `wait(mutex)`로 buffer pool에 들어간다. Item을 꺼낸 뒤 `signal(mutex)`로 critical section을 나가고, `signal(empty)`로 empty buffer가 하나 늘었음을 알린다.
 
-![Consumer process](@/assets/images/164_Figure_7.2_page_377.png)
+![Consumer process](@/assets/images/cs-operating-system-164-figure-7-2-page-377.png)
 <p align="center"><sub>Figure 7.2 · PDF p. 377 · bounded-buffer consumer가 full slot과 mutex를 얻은 뒤 item을 제거하는 구조</sub></p>
 
 이 구조의 중요한 점은 `empty/full`과 `mutex`의 역할이 다르다는 것이다. `empty`와 `full`은 resource count와 ordering을 다루고, `mutex`는 buffer array/index update 자체의 mutual exclusion을 보장한다.
@@ -105,12 +105,12 @@ int read_count = 0;
 
 Writer는 단순하다. `wait(rw_mutex)`로 database에 대한 exclusive access를 얻고 write를 수행한 뒤 `signal(rw_mutex)`로 놓는다.
 
-![Writer process](@/assets/images/165_Figure_7.3_page_378.png)
+![Writer process](@/assets/images/cs-operating-system-165-figure-7-3-page-378.png)
 <p align="center"><sub>Figure 7.3 · PDF p. 378 · writer가 rw_mutex를 얻어 exclusive writing을 수행하는 구조</sub></p>
 
 Reader는 첫 reader일 때만 `rw_mutex`를 얻고, 마지막 reader일 때만 `rw_mutex`를 놓는다. 중간 readers는 `read_count`만 늘리고 줄이며 동시에 읽을 수 있다.
 
-![Reader process](@/assets/images/166_Figure_7.4_page_378.png)
+![Reader process](@/assets/images/cs-operating-system-166-figure-7-4-page-378.png)
 <p align="center"><sub>Figure 7.4 · PDF p. 378 · 첫 reader와 마지막 reader만 rw_mutex를 조정하는 readers-writers solution</sub></p>
 
 Reader process의 핵심은 다음 흐름이다.
@@ -139,7 +139,7 @@ Writer가 critical section에 있고 `n` readers가 waiting이면, reader 하나
 
 `dining-philosophers problem`은 여러 processes가 여러 resources를 동시에 요구할 때 deadlock과 starvation을 피해야 하는 대표 문제다. 다섯 philosophers가 원형 table에 앉아 있고, 각 philosopher 사이에는 chopstick 하나가 있다. Philosopher는 think하다가 hungry해지면 양쪽 chopsticks를 하나씩 집어야 eat할 수 있다.
 
-![Dining philosophers](@/assets/images/167_Figure_7.5_page_379.png)
+![Dining philosophers](@/assets/images/cs-operating-system-167-figure-7-5-page-379.png)
 <p align="center"><sub>Figure 7.5 · PDF p. 379 · 다섯 philosophers와 다섯 chopsticks가 원형으로 배치된 dining-philosophers 상황</sub></p>
 
 이 문제의 핵심은 “인접한 두 philosophers는 같은 chopstick을 동시에 사용할 수 없다”는 mutual exclusion뿐 아니라, 전체 system이 deadlock-free와 starvation-free여야 한다는 점이다.
@@ -154,7 +154,7 @@ semaphore chopstick[5]; // all initialized to 1
 
 Philosopher `i`는 `wait(chopstick[i])`로 왼쪽 chopstick을, `wait(chopstick[(i + 1) % 5])`로 오른쪽 chopstick을 얻은 뒤 eat하고, 먹은 뒤 두 chopsticks에 `signal()`을 호출한다.
 
-![Philosopher semaphore structure](@/assets/images/168_Figure_7.6_page_380.png)
+![Philosopher semaphore structure](@/assets/images/cs-operating-system-168-figure-7-6-page-380.png)
 <p align="center"><sub>Figure 7.6 · PDF p. 380 · philosopher i가 양쪽 chopsticks semaphore를 차례로 획득하고 해제하는 구조</sub></p>
 
 이 solution은 인접한 두 philosophers가 동시에 eat하는 것은 막지만 deadlock을 만들 수 있다. 다섯 philosophers가 동시에 hungry해져 각자 left chopstick을 먼저 집으면 모든 `chopstick[i] == 0`이 된다. 이후 모두 right chopstick을 기다리므로 영원히 진행하지 못한다.
@@ -187,7 +187,7 @@ state[(i + 1) % 5] != EATING
 
 `self[i]` condition variable은 philosopher `i`가 hungry하지만 필요한 chopsticks를 얻을 수 없을 때 자기 자신을 delay하는 데 사용된다.
 
-![Dining philosophers monitor](@/assets/images/169_Figure_7.7_page_382.png)
+![Dining philosophers monitor](@/assets/images/cs-operating-system-169-figure-7-7-page-382.png)
 <p align="center"><sub>Figure 7.7 · PDF p. 382 · state 배열과 condition self[]를 사용한 dining-philosophers monitor solution</sub></p>
 
 Monitor `DiningPhilosophers`는 세 operation 중심으로 동작한다.
@@ -227,7 +227,7 @@ Kernel 밖 thread synchronization을 위해 Windows는 `dispatcher objects`를 �
 
 Dispatcher object는 `signaled state` 또는 `nonsignaled state`를 가진다. Signaled state는 object가 available하다는 뜻이라 acquire 시 block되지 않는다. Nonsignaled state는 object가 unavailable하다는 뜻이라 thread가 block된다.
 
-![Mutex dispatcher object](@/assets/images/170_Figure_7.8_page_383.png)
+![Mutex dispatcher object](@/assets/images/cs-operating-system-170-figure-7-8-page-383.png)
 <p align="center"><sub>Figure 7.8 · PDF p. 383 · Windows mutex dispatcher object가 signaled/nonsignaled state 사이를 전이하는 구조</sub></p>
 
 Thread가 nonsignaled dispatcher object에서 block되면 thread state는 ready에서 waiting으로 바뀌고, 해당 object의 waiting queue에 들어간다. Dispatcher object가 signaled로 바뀌면 kernel은 waiting threads가 있는지 확인하고, object type에 따라 하나 또는 여러 threads를 waiting에서 ready로 옮긴다. Mutex object는 single owner만 가질 수 있으므로 waiting queue에서 하나만 선택한다. Event object는 waiting threads 전부를 깨울 수 있다.
@@ -379,12 +379,12 @@ Java는 초기부터 thread synchronization을 language/API 차원에서 지원�
 
 Java는 모든 object에 하나의 lock을 연결한다. Method가 `synchronized`로 선언되면, 그 method를 호출하려면 해당 object instance의 lock을 소유해야 한다. `BoundedBuffer` 예시는 producer가 `insert()`를, consumer가 `remove()`를 호출하는 bounded-buffer solution을 Java monitor 방식으로 표현한다.
 
-![BoundedBuffer using Java synchronization](@/assets/images/171_Figure_7.9_page_390.png)
+![BoundedBuffer using Java synchronization](@/assets/images/cs-operating-system-171-figure-7-9-page-390.png)
 <p align="center"><sub>Figure 7.9 · PDF p. 390 · synchronized insert()와 remove()를 가진 Java BoundedBuffer class 구조</sub></p>
 
 `synchronized` method 호출 시 lock이 이미 다른 thread에게 owned되어 있으면 calling thread는 block되고 object lock의 `entry set`에 들어간다. Entry set은 lock이 available해지기를 기다리는 threads 집합이다. Lock이 available하면 calling thread가 lock owner가 되어 method에 들어간다. Thread가 method를 exit하면 lock을 release한다.
 
-![Entry set for Java object lock](@/assets/images/172_Figure_7.10_page_390.png)
+![Entry set for Java object lock](@/assets/images/cs-operating-system-172-figure-7-10-page-390.png)
 <p align="center"><sub>Figure 7.10 · PDF p. 390 · Java object lock을 얻으려는 threads가 entry set에서 기다리는 구조</sub></p>
 
 Java specification은 entry set의 ordering을 강제하지 않는다. 따라서 lock release 시 JVM은 entry set에서 어떤 thread를 선택할지 임의로 정할 수 있다. 실제 많은 JVM은 FIFO에 가깝게 관리하지만, portable correctness는 특정 ordering에 의존하면 안 된다.
@@ -413,7 +413,7 @@ Java object에는 lock뿐 아니라 `wait set`도 있다. Wait set은 `wait()`�
 
 `BoundedBuffer.insert()`에서 buffer가 full이면 producer는 `wait()`를 호출한다. Producer가 lock을 release했기 때문에 consumer가 `remove()`에 들어가 buffer 공간을 만들 수 있다.
 
-![Java wait and notify methods](@/assets/images/173_Figure_7.11_page_392.png)
+![Java wait and notify methods](@/assets/images/cs-operating-system-173-figure-7-11-page-392.png)
 <p align="center"><sub>Figure 7.11 · PDF p. 392 · Java BoundedBuffer의 insert()/remove()가 wait()와 notify()를 사용하는 방식</sub></p>
 
 Figure 7.11에서 `insert()`와 `remove()`는 condition check를 `while` loop 안에서 수행한다.
@@ -436,7 +436,7 @@ Loop를 사용하는 이유는 signal 이후에도 condition이 여전히 false�
 2. `T`를 wait set에서 entry set으로 옮긴다.
 3. `T`의 state를 blocked에서 runnable로 바꾼다.
 
-![Java entry and wait sets](@/assets/images/174_Figure_7.12_page_393.png)
+![Java entry and wait sets](@/assets/images/cs-operating-system-174-figure-7-12-page-393.png)
 <p align="center"><sub>Figure 7.12 · PDF p. 393 · Java object lock의 entry set과 condition 대기용 wait set의 관계</sub></p>
 
 예를 들어 buffer가 full이고 lock이 available하다고 하자.
@@ -516,7 +516,7 @@ Condition condVar = key.newCondition();
 
 Java language-level monitor에는 object마다 하나의 unnamed condition variable만 있다. 따라서 `wait()`와 `notify()`는 단일 wait set에만 작동한다. `notify()`로 깨어난 thread는 왜 깨어났는지 정보를 받지 못하므로, 자신이 기다리던 condition이 만족됐는지 다시 확인해야 한다. `Condition` objects는 여러 named-like conditions를 만들 수 있게 해, 특정 condition을 기다리는 thread만 signal할 수 있다.
 
-![Java condition variables](@/assets/images/175_Figure_7.13_page_396.png)
+![Java condition variables](@/assets/images/cs-operating-system-175-figure-7-13-page-396.png)
 <p align="center"><sub>Figure 7.13 · PDF p. 396 · threadNumber와 turn을 비교해 자기 condition variable에서 await/signal하는 Java Condition 예</sub></p>
 
 Figure 7.13의 예에서는 thread 0-4가 있고 shared variable `turn`이 현재 차례인 thread를 나타낸다. 각 thread는 `doWork(threadNumber)`를 호출한다. 자기 번호가 `turn`과 다르면 자기 condition variable에서 `await()`한다. 일을 마친 thread는 `turn = (turn + 1) % 5`로 다음 차례를 정하고, 해당 condition variable에 `signal()`을 보낸다.

@@ -6,7 +6,7 @@ description: "지금 까지 Merge와 Rebase는 비슷한건줄 알고있었는�
 tags:
   - "일반"
   - "깃"
-banner: "@/assets/images/woodfence.jpg"
+banner: "@/assets/images/shared-woodfence.jpg"
 ---
 
 # Merge, Rebase

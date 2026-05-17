@@ -81,7 +81,7 @@ I/O efficiency를 위해 memory와 mass storage 사이 transfers는 `blocks` 단
 
 File system은 efficient/convenient access를 위해 data를 stored, located, retrieved할 수 있게 한다. 이를 구현하는 전형적 구조가 layered design이다.
 
-![Layered file system](@/assets/images/301_Figure_14.1_page_696.png)
+![Layered file system](@/assets/images/cs-operating-system-301-figure-14-1-page-696.png)
 <p align="center"><sub>Figure 14.1 · PDF p. 696 · application programs부터 devices까지 file-system functionality를 계층으로 나눈 구조</sub></p>
 
 각 layer는 아래 layer의 기능을 사용해 위 layer에 더 높은 abstraction을 제공한다.
@@ -134,7 +134,7 @@ In-memory structures는 management와 caching을 위해 mount time에 load되고
 
 새 file을 create할 때 process는 logical file system을 호출한다. Logical file system은 directory format을 알고 있으므로, 새 `FCB`를 allocate하고, appropriate directory를 memory로 읽어 new file name과 FCB를 추가한 뒤 file system에 다시 쓴다.
 
-![Typical file-control block](@/assets/images/302_Figure_14.2_page_698.png)
+![Typical file-control block](@/assets/images/cs-operating-system-302-figure-14-2-page-698.png)
 <p align="center"><sub>Figure 14.2 · PDF p. 698 · permissions, dates, owner/group/ACL, size, data block pointers를 담는 file-control block 예</sub></p>
 
 UNIX처럼 directory를 type field가 directory인 special file로 취급하는 OS도 있고, Windows처럼 files와 directories에 별도 system calls를 제공하고 directories를 files와 별도 entity로 다루는 OS도 있다. 어느 쪽이든 logical file system은 directory I/O를 storage block locations로 mapping하기 위해 file-organization module을 호출하고, 그 아래 basic file system과 I/O control로 request가 내려간다.
@@ -149,7 +149,7 @@ File이 아직 열려 있지 않으면 directory structure에서 file name을 se
 
 `close()` 때는 per-process table entry가 제거되고 system-wide entry의 open count가 감소한다. 모든 users가 close하여 open count가 0이 되면 updated metadata가 disk-based directory structure로 복사되고 system-wide open-file table entry가 제거된다.
 
-![In-memory file-system structures](@/assets/images/303_Figure_14.3_page_700.png)
+![In-memory file-system structures](@/assets/images/cs-operating-system-303-figure-14-3-page-700.png)
 <p align="center"><sub>Figure 14.3 · PDF p. 700 · file open과 read 시 user space, kernel memory, secondary storage의 directory/FCB/open-file table 관계</sub></p>
 
 Open file 정보는 actual data blocks를 제외하면 대부분 memory에 유지된다. BSD UNIX는 disk I/O를 줄일 수 있는 곳에 caches를 적극 사용하며, 원문은 average cache hit rate 85 percent를 예로 든다. 여기서 중요한 점은 file-system performance가 metadata caching에 크게 의존한다는 것이다.
@@ -187,7 +187,7 @@ Secondary storage는 direct access가 가능하므로 files를 구현하는 방�
 
 `contiguous allocation`은 file이 device의 contiguous blocks 집합을 차지하게 한다. File이 block `b`에서 시작하고 길이가 `n` blocks라면, file은 `b, b+1, ..., b+n-1`을 차지한다. Directory entry에는 starting block address와 length가 들어간다.
 
-![Contiguous allocation](@/assets/images/304_Figure_14.4_page_702.png)
+![Contiguous allocation](@/assets/images/cs-operating-system-304-figure-14-4-page-702.png)
 <p align="center"><sub>Figure 14.4 · PDF p. 702 · directory entry가 start와 length를 저장하고 file blocks가 연속 배치되는 contiguous allocation</sub></p>
 
 Contiguous allocation은 sequential access와 direct access 모두 빠르다. Sequential access에서는 last referenced block 다음 block을 읽으면 되고, direct access에서는 file block `i`를 `b+i`로 즉시 계산할 수 있다. HDD에서는 contiguous access가 seeks를 최소화한다. Logical addresses가 physical proximity와 어느 정도 대응된다는 가정에서 특히 효과가 크다.
@@ -212,7 +212,7 @@ File size 예측도 어렵다. 너무 작게 allocate하면 file을 extend할 �
 
 `linked allocation`은 contiguous allocation의 size declaration과 external fragmentation 문제를 해결한다. File은 storage blocks의 linked list이고, blocks는 device 어디에나 흩어질 수 있다. Directory entry는 file의 first block과 last block pointer를 가진다. 각 block은 next block pointer를 포함한다.
 
-![Linked allocation](@/assets/images/305_Figure_14.5_page_704.png)
+![Linked allocation](@/assets/images/cs-operating-system-305-figure-14-5-page-704.png)
 <p align="center"><sub>Figure 14.5 · PDF p. 704 · file blocks가 흩어져 있고 각 block이 next block pointer로 연결되는 linked allocation</sub></p>
 
 New file create 시 directory entry의 first pointer는 null이고 size는 0이다. Write가 발생하면 free-space manager가 free block을 찾아 file end에 link한다. Read는 first block부터 pointers를 따라가며 blocks를 읽는다. Any free block can satisfy a request이므로 external fragmentation이 없고, file size를 creation time에 선언할 필요도 없다. Free blocks가 있는 한 file은 계속 grow할 수 있다.
@@ -232,7 +232,7 @@ Reliability 문제를 줄이기 위해 doubly linked lists를 쓰거나 각 bloc
 
 `FAT (file-allocation table)`은 linked allocation의 중요한 변형이다. Volume beginning의 table에 one entry per block을 두고, table entry가 next block number를 저장한다. Directory entry는 first block number를 담고, FAT entry chain을 따라가면 file blocks를 찾는다. Unused block은 0 같은 value로 표시되고, last block은 special end-of-file value를 가진다.
 
-![File-allocation table](@/assets/images/306_Figure_14.6_page_706.png)
+![File-allocation table](@/assets/images/cs-operating-system-306-figure-14-6-page-706.png)
 <p align="center"><sub>Figure 14.6 · PDF p. 706 · directory의 start block에서 FAT entries를 따라 file block chain을 찾는 구조</sub></p>
 
 FAT는 table을 cache하지 않으면 head seeks가 많을 수 있다. 각 block 위치를 찾기 위해 volume beginning의 FAT로 이동했다가 actual block 위치로 이동해야 할 수 있기 때문이다. 하지만 FAT를 memory에 cache하면 random access가 linked allocation보다 훨씬 좋아진다. Block chain pointers가 disk 전체에 흩어진 것이 아니라 table에 모여 있기 때문이다.
@@ -243,7 +243,7 @@ FAT는 table을 cache하지 않으면 head seeks가 많을 수 있다. 각 block
 
 각 file은 자기 index block을 가진다. Index block은 storage-block addresses의 array이고, i번째 entry가 file의 i번째 block을 가리킨다. Directory entry는 index block address를 담는다.
 
-![Indexed allocation](@/assets/images/307_Figure_14.7_page_707.png)
+![Indexed allocation](@/assets/images/cs-operating-system-307-figure-14-7-page-707.png)
 <p align="center"><sub>Figure 14.7 · PDF p. 707 · directory가 index block을 가리키고 index block entries가 file data blocks를 가리키는 indexed allocation</sub></p>
 
 File이 create되면 index block pointers는 null로 초기화된다. i번째 block이 처음 write될 때 free-space manager에서 block을 얻고, 그 address를 index block의 i번째 entry에 넣는다. Any free block을 사용할 수 있으므로 external fragmentation이 없고, i번째 block address를 index entry로 바로 찾으므로 direct access가 가능하다.
@@ -258,7 +258,7 @@ File이 create되면 index block pointers는 null로 초기화된다. i번째 bl
 
 UNIX-style combined scheme은 small files를 효율적으로 처리하면서 large files도 지원한다. Inode의 첫 12 pointers는 direct blocks를 가리키고, 그다음은 single indirect, double indirect, triple indirect blocks를 가리킨다. Small file은 separate index block 없이 direct pointers만으로 처리되고, large file은 indirect levels를 통해 많은 blocks를 주소화한다.
 
-![UNIX inode](@/assets/images/308_Figure_14.8_page_708.png)
+![UNIX inode](@/assets/images/cs-operating-system-308-figure-14-8-page-708.png)
 <p align="center"><sub>Figure 14.8 · PDF p. 708 · direct blocks와 single/double/triple indirect blocks를 결합해 small/large files를 모두 지원하는 UNIX inode</sub></p>
 
 Pointer size도 maximum file size에 영향을 준다. 32-bit file pointer는 4GB 정도만 address할 수 있지만, 64-bit file pointers는 exbibytes 규모를 지원할 수 있고, ZFS는 128-bit file pointers를 지원한다.
@@ -304,7 +304,7 @@ block number =
 
 다른 방식은 모든 free blocks를 linked list로 연결하는 것이다. File system의 special location에 first free block pointer를 두고, 그 block이 next free block을 가리키는 식이다.
 
-![Linked free-space list](@/assets/images/309_Figure_14.9_page_711.png)
+![Linked free-space list](@/assets/images/cs-operating-system-309-figure-14-9-page-711.png)
 <p align="center"><sub>Figure 14.9 · PDF p. 711 · free blocks가 pointers로 연결되고 free-space list head가 첫 free block을 가리키는 구조</sub></p>
 
 Linked free-space list는 전체 list traversal이 느리다. 각 free block을 읽어야 하므로 HDD에서는 substantial I/O time이 든다. 하지만 실제로 OS는 보통 “free block 하나”가 필요할 뿐 전체 free list를 자주 traverse하지 않으므로, 첫 free block을 사용하는 상황에서는 괜찮다. FAT 방식은 allocation data structure 자체에 free-block accounting을 포함하므로 separate free-space method가 필요 없다.
@@ -357,12 +357,12 @@ Some systems는 main memory에 separate `buffer cache`를 유지해 file-system 
 
 문제는 memory-mapped I/O와 `read()`/`write()` I/O가 서로 다른 caches를 사용할 때 생긴다.
 
-![I/O without unified buffer cache](@/assets/images/310_Figure_14.10_page_715.png)
+![I/O without unified buffer cache](@/assets/images/cs-operating-system-310-figure-14-10-page-715.png)
 <p align="center"><sub>Figure 14.10 · PDF p. 715 · memory-mapped I/O가 page cache와 buffer cache를 모두 거쳐 double caching을 만드는 구조</sub></p>
 
 Unified buffer cache가 없으면 `read()`/`write()`는 buffer cache를 사용하고, memory mapping은 page cache와 buffer cache를 모두 사용한다. File data가 buffer cache에서 page cache로 copy되므로 memory를 낭비하고 CPU/I/O cycles도 낭비한다. 두 caches 사이 inconsistency는 file corruption 위험도 만든다.
 
-![I/O with unified buffer cache](@/assets/images/311_Figure_14.11_page_716.png)
+![I/O with unified buffer cache](@/assets/images/cs-operating-system-311-figure-14-11-page-716.png)
 <p align="center"><sub>Figure 14.11 · PDF p. 716 · memory-mapped I/O와 read/write가 같은 cache path를 사용해 double caching을 피하는 unified buffer cache</sub></p>
 
 Unified buffer cache에서는 memory mapping과 `read()`/`write()` system calls가 같은 page cache를 사용한다. Double caching을 피하고 virtual memory system이 file-system data를 직접 관리할 수 있다.
@@ -452,7 +452,7 @@ WAFL은 특정 architecture 위에서 동작한다는 점을 이용한다. File 
 
 WAFL은 Berkeley Fast File System과 유사하게 block-based이고, files를 `inode`로 설명한다. 각 inode는 해당 file의 blocks 또는 indirect blocks를 가리키는 16 pointers를 가진다. 각 file system에는 `root inode`가 있으며, WAFL의 중요한 특징은 metadata가 별도 고정 영역이 아니라 files 안에 산다는 점이다.
 
-![WAFL file layout](@/assets/images/312_Figure_14.12_page_721.png)
+![WAFL file layout](@/assets/images/cs-operating-system-312-figure-14-12-page-721.png)
 <p align="center"><sub>Figure 14.12 · PDF p. 721 · root inode 아래 inode file, free-block map, free-inode map, 일반 files가 모두 file로 배치되는 WAFL layout</sub></p>
 
 WAFL에서 all inodes는 하나의 inode file에, free-block map은 다른 file에, free-inode map은 또 다른 file에 저장된다. 이 metadata files도 standard files이므로 data blocks 위치가 고정되지 않고 anywhere에 배치될 수 있다. File system을 disks 추가로 확장하면 metadata files 길이도 file system이 자동으로 늘린다.
@@ -465,7 +465,7 @@ WAFL의 free-block map은 standard bitmap과 다르다. Block마다 단순히 fr
 
 Used blocks를 overwrite하지 않기 때문에 writes는 빠를 수 있다. Current head location 근처의 free block에 write하면 되므로 random write 부담을 줄일 수 있다. 이 구조는 snapshot 효율성도 높인다. 많은 snapshots가 동시에 존재할 수 있고, hourly/daily snapshots처럼 여러 시점의 read-only view를 제공할 수 있다.
 
-![Snapshots in WAFL](@/assets/images/313_Figure_14.13_page_722.png)
+![Snapshots in WAFL](@/assets/images/cs-operating-system-313-figure-14-13-page-722.png)
 <p align="center"><sub>Figure 14.13 · PDF p. 722 · snapshot 생성 뒤 block D가 D'로 바뀌어도 snapshot은 old block D를 계속 가리키는 구조</sub></p>
 
 Figure 14.13의 핵심은 pointer ownership이다. Snapshot 이전에는 root inode가 blocks A-E를 가리킨다. Snapshot 직후에는 current root inode와 snapshot이 같은 blocks를 공유한다. 이후 block D가 D'로 바뀌면 current root inode는 D'를 가리키고, snapshot은 old D를 계속 가리킨다. 따라서 full copy 없이 point-in-time view가 유지된다.

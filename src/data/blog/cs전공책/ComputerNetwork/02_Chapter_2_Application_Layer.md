@@ -24,7 +24,7 @@ Application layer는 사용자가 실제로 체감하는 network applications가
 
 network application 개발의 핵심은 서로 다른 end systems에서 실행되는 programs를 작성하고, 이 programs가 network를 통해 통신하게 만드는 것이다. Web에서는 browser program과 Web server program이, Netflix 같은 video service에서는 client app과 server-side program이 message를 주고받는다. 중요한 점은 application software가 routers나 link-layer switches 같은 network-core devices에서 실행되지 않는다는 것이다. core devices는 application layer가 아니라 network layer 이하에서 packet forwarding에 집중한다.
 
-![Application layer communication](@/assets/images/029_figure_2-1_page_94.png)
+![Application layer communication](@/assets/images/cs-computer-network-029-figure-2-1-page-94.png)
 *Figure 2.1 · PDF p. 94 · network application의 communication은 application layer의 end systems 사이에서 일어난다*
 
 이 설계는 application innovation을 빠르게 만든다. 개발자는 network core를 수정하지 않고 end systems에 새 client/server code를 배포해 새로운 application을 만들 수 있다. Chapter 1의 edge/core 분리와 이어지는 중요한 설계 감각이다.
@@ -37,7 +37,7 @@ client-server architecture에서는 always-on host인 server가 많은 clients�
 
 P2P architecture는 dedicated server 의존을 최소화하고 intermittently connected hosts인 peers 사이의 direct communication을 활용한다. BitTorrent가 대표 예다. P2P의 강점은 self-scalability다. 각 peer는 file을 요청하며 workload를 만들지만 동시에 다른 peer에게 file을 제공해 service capacity도 늘린다. 그러나 decentralized structure 때문에 security, performance, reliability 관리가 어렵다.
 
-![Client-server and P2P architectures](@/assets/images/030_figure_2-2_page_96.png)
+![Client-server and P2P architectures](@/assets/images/cs-computer-network-030-figure-2-2-page-96.png)
 *Figure 2.2 · PDF p. 96 · client-server architecture와 peer-to-peer(P2P) architecture의 구조 차이*
 
 #### processes, sockets, ports
@@ -48,7 +48,7 @@ communication session에서 먼저 접촉을 시작하는 process를 client proc
 
 process는 socket이라는 software interface를 통해 network로 message를 보내고 받는다. socket은 application layer와 transport layer 사이의 API이며, process 입장에서는 network로 나가는 “door”다. application developer는 socket 위쪽의 application logic을 통제하고, socket 아래쪽 transport layer에 대해서는 보통 transport protocol 선택(TCP 또는 UDP)과 일부 parameters 정도만 통제한다.
 
-![Processes and sockets](@/assets/images/031_figure_2-3_page_98.png)
+![Processes and sockets](@/assets/images/cs-computer-network-031-figure-2-3-page-98.png)
 *Figure 2.3 · PDF p. 98 · process가 socket API를 통해 TCP와 underlying network를 사용하는 구조*
 
 다른 host의 특정 process로 message를 보내려면 두 주소가 필요하다. 첫째는 host를 식별하는 IP address이고, 둘째는 destination host 안의 receiving process/socket을 식별하는 destination port number다. 예를 들어 Web server는 port 80, SMTP mail server는 port 25를 사용한다. port number와 multiplexing/demultiplexing은 Chapter 3 transport layer에서 더 자세히 다룬다.
@@ -65,7 +65,7 @@ timing guarantee는 bit가 socket에 들어간 뒤 일정 시간 안에 receiver
 
 security service는 confidentiality, data integrity, end-point authentication 등을 포함한다. 중요한 주의점은 TCP와 UDP 자체가 encryption을 제공하지 않는다는 것이다. TCP를 사용하는 application이 process-to-process 보안을 원하면 Transport Layer Security(TLS)를 application layer에서 TCP 위에 얹는다. TLS는 TCP/UDP와 같은 별도 transport protocol이 아니라 TCP enhancement로 사용되는 library/API 성격이 강하다.
 
-![Application service requirements](@/assets/images/032_figure_2-4_page_102.png)
+![Application service requirements](@/assets/images/cs-computer-network-032-figure-2-4-page-102.png)
 *Figure 2.4 · PDF p. 102 · file transfer, Web, Internet telephony, streaming, games 등이 요구하는 data loss, throughput, timing 특성*
 
 #### TCP와 UDP의 application-facing service
@@ -100,7 +100,7 @@ HTTP는 client program과 server program이 교환하는 HTTP messages의 struct
 
 URL은 server의 hostname과 object의 path name을 포함한다. 예를 들어 `http://www.someSchool.edu/someDepartment/picture.gif`에서 `www.someSchool.edu`는 hostname이고 `/someDepartment/picture.gif`는 path name이다. browser가 Web page를 요청하면 base HTML file을 받은 뒤, 그 안에 포함된 referenced objects의 URL을 읽고 추가 HTTP requests를 보낸다.
 
-![HTTP request-response behavior](@/assets/images/034_figure_2-6_page_108.png)
+![HTTP request-response behavior](@/assets/images/cs-computer-network-034-figure-2-6-page-108.png)
 *Figure 2.6 · PDF p. 108 · browser/client가 HTTP request를 보내고 server가 HTTP response로 object를 돌려주는 흐름*
 
 HTTP는 UDP가 아니라 TCP 위에서 동작한다. HTTP client는 먼저 server와 TCP connection을 만들고, connection이 만들어지면 browser와 server process는 socket interface를 통해 TCP를 사용한다. HTTP가 TCP를 사용하는 덕분에 HTTP 자체는 packet loss, reordering, retransmission 세부를 직접 처리하지 않아도 된다. 이는 layered architecture의 장점이다. application protocol은 message semantics에 집중하고, reliable data transfer는 TCP가 맡는다.
@@ -119,7 +119,7 @@ $$
 response\ time \approx 2RTT + server\ transmission\ time
 $$
 
-![HTTP non-persistent timing](@/assets/images/035_figure_2-7_page_111.png)
+![HTTP non-persistent timing](@/assets/images/cs-computer-network-035-figure-2-7-page-111.png)
 *Figure 2.7 · PDF p. 111 · non-persistent HTTP에서 TCP setup과 request/response가 각각 RTT를 소비하는 시간 계산*
 
 non-persistent connections의 단점은 object마다 TCP buffers와 variables가 양쪽에 필요하고, server가 많은 clients를 처리할 때 부담이 커진다는 것이다. 또한 각 object가 TCP connection setup RTT를 반복해서 지불한다. browser가 parallel TCP connections를 열어 일부 지연을 줄일 수 있지만, connection 수와 server/network 부담이 늘어난다.
@@ -142,7 +142,7 @@ request line은 `method URL version` 세 필드를 갖는다. `GET`은 object �
 
 header lines의 의미도 중요하다. `Host:`는 object가 있는 host를 지정하며 Web proxy cache에도 필요하다. `Connection: close`는 persistent connection을 쓰지 않고 response 후 connection을 닫도록 요청한다. `User-agent:`는 browser type을 알려 server가 user agent별 object를 줄 수 있게 한다. `Accept-language:`는 language preference를 표현하는 content negotiation header다.
 
-![HTTP request message format](@/assets/images/036_figure_2-8_page_113.png)
+![HTTP request message format](@/assets/images/cs-computer-network-036-figure-2-8-page-113.png)
 *Figure 2.8 · PDF p. 113 · HTTP request message의 request line, header lines, blank line, entity body 구조*
 
 HTTP request의 일반 구조는 이렇게 기억하면 된다.
@@ -175,7 +175,7 @@ status line은 `version status-code phrase` 형식이다. `200 OK`는 성공, `3
 
 response headers도 caching과 object 해석에 중요하다. `Date:`는 response가 server에서 생성/전송된 시간이고 object의 생성 시간이 아니다. `Last-Modified:`는 object가 마지막으로 수정된 시간이며 Web cache의 freshness validation에 중요하다. `Content-Length:`는 object byte 수, `Content-Type:`은 entity body의 media type을 지정한다. object type은 file extension이 아니라 `Content-Type` header로 공식 표시된다.
 
-![HTTP response message format](@/assets/images/037_figure_2-9_page_115.png)
+![HTTP response message format](@/assets/images/cs-computer-network-037-figure-2-9-page-115.png)
 *Figure 2.9 · PDF p. 115 · HTTP response message의 status line, header lines, blank line, entity body 구조*
 
 #### cookies: stateless HTTP 위의 user session
@@ -184,7 +184,7 @@ HTTP server는 stateless지만, 실제 Web sites는 user를 식별해야 할 때
 
 cookie technology는 네 구성요소로 이루어진다. 첫째, HTTP response message의 `Set-cookie:` header line. 둘째, 이후 HTTP request message의 `Cookie:` header line. 셋째, browser가 user end system에 관리하는 cookie file. 넷째, Web site의 back-end database다. 사용자가 site에 처음 방문하면 server는 unique identification number를 만들고 database entry를 생성한 뒤 response에 `Set-cookie: 1678` 같은 header를 보낸다. browser는 hostname과 ID를 cookie file에 저장한다. 이후 같은 site로 가는 request마다 `Cookie: 1678`을 붙여 server가 같은 user의 activity를 이어서 볼 수 있게 한다.
 
-![Keeping user state with cookies](@/assets/images/038_figure_2-10_page_117.png)
+![Keeping user state with cookies](@/assets/images/cs-computer-network-038-figure-2-10-page-117.png)
 *Figure 2.10 · PDF p. 117 · Set-cookie, Cookie header, browser cookie file, server database가 함께 user state를 유지하는 흐름*
 
 cookies의 설계 trade-off는 분명하다. server는 HTTP 자체를 stateless로 유지하면서도 user-specific behavior를 구현할 수 있다. 하지만 Web site가 pages visited, order, time, account information을 연결해 user profile을 만들 수 있으므로 privacy risk가 생긴다. 즉 cookies는 convenience와 tracking capability를 동시에 제공한다.
@@ -195,14 +195,14 @@ Web cache 또는 proxy server는 origin Web server를 대신해 HTTP requests를
 
 cache hit이면 cache가 local copy를 HTTP response로 바로 돌려준다. cache miss이면 cache가 origin server로 TCP connection을 열고 object를 요청한 뒤, 받은 object를 local storage에 저장하면서 client browser에도 전달한다. 따라서 cache는 browser에게는 server이고, origin server에게는 client다.
 
-![Clients requesting objects through a Web cache](@/assets/images/039_figure_2-11_page_119.png)
+![Clients requesting objects through a Web cache](@/assets/images/cs-computer-network-039-figure-2-11-page-119.png)
 *Figure 2.11 · PDF p. 119 · browser requests가 먼저 Web cache로 가고, miss일 때 cache가 origin server에 요청하는 구조*
 
 Web caching의 이점은 두 가지다. 첫째, client와 cache 사이 bottleneck bandwidth가 client-origin server 사이보다 크고 cache hit이면 response time이 크게 줄어든다. 둘째, institution access link를 지나는 traffic을 줄여 link upgrade 비용을 늦출 수 있고, Internet 전체 Web traffic도 줄인다.
 
 본문의 계산 예시는 Chapter 1의 traffic intensity가 실제 Web caching 성능에 어떻게 쓰이는지 보여준다. average object size가 1 Mbits, request rate가 15 requests/sec이면 100 Mbps LAN의 traffic intensity는 `15 * 1 / 100 = 0.15`라 delay가 작다. 하지만 15 Mbps access link의 traffic intensity는 `15 * 1 / 15 = 1`이 되어 queuing delay가 폭발한다.
 
-![Access-link bottleneck](@/assets/images/040_figure_2-12_page_121.png)
+![Access-link bottleneck](@/assets/images/cs-computer-network-040-figure-2-12-page-121.png)
 *Figure 2.12 · PDF p. 121 · institutional network와 Internet 사이 15 Mbps access link가 bottleneck이 되는 상황*
 
 해결책 하나는 access link를 100 Mbps로 upgrade하는 것이지만 비용이 크다. 다른 해결책은 institutional network 안에 Web cache를 설치하는 것이다. hit rate가 0.4라면 40% requests는 LAN 내부 cache에서 약 10 ms에 만족되고, 나머지 60%만 origin server로 나가므로 access link traffic intensity는 1.0에서 0.6으로 내려간다. 평균 response time은 대략 다음처럼 줄어든다.
@@ -211,7 +211,7 @@ $$
 0.4 \times 0.01s + 0.6 \times 2.01s \approx 1.2s
 $$
 
-![Adding a cache](@/assets/images/041_figure_2-13_page_122.png)
+![Adding a cache](@/assets/images/cs-computer-network-041-figure-2-13-page-122.png)
 *Figure 2.13 · PDF p. 122 · institutional cache가 hit traffic을 LAN 안에서 처리해 access link load를 줄이는 구조*
 
 Content Distribution Networks(CDNs)는 Web caches를 Internet 전역에 분산 배치한 확장 형태로 볼 수 있다. Akamai나 Limelight 같은 shared CDN, Google이나 Netflix 같은 dedicated CDN은 traffic을 user 가까이 localize하여 delay와 backbone/access traffic을 줄인다. 이 주제는 Section 2.6에서 video streaming과 함께 다시 등장한다.
@@ -256,7 +256,7 @@ e-mail은 asynchronous communication medium이다. sender와 recipient가 동시
 
 user agent는 사용자가 messages를 compose, read, reply, forward, save하게 해 주는 client-side application이다. mail server는 e-mail infrastructure의 중심이며, 각 recipient의 mailbox와 outgoing message queue를 관리한다. Alice가 message를 작성하면 Alice의 user agent는 message를 Alice의 mail server로 보내고, 그 message는 outgoing message queue에 들어간다. Bob이 message를 읽을 때 Bob의 user agent는 Bob의 mail server에 있는 mailbox에서 message를 가져온다.
 
-![Internet e-mail system](@/assets/images/042_figure_2-14_page_128.png)
+![Internet e-mail system](@/assets/images/cs-computer-network-042-figure-2-14-page-128.png)
 *Figure 2.14 · PDF p. 128 · user agent, mail server, message queue, mailbox, SMTP로 이루어진 Internet e-mail system*
 
 mail server는 failure handling도 맡는다. Alice의 mail server가 Bob의 mail server에 message를 전달하지 못하면, message를 queue에 보관하고 later retry한다. 여러 날 실패하면 message를 제거하고 sender에게 failure notification을 보낸다. 이 구조 덕분에 Bob의 PC나 smartphone이 항상 켜져 있지 않아도 e-mail을 받을 수 있다.
@@ -267,7 +267,7 @@ SMTP는 Internet e-mail의 principal application-layer protocol이며 TCP의 rel
 
 SMTP의 전송 흐름은 다음과 같다. Alice의 user agent가 message를 Alice mail server에 넣는다. Alice mail server의 SMTP client가 Bob mail server의 SMTP server, port 25로 TCP connection을 연다. application-layer handshaking 동안 sender address와 recipient address를 알리고, 이후 message body를 TCP connection에 보낸다. Bob mail server의 SMTP server는 message를 Bob의 mailbox에 넣는다.
 
-![Alice sends a message to Bob](@/assets/images/043_figure_2-15_page_130.png)
+![Alice sends a message to Bob](@/assets/images/cs-computer-network-043-figure-2-15-page-130.png)
 *Figure 2.15 · PDF p. 130 · Alice user agent에서 Alice mail server, Bob mail server, Bob user agent로 이어지는 e-mail delivery path*
 
 SMTP는 보통 intermediate mail servers를 사용하지 않고 sending mail server와 receiving mail server 사이에 direct TCP connection을 만든다. Bob의 mail server가 down이면 message가 중간 server에 맡겨지는 것이 아니라 Alice의 mail server queue에 남아 재시도된다.
@@ -307,7 +307,7 @@ SMTP는 push protocol이다. sending mail server가 receiving mail server로 mes
 
 오늘날 흔한 방식은 두 가지다. Web-based e-mail이나 smartphone app은 HTTP interface를 통해 Bob의 mail server에서 messages를 가져온다. Outlook 같은 전통 mail client는 Internet Mail Access Protocol(IMAP)을 사용한다. 둘 다 Bob의 mail server에 있는 folders를 관리하고, messages를 move/delete/mark할 수 있게 한다.
 
-![E-mail protocols and communicating entities](@/assets/images/044_figure_2-16_page_133.png)
+![E-mail protocols and communicating entities](@/assets/images/cs-computer-network-044-figure-2-16-page-133.png)
 *Figure 2.16 · PDF p. 133 · user agent와 mail server 사이 HTTP/IMAP, mail servers 사이 SMTP가 쓰이는 위치*
 
 e-mail의 큰 구조는 “작성/제출 → server-to-server push → mailbox에서 pull”이다. Alice user agent는 SMTP 또는 HTTP로 Alice mail server에 제출하고, Alice mail server는 SMTP로 Bob mail server에 relay하며, Bob user agent는 HTTP 또는 IMAP으로 Bob mailbox에서 읽는다.
@@ -353,7 +353,7 @@ load distribution에서 DNS server는 같은 hostname에 대한 IP address set�
 
 DNS hierarchy의 기본 축은 `root DNS servers`, `top-level domain (TLD) DNS servers`, `authoritative DNS servers`다. 예를 들어 client가 `www.amazon.com`을 찾는다면 root는 `.com` TLD servers를 알려 주고, `.com` TLD server는 `amazon.com` authoritative DNS server를 알려 주며, authoritative server가 최종 host IP address를 준다.
 
-![Portion of the hierarchy of DNS servers](@/assets/images/045_figure_2-17_page_138.png)
+![Portion of the hierarchy of DNS servers](@/assets/images/cs-computer-network-045-figure-2-17-page-138.png)
 *Figure 2.17 · PDF p. 138 · root, TLD, authoritative DNS servers로 이어지는 DNS hierarchy*
 
 각 server class의 역할은 다르다.
@@ -370,14 +370,14 @@ DNS hierarchy의 기본 축은 `root DNS servers`, `top-level domain (TLD) DNS s
 
 `cse.nyu.edu`가 `gaia.cs.umass.edu`의 IP address를 찾는 예를 보면 DNS lookup의 message flow가 선명하다. host는 local DNS server `dns.nyu.edu`에 query를 보낸다. local DNS server는 root DNS server, edu TLD server, UMass authoritative DNS server를 차례로 묻고, 최종 IP address를 host에게 돌려준다. 기본 예에서는 4 queries와 4 replies, 총 8 DNS messages가 발생한다.
 
-![Interaction of the various DNS servers](@/assets/images/047_figure_2-19_page_140.png)
+![Interaction of the various DNS servers](@/assets/images/cs-computer-network-047-figure-2-19-page-140.png)
 *Figure 2.19 · PDF p. 140 · local DNS server가 hierarchy를 따라 iterative queries를 수행하는 흐름*
 
 Figure 2.19의 첫 query, 즉 requesting host에서 local DNS server로 가는 query는 recursive query다. host는 “나 대신 mapping을 구해 달라”고 요청한다. 반면 local DNS server가 root, TLD, authoritative server에 보내는 query들은 iterative query다. 각 server는 최종 답을 대신 구해 주는 것이 아니라 다음에 물어볼 위치나 알고 있는 답을 local DNS server에 직접 돌려준다.
 
 책은 모든 단계가 recursive인 경우도 보여 준다. 이 경우 각 DNS server가 다음 server에 query를 넘기고, reply도 거슬러 올라오므로 각 intermediate server가 더 많은 state와 forwarding 책임을 진다. 실제 Internet에서는 보통 host → local DNS server는 recursive, local DNS server → hierarchy는 iterative 패턴이 일반적이다.
 
-![Recursive queries in DNS](@/assets/images/048_figure_2-20_page_142.png)
+![Recursive queries in DNS](@/assets/images/cs-computer-network-048-figure-2-20-page-142.png)
 *Figure 2.20 · PDF p. 142 · 모든 단계가 recursive query로 이어질 때의 DNS message 흐름*
 
 #### DNS caching
@@ -409,7 +409,7 @@ authoritative DNS server는 자신이 책임지는 hostname의 `Type A` record�
 
 DNS query와 reply는 같은 message format을 쓴다. header는 12 bytes이고 query identifier, flags, section별 count를 포함한다. identifier는 reply에도 복사되어 client가 sent query와 received reply를 match할 수 있게 한다.
 
-![DNS message format](@/assets/images/049_figure_2-21_page_144.png)
+![DNS message format](@/assets/images/cs-computer-network-049-figure-2-21-page-144.png)
 *Figure 2.21 · PDF p. 144 · DNS query/reply 공통 message format과 네 가지 data section*
 
 DNS message의 주요 sections는 다음과 같다.
@@ -461,7 +461,7 @@ P2P file distribution의 대표 문제는 하나의 큰 file을 `N`개 peers에�
 | `d_min` | 가장 느린 peer download rate, `min(d_1, ..., d_N)` |
 | `distribution time` | 모든 `N` peers가 file copy를 얻는 데 걸리는 시간 |
 
-![An illustrative file distribution problem](@/assets/images/050_figure_2-22_page_148.png)
+![An illustrative file distribution problem](@/assets/images/cs-computer-network-050-figure-2-22-page-148.png)
 *Figure 2.22 · PDF p. 148 · server upload rate와 peer upload/download rates로 본 file distribution 모델*
 
 #### client-server distribution time
@@ -485,7 +485,7 @@ D_P2P = max(F/u_s, F/d_min, NF/(u_s + Σu_i))        (2.3)
 
 P2P의 핵심은 peers가 늘수록 demand도 늘지만 upload capacity도 함께 늘어난다는 점이다. 이것이 self-scalability다. peers는 file을 받는 소비자이면서 동시에 다른 peers에게 chunks를 공급하는 upload resources가 된다.
 
-![Distribution time for P2P and client-server architectures](@/assets/images/051_figure_2-23_page_151.png)
+![Distribution time for P2P and client-server architectures](@/assets/images/cs-computer-network-051-figure-2-23-page-151.png)
 *Figure 2.23 · PDF p. 151 · peers 수가 증가할 때 client-server와 P2P distribution time의 차이*
 
 Figure 2.23의 설정에서는 client-server distribution time이 `N`에 따라 계속 증가하지만, P2P distribution time은 훨씬 낮고 bounded에 가깝게 유지된다. P2P scalability는 “중앙 server가 모든 bits를 반복해서 보내지 않는다”는 점에서 나온다.
@@ -496,7 +496,7 @@ BitTorrent는 P2P file distribution protocol이다. 특정 file distribution에 
 
 각 torrent에는 `tracker`라는 infrastructure node가 있다. peer가 torrent에 join하면 tracker에 자신을 등록하고, 주기적으로 아직 torrent 안에 있음을 알린다. tracker는 참여 peers 목록을 유지한다.
 
-![File distribution with BitTorrent](@/assets/images/052_figure_2-24_page_152.png)
+![File distribution with BitTorrent](@/assets/images/cs-computer-network-052-figure-2-24-page-152.png)
 *Figure 2.24 · PDF p. 152 · tracker가 peer 목록을 제공하고 peers가 chunks를 교환하는 BitTorrent 구조*
 
 새 peer Alice가 join하면 tracker는 참여 peers 중 일부, 예를 들어 50개의 IP addresses를 Alice에게 보낸다. Alice는 이 peers와 concurrent TCP connections를 시도한다. 연결에 성공한 peers는 Alice의 `neighboring peers`가 된다. neighboring peers는 시간이 지나며 떠나거나 새로 들어오므로 계속 변한다.
@@ -580,7 +580,7 @@ content replication도 모든 clusters에 모든 videos를 넣는 방식만 있�
 
 CDN은 user request를 가로채 적절한 CDN server cluster로 redirect해야 한다. 많은 CDNs는 DNS를 이용한다. content provider의 authoritative DNS server가 video hostname query를 CDN domain으로 넘기고, CDN의 DNS infrastructure가 client의 LDNS(local DNS server) 정보를 바탕으로 content server IP address를 반환한다.
 
-![DNS redirects a user's request to a CDN server](@/assets/images/053_figure_2-25_page_159.png)
+![DNS redirects a user's request to a CDN server](@/assets/images/cs-computer-network-053-figure-2-25-page-159.png)
 *Figure 2.25 · PDF p. 159 · DNS를 이용해 content provider URL 요청을 CDN server로 redirect하는 과정*
 
 전형적 흐름은 다음과 같다.
@@ -602,7 +602,7 @@ CDN의 핵심은 cluster selection strategy다. DNS-based CDN은 query를 보낸
 
 Netflix video distribution은 Amazon cloud와 Netflix private CDN으로 나뉜다.
 
-![Netflix video streaming platform](@/assets/images/054_figure_2-26_page_161.png)
+![Netflix video streaming platform](@/assets/images/cs-computer-network-054-figure-2-26-page-161.png)
 *Figure 2.26 · PDF p. 161 · Amazon cloud가 control/processing을 맡고 Netflix CDN이 DASH chunks를 전달하는 구조*
 
 Amazon cloud는 user registration/login, billing, catalogue browsing/search, recommendation 같은 Web service와 backend databases를 담당한다. 또한 content ingestion, content processing, 여러 device/bit rate용 versions 생성, CDN으로 versions upload를 수행한다.
@@ -642,7 +642,7 @@ UDP에서는 application이 datagram을 보낼 때 destination address를 명시
 
 UDP는 connectionless service다. client와 server가 handshake로 connection을 만들지 않고, 각 datagram이 독립적으로 destination address를 가진다. 책의 예제 application은 client가 lowercase sentence를 보내고, server가 uppercase로 바꿔 reply하는 구조다.
 
-![The client-server application using UDP](@/assets/images/055_figure_2-27_page_166.png)
+![The client-server application using UDP](@/assets/images/cs-computer-network-055-figure-2-27-page-166.png)
 *Figure 2.27 · PDF p. 166 · UDP client/server socket 생성, datagram 송수신, client socket close 흐름*
 
 UDP client의 핵심 흐름은 다음과 같다.
@@ -685,10 +685,10 @@ TCP는 connection-oriented protocol이다. client와 server가 데이터를 보�
 
 TCP server에는 두 종류의 socket이 나온다. `serverSocket`은 모든 clients의 initial contact를 받는 welcoming socket이다. 어떤 client가 connect하면 `accept()`가 그 client 전용 `connectionSocket`을 새로 만든다. 이 구분은 TCP socket programming에서 가장 자주 헷갈리는 부분이다.
 
-![The TCPServer process has two sockets](@/assets/images/056_figure_2-28_page_172.png)
+![The TCPServer process has two sockets](@/assets/images/cs-computer-network-056-figure-2-28-page-172.png)
 *Figure 2.28 · PDF p. 172 · TCP server의 welcoming socket과 client별 connection socket 구분*
 
-![The client-server application using TCP](@/assets/images/057_figure_2-29_page_173.png)
+![The client-server application using TCP](@/assets/images/cs-computer-network-057-figure-2-29-page-173.png)
 *Figure 2.29 · PDF p. 173 · TCP connection setup 후 clientSocket과 connectionSocket이 bytes를 주고받는 흐름*
 
 TCP client의 핵심 흐름은 다음과 같다.

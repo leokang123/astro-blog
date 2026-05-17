@@ -58,7 +58,7 @@ S[1..S.top]   : 현재 stack에 들어 있는 elements
 S.top = 0     : empty stack
 ```
 
-![Figure 10.1](@/assets/images/033_figure_10-1_page_254.png)
+![Figure 10.1](@/assets/images/cs-algorithm-033-figure-10-1-page-254.png)
 *Figure 10.1 · PDF p. 254 · array `S`와 `S.top`으로 구현한 stack의 PUSH/POP 변화*
 
 Figure 10.1에서 `POP(S)` 후에도 값 `3`은 array 위치에 남아 있다. 하지만 `S.top`이 줄어들었기 때문에 그 위치는 더 이상 stack의 일부가 아니다. 자료구조의 논리적 내용은 memory에 남은 bit pattern이 아니라 representation invariant로 결정된다.
@@ -101,7 +101,7 @@ Q.tail : next insertion position
 
 Queue elements는 circular order에서 `Q.head`부터 `Q.tail - 1`까지 놓인다. `Q.tail`이 array 끝 `Q.length`를 넘으면 다시 `1`로 돌아간다. 이 wrap-around 덕분에 앞쪽에서 `DEQUEUE`된 빈 공간을 뒤쪽 삽입에 재사용할 수 있다.
 
-![Figure 10.2](@/assets/images/034_figure_10-2_page_255.png)
+![Figure 10.2](@/assets/images/cs-algorithm-034-figure-10-2-page-255.png)
 *Figure 10.2 · PDF p. 255 · circular array `Q`에서 `Q.head`와 `Q.tail`이 이동하는 queue 구현*
 
 Figure 10.2에서 `Q.tail`은 마지막 원소가 아니라 “다음에 새 원소가 들어갈 위치”다. 이 점을 헷갈리면 empty/full 조건을 잘못 이해하기 쉽다.
@@ -157,7 +157,7 @@ x.prev  : predecessor를 가리키는 pointer
 
 List object `L`은 `L.head`를 통해 첫 element를 가리킨다. `L.head = NIL`이면 empty list다.
 
-![Figure 10.3](@/assets/images/035_figure_10-3_page_258.png)
+![Figure 10.3](@/assets/images/cs-algorithm-035-figure-10-3-page-258.png)
 *Figure 10.3 · PDF p. 258 · doubly linked list에서 `next`/`prev` pointer로 search, insert, delete를 수행하는 구조*
 
 Figure 10.3(a)에서 dynamic set `{1,4,9,16}`이 list 순서 `9 -> 16 -> 4 -> 1`로 표현되어 있다. Set의 원소와 list의 물리적 순서는 다를 수 있다. Unsorted linked list에서는 key 순서가 아니라 pointer 연결 순서가 traversal 순서다.
@@ -237,7 +237,7 @@ L.nil.prev : tail
 empty list: L.nil.next == L.nil and L.nil.prev == L.nil
 ```
 
-![Figure 10.4](@/assets/images/036_figure_10-4_page_260.png)
+![Figure 10.4](@/assets/images/cs-algorithm-036-figure-10-4-page-260.png)
 *Figure 10.4 · PDF p. 260 · sentinel `L.nil`을 둔 circular doubly linked list의 empty/insert/delete 상태*
 
 Sentinel을 쓰면 `L.head` attribute도 필요 없다. Head는 `L.nil.next`로 접근하고, tail은 `L.nil.prev`로 접근한다.
@@ -314,7 +314,7 @@ prev[i]  : object i의 predecessor index
 
 이때 pointer `i`는 `key[i]`, `next[i]`, `prev[i]`를 함께 가리키는 common index다. List head를 나타내는 variable `L`도 object index를 저장한다.
 
-![Figure 10.5](@/assets/images/037_figure_10-5_page_263.png)
+![Figure 10.5](@/assets/images/cs-algorithm-037-figure-10-5-page-263.png)
 *Figure 10.5 · PDF p. 263 · `key`, `next`, `prev` arrays의 같은 index를 하나의 linked-list object로 해석하는 multiple-array representation*
 
 Figure 10.5에서 key `16`이 index `5`에 있고 key `4`가 index `2`에 있다면, list에서 `16 -> 4` 관계는
@@ -339,7 +339,7 @@ A[i + 1] : next
 A[i + 2] : prev
 ```
 
-![Figure 10.6](@/assets/images/038_figure_10-6_page_264.png)
+![Figure 10.6](@/assets/images/cs-algorithm-038-figure-10-6-page-264.png)
 *Figure 10.6 · PDF p. 264 · 하나의 array `A`에서 offset 0/1/2를 `key`/`next`/`prev`로 해석하는 single-array representation*
 
 Single-array representation은 서로 길이가 다른 objects를 같은 array에 저장할 수 있다는 점에서 더 flexible하다. 하지만 heterogeneous objects의 storage management는 복잡하다. CLRS에서 다루는 대부분의 자료구조는 homogeneous elements로 구성되므로, 이후 설명에는 multiple-array representation이면 충분하다.
@@ -358,7 +358,7 @@ CLRS는 unused objects를 `free list`라는 singly linked list로 관리한다. 
 2. unused slots를 나타내는 free list
 ```
 
-![Figure 10.7](@/assets/images/039_figure_10-7_page_265.png)
+![Figure 10.7](@/assets/images/cs-algorithm-039-figure-10-7-page-265.png)
 *Figure 10.7 · PDF p. 265 · `ALLOCATE-OBJECT`와 `FREE-OBJECT`가 free list head를 갱신하는 과정*
 
 Figure 10.7에서 free list는 stack처럼 동작한다. 가장 최근에 free된 object가 다음 allocation에서 먼저 재사용된다.
@@ -420,7 +420,7 @@ x.right : right child
 
 Root는 parent가 없으므로 `x.p = NIL`이다. 어떤 child가 없으면 해당 field가 `NIL`이다. 전체 tree object `T`는 root를 `T.root`로 가리킨다. `T.root = NIL`이면 empty tree다.
 
-![Figure 10.9](@/assets/images/041_figure_10-9_page_268.png)
+![Figure 10.9](@/assets/images/cs-algorithm-041-figure-10-9-page-268.png)
 *Figure 10.9 · PDF p. 268 · binary tree node를 `p`, `left`, `right` pointers로 표현하는 방식*
 
 Binary tree에서는 모든 node가 같은 shape의 object를 가진다. 즉 `key`, `p`, `left`, `right` fields를 가진 homogeneous objects로 구현할 수 있고, Section 10.3의 multiple-array representation으로도 옮길 수 있다.
@@ -452,7 +452,7 @@ x.right-sibling : x 바로 오른쪽 sibling
 
 Child가 없으면 `x.left-child = NIL`이고, parent의 가장 오른쪽 child이면 `x.right-sibling = NIL`이다.
 
-![Figure 10.10](@/assets/images/042_figure_10-10_page_268.png)
+![Figure 10.10](@/assets/images/cs-algorithm-042-figure-10-10-page-268.png)
 *Figure 10.10 · PDF p. 268 · arbitrary rooted tree를 `left-child`와 `right-sibling` 두 pointer로 표현하는 방식*
 
 이 표현은 arbitrary number of children을 `O(n)` space로 표현한다. 각 node마다 children 수만큼 pointer field를 두는 대신, children을 sibling linked list처럼 연결하고 parent는 그 list의 head, 즉 leftmost child만 가리킨다.

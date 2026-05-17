@@ -38,7 +38,7 @@ Information security의 기본 속성은 CIA triad다.
 
 Network communication threat는 passive attack과 active attack으로 나눌 수 있다. Passive attack은 traffic을 monitor/eavesdrop하는 공격이고, confidentiality를 깨뜨린다. Active attack은 traffic을 modify, delete, replay하거나 service 자체를 방해하므로 integrity, authenticity, availability를 건드린다.
 
-![Figure 18-1](@/assets/images/310_figure_18_1_page_846.png)
+![Figure 18-1](@/assets/images/cs-tcp-ip-illustrated-310-figure-18-1-page-846.png)
 *Figure 18-1 · PDF p. 846 · Alice와 Bob 사이에서 Eve는 eavesdropping, Mallory는 modification/replay를 수행할 수 있는 위협 모델*
 
 Figure 18-1의 이름은 보안 설명에서 자주 쓰이는 관례다. Alice와 Bob은 통신 당사자(principals), Eve는 eavesdropper, Mallory는 malicious attacker다. Eve는 passive attack만 수행하지만, Mallory는 traffic을 저장, 수정, 삭제, 재정렬, replay할 수 있어 active/passive attack을 모두 수행한다.
@@ -63,7 +63,7 @@ Cryptography는 confidentiality, integrity, authenticity를 unsecured channel �
 
 Cryptosystem은 algorithm만이 아니라 key, protocol, 운영 절차를 함께 포함한다. Cleartext가 encryption algorithm과 key를 거쳐 ciphertext가 되고, receiver는 대응 key와 decryption algorithm으로 cleartext를 복원한다.
 
-![Figure 18-2](@/assets/images/311_figure_18_2_page_849.png)
+![Figure 18-2](@/assets/images/cs-tcp-ip-illustrated-311-figure-18-2-page-849.png)
 *Figure 18-2 · PDF p. 849 · symmetric key cryptosystem과 asymmetric/public key cryptosystem의 기본 흐름*
 
 Symmetric key cryptosystem에서는 encryption key와 decryption key가 보통 동일하고 secret key를 공유한 당사자만 유효한 ciphertext를 만들거나 복호화할 수 있다. 따라서 confidentiality뿐 아니라 약한 수준의 authentication도 암시한다. 하지만 message가 transit 중 수정되었는지를 확실히 확인하려면 단순 복호화 성공만으로 부족하고, MAC/HMAC 같은 integrity mechanism을 함께 써야 한다.
@@ -74,7 +74,7 @@ Symmetric encryption algorithm은 block cipher와 stream cipher로 나뉜다. Bl
 
 Asymmetric cryptosystem은 confidentiality와 authentication을 서로 다른 방향으로 제공할 수 있다. Bob에게 비밀 message를 보내려면 Bob의 public key로 encrypt한다. 반대로 Alice가 자신의 private key로 message를 변환하면 누구나 Alice의 public key로 검증할 수 있으므로 digital signature가 된다. 둘을 결합하면 “Alice가 작성했고 Bob만 읽을 수 있는” signed and private message를 만들 수 있다.
 
-![Figure 18-3](@/assets/images/312_figure_18_3_page_851.png)
+![Figure 18-3](@/assets/images/cs-tcp-ip-illustrated-312-figure-18-3-page-851.png)
 *Figure 18-3 · PDF p. 851 · public key cryptosystem이 confidentiality, digital signature, 두 속성의 결합을 제공하는 방식*
 
 Digital signature는 authenticity와 nonrepudiation의 기반이다. Alice의 private key를 가진 주체만 Alice로서 서명할 수 있고, public key를 가진 verifier는 signature를 검증할 수 있다. 실제 Internet protocol은 public key operation이 비싸기 때문에 대부분 hybrid cryptosystem을 사용한다. 즉 public key cryptography는 symmetric session key를 안전하게 만들거나 교환하는 데 쓰고, 실제 bulk traffic encryption은 더 빠른 symmetric algorithm으로 처리한다.
@@ -261,7 +261,7 @@ X.509는 public key certificate(PKC) 외에 attribute certificate(AC)도 정의�
 
 Security protocol은 TCP/IP stack의 거의 모든 계층에 존재한다. 어느 계층에서 보호하느냐에 따라 보호 범위가 달라진다.
 
-![Figure 18-4](@/assets/images/313_figure_18_4_page_871.png)
+![Figure 18-4](@/assets/images/cs-tcp-ip-illustrated-313-figure-18-4-page-871.png)
 *Figure 18-4 · PDF p. 871 · TCP/IP와 OSI stack 주변의 주요 security protocol 배치*
 
 Layer별 의미는 다음과 같다.
@@ -288,7 +288,7 @@ Network Access Control(NAC)은 특정 system/user에게 network communication을
 | backend 인증 서버 | AAA server / authentication server | authentication, authorization, accounting 판단 |
 | enforcement mechanism | VLAN, port control, MACSec 등 | 인증 결과에 따라 protected/remediation/guest network 배치 |
 
-![Figure 18-5](@/assets/images/314_figure_18_5_page_873.png)
+![Figure 18-5](@/assets/images/cs-tcp-ip-illustrated-314-figure-18-5-page-873.png)
 *Figure 18-5 · PDF p. 873 · supplicant, authenticator, AAA server가 분리된 EAP/802.1X enterprise access 구조*
 
 Figure 18-5의 pass-through authenticator는 많은 EAP method를 직접 구현하지 않고 EAP packet을 RADIUS 또는 Diameter 같은 AAA protocol에 실어 backend AAA server로 전달한다. 인증에 성공하면 authenticator는 port/VLAN mapping을 바꾸어 peer를 protected VLAN으로 넣거나, router를 통해 protected VLAN에 접근하게 한다. 인증 전에는 remediation/guest VLAN에만 두는 식으로 network access를 제한할 수 있다.
@@ -297,7 +297,7 @@ EAP 자체는 encryption protocol이 아니다. EAP는 authentication framework�
 
 EAP packet format은 간단하다.
 
-![Figure 18-6](@/assets/images/315_figure_18_6_page_874.png)
+![Figure 18-6](@/assets/images/cs-tcp-ip-illustrated-315-figure-18-6-page-874.png)
 *Figure 18-6 · PDF p. 874 · Code, Identifier, Length, Data로 구성된 EAP header*
 
 | field | 의미 |
@@ -311,7 +311,7 @@ Typical EAP exchange는 `Request -> Response -> 추가 Request/Response 반복 -
 
 EAP architecture는 lower layer, EAP layer, peer/authenticator layer, EAP methods layer로 나뉜다. EAP lower layer는 802.1X, 802.11i, UDP/L2TP, UDP/IKEv2, TCP 같은 운반 매체일 수 있다. EAP method는 TLS certificate exchange처럼 큰 message를 다룰 수 있으므로 method 자체가 fragmentation/large message handling을 담당해야 할 수 있다.
 
-![Figure 18.8](@/assets/images/317_figure_18-8_page_876.png)
+![Figure 18.8](@/assets/images/cs-tcp-ip-illustrated-317-figure-18-8-page-876.png)
 *Figure 18.8 · PDF p. 876 · pass-through authenticator에서 EAP method는 peer와 AAA server가 주로 처리하는 implementation model*
 
 ### 18.7.1 EAP Methods and Key Derivation
@@ -345,7 +345,7 @@ PANA session은 authentication/authorization, access, re-authentication, termina
 
 IPsec은 IPv4/IPv6 network layer에서 data source authentication, integrity, confidentiality, access control을 제공하는 architecture와 standards collection이다. Remote access VPN, site-to-site enterprise interconnection, routing protocol 보호, Mobile IPv6 보호 등에 쓰인다. IPsec endpoint는 host일 수도 있고 protected/unprotected network 경계에 있는 security gateway(SG)일 수도 있다.
 
-![Figure 18-9](@/assets/images/319_figure_18_9_page_880.png)
+![Figure 18-9](@/assets/images/cs-tcp-ip-illustrated-319-figure-18-9-page-880.png)
 *Figure 18-9 · PDF p. 880 · IPsec이 host-to-host, host-to-gateway, gateway-to-gateway, multicast/mobility에 적용되는 배치*
 
 IPsec 처리의 큰 흐름은 두 단계다.
@@ -355,7 +355,7 @@ IPsec 처리의 큰 흐름은 두 단계다.
 
 IPsec implementation은 packet마다 policy를 보고 선택적으로 동작한다. 모든 packet이 자동으로 암호화되는 것이 아니다. 핵심 database는 SPD, SAD, PAD다.
 
-![Figure 18-10](@/assets/images/320_figure_18_10_page_881.png)
+![Figure 18-10](@/assets/images/cs-tcp-ip-illustrated-320-figure-18-10-page-881.png)
 *Figure 18-10 · PDF p. 881 · security gateway에서 SPD/SAD/PAD가 packet을 bypass, discard, protect로 분류하는 구조*
 
 | database | 역할 |
@@ -385,7 +385,7 @@ IKE는 UDP port 500 또는 NAT traversal 시 UDP port 4500을 사용한다. Port
 
 IKE message는 IKE header와 zero or more payloads로 구성된다.
 
-![Figure 18-11](@/assets/images/321_figure_18_11_page_883.png)
+![Figure 18-11](@/assets/images/cs-tcp-ip-illustrated-321-figure-18-11-page-883.png)
 *Figure 18-11 · PDF p. 883 · 64-bit SPI pair, Exchange Type, Flags, Message ID를 포함한 IKEv2 header*
 
 IKE header에서 SPI(Security Parameter Index)는 IKE_SA를 식별한다. IKE는 64-bit SPI를 사용하고, AH/ESP는 뒤에서 32-bit SPI를 사용한다. Initiator SPI와 responder SPI, endpoint IP addresses의 조합은 effective connection identifier처럼 동작한다. `Exchange Type`은 IKE_SA_INIT, IKE_AUTH, CREATE_CHILD_SA, INFORMATIONAL 등을 나타낸다. `Flags`의 I bit는 original initiator, R bit는 response, V bit는 higher major version support를 나타낸다.
@@ -398,7 +398,7 @@ Message ID는 TCP sequence number와 비슷하지만 message 단위 request/resp
 
 IKE initial exchanges는 IKE_SA_INIT과 IKE_AUTH 두 exchange, 총 네 message로 구성된다. IKE_SA_INIT은 cryptographic suite를 고르고 nonce를 교환하며 DH key agreement를 수행한다.
 
-![Figure 18-13](@/assets/images/323_figure_18_13_page_886.png)
+![Figure 18-13](@/assets/images/cs-tcp-ip-illustrated-323-figure-18-13-page-886.png)
 *Figure 18-13 · PDF p. 886 · IKE_SA_INIT과 IKE_AUTH가 IKE_SA와 첫 CHILD_SA를 만드는 payload 흐름*
 
 IKE_SA_INIT에서 initiator는 `SAi1`, `KEi`, `Ni`를 보낸다. Responder는 acceptable suite를 고른 `SAr1`, `KEr`, `Nr`, 그리고 필요하면 `CERTREQ`를 보낸다. 이 시점에 양쪽은 DH shared secret과 nonce를 사용해 IKE_SA key material을 계산할 수 있다.
@@ -464,7 +464,7 @@ AH(Authentication Header)는 IP datagram에 origin authentication과 integrity�
 
 Transport mode AH는 IP header와 TCP/UDP/ICMP 같은 next protocol header 사이에 AH를 넣는다. IPv4에서는 protocol number 51을 사용하고, IPv6에서는 extension header chain 안에 AH가 들어간다.
 
-![Figure 18-16](@/assets/images/326_figure_18_16_page_894.png)
+![Figure 18-16](@/assets/images/cs-tcp-ip-illustrated-326-figure-18-16-page-894.png)
 *Figure 18-16 · PDF p. 894 · IPv4/IPv6 transport mode AH가 immutable 부분을 integrity-protect하는 구조*
 
 AH가 어려운 이유는 IP header에 mutable field와 immutable field가 섞여 있기 때문이다. TTL/Hop Limit, DS Field, ECN bits, Flow Label처럼 transit 중 변할 수 있는 field는 integrity calculation에서 특별히 처리하거나 제외해야 한다. Source/destination IP address처럼 immutable로 간주되는 field는 integrity-protected된다. 이 때문에 NAT가 address를 바꾸면 AH verification이 깨질 수 있다.
@@ -473,7 +473,7 @@ Tunnel mode AH는 original IP datagram을 inner datagram으로 보존하고, 새
 
 AH header는 transport/tunnel mode에서 동일하다.
 
-![Figure 18-18](@/assets/images/328_figure_18_18_page_897.png)
+![Figure 18-18](@/assets/images/cs-tcp-ip-illustrated-328-figure-18-18-page-897.png)
 *Figure 18-18 · PDF p. 897 · AH header의 SPI, Sequence Number, ICV 필드와 replay/integrity 역할*
 
 | AH field | 의미 |
@@ -492,12 +492,12 @@ ESP는 confidentiality, integrity, origin authentication, anti-replay protection
 
 ESP transport mode는 original IP header는 남겨두고 transport payload(TCP/UDP/ICMP 등)를 ESP로 보호한다. ESP tunnel mode는 original IP datagram 전체를 inner packet으로 넣고 새 outer IP datagram을 만든다. Tunnel mode ESP는 inner source/destination과 payload를 숨길 수 있어 제한적인 traffic flow confidentiality(TFC)도 제공한다.
 
-![Figure 18-20](@/assets/images/330_figure_18_20_page_900.png)
+![Figure 18-20](@/assets/images/cs-tcp-ip-illustrated-330-figure-18-20-page-900.png)
 *Figure 18-20 · PDF p. 900 · ESP tunnel mode가 original datagram을 새 outer datagram 안에 넣어 보호하는 구조*
 
 ESP packet structure는 header와 trailer를 함께 봐야 한다.
 
-![Figure 18-21](@/assets/images/331_figure_18_21_page_901.png)
+![Figure 18-21](@/assets/images/cs-tcp-ip-illustrated-331-figure-18-21-page-901.png)
 *Figure 18-21 · PDF p. 901 · ESP header, encrypted payload/trailer, optional ICV trailer의 구조*
 
 | ESP component | 보호/역할 |
@@ -553,14 +553,14 @@ Transport mode SA를 만들 때 NAT 뒤의 private address가 `TSi`/`TSr` traffi
 
 첫 packet은 `IKE_SA_INIT` request다. Initiator SPI가 있고 responder SPI는 아직 0이며, exchange type은 `IKE_SA_INIT`이다. Payload는 SA, KE, Nonce, 두 개의 Notify payload로 구성된다. SA payload에는 initiator가 받아들일 수 있는 cryptographic suite proposal들이 들어가고, 각 proposal은 encryption, integrity protection, PRF, DH group transform 조합을 제안한다.
 
-![Figure 18-22](@/assets/images/332_figure_18_22_page_907.png)
+![Figure 18-22](@/assets/images/cs-tcp-ip-illustrated-332-figure-18-22-page-907.png)
 *Figure 18-22 · PDF p. 907 · 첫 IKE_SA_INIT packet의 SA proposal, DH key exchange, nonce, NAT detection Notify payload*
 
 확장된 proposal 예시는 AES-CBC 256-bit encryption, HMAC-SHA-256 integrity, SHA-384 기반 PRF, alternate 1024-bit MODP group DH를 제안한다. 뒤따르는 KE payload는 해당 DH group의 public value를 싣고, Nonce는 freshness를 위한 random bit string을 싣는다. `NAT_DETECTION_SOURCE_IP`와 `NAT_DETECTION_DESTINATION_IP`는 각각 SPI와 IP/UDP port 값을 넣은 SHA-1 hash로 NAT 존재 여부를 판별한다.
 
 Responder의 `IKE_SA_INIT` response는 하나의 proposal을 선택한다. 예시에서는 3DES encryption, `HMAC_SHA1_96` integrity, `HMAC_SHA1` PRF, DH group 2 조합이 선택된다. 여기에 responder의 DH public value, nonce, NAT detection payload, `CERTREQ`, `MULTIPLE_AUTH_SUPPORTED` Notify payload가 붙는다.
 
-![Figure 18-23](@/assets/images/333_figure_18_23_page_909.png)
+![Figure 18-23](@/assets/images/cs-tcp-ip-illustrated-333-figure-18-23-page-909.png)
 *Figure 18-23 · PDF p. 909 · responder의 IKE_SA_INIT response와 CERTREQ, multiple authentication 지원 표시*
 
 `CERTREQ` payload는 responder가 나중에 initiator에게 어떤 CA와 연결된 certificate를 기대하는지 알려준다. 예시의 encoding type 4는 trusted CA의 X.509 Subject Public Key Info에 대한 SHA-1 hash 목록을 의미한다. 이 trace에서는 20-byte 값 하나이므로 단일 CA만 지정한 것이다. DER(Distinguished Encoding Rules)는 ASN.1 BER의 제한된 subset으로, 값을 하나의 모호하지 않은 binary encoding으로 표현한다. PEM은 ASCII 기반 encoding이며, X.509 certificate는 DER/PEM 사이 변환이 흔하다.
@@ -571,7 +571,7 @@ Responder의 `IKE_SA_INIT` response는 하나의 proposal을 선택한다. 예�
 
 첫 `IKE_AUTH` request는 UDP/IPv4 fragmentation 후 reassembly된 message다. Payload에는 `IDi`, `CERT`, `CERTREQ`, `AUTH`, `N(MOBIKE_SUPP)`, `CP`, `SA`, `TSi`, `TSr`가 들어 있다.
 
-![Figure 18-24](@/assets/images/334_figure_18_24_page_911.png)
+![Figure 18-24](@/assets/images/cs-tcp-ip-illustrated-334-figure-18-24-page-911.png)
 *Figure 18-24 · PDF p. 911 · UDP 4500에서 reassembled/decrypted된 IKE_AUTH request payload 구성*
 
 각 payload의 의미는 다음과 같다.
@@ -593,7 +593,7 @@ Responder의 `IKE_SA_INIT` response는 하나의 proposal을 선택한다. 예�
 
 Responder의 `IKE_AUTH` response는 `IDr`, `CERT`, `AUTH`, `CP(CFG_REPLY)`, `SA`, `TSi`, `TSr`, `N(AUTH_LIFETIME)`, `N(MOBIKE_SUPPORTED)`, `N(NO_ADDITIONAL_ADDRESSES)`를 포함한다.
 
-![Figure 18-25](@/assets/images/335_figure_18_25_page_913.png)
+![Figure 18-25](@/assets/images/cs-tcp-ip-illustrated-335-figure-18-25-page-913.png)
 *Figure 18-25 · PDF p. 913 · IKE_AUTH response가 responder identity, certificate, configuration, narrowed traffic selectors를 반환하는 흐름*
 
 `CP(CFG_REPLY)`는 VPN client에게 줄 `INTERNAL_IP4_ADDRESS` 같은 설정 값을 제공한다. Responder가 고른 CHILD_SA proposal은 AES-CBC 256-bit, `AUTH_HMAC_SHA1_96`, no ESN 조합이다. Traffic selector narrowing 예시에서는 `TSi`가 단일 IPv4 address `10.100.0.1`로, `TSr`가 `10.0.0.0/16`으로 줄어든다. 여러 불연속 subset이 가능하면 `N(ADDITIONAL_TS_POSSIBLE)`로 추가 selector 가능성을 알릴 수 있다.
@@ -604,12 +604,12 @@ Responder의 `IKE_AUTH` response는 `IDr`, `CERT`, `AUTH`, `CP(CFG_REPLY)`, `SA`
 
 SA 해제는 INFORMATIONAL exchange와 Delete payload로 수행된다. 먼저 ESP CHILD_SA를 지울 때는 IKE SA 위에 encrypted/authenticated Delete payload를 싣는다. Delete payload는 여러 SPI를 한 번에 삭제할 수 있지만, 예시에서는 SPI `0x6cfca5ef` 하나만 삭제한다.
 
-![Figure 18-26](@/assets/images/336_figure_18_26_page_914.png)
+![Figure 18-26](@/assets/images/cs-tcp-ip-illustrated-336-figure-18-26-page-914.png)
 *Figure 18-26 · PDF p. 914 · ESP CHILD_SA 삭제 요청이 IKE SA 위의 encrypted Delete payload로 전달되는 예*
 
 Responder의 응답도 유사하지만 Flags field가 response/responder 방향을 나타내고, 다른 IV/integrity checksum과 다른 SPI를 Delete payload에 넣는다. 이후 IKE_SA 자체를 닫을 때는 별도의 INFORMATIONAL exchange가 필요하다. IKE_SA 삭제 요청에서는 삭제 대상 SPI를 payload에 넣을 필요가 없다. 삭제 요청 자체가 해당 IKE_SA 위에 실려 있으므로 대상 SA가 암묵적으로 정해지기 때문이다.
 
-![Figure 18-27](@/assets/images/337_figure_18_27_page_915.png)
+![Figure 18-27](@/assets/images/cs-tcp-ip-illustrated-337-figure-18-27-page-915.png)
 *Figure 18-27 · PDF p. 915 · IKE_SA 삭제 요청에서는 message가 실린 IKE_SA 자체가 삭제 대상이므로 별도 SPI가 필요 없다*
 
 ### 18.9 Transport Layer Security (TLS and DTLS)
@@ -624,7 +624,7 @@ TLS의 보안 목표는 confidentiality, data integrity, peer authentication, ke
 
 TLS 내부는 record layer와 upper layer protocols로 나뉜다.
 
-![Figure 18-28](@/assets/images/338_figure_18_28_page_916.png)
+![Figure 18-28](@/assets/images/cs-tcp-ip-illustrated-338-figure-18-28-page-916.png)
 *Figure 18-28 · PDF p. 916 · TLS record layer와 Handshake/Alert/Change Cipher Spec/Application Data protocol의 계층 구조*
 
 | TLS component | 핵심 역할 |
@@ -643,7 +643,7 @@ TLS 1.2가 의존하는 cryptographic operation은 digital signing, stream ciphe
 
 Record protocol은 upper-layer data를 `TLSPlaintext` record로 fragment한다. Record 최대 payload는 `2^14` bytes이며, TLS는 higher-layer message boundary를 보존하지 않는다. 이후 optional compression으로 `TLSCompressed`를 만들고, encryption/integrity protection으로 `TLSCiphertext`를 만든다.
 
-![Figure 18-29](@/assets/images/339_figure_18_29_page_918.png)
+![Figure 18-29](@/assets/images/cs-tcp-ip-illustrated-339-figure-18-29-page-918.png)
 *Figure 18-29 · PDF p. 918 · TLSPlaintext에서 TLSCompressed, TLSCiphertext로 변환되는 record layer 처리 흐름*
 
 Record 처리 순서는 일반적으로 sequence number 계산, MAC 계산, padding, symmetric encryption이다. Sequence number는 message에 직접 실리지 않지만 MAC 계산에 들어간다. Block cipher는 padding과 pad length가 필요할 수 있고, AEAD cipher(CCM, GCM 등)는 separate MAC 없이 nonce와 authenticated encryption을 사용한다.
@@ -678,7 +678,7 @@ Handshake protocol의 목표는 여섯 가지로 정리된다.
 | Session-specific secret | premaster secret, master secret 생성 |
 | Verification | Finished message로 handshake transcript가 일치했는지 확인 |
 
-![Figure 18-30](@/assets/images/340_figure_18_30_page_920.png)
+![Figure 18-30](@/assets/images/cs-tcp-ip-illustrated-340-figure-18-30-page-920.png)
 *Figure 18-30 · PDF p. 920 · TLS full handshake와 abbreviated handshake resume의 message 흐름*
 
 `ClientHello`는 TLS version, session ID, cipher suite proposal, compression algorithm, `ClientHello.random`, extensions를 보낸다. Server가 session cache에서 session ID를 찾고 재사용을 허용하면 abbreviated handshake로 resume할 수 있다. Resume은 endpoint authentication 비용을 줄여 성능상 중요하지만, cipher specification 상태가 양쪽에서 맞아야 한다.
@@ -719,12 +719,12 @@ Renegotiation은 같은 TLS connection을 유지한 채 cryptographic parameter�
 
 예시 trace는 loopback `127.0.0.1`에서 TLS 1.2 server port `5556`에 접속하는 TCP/IP 흐름이다. Client와 server는 모두 RSA certificate를 peer에게 제공한다. Wireshark에서는 SSL로 decode하도록 지정해 TLS message를 확인한다.
 
-![Figure 18-31](@/assets/images/341_figure_18_31_page_924.png)
+![Figure 18-31](@/assets/images/cs-tcp-ip-illustrated-341-figure-18-31-page-924.png)
 *Figure 18-31 · PDF p. 924 · TCP ACK가 섞인 TLS 1.2 connection establishment trace와 ChangeCipherSpec 이후 암호화 구간*
 
 TLS exchange는 TCP three-way handshake 이후 `ClientHello`로 시작한다. `ChangeCipherSpec`가 처리된 뒤 이후 message는 encrypted/authenticated 상태가 된다.
 
-![Figure 18-32](@/assets/images/342_figure_18_32_page_925.png)
+![Figure 18-32](@/assets/images/cs-tcp-ip-illustrated-342-figure-18-32-page-925.png)
 *Figure 18-32 · PDF p. 925 · ClientHello의 version, cipher suites, compression, random, extensions 예시*
 
 이 `ClientHello`는 32-bit UNIX timestamp와 28-byte random value로 구성된 `ClientHello.random`을 포함한다. 새 connection이므로 session ID는 0이다. Client는 세 개의 cipher suite를 선호도 순서로 제안하고, compression은 NULL만 지원한다. Extensions에는 `cert_type`, `server_name`, `renegotiation_info`, `SessionTicket`, `signature_algorithms`가 들어 있다.
@@ -743,7 +743,7 @@ DTLS의 replay detection은 IPsec AH/ESP와 비슷하게 receiver window로 수�
 
 하나의 datagram에는 여러 DTLS record가 들어갈 수 있지만, 하나의 record가 여러 datagram에 걸쳐서는 안 된다. Application은 PMTUD와 유사하게 DTLS overhead를 고려한 maximum application datagram size를 지켜야 한다. 단, Handshake protocol message는 수 KB가 될 수 있어 별도 fragmentation이 있다. DTLS handshake fragment는 16-bit Sequence Number, 24-bit Fragment Offset, 24-bit Fragment Length를 사용한다.
 
-![Figure 18-36](@/assets/images/346_figure_18_36_page_932.png)
+![Figure 18-36](@/assets/images/cs-tcp-ip-illustrated-346-figure-18-36-page-932.png)
 *Figure 18-36 · PDF p. 932 · DTLS full/abbreviated exchange의 flight 재전송과 Preparing/Sending/Waiting state machine*
 
 DTLS handshake는 message group을 flight 단위로 보내며 timeout-based retransmission을 수행한다. Full exchange는 TLS full handshake와 유사하지만 `HelloVerifyRequest`와 cookie가 들어간 두 번째 `ClientHello`가 추가된다. Abbreviated exchange는 TLS와 달리 server가 첫 Finished를 보낸다.
@@ -791,7 +791,7 @@ DNSSECbis는 네 가지 핵심 RR와 두 header bit(`CD`, `AD`)를 정의하고,
 
 `DNSKEY` RR는 DNSSEC 전용 public key를 DNS 안에 저장한다. 다른 용도의 key/certificate는 `CERT` RR 같은 다른 record를 사용할 수 있지만, DNSSEC zone signing과 validation에는 DNSKEY가 중심이다.
 
-![Figure 18-37](@/assets/images/347_figure_18_37_page_936.png)
+![Figure 18-37](@/assets/images/cs-tcp-ip-illustrated-347-figure-18-37-page-936.png)
 *Figure 18-37 · PDF p. 936 · DNSKEY RDATA의 Flags, Protocol, Algorithm, Public Key 필드*
 
 | DNSKEY field | 의미 |
@@ -809,7 +809,7 @@ DNSSECbis는 네 가지 핵심 RR와 두 header bit(`CD`, `AD`)를 정의하고,
 
 `DS(Delegation Signer)` RR는 보통 parent zone에서 child zone의 DNSKEY RR를 참조한다. DNSSEC chain of trust에서 parent가 child의 key를 인증하는 downward link 역할을 한다.
 
-![Figure 18-38](@/assets/images/348_figure_18_38_page_936.png)
+![Figure 18-38](@/assets/images/cs-tcp-ip-illustrated-348-figure-18-38-page-936.png)
 *Figure 18-38 · PDF p. 936 · DS RDATA의 Key Tag, Algorithm, Digest Type, Digest 필드*
 
 `Key Tag`는 DNSKEY RR를 찾기 위한 nonunique hint일 뿐이고, 같은 tag를 가진 DNSKEY가 여러 개 있을 수 있다. 따라서 Key Tag만으로 신뢰하지 않고 digest와 signature validation이 필요하다. DS digest는 다음 형태로 계산된다.
@@ -826,14 +826,14 @@ DS RR는 zone boundary를 건너 trust chain을 이어야 하므로, 참조되�
 
 `NSEC(NextSECure)` RR는 canonical order에서 현재 owner name 다음에 오는 RRset owner name과, 현재 owner name에 존재하는 RR type bitmap을 담는다. 이 chain을 따라가면 “어떤 이름/타입이 zone에 존재하지 않는다”는 것을 signature로 증명할 수 있다.
 
-![Figure 18-39](@/assets/images/349_figure_18_39_page_938.png)
+![Figure 18-39](@/assets/images/cs-tcp-ip-illustrated-349-figure-18-39-page-938.png)
 *Figure 18-39 · PDF p. 938 · NSEC RDATA의 Next Domain Name과 Type Bit Maps 구조*
 
 NSEC의 장점은 authenticated denial of existence가 단순하다는 점이고, 단점은 zone enumeration이다. 공격자가 NSEC chain을 걸으면 authoritative zone 안의 name들을 열거할 수 있다. Type Bit Maps는 RR type space를 256개 window block으로 나누고, 각 block 안의 최대 256개 type presence를 bitmap으로 encoding한다. Sparse RR type distribution에 맞춰 없는 block은 생략한다.
 
 `NSEC3`는 owner name을 그대로 보여주는 대신 hash한 owner name chain을 사용해 zone enumeration 노출을 줄인다.
 
-![Figure 18-40](@/assets/images/350_figure_18_40_page_939.png)
+![Figure 18-40](@/assets/images/cs-tcp-ip-illustrated-350-figure-18-40-page-939.png)
 *Figure 18-40 · PDF p. 939 · NSEC3 RDATA의 hash algorithm, salt, iterations, next hashed owner, type bitmap*
 
 | NSEC3 field | 의미 |
@@ -859,7 +859,7 @@ Next Hashed Owner = H(IH(Iterations) | Salt)
 
 `RRSIG` RR는 특정 RRset에 대한 digital signature와, 그 signature를 검증할 DNSKEY를 찾는 정보를 담는다. DNSSEC에서 authoritative zone의 모든 authoritative RR은 RRSIG로 서명되어야 한다. 단 parent zone의 delegation NS RR와 glue record는 예외다.
 
-![Figure 18-41](@/assets/images/351_figure_18_41_page_941.png)
+![Figure 18-41](@/assets/images/cs-tcp-ip-illustrated-351-figure-18-41-page-941.png)
 *Figure 18-41 · PDF p. 941 · RRSIG RDATA의 Type Covered, validity time, Key Tag, Signer's Name, Signature 구조*
 
 | RRSIG field | 의미 |
@@ -891,7 +891,7 @@ DNSSEC validation은 같은 data라도 순서나 표현이 달라지면 hash/sig
 
 Signed zone은 `RRSIG`, `DNSKEY`, `NSEC` 또는 `NSEC3` RR를 포함하고, signed delegation point가 있으면 `DS` RR도 포함한다. DNSSEC public key는 DNSKEY RR로 DNS 안에 저장되고, private key가 zone의 authoritative RRset을 RRSIG로 서명한다.
 
-![Figure 18-42](@/assets/images/352_figure_18_42_page_943.png)
+![Figure 18-42](@/assets/images/cs-tcp-ip-illustrated-352-figure-18-42-page-943.png)
 *Figure 18-42 · PDF p. 943 · parent DS RR가 child DNSKEY hash를 담아 zone cut에서 trust chain을 이어주는 구조*
 
 Parent zone의 DS RR는 child zone apex의 DNSKEY RR digest를 담는다. Validating resolver가 parent의 DS RR를 신뢰할 수 있으면 child DNSKEY RR를 검증하고, 그 child DNSKEY로 child zone 내부의 RRSIG와 RRset을 검증한다. 단 이 과정은 parent DNSKEY까지 이어지는 root of trust가 있을 때만 의미가 있다.
@@ -913,7 +913,7 @@ Parent zone의 DS RR는 child zone apex의 DNSKEY RR digest를 담는다. Valida
 
 `org.` zone에서는 DNSKEY RR 네 개가 보이며, value `257`인 KSK와 value `256`인 ZSK가 구분된다. Root zone의 DS RR가 가리키던 key tag와 `org.` DNSKEY가 연결되고, `org.`의 NSEC3/NSEC3PARAM은 hashed owner name과 salt/iteration parameter가 맞는지 확인하게 해 준다. 같은 방식으로 `icann.org.` DS와 DNSKEY를 연결한 뒤, 마지막으로 `www.icann.org.` A RR와 `RRSIG A`를 검증한다.
 
-![Figure 18-43](@/assets/images/353_figure_18_43_page_949.png)
+![Figure 18-43](@/assets/images/cs-tcp-ip-illustrated-353-figure-18-43-page-949.png)
 *Figure 18-43 · PDF p. 949 · root trust anchor에서 DS/DNSKEY/RRSIG chain을 따라 최종 RRset을 검증하는 DNSSEC chain of trust 시각화*
 
 Figure 18-43의 표기에서 root zone의 `alg=8`은 RSA/SHA-256 signature를, 다른 zone의 `alg=7`은 NSEC3 사용을 허용하는 RSA/SHA-1 계열 algorithm을 의미한다. Root zone의 DS RR에서 `digest algs=1,2`는 SHA-1과 SHA-256 digest가 함께 지원됨을 뜻한다.
@@ -932,7 +932,7 @@ DNS zone transfer와 dynamic update는 잘못 사용되면 DNS structure나 cont
 
 TSIG(Secret Key Transaction Authentication for DNS, Transaction Signatures)는 shared secret key 기반 MAC으로 DNS request/response transaction을 보호한다. TSIG는 on demand로 계산되는 pseudo-RR이며, DNS message의 additional data section에 실리고 단일 transaction 보호에만 쓰인다.
 
-![Figure 18-44](@/assets/images/354_figure_18_44_page_951.png)
+![Figure 18-44](@/assets/images/cs-tcp-ip-illustrated-354-figure-18-44-page-951.png)
 *Figure 18-44 · PDF p. 951 · TSIG pseudo-RR RDATA의 Algorithm Name, Time Signed, Fudge, MAC, Error 필드*
 
 | TSIG field | 의미 |
@@ -948,12 +948,12 @@ TSIG(Secret Key Transaction Authentication for DNS, Transaction Signatures)는 s
 
 예시는 BIND9의 `nsupdate`로 `dynzone.`에서 `two.dynzone.` RR를 삭제하는 signed dynamic update다. Key name은 `tsigkey.dynzone.`이고 shared secret은 명령에서 제공된다.
 
-![Figure 18-45](@/assets/images/355_figure_18_45_page_952.png)
+![Figure 18-45](@/assets/images/cs-tcp-ip-illustrated-355-figure-18-45-page-952.png)
 *Figure 18-45 · PDF p. 952 · HMAC-MD5 TSIG로 서명된 DNS dynamic update request*
 
 Request의 TSIG pseudo-RR는 signature algorithm `HMAC-MD5.SIG-ALG.REG.INT`, 16-byte MAC, Original ID를 포함한다. Original ID가 DNS header의 Transaction ID와 맞아 transaction binding을 제공한다.
 
-![Figure 18-46](@/assets/images/356_figure_18_46_page_953.png)
+![Figure 18-46](@/assets/images/cs-tcp-ip-illustrated-356-figure-18-46-page-953.png)
 *Figure 18-46 · PDF p. 953 · TSIG로 서명된 dynamic update response와 성공 상태*
 
 Response 역시 TSIG pseudo-RR를 additional information area에 담아 transaction 응답의 integrity/authentication을 제공한다.

@@ -80,7 +80,7 @@ Bit vector의 긴 scan을 줄이기 위해 leaves를 `A[0..u-1]`로 두고, inte
 
 Figure 20.1은 `u=16`, set `{2,3,4,5,7,14,15}`를 bit vector와 binary tree overlay로 나타낸다. 그림의 arrows는 `PREDECESSOR(14)`가 7을 찾는 경로를 보여 준다.
 
-![Figure 20.1](@/assets/images/110_figure_20-1_page_554.png)
+![Figure 20.1](@/assets/images/cs-algorithm-110-figure-20-1-page-554.png)
 *Figure 20.1 · PDF p. 554 · bit vector 위의 binary tree overlay와 `PREDECESSOR(14)` 탐색 경로*
 
 이 구조에서 순서 연산은 다음처럼 동작한다.
@@ -102,7 +102,7 @@ Tree height가 `lg u`이므로 각 operation은 위로 한 번, 아래로 한 �
 
 Figure 20.2는 Figure 20.1과 같은 set을 degree `sqrt(u)` tree로 나타낸다. `summary[i]`는 cluster `i`가 비어 있지 않으면 1이다.
 
-![Figure 20.2](@/assets/images/111_figure_20-2_page_556.png)
+![Figure 20.2](@/assets/images/cs-algorithm-111-figure-20-2-page-556.png)
 *Figure 20.2 · PDF p. 556 · universe를 `sqrt(u)` clusters와 `summary`로 나눈 height-2 구조*
 
 값 `x`가 들어 있는 cluster 번호는:
@@ -195,7 +195,7 @@ x = index(high(x), low(x))
 
 Figure 20.3은 `proto-vEB(u)`가 `summary` 하나와 `sqrt(u)`개의 clusters로 구성된다는 사실을 보여 준다.
 
-![Figure 20.3](@/assets/images/112_figure_20-3_page_559.png)
+![Figure 20.3](@/assets/images/cs-algorithm-112-figure-20-3-page-559.png)
 *Figure 20.3 · PDF p. 559 · `proto-vEB(u)`의 `summary`와 `cluster[0..sqrt(u)-1]` 구조*
 
 원래 key `x`는 다음 위치에 재귀적으로 저장된다.
@@ -210,7 +210,7 @@ cluster[high(x)] 안의 key low(x)
 
 Figure 20.4는 set `{2,3,4,5,7,14,15}`를 저장하는 `proto-vEB(16)` 구조를 완전히 펼쳐 보여 준다. Top-level에는 4개의 `proto-vEB(4)` clusters와 하나의 `proto-vEB(4)` summary가 있다. 각 `proto-vEB(4)`는 다시 2개의 `proto-vEB(2)` clusters와 하나의 `proto-vEB(2)` summary를 가진다.
 
-![Figure 20.4](@/assets/images/113_figure_20-4_page_560.png)
+![Figure 20.4](@/assets/images/cs-algorithm-113-figure-20-4-page-560.png)
 *Figure 20.4 · PDF p. 560 · set `{2,3,4,5,7,14,15}`를 저장하는 완전 확장 `proto-vEB(16)`*
 
 예를 들어 top-level `cluster[1]`은 values 4-7을 담당한다. 이 cluster 안에서 key 7은 local offset `low(7)=3`으로 저장된다. Top-level `summary`에는 cluster 0, 1, 3이 nonempty라는 정보가 저장되고, cluster 2는 empty이므로 summary bit가 0이다.
@@ -412,7 +412,7 @@ index(x, y) = x * sqrt_down(u) + y
 
 Figure 20.5는 `u > 2`인 vEB tree의 정보를 보여 준다. Proto-vEB와 비교하면 `min`과 `max`가 새로 추가되었고, summary와 cluster의 universe sizes가 upper/lower square root로 나뉜다.
 
-![Figure 20.5](@/assets/images/114_figure_20-5_page_567.png)
+![Figure 20.5](@/assets/images/cs-algorithm-114-figure-20-5-page-567.png)
 *Figure 20.5 · PDF p. 567 · 실제 `vEB(u)`의 `min`, `max`, `summary`, `cluster` 구성*
 
 가장 중요한 비대칭은 다음이다.
@@ -432,7 +432,7 @@ V.max는 원소가 2개 이상이면 cluster 안에도 저장된다.
 
 Figure 20.6은 Figure 20.4의 proto-vEB 구조와 같은 set `{2,3,4,5,7,14,15}`를 저장하는 `vEB(16)`이다. Top-level `V.min = 2`, `V.max = 15`다. `2`는 minimum이므로 `cluster[0]` 안에 다시 저장되지 않는다. 그래서 `cluster[0].min`은 3이다.
 
-![Figure 20.6](@/assets/images/115_figure_20-6_page_569.png)
+![Figure 20.6](@/assets/images/cs-algorithm-115-figure-20-6-page-569.png)
 *Figure 20.6 · PDF p. 569 · set `{2,3,4,5,7,14,15}`를 저장하는 `vEB(16)`과 `min` 비저장 규칙*
 
 #### `min/max`가 recursive calls를 줄이는 네 가지 방식

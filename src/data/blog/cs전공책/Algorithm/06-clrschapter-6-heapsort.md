@@ -38,7 +38,7 @@ Chapter 6은 `heapsort`와 그 기반 자료구조인 `heap`을 다룬다. Heaps
 
 `binary heap`은 array object지만, 구조적으로는 `nearly complete binary tree`로 볼 수 있다. tree는 lowest level을 제외한 모든 level이 꽉 차 있고, lowest level은 왼쪽부터 차례로 채워진다. 각 tree node는 array element 하나에 대응된다.
 
-![Figure 6.1](@/assets/images/016_figure_6-1_page_173.png)
+![Figure 6.1](@/assets/images/cs-algorithm-016-figure-6-1-page-173.png)
 *Figure 6.1 · PDF p. 173 · max-heap을 binary tree와 array로 동시에 표현한 예*
 
 heap array `A`에는 두 가지 크기 개념이 있다.
@@ -146,7 +146,7 @@ MAX-HEAPIFY(A, i)
 
 swap 후에는 원래 `A[i]`였던 작은 값이 child 위치로 내려갔기 때문에, 그 child subtree에서 다시 max-heap property가 깨질 수 있다. 그래서 `MAX-HEAPIFY(A, largest)`를 recursive하게 호출한다.
 
-![Figure 6.2](@/assets/images/017_figure_6-2_page_176.png)
+![Figure 6.2](@/assets/images/cs-algorithm-017-figure-6-2-page-176.png)
 *Figure 6.2 · PDF p. 176 · `MAX-HEAPIFY(A,2)`가 값을 아래로 내리며 max-heap property를 복구하는 과정*
 
 Figure 6.2에서는 index `2`의 값이 children보다 작아 property를 위반한다. 먼저 더 큰 child와 swap해 node 2를 고치지만, 그 swap 때문에 node 4에서 다시 문제가 생긴다. 다시 recursive call로 node 4를 고치면 전체 subtree가 max-heap이 된다.
@@ -191,7 +191,7 @@ BUILD-MAX-HEAP(A)
 
 왜 뒤에서 앞으로 가는가? `MAX-HEAPIFY(A, i)`는 `i`의 left/right subtrees가 이미 max-heap이라는 전제를 요구한다. Array index에서 children은 parent보다 큰 index를 가지므로, 큰 index에서 작은 index로 내려오면 node `i`를 처리할 때 children subtrees는 이미 heap으로 만들어져 있다.
 
-![Figure 6.3](@/assets/images/018_figure_6-3_page_179.png)
+![Figure 6.3](@/assets/images/cs-algorithm-018-figure-6-3-page-179.png)
 *Figure 6.3 · PDF p. 179 · `BUILD-MAX-HEAP`이 internal node를 뒤에서 앞으로 heapify하는 과정*
 
 Figure 6.3의 각 단계는 line 3의 `MAX-HEAPIFY` 호출 직전 상태를 보여준다. 중요한 관찰은 호출되는 node의 두 child subtrees가 이미 max-heaps라는 점이다. 그래서 `MAX-HEAPIFY`의 precondition이 만족되고, 한 번의 호출로 해당 node를 root로 하는 subtree가 max-heap이 된다.
@@ -278,7 +278,7 @@ HEAPSORT(A)
 5      MAX-HEAPIFY(A, 1)
 ```
 
-![Figure 6.4](@/assets/images/019_figure_6-4_page_182.png)
+![Figure 6.4](@/assets/images/cs-algorithm-019-figure-6-4-page-182.png)
 *Figure 6.4 · PDF p. 182 · `HEAPSORT`가 max root를 sorted suffix로 보내며 heap 영역을 줄이는 과정*
 
 Figure 6.4에서 lightly shaded nodes만 heap에 남아 있고, 오른쪽/아래쪽의 excluded nodes는 이미 sorted suffix를 이룬다. 즉 같은 array 안에서
@@ -414,7 +414,7 @@ HEAP-INCREASE-KEY(A, i, key)
 
 `MAX-HEAPIFY`가 값을 아래로 내려 보내는 operation이라면, `HEAP-INCREASE-KEY`는 증가한 key를 위로 올려 보내는 operation이다. Parent보다 작거나 같아지는 순간, 또는 root에 도달하는 순간 종료한다.
 
-![Figure 6.5](@/assets/images/020_figure_6-5_page_186.png)
+![Figure 6.5](@/assets/images/cs-algorithm-020-figure-6-5-page-186.png)
 *Figure 6.5 · PDF p. 186 · `HEAP-INCREASE-KEY`가 증가한 key를 parent 방향으로 올리는 과정*
 
 Figure 6.5에서는 특정 node의 key가 15로 증가한 뒤, parent보다 커졌기 때문에 parent와 swap한다. 한 번 더 parent와 비교해 필요하면 다시 swap하고, `A[PARENT(i)] >= A[i]`가 되는 지점에서 max-heap property가 회복된다.

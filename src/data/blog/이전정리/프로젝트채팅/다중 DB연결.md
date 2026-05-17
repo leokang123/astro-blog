@@ -6,7 +6,7 @@ description: "각각의 Entity에서 Getter Setter를 설정해 줘야 Controlle
 tags:
   - "일반"
   - "프로젝트채팅"
-banner: "@/assets/images/warmalley.jpg"
+banner: "@/assets/images/legacy-project-chat-warmalley.jpg"
 ---
 
 # 다중 DB연결

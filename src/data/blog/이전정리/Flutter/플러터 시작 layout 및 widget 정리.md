@@ -6,7 +6,7 @@ description: "Flutter의 UI를 구성하는 모든 요소는 위젯(Widget)이�
 tags:
   - "일반"
   - "Flutter"
-banner: "@/assets/images/cavemansitting.jpg"
+banner: "@/assets/images/shared-cavemansitting.jpg"
 ---
 
 # 플러터 시작 Layout 및 Widget 정리
@@ -104,7 +104,7 @@ _다시 빌드하는 문제로 Stateful 위젯은 작게 나눌수록 좋다고 
 
 ### 디렉토리 구조
 
-![Pasted image 20250610234830](@/assets/images/pasted-image-20250610234830.png)
+![Pasted image 20250610234830](@/assets/images/legacy-flutter-pasted-image-20250610234830.png)
 
 #### Notifiers
 

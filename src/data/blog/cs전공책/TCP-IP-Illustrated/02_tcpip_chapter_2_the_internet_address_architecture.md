@@ -57,7 +57,7 @@ IPv4 address space는 `2^32 = 4,294,967,296`개 address를 갖고, IPv6 address 
 
 classful addressing은 network 규모가 서로 다르다는 점을 반영해 IPv4 address space를 A, B, C, D, E class로 나누었다. Class A/B/C는 unicast address allocation에 사용되었고, Class D는 multicast, Class E는 reserved 용도다. Class는 address의 맨 앞 bit pattern으로 결정된다. Class A는 leading bit `0`, Class B는 `10`, Class C는 `110`, Class D는 `1110`, Class E는 `1111`로 시작한다.
 
-![Figure 2-1](@/assets/images/008_figure_2_1_page_74.png)
+![Figure 2-1](@/assets/images/cs-tcp-ip-illustrated-008-figure-2-1-page-74.png)
 *Figure 2-1 · PDF p. 74 · IPv4 classful address space에서 network/host bit가 class별로 나뉘는 방식*
 
 Figure 2-1은 classful addressing의 핵심 trade-off를 보여준다. Class A는 network number가 작고 host number가 커서 매우 큰 network에 맞지만 allocation 단위가 과하게 크다. Class C는 network number가 크고 host number가 작아 작은 network에 맞지만 큰 조직에는 너무 작다. 이런 fixed-size class 구조는 address 낭비와 routing scalability 문제를 낳았고, 뒤의 subnetting, VLSM, CIDR이 등장하는 배경이 된다.
@@ -80,12 +80,12 @@ subnet addressing은 중앙에서 받은 class A/B/C network number를 site 내�
 
 subnetting은 IPv4 address 길이를 늘리지 않는다. 대신 원래 host portion으로 쓰였던 bit 일부를 subnet number로 재해석한다. 따라서 address 구조는 `network number + subnet ID + host ID`가 된다. 이 추가 구분은 site 내부 router와 host만 알면 되고, site 밖 Internet은 여전히 전통적인 classful network number만 보고 해당 site의 border router로 traffic을 보낸다.
 
-![Figure 2-2](@/assets/images/009_figure_2_2_page_76.png)
+![Figure 2-2](@/assets/images/cs-tcp-ip-illustrated-009-figure-2-2-page-76.png)
 *Figure 2-2 · PDF p. 76 · class B address의 host portion을 subnet ID와 host ID로 나누는 예*
 
 Figure 2-2의 예에서 class B network는 앞 16 bits가 centrally allocated network number다. 남은 16 bits 중 8 bits를 subnet ID로 쓰면 `2^8 = 256`개 subnet을 만들 수 있고, 각 subnet에는 host ID 8 bits가 남는다. 각 subnet에서 all-zero host와 all-one host를 제외하면 `2^8 - 2 = 254`개 host address를 쓸 수 있다. 더 많은 subnet을 원하면 host 수를 줄이고, 더 많은 host를 원하면 subnet 수를 줄이는 trade-off가 생긴다.
 
-![Figure 2-3](@/assets/images/010_figure_2_3_page_77.png)
+![Figure 2-3](@/assets/images/cs-tcp-ip-illustrated-010-figure-2-3-page-77.png)
 *Figure 2-3 · PDF p. 77 · `128.32.0.0` class B site가 `255.255.255.0` mask로 내부 subnet을 나누는 구조*
 
 Figure 2-3은 site 밖과 site 안의 관점 차이를 보여준다. Internet routing system은 `128.32.x.x`로 가는 모든 traffic을 site border router로 보낸다. 하지만 border router는 내부에서 `128.32.1.x`와 `128.32.2.x`가 서로 다른 subnet이라는 사실을 알아야 한다. 이 local distinction을 가능하게 하는 configuration parameter가 subnet mask다.
@@ -104,7 +104,7 @@ mask:    255.255.255.0  (/24)
 AND 결과: 128.32.1.0   → prefix 128.32.1.0/24
 ```
 
-![Figure 2-4](@/assets/images/011_figure_2_4_page_79.png)
+![Figure 2-4](@/assets/images/cs-tcp-ip-illustrated-011-figure-2-4-page-79.png)
 *Figure 2-4 · PDF p. 79 · IP address와 subnet mask를 bitwise AND하여 routing prefix를 얻는 과정*
 
 subnet mask는 local matter다. Figure 2-3의 외부 Internet router들은 `128.32` class B network로만 route하면 되고, site 내부의 `/24` subnet 구분을 알 필요가 없다. 반대로 site border router와 내부 host/router는 정확한 mask를 알아야 `128.32.1.14`를 `128.32.1.0/24` subnet에 속한 address로 판단할 수 있다.
@@ -113,7 +113,7 @@ subnet mask는 local matter다. Figure 2-3의 외부 Internet router들은 `128.
 
 VLSM(Variable-Length Subnet Masks)은 같은 site의 같은 base network number 안에서 서로 다른 subnet mask length를 사용하는 방식이다. 모든 subnet을 같은 크기로 나누면 관리가 단순하지만, 작은 point-to-point link와 큰 LAN이 같은 address block 크기를 소비해 낭비가 생긴다. VLSM은 subnet마다 host 수 요구가 다를 때 address utilization을 개선한다.
 
-![Figure 2-5](@/assets/images/012_figure_2_5_page_80.png)
+![Figure 2-5](@/assets/images/cs-tcp-ip-illustrated-012-figure-2-5-page-80.png)
 *Figure 2-5 · PDF p. 80 · 하나의 `128.32.0.0/16` site 안에서 `/24`, `/25`, `/26` subnet을 함께 쓰는 VLSM 예*
 
 Figure 2-5에서는 `128.32.0.0/16` 내부에 `/24`, `/25`, `/26` subnet이 함께 있다. `/24`는 host part가 8 bits라 256개 address를 담고, `/25`는 7 bits라 128개, `/26`은 6 bits라 64개 address를 담는다. host와 router의 각 interface는 IP address뿐 아니라 해당 subnet mask도 함께 설정되어야 한다. OSPF, IS-IS, RIPv2 같은 classless-aware dynamic routing protocol은 이런 prefix length 정보를 전달할 수 있지만, RIP version 1처럼 오래된 protocol은 VLSM을 제대로 지원하지 못한다.
@@ -132,7 +132,7 @@ mask complement:    0.0.0.255
 OR 결과:          128.32.1.255  → subnet broadcast address
 ```
 
-![Figure 2-6](@/assets/images/013_figure_2_6_page_81.png)
+![Figure 2-6](@/assets/images/cs-tcp-ip-illustrated-013-figure-2-6-page-81.png)
 *Figure 2-6 · PDF p. 81 · subnet mask의 complement와 address를 OR하여 subnet broadcast address를 만드는 과정*
 
 directed broadcast는 subnet broadcast address를 destination으로 한 datagram이 Internet을 통해 target subnet까지 route된 뒤, 그 subnet에서 all-host broadcast로 전달되는 개념이다. 예를 들어 `128.32.1.255`는 `128.32.1.0/24` subnet의 directed broadcast이고, 더 크게 `128.32.255.255`는 Figure 2-3/2-5의 site 전체를 겨냥하는 broadcast처럼 해석될 수 있다.
@@ -149,7 +149,7 @@ site-local prefix `fec0::/10`은 과거 IPv6 unicast scope로 제안되었지만
 
 IPv6의 link-local address와 일부 global address는 interface identifier(IID)를 low-order bits로 사용한다. IID는 같은 network prefix 안에서 unique해야 하며, 보통 64 bits 길이다. IID는 network interface의 link-layer MAC address를 기반으로 modified EUI-64 형식에서 만들 수도 있고, privacy를 위해 randomized value로 만들 수도 있다. 후자는 address tracking을 줄이기 위한 설계와 연결된다.
 
-![Figure 2-7](@/assets/images/015_figure_2_7_page_83.png)
+![Figure 2-7](@/assets/images/cs-tcp-ip-illustrated-015-figure-2-7-page-83.png)
 *Figure 2-7 · PDF p. 83 · EUI-48/EUI-64 구조와 IPv6 interface identifier 생성에 쓰이는 bit 의미*
 
 EUI(Extended Unique Identifier)는 IEEE가 정의한 interface identifier 형식이다. EUI-48과 EUI-64는 앞 24 bits에 OUI(Organizationally Unique Identifier)를 담고, 나머지는 해당 organization이 assigned한다. 첫 byte의 low-order bit 중 `u` bit는 universal/local administration을, `g` bit는 individual/group address를 나타낸다.
@@ -180,14 +180,14 @@ CIDR이 다양한 block size allocation을 가능하게 했지만, 그것만으�
 
 hierarchical routing의 핵심 아이디어는 topology에 맞게 address를 배치하면 routing state를 줄일 수 있다는 것이다. network가 tree-like topology이고 address도 location-sensitive하게 할당되면, 상위 router는 하위 모든 node를 개별 entry로 기억하지 않고 큰 prefix 몇 개만 기억해도 된다.
 
-![Figure 2-8](@/assets/images/016_figure_2_8_page_88.png)
+![Figure 2-8](@/assets/images/cs-tcp-ip-illustrated-016-figure-2-8-page-88.png)
 *Figure 2-8 · PDF p. 88 · topology-sensitive addressing이 routing table state를 줄이는 방식*
 
 Figure 2-8의 왼쪽처럼 address가 topology와 무관하게 random하게 배치되면 root router는 아래 router 각각에 대한 entry를 많이 가져야 shortest-path routing을 유지할 수 있다. 오른쪽처럼 왼쪽 subtree는 `19.1` prefix, 오른쪽 subtree는 `19.2` prefix로 묶이면 root router는 `19.1`로 가는 next hop, `19.2`로 가는 next hop, 나머지 network로 가는 default-like entry 정도만 갖고도 된다. trade-off는 address assignment가 topology에 민감해진다는 점이다. topology가 크게 바뀌면 address renumbering이 필요할 수 있다.
 
 route aggregation은 여러 numerically adjacent IP prefixes를 더 짧은 하나의 prefix, 즉 aggregate 또는 summary로 합치는 절차다. aggregate는 더 넓은 address space를 cover하지만, routing table entry 수를 줄인다. 단, arbitrary prefix를 아무렇게나 합칠 수 있는 것은 아니고, binary boundary와 adjacency가 맞아야 한다.
 
-![Figure 2-9](@/assets/images/017_figure_2_9_page_89.png)
+![Figure 2-9](@/assets/images/cs-tcp-ip-illustrated-017-figure-2-9-page-89.png)
 *Figure 2-9 · PDF p. 89 · numerically adjacent prefix들을 더 짧은 aggregate prefix로 합치는 과정*
 
 Figure 2-9에서 `190.154.27.0/26`과 `190.154.27.64/26`은 인접하므로 `190.154.27.0/25`로 aggregate될 수 있다. 하지만 `190.154.27.192/26`은 처음 두 prefix와 바로 맞물리지 않으므로 첫 단계에서는 합칠 수 없다. 이후 `190.154.27.128/26`이 추가되면 `190.154.27.128/25`가 만들어지고, 이것이 기존 `190.154.27.0/25`와 합쳐져 `190.154.27.0/24`가 된다. 여기에 adjacent한 `190.154.26.0/24`까지 있으면 최종적으로 `190.154.26.0/23`이 된다.
@@ -218,7 +218,7 @@ private/nonroutable address는 local administrative decision으로 관리된다.
 
 IPv4와 IPv6가 동시에 존재하는 network에서는 translator가 필요할 수 있다. unicast translation에서는 IPv4 address를 IPv6 address 안에 algorithmically embed하는 IPv4-embedded IPv6 address가 사용된다. 잘 알려진 prefix는 `64:ff9b::/96`이며, organization-specific prefix를 사용할 수도 있다.
 
-![Figure 2-10](@/assets/images/018_figure_2_10_page_92.png)
+![Figure 2-10](@/assets/images/cs-tcp-ip-illustrated-018-figure-2-10-page-92.png)
 *Figure 2-10 · PDF p. 92 · IPv6 prefix 길이에 따라 IPv4 address를 IPv6 address 안에 embed하는 형식*
 
 Figure 2-10의 형식은 IPv6 prefix length가 `32, 40, 48, 56, 64, 96` 중 하나일 때 IPv4 32-bit address를 어디에 넣는지 보여준다. 핵심 알고리즘은 IPv6 prefix와 IPv4 address를 concatenate하고, RFC4291 호환성을 위해 bits `64-71`에 해당하는 `u` 위치를 0으로 유지하며, 남는 suffix bits를 0으로 채워 128-bit address를 만드는 것이다. `/96` well-known prefix를 쓰면 IPv4 address `198.51.100.16`은 `64:ff9b::198.51.100.16`처럼 표현될 수 있다.
@@ -250,7 +250,7 @@ GLOP은 16-bit AS number를 IPv4 multicast address의 두 번째/세 번째 byte
 
 UBM(unicast-prefix-based multicast addressing)은 이미 allocated된 unicast prefix를 기반으로 multicast address를 유도한다. `/24` 또는 그보다 짧은 unicast prefix를 받은 site는 `234/8` prefix 뒤에 자기 unicast prefix와 group ID를 붙여 사용할 수 있다.
 
-![Figure 2-11](@/assets/images/019_figure_2_11_page_95.png)
+![Figure 2-11](@/assets/images/cs-tcp-ip-illustrated-019-figure-2-11-page-95.png)
 *Figure 2-11 · PDF p. 95 · `234/8` prefix와 unicast prefix, group ID를 결합하는 IPv4 UBM address format*
 
 예를 들어 unicast prefix `192.0.2.0/24`에는 UBM address `234.192.0.2`가 대응된다. `234.128.32.0/24` multicast range는 left-shift하면 `128.32.0.0/16` unicast allocation과 연결되므로, owner를 추적하기 쉽다. 이 방식은 별도 multicast allocation 절차를 줄이고, 기존 unicast allocation의 ownership 정보를 재사용한다.
@@ -261,7 +261,7 @@ administratively scoped multicast block은 multicast traffic의 배포 범위를
 
 IPv6는 IPv4보다 multicast를 더 적극적으로 사용한다. IPv6 multicast prefix는 `ff00::/8`이며, group number를 담는 데 112 bits가 남는다. IPv6에는 broadcast가 없기 때문에, neighbor discovery나 all-nodes/all-routers 같은 기능도 multicast 기반으로 설계된다.
 
-![Figure 2-12](@/assets/images/020_figure_2_12_page_96.png)
+![Figure 2-12](@/assets/images/cs-tcp-ip-illustrated-020-figure-2-12-page-96.png)
 *Figure 2-12 · PDF p. 96 · IPv6 multicast base format: Flags, Scope, Group ID*
 
 base IPv6 multicast address의 두 번째 byte는 4-bit Flags와 4-bit Scope ID를 포함한다. Flags의 핵심 bit는 `R`, `P`, `T`다. `T`는 transient group인지, `P`는 unicast prefix 기반 address인지, `R`은 rendezvous point(RP) 정보를 포함하는지를 나타낸다. Scope 값은 distribution boundary를 나타낸다. 대표적으로 `1`은 interface-local, `2`는 link-local, `4`는 admin-local, `5`는 site-local, `8`은 organization-local, `e`는 global scope다.
@@ -270,21 +270,21 @@ IPv6 multicast에는 scope-relative 또는 variable-scope address가 있다. 예
 
 `P` bit가 1이면 unicast-prefix-based IPv6 multicast address가 된다. 이미 global하게 할당된 unicast prefix를 multicast address 안에 넣어, multicast group별 global allocation agreement를 줄인다.
 
-![Figure 2-13](@/assets/images/021_figure_2_13_page_98.png)
+![Figure 2-13](@/assets/images/cs-tcp-ip-illustrated-021-figure-2-13-page-98.png)
 *Figure 2-13 · PDF p. 98 · unicast prefix를 포함하는 IPv6 multicast address format*
 
 Figure 2-13의 format은 reserved field, prefix length, prefix, 32-bit group ID를 담는다. 예를 들어 organization이 `3ffe:ffff:1::/48` unicast prefix를 받으면, `ff3x:30:3ffe:ffff:1::/96` 형태의 unicast-based multicast prefix도 사실상 사용할 수 있다. 여기서 `x`는 scope value다. SSM도 이 format을 활용하되 prefix length와 prefix fields를 0으로 두어 `ff3x::/32` 계열을 사용한다.
 
 link-local 또는 node-local scope에서만 unique multicast가 필요하면 IID 기반 format을 쓸 수 있다. 이 방식은 router나 global prefix가 없는 ad hoc environment에서도 host가 자기 IID를 기반으로 unique multicast address를 만들 수 있게 한다.
 
-![Figure 2-14](@/assets/images/022_figure_2_14_page_98.png)
+![Figure 2-14](@/assets/images/cs-tcp-ip-illustrated-022-figure-2-14-page-98.png)
 *Figure 2-14 · PDF p. 98 · link-scoped IPv6 multicast에서 IID와 group ID를 결합하는 형식*
 
 Figure 2-14 format은 Figure 2-13과 비슷하지만 prefix 대신 64-bit IID를 담고, prefix length field가 특수 값으로 설정된다. 이 형식은 scope가 link-local 이하일 때만 적합하다. 더 넓은 scope가 필요하면 unicast-prefix-based allocation 또는 permanent multicast address를 사용해야 한다.
 
 R bit는 multicast routing에서 rendezvous point(RP)를 찾기 쉽게 하기 위한 확장이다. RP는 PIM-SM 같은 multicast routing protocol에서 sender와 receiver가 같은 group을 찾도록 도와주는 router address다. Internet-wide multicast deployment에서 RP discovery가 어려운 문제였기 때문에, IPv6 multicast address 자체에 RP address 일부를 embed하는 방식이 제안되었다.
 
-![Figure 2-15](@/assets/images/023_figure_2_15_page_99.png)
+![Figure 2-15](@/assets/images/cs-tcp-ip-illustrated-023-figure-2-15-page-99.png)
 *Figure 2-15 · PDF p. 99 · IPv6 multicast address 안에 RP 정보를 embed하는 format*
 
 Figure 2-15에서는 RIID field와 prefix length/prefix를 사용해 RP의 unicast IPv6 address를 재구성할 수 있다. 예를 들어 multicast address `ff75:940:2001:db8:dead:beef:f00d:face`는 site-local scope `5`, RIID `9`, prefix length `0x40 = 64`, prefix `2001:db8:dead:beef`를 담으므로 RP address는 `2001:db8:dead:beef::9`가 된다.
@@ -343,7 +343,7 @@ Linux `ifconfig`/`netstat -gn` 예시는 point-to-point interface `ppp0`에 IPv4
 
 small/medium enterprise에서는 ISP로부터 public routable prefix를 받고, 일부 address는 DMZ(demilitarized zone) server에 직접 assign하며, 나머지는 NAT router의 NAT pool로 사용하기도 한다. DMZ는 primary firewall 바깥 또는 경계 영역에 두어 Internet-visible server를 internal network와 분리하는 설계다.
 
-![Figure 2-16](@/assets/images/024_figure_2_16_page_107.png)
+![Figure 2-16](@/assets/images/cs-tcp-ip-illustrated-024-figure-2-16-page-107.png)
 *Figure 2-16 · PDF p. 107 · public `/26` prefix, DMZ, internal NAT router를 가진 enterprise address assignment 예*
 
 Figure 2-16의 enterprise는 `128.32.2.64/26` public prefix를 받았고, DMZ server에는 `128.32.2.66/26`, `128.32.2.70/26` 같은 routable address를 준다. internal NAT router는 바깥쪽에 public address를 갖고, 안쪽에는 `10.0.0.0/16` private network를 제공한다. 이 구조의 장점은 두 가지다. 첫째, DMZ server가 compromise되어도 internal hosts를 별도 NAT/firewall boundary 뒤에 둘 수 있다. 둘째, 내부 address plan은 private space를 자유롭게 써도 되므로 public IPv4 address 부족의 압력을 줄인다.
@@ -352,7 +352,7 @@ Figure 2-16의 enterprise는 `128.32.2.64/26` public prefix를 받았고, DMZ se
 
 multihoming은 조직이 redundancy, availability, policy control 등을 위해 둘 이상의 ISP에 연결하는 방식이다. CIDR 환경에서는 single ISP customer가 보통 그 ISP의 PA address를 쓰므로, 두 번째 ISP를 붙일 때 어떤 address를 host에 사용할지가 문제가 된다.
 
-![Figure 2-17](@/assets/images/025_figure_2_17_page_108.png)
+![Figure 2-17](@/assets/images/cs-tcp-ip-illustrated-025-figure-2-17-page-108.png)
 *Figure 2-17 · PDF p. 108 · multihomed enterprise에서 PA address와 PI address를 사용할 때의 routing trade-off*
 
 Figure 2-17에서 site S가 ISP P1의 PA prefix `12.46.129.0/25`를 쓰면, P1은 이 prefix를 자기 큰 block `12/8` 안으로 aggregate할 수 있다. 하지만 P2는 이 prefix가 자기 `137.164/16` block과 인접하지 않으므로 aggregate할 수 없다. 게다가 다른 Internet host 입장에서는 `12.0.0.0/8`보다 `12.46.129.0/25`가 더 specific하므로 longest matching prefix rule에 따라 P2 쪽 route가 선호될 수 있다. 결과적으로 P2는 aggregate하지 못하면서도 S의 traffic을 많이 운반하는 불리한 위치가 된다.

@@ -55,14 +55,14 @@ CPU scheduling은 모든 scheduling 중에서도 특히 중요하다. 거의 모
 
 CPU scheduling이 가능한 이유는 process execution이 보통 CPU execution과 I/O wait 사이를 번갈아 움직인다는 관찰 때문이다.
 
-![Alternating CPU and I/O bursts](@/assets/images/112_Figure_5.1_page_267.png)
+![Alternating CPU and I/O bursts](@/assets/images/cs-operating-system-112-figure-5-1-page-267.png)
 <p align="center"><sub>Figure 5.1 · PDF p. 267 · process execution이 CPU burst와 I/O burst를 번갈아 반복하는 구조</sub></p>
 
 Process execution은 CPU burst로 시작하고, I/O burst가 뒤따르며, 다시 CPU burst와 I/O burst가 반복된다. 마지막 CPU burst는 보통 process termination system request로 끝난다.
 
 CPU burst duration은 process마다 크게 다르다. 하지만 측정하면 보통 많은 짧은 CPU bursts와 소수의 긴 CPU bursts를 갖는 exponential 또는 hyperexponential 형태를 보인다.
 
-![Histogram of CPU-burst durations](@/assets/images/113_Figure_5.2_page_268.png)
+![Histogram of CPU-burst durations](@/assets/images/cs-operating-system-113-figure-5-2-page-268.png)
 <p align="center"><sub>Figure 5.2 · PDF p. 268 · 짧은 CPU burst가 많고 긴 CPU burst가 적은 분포</sub></p>
 
 | Process 성격 | CPU burst 특성 | Scheduling 관점 |
@@ -111,7 +111,7 @@ Interrupt는 언제든 발생할 수 있고 항상 무시할 수도 없기 때�
 
 `dispatcher`는 CPU scheduler가 선택한 process에 실제 CPU core control을 넘기는 module이다.
 
-![Role of the dispatcher](@/assets/images/114_Figure_5.3_page_270.png)
+![Role of the dispatcher](@/assets/images/cs-operating-system-114-figure-5-3-page-270.png)
 <p align="center"><sub>Figure 5.3 · PDF p. 270 · process P0에서 P1로 control을 넘길 때 발생하는 dispatch latency</sub></p>
 
 Dispatcher가 하는 일은 다음과 같다.
@@ -185,7 +185,7 @@ tau(n+1) = alpha * t(n) + (1 - alpha) * tau(n)
 | `tau(n+1)` | 다음 CPU burst prediction |
 | `alpha` | recent history와 past history의 상대 weight, `0 <= alpha <= 1` |
 
-![Prediction of the next CPU burst](@/assets/images/115_Figure_5.4_page_275.png)
+![Prediction of the next CPU burst](@/assets/images/cs-operating-system-115-figure-5-4-page-275.png)
 <p align="center"><sub>Figure 5.4 · PDF p. 275 · `alpha = 1/2`, `tau0 = 10`일 때 CPU burst prediction이 실제 burst를 따라가는 모습</sub></p>
 
 `alpha = 0`이면 recent burst는 prediction에 영향을 주지 않고, `alpha = 1`이면 가장 최근 burst만 반영된다. 보통 `alpha = 1/2`를 사용하면 recent history와 past history가 같은 weight를 가진다. Formula를 펼치면 오래된 burst일수록 `(1 - alpha)`의 거듭제곱 때문에 weight가 작아진다.
@@ -209,7 +209,7 @@ RR에서는 process가 유일한 runnable process가 아닌 한, 한 번에 1 ti
 
 RR의 성능은 `time quantum` 크기에 매우 민감하다.
 
-![Smaller time quantum and context switches](@/assets/images/116_Figure_5.5_page_278.png)
+![Smaller time quantum and context switches](@/assets/images/cs-operating-system-116-figure-5-5-page-278.png)
 <p align="center"><sub>Figure 5.5 · PDF p. 278 · time quantum이 작을수록 context switches가 증가하는 구조</sub></p>
 
 | Time quantum | 결과 |
@@ -220,7 +220,7 @@ RR의 성능은 `time quantum` 크기에 매우 민감하다.
 
 Context-switch time이 time quantum의 10% 정도라면 CPU time의 약 10%가 switching overhead로 쓰인다. 실제 현대 system의 time quantum은 대체로 10-100ms 범위이고, context switch는 보통 10 microseconds보다 작아 time quantum에 비해 작은 편이다.
 
-![Turnaround time and time quantum](@/assets/images/117_Figure_5.6_page_279.png)
+![Turnaround time and time quantum](@/assets/images/cs-operating-system-117-figure-5-6-page-279.png)
 <p align="center"><sub>Figure 5.6 · PDF p. 279 · time quantum 크기에 따라 average turnaround time이 비단조적으로 변하는 예</sub></p>
 
 Average turnaround time은 time quantum을 키운다고 항상 좋아지지 않는다. 일반적으로 most processes가 next CPU burst를 single time quantum 안에 끝낼 수 있으면 turnaround time이 개선된다. 경험적 rule of thumb은 CPU bursts의 80% 정도가 time quantum보다 짧도록 잡는 것이다.
@@ -250,14 +250,14 @@ Priority scheduling은 RR과 결합할 수 있다. System은 highest-priority pr
 
 Priority scheduling과 RR을 단일 queue에서 구현하면 highest-priority process를 찾기 위해 queue scan이 필요할 수 있다. 실제로는 distinct priority마다 separate queue를 두는 방식이 더 쉬울 수 있다. 이 방식이 `multilevel queue scheduling`이다.
 
-![Separate queues for each priority](@/assets/images/118_Figure_5.7_page_281.png)
+![Separate queues for each priority](@/assets/images/cs-operating-system-118-figure-5-7-page-281.png)
 <p align="center"><sub>Figure 5.7 · PDF p. 281 · priority별로 별도 queue를 두고 highest-priority queue를 먼저 실행하는 구조</sub></p>
 
 각 priority queue 안에 multiple processes가 있으면 RR로 실행할 수 있다. 가장 일반적인 형태에서는 process가 system에 들어올 때 static priority를 받고, runtime 동안 같은 queue에 머문다.
 
 Multilevel queue는 process type별 partition에도 쓰인다.
 
-![Multilevel queue scheduling](@/assets/images/119_Figure_5.8_page_282.png)
+![Multilevel queue scheduling](@/assets/images/cs-operating-system-119-figure-5-8-page-282.png)
 <p align="center"><sub>Figure 5.8 · PDF p. 282 · real-time, system, interactive, batch process queue를 분리한 multilevel queue</sub></p>
 
 예를 들어 네 queue를 priority 순으로 둘 수 있다.
@@ -281,7 +281,7 @@ Queue 사이 scheduling은 보통 fixed-priority preemptive scheduling으로 구
 - 짧은 CPU bursts를 보이는 I/O-bound 또는 interactive processes는 higher-priority queues에 남긴다.
 - Lower-priority queue에서 너무 오래 기다린 process는 higher-priority queue로 promote해 starvation을 막는다.
 
-![Multilevel feedback queues](@/assets/images/120_Figure_5.9_page_283.png)
+![Multilevel feedback queues](@/assets/images/cs-operating-system-120-figure-5-9-page-283.png)
 <p align="center"><sub>Figure 5.9 · PDF p. 283 · quantum 8, quantum 16, FCFS queue로 구성된 multilevel feedback queue</sub></p>
 
 Figure 5.9의 예시는 세 queue를 둔다.
@@ -343,7 +343,7 @@ pthread_attr_getscope(pthread_attr_t *attr, int *scope)
 
 첫 parameter는 thread attribute set pointer다. `pthread_attr_setscope()`의 두 번째 parameter에는 `PTHREAD_SCOPE_SYSTEM` 또는 `PTHREAD_SCOPE_PROCESS`가 들어간다. `pthread_attr_getscope()`에서는 두 번째 parameter가 current scope value를 받을 `int *`다. Error가 발생하면 nonzero value를 return한다.
 
-![Pthread scheduling API](@/assets/images/121_Figure_5.10_page_286.png)
+![Pthread scheduling API](@/assets/images/cs-operating-system-121-figure-5-10-page-286.png)
 <p align="center"><sub>Figure 5.10 · PDF p. 286 · Pthreads에서 scheduling scope를 조회하고 `PTHREAD_SCOPE_SYSTEM`으로 설정하는 예제</sub></p>
 
 Figure 5.10은 default attributes를 얻고, current scope를 조회한 뒤, `pthread_attr_setscope(&attr, PTHREAD_SCOPE_SYSTEM)`으로 SCS scheduling을 지정하고 five threads를 만드는 흐름을 보여준다. Linux와 macOS는 `PTHREAD_SCOPE_SYSTEM`만 허용한다.
@@ -367,7 +367,7 @@ Multiprocessor scheduling의 한 방식은 `asymmetric multiprocessing`이다. �
 
 Ready queue organization에는 두 전략이 있다.
 
-![Organization of ready queues](@/assets/images/122_Figure_5.11_page_288.png)
+![Organization of ready queues](@/assets/images/cs-operating-system-122-figure-5-11-page-288.png)
 <p align="center"><sub>Figure 5.11 · PDF p. 288 · common ready queue와 per-core run queues의 차이</sub></p>
 
 | Strategy | 장점 | 문제 |
@@ -383,17 +383,17 @@ Common ready queue는 두 processors가 같은 thread를 동시에 선택하거�
 
 하지만 memory speed가 processor speed를 따라가지 못하면서 `memory stall`이 중요해졌다. Processor가 memory access를 요청한 뒤 data가 available해질 때까지 기다리는 시간이 생긴다. Cache miss도 memory stall을 일으킬 수 있다.
 
-![Memory stall](@/assets/images/123_Figure_5.12_page_289.png)
+![Memory stall](@/assets/images/cs-operating-system-123-figure-5-12-page-289.png)
 <p align="center"><sub>Figure 5.12 · PDF p. 289 · compute cycle 사이에 memory stall cycle이 끼어 CPU가 data를 기다리는 모습</sub></p>
 
 Memory stall 때문에 processor가 time의 상당 부분, 원문 예시에서는 최대 50%까지 data availability를 기다릴 수 있다. 이를 완화하기 위해 many hardware designs는 core마다 two or more hardware threads를 둔다. 한 hardware thread가 memory를 기다리며 stall되면 core가 다른 thread로 switch한다.
 
-![Multithreaded multicore system](@/assets/images/124_Figure_5.13_page_289.png)
+![Multithreaded multicore system](@/assets/images/cs-operating-system-124-figure-5-13-page-289.png)
 <p align="center"><sub>Figure 5.13 · PDF p. 289 · 한 core의 hardware threads가 memory stall 동안 interleaving되는 모습</sub></p>
 
 이 기술은 `chip multithreading (CMT)`라고 불린다. 각 hardware thread는 instruction pointer와 register set 같은 architectural state를 유지하므로 OS 입장에서는 software thread를 run할 수 있는 logical CPU로 보인다.
 
-![Chip multithreading](@/assets/images/125_Figure_5.14_page_290.png)
+![Chip multithreading](@/assets/images/cs-operating-system-125-figure-5-14-page-290.png)
 <p align="center"><sub>Figure 5.14 · PDF p. 290 · 4 cores와 core당 2 hardware threads가 OS에 8 logical CPUs로 보이는 CMT 구조</sub></p>
 
 Intel은 single processing core에 multiple hardware threads를 배정하는 방식을 `hyper-threading`, 또는 `simultaneous multithreading (SMT)`라고 부른다. 예를 들어 core당 2 hardware threads를 지원하면 OS는 physical core 수보다 많은 logical CPUs를 본다.
@@ -407,7 +407,7 @@ Core multithreading 방식에는 두 가지가 있다.
 
 Physical core의 caches와 pipelines는 hardware threads가 공유한다. 따라서 하나의 processing core는 실제로 한 순간에 하나의 hardware thread만 실행할 수 있다. 이 때문에 multithreaded multicore processor에서는 scheduling level이 두 개로 나뉜다.
 
-![Two levels of scheduling](@/assets/images/126_Figure_5.15_page_291.png)
+![Two levels of scheduling](@/assets/images/cs-operating-system-126-figure-5-15-page-291.png)
 <p align="center"><sub>Figure 5.15 · PDF p. 291 · OS가 software thread를 logical CPU에 배정하고, core가 hardware thread를 선택하는 두 단계 scheduling</sub></p>
 
 1. OS scheduler가 software threads를 hardware threads, 즉 logical CPUs에 배정한다.
@@ -445,7 +445,7 @@ Per-processor ready queues는 processor affinity에 유리하다. Thread가 같�
 
 NUMA architecture는 affinity 문제를 더 복잡하게 만든다. `non-uniform memory access (NUMA)`에서는 각 CPU가 자기 local memory에는 빠르게 접근하지만, 다른 CPU의 local memory에는 더 느리게 접근한다.
 
-![NUMA and CPU scheduling](@/assets/images/127_Figure_5.16_page_293.png)
+![NUMA and CPU scheduling](@/assets/images/cs-operating-system-127-figure-5-16-page-293.png)
 <p align="center"><sub>Figure 5.16 · PDF p. 293 · CPU마다 local memory가 있고 remote memory access가 느린 NUMA 구조</sub></p>
 
 NUMA-aware CPU scheduler와 memory-placement algorithm이 함께 동작하면, 특정 CPU에 schedule된 thread에 그 CPU 가까운 memory를 allocate해 memory access time을 줄일 수 있다.
@@ -473,7 +473,7 @@ Real-time system은 event-driven 성격이 강하다. Timer expiration 같은 so
 
 `event latency`는 event가 발생한 시점부터 service가 시작되는 시점까지의 시간이다.
 
-![Event latency](@/assets/images/128_Figure_5.17_page_294.png)
+![Event latency](@/assets/images/cs-operating-system-128-figure-5-17-page-294.png)
 <p align="center"><sub>Figure 5.17 · PDF p. 294 · event 발생부터 real-time system response까지의 event latency</sub></p>
 
 Latency requirement는 event마다 다르다. Antilock brake system은 wheel sliding을 감지한 뒤 3-5ms 안에 respond해야 할 수 있지만, airliner radar control embedded system은 몇 초 latency를 tolerate할 수도 있다.
@@ -485,12 +485,12 @@ Real-time system 성능에 영향을 주는 latency는 두 가지다.
 | `interrupt latency` | CPU에 interrupt가 도착한 뒤 ISR(interrupt service routine)이 시작될 때까지의 시간 | minimize, hard real-time에서는 bounded |
 | `dispatch latency` | scheduler dispatcher가 one process를 stop하고 another process를 start하는 데 걸리는 시간 | minimize, hard real-time에서는 microseconds 수준 |
 
-![Interrupt latency](@/assets/images/129_Figure_5.18_page_295.png)
+![Interrupt latency](@/assets/images/cs-operating-system-129-figure-5-18-page-295.png)
 <p align="center"><sub>Figure 5.18 · PDF p. 295 · interrupt arrival 이후 type 결정, context save, ISR 시작까지의 interrupt latency</sub></p>
 
 Interrupt latency에는 현재 instruction completion, interrupt type determination, current process state save, ISR 시작까지의 시간이 포함된다. Real-time OS는 interrupt latency를 줄이기 위해 interrupts가 disabled되는 시간을 매우 짧게 유지해야 한다.
 
-![Dispatch latency](@/assets/images/130_Figure_5.19_page_296.png)
+![Dispatch latency](@/assets/images/cs-operating-system-130-figure-5-19-page-296.png)
 <p align="center"><sub>Figure 5.19 · PDF p. 296 · interrupt processing 후 real-time process 실행까지의 dispatch latency 구성</sub></p>
 
 Dispatch latency의 conflict phase는 두 요소로 구성된다.
@@ -508,7 +508,7 @@ Linux, Windows, Solaris 같은 general-purpose OS도 soft real-time scheduling f
 
 Hard real-time scheduling 논의에서는 process를 보통 `periodic task`로 본다.
 
-![Periodic task](@/assets/images/131_Figure_5.20_page_297.png)
+![Periodic task](@/assets/images/cs-operating-system-131-figure-5-20-page-297.png)
 <p align="center"><sub>Figure 5.20 · PDF p. 297 · processing time t, deadline d, period p를 가진 periodic task</sub></p>
 
 Periodic task는 constant intervals, 즉 periods마다 CPU를 요구한다. 각 task는 다음 특성을 가진다.
@@ -531,19 +531,19 @@ Periodic task는 constant intervals, 즉 periods마다 CPU를 요구한다. 각 
 
 이 정책의 rationale은 CPU를 더 자주 요구하는 task에 더 높은 priority를 주는 것이다. Rate-monotonic scheduling은 각 periodic process의 CPU burst duration이 매 period마다 같다고 가정한다.
 
-![Wrong priority assignment for periodic tasks](@/assets/images/132_Figure_5.21_page_298.png)
+![Wrong priority assignment for periodic tasks](@/assets/images/cs-operating-system-132-figure-5-21-page-298.png)
 <p align="center"><sub>Figure 5.21 · PDF p. 298 · P2를 P1보다 높은 priority로 두었을 때 P1이 deadline을 miss하는 예</sub></p>
 
 예를 들어 `P1`의 period가 50, processing time이 20이고, `P2`의 period가 100, processing time이 35라고 하자. CPU utilization은 `20/50 + 35/100 = 0.75`이므로 schedule 가능해 보인다. 그러나 period가 더 긴 `P2`에 higher priority를 주면 `P1`이 첫 deadline 50을 miss한다.
 
-![Rate-monotonic scheduling](@/assets/images/133_Figure_5.22_page_298.png)
+![Rate-monotonic scheduling](@/assets/images/cs-operating-system-133-figure-5-22-page-298.png)
 <p align="center"><sub>Figure 5.22 · PDF p. 298 · 짧은 period를 가진 P1에 더 높은 priority를 주어 deadlines를 만족하는 rate-monotonic scheduling</sub></p>
 
 Rate-monotonic에서는 period가 짧은 `P1`이 `P2`보다 higher priority를 받는다. `P1`이 period마다 CPU burst를 deadline 안에 끝내고, `P2`는 필요할 때 preempt되지만 나중에 resume하여 deadline을 만족한다.
 
 Rate-monotonic scheduling은 static priority algorithms 중 optimal이다. 어떤 set of processes를 rate-monotonic으로 schedule할 수 없다면, 다른 static-priority algorithm으로도 schedule할 수 없다. 하지만 CPU utilization bound가 있어 항상 CPU를 100% 활용할 수는 없다.
 
-![Missing deadlines with rate-monotonic scheduling](@/assets/images/134_Figure_5.23_page_299.png)
+![Missing deadlines with rate-monotonic scheduling](@/assets/images/cs-operating-system-134-figure-5-23-page-299.png)
 <p align="center"><sub>Figure 5.23 · PDF p. 299 · utilization이 높아 rate-monotonic scheduling에서 deadline miss가 발생하는 예</sub></p>
 
 Worst-case CPU utilization bound for `N` processes는 다음과 같다.
@@ -558,7 +558,7 @@ N * (2^(1/N) - 1)
 
 `earliest-deadline-first (EDF)` scheduling은 deadline에 따라 priority를 dynamically assign한다. Deadline이 빠를수록 priority가 높고, deadline이 늦을수록 priority가 낮다. Process가 runnable해질 때 scheduler에 deadline requirement를 announce해야 하며, 새 runnable process의 deadline에 따라 priorities가 조정될 수 있다.
 
-![Earliest-deadline-first scheduling](@/assets/images/135_Figure_5.24_page_300.png)
+![Earliest-deadline-first scheduling](@/assets/images/cs-operating-system-135-figure-5-24-page-300.png)
 <p align="center"><sub>Figure 5.24 · PDF p. 300 · dynamic deadline priority로 Figure 5.23의 tasks가 deadlines를 만족하는 EDF scheduling</sub></p>
 
 EDF는 rate-monotonic과 달리 priorities가 fixed가 아니다. Figure 5.23에서 rate-monotonic으로 deadline을 놓친 tasks도 EDF에서는 현재 가장 빠른 deadline을 가진 process를 우선해 deadlines를 만족할 수 있다.
@@ -581,7 +581,7 @@ POSIX는 real-time computing extension인 `POSIX.1b`를 제공하며, real-time 
 - `SCHED_RR`: `SCHED_FIFO`와 비슷하지만, 같은 priority의 threads 사이에 round-robin time slicing을 제공한다.
 - `SCHED_OTHER`: POSIX가 추가로 제공하는 scheduling class지만, 구현은 system-specific이라 OS마다 다르게 동작할 수 있다.
 
-![POSIX real-time scheduling API](@/assets/images/136_Figure_5.25_page_302.png)
+![POSIX real-time scheduling API](@/assets/images/cs-operating-system-136-figure-5-25-page-302.png)
 <p align="center"><sub>Figure 5.25 · PDF p. 302 · pthread attributes로 SCHED_FIFO 정책을 확인하고 설정하는 POSIX API 예</sub></p>
 
 POSIX API는 thread attributes에 대해 scheduling policy를 읽고 설정하는 함수를 제공한다.
@@ -630,14 +630,14 @@ CFS의 핵심 상태값은 각 task의 `virtual runtime (vruntime)`이다. Sched
 
 CFS는 runnable tasks를 일반 queue가 아니라 `red-black tree`에 둔다. Key는 `vruntime`이며, 가장 왼쪽 node가 가장 작은 `vruntime`을 가진 task다. Red-black tree는 balanced binary search tree라 leftmost node 탐색은 원칙적으로 `O(log N)`이지만, Linux는 `rb_leftmost`를 cache하여 다음 task 선택을 빠르게 한다.
 
-![Linux scheduling priorities](@/assets/images/137_Figure_5.26_page_305.png)
+![Linux scheduling priorities](@/assets/images/cs-operating-system-137-figure-5-26-page-305.png)
 <p align="center"><sub>Figure 5.26 · PDF p. 305 · Linux real-time priorities와 normal priorities의 전역 priority 범위</sub></p>
 
 Linux real-time tasks는 static priority `0` to `99`를 사용하고, normal tasks는 priority `100` to `139`를 사용한다. Global priority에서는 numerically lower value가 higher priority다. Normal task의 nice `-20`은 priority `100`, nice `+19`는 priority `139`에 mapping된다.
 
 CFS의 load balancing은 단순히 queue 길이를 같게 만드는 것이 아니다. 각 thread의 `load`를 priority와 average CPU utilization의 조합으로 정의한다. High-priority지만 대부분 I/O-bound인 thread는 CPU를 많이 쓰는 low-priority thread와 비슷한 load로 평가될 수 있다. Queue load는 queue 안의 thread loads 합이며, balancing은 각 queue load를 비슷하게 맞추는 작업이다.
 
-![NUMA-aware load balancing](@/assets/images/138_Figure_5.27_page_305.png)
+![NUMA-aware load balancing](@/assets/images/cs-operating-system-138-figure-5-27-page-305.png)
 <p align="center"><sub>Figure 5.27 · PDF p. 305 · Linux CFS의 scheduling domain과 NUMA-aware load balancing 구조</sub></p>
 
 Figure 5.27은 CFS가 `scheduling domains`를 계층적으로 둔다는 점을 보여준다. 같은 L2 cache를 공유하는 cores를 작은 domain으로 묶고, 더 위에는 L3 cache나 NUMA node 수준의 domain이 있다. CFS는 가능한 낮은 level domain 안에서 먼저 load balancing을 한다. Thread migration은 cache invalidation이나 NUMA remote memory access penalty를 일으킬 수 있으므로, CFS는 severe load imbalance가 아니면 NUMA nodes 사이 migration을 꺼린다.
@@ -672,7 +672,7 @@ Windows API에서는 process가 여섯 priority class 중 하나에 속한다.
 
 Thread는 process priority class 안에서 relative priority를 가진다. Relative priority에는 `IDLE`, `LOWEST`, `BELOW_NORMAL`, `NORMAL`, `ABOVE_NORMAL`, `HIGHEST`, `TIME_CRITICAL` 등이 있다. 실제 numeric priority는 process priority class와 thread relative priority의 조합으로 결정된다.
 
-![Windows thread priorities](@/assets/images/139_Figure_5.28_page_307.png)
+![Windows thread priorities](@/assets/images/cs-operating-system-139-figure-5-28-page-307.png)
 <p align="center"><sub>Figure 5.28 · PDF p. 307 · Windows priority class와 relative priority가 numeric thread priority로 mapping되는 방식</sub></p>
 
 Windows의 variable-priority thread는 time quantum을 다 쓰면 priority가 낮아진다. 단, base priority 아래로는 내려가지 않는다. 반대로 wait operation에서 깨어난 thread는 priority boost를 받는다. Keyboard I/O처럼 interactive response와 관련된 wait에서 깨어난 thread는 큰 boost를 받고, disk I/O는 moderate boost를 받는다. 이 정책은 I/O-bound, interactive threads의 response time을 좋게 만들고, compute-bound threads는 background에서 spare CPU cycles를 쓰게 만든다.
@@ -705,7 +705,7 @@ Default scheduling class는 `time sharing (TS)`다. TS class는 multilevel feedb
 
 이 설계는 interactive processes의 response time과 CPU-bound processes의 throughput을 동시에 고려한다. `interactive (IA)` class도 TS와 같은 policy를 사용하지만, KDE/GNOME 같은 windowing applications에 더 높은 priority를 주어 user-facing responsiveness를 높인다.
 
-![Solaris dispatch table](@/assets/images/140_Figure_5.29_page_310.png)
+![Solaris dispatch table](@/assets/images/cs-operating-system-140-figure-5-29-page-310.png)
 <p align="center"><sub>Figure 5.29 · PDF p. 310 · Solaris time-sharing/interactive threads의 dispatch table 일부</sub></p>
 
 Solaris dispatch table의 핵심 field는 다음과 같다.
@@ -719,7 +719,7 @@ Solaris dispatch table의 핵심 field는 다음과 같다.
 
 `RT` class threads는 가장 높은 priority를 받으며, 다른 class의 process보다 먼저 실행된다. `SYS` class는 scheduler, paging daemon 같은 kernel threads에 사용되며 user processes에는 예약되지 않는다. `FX`는 priority가 dynamically adjusted되지 않는 fixed-priority class이고, `FSS`는 priorities 대신 CPU shares를 사용하여 project 단위 entitlement를 반영한다.
 
-![Solaris scheduling](@/assets/images/141_Figure_5.30_page_312.png)
+![Solaris scheduling](@/assets/images/cs-operating-system-141-figure-5-30-page-312.png)
 <p align="center"><sub>Figure 5.30 · PDF p. 312 · Solaris scheduling classes가 global priority와 scheduling order로 mapping되는 구조</sub></p>
 
 Solaris scheduler는 class-specific priority를 `global priority`로 변환하고, highest global priority thread를 선택한다. 선택된 thread는 block하거나 time slice를 다 쓰거나 higher-priority thread에 의해 preempt될 때까지 실행된다. 같은 priority의 여러 threads는 round-robin queue를 사용한다. Interrupt threads는 scheduling class에 속하지 않고 global priority `160-169`의 최상위 priority에서 실행된다.
@@ -788,7 +788,7 @@ Simulation input은 두 방식으로 만들 수 있다.
 | Distribution-driven | random-number generator가 uniform, exponential, Poisson 또는 empirical distribution에 따라 arrivals, CPU bursts 등을 생성 | event들의 순서와 상관관계를 잃을 수 있음 |
 | Trace-driven | real system을 monitoring하여 actual event sequence를 `trace file`로 기록하고 simulation에 사용 | storage가 크고 trace에 포함된 입력에 대해서만 정확함 |
 
-![Scheduler evaluation by simulation](@/assets/images/142_Figure_5.31_page_315.png)
+![Scheduler evaluation by simulation](@/assets/images/cs-operating-system-142-figure-5-31-page-315.png)
 <p align="center"><sub>Figure 5.31 · PDF p. 315 · 같은 trace file로 FCFS, SJF, RR(q=14)을 비교하는 scheduler simulation</sub></p>
 
 Trace file은 서로 다른 algorithms를 exactly same real inputs에서 비교할 수 있게 해 준다. Figure 5.31처럼 actual process execution에서 CPU/I/O event sequence를 기록한 뒤, 같은 trace를 FCFS, SJF, RR simulator에 넣으면 algorithm 차이만 비교하기 쉽다.

@@ -51,7 +51,7 @@ timeout과 retransmission은 이전 장들에서도 이미 등장했다. UDP 기
 
 본문 예제는 client가 Web server와 TCP connection을 established한 뒤 server host를 분리하고, client가 `GET / HTTP/1.0` 요청을 보내는 상황이다. server가 분리되어 있으므로 이 요청은 전달되지 못하고 client TCP send queue에 남는다. `netstat` 출력에서 `Send-Q = 18`로 보이는 18 bytes는 HTTP request 문자와 CRLF 쌍들을 포함한 data다.
 
-![Figure 14-1](@/assets/images/254_figure_14_1_page_688.png)
+![Figure 14-1](@/assets/images/cs-tcp-ip-illustrated-254-figure-14-1-page-688.png)
 *Figure 14-1 · PDF p. 688 · timer-based retransmission과 timeout doubling 예제*
 
 Figure 14-1에서 client는 segment 4로 처음 request를 보낸 뒤 ACK를 받지 못한다. 이후 같은 segment를 반복 retransmit하는데, 각 retransmission 간격이 대략 `206ms → 420ms → 841ms → 1.68s → 3.36s`처럼 증가한다. 같은 segment에 대해 timeout 간격이 두 배씩 늘어나는 이 패턴을 binary exponential backoff라고 한다.
@@ -200,7 +200,7 @@ Linux가 추가로 유지하는 핵심 변수는 다음과 같다.
 
 Linux의 중요한 제약은 `mdev_max`가 50ms보다 작아지지 않도록 하는 것이다. 따라서 `rttvar >= 50ms`가 되고, `RTO = srtt + 4 * rttvar` 구조상 RTO는 사실상 200ms 아래로 내려가지 않는다. `TCP_RTO_MIN`은 kernel configuration이나 일부 route 설정으로 바꿀 수 있지만, global Internet에서는 지나치게 작은 minimum RTO가 권장되지 않는다. data-center network처럼 RTT가 microseconds 단위인 환경에서는 200ms minimum RTO가 incast 문제에서 loss recovery를 심하게 늦출 수 있어 별도 tuning이 논의된다.
 
-![Figure 14-2](@/assets/images/255_figure_14_2_page_697.png)
+![Figure 14-2](@/assets/images/cs-tcp-ip-illustrated-255-figure-14-2-page-697.png)
 *Figure 14-2 · PDF p. 697 · Linux에서 TSOPT 기반 RTT sample로 srtt/rttvar/RTO를 갱신하는 흐름*
 
 Figure 14-2의 초기 SYN RTT가 16ms라면 Linux는 다음처럼 초기값을 잡는다.
@@ -233,7 +233,7 @@ Figure 14-2에서 ACK 7001의 TSER가 가장 최근 도착 segment가 아니라 
 
 RTT estimator의 차이는 synthetic sample에서도 드러난다. Figure 14-3은 첫 100개 sample은 `N(200, 50)`, 다음 100개 sample은 `N(50, 50)`에서 뽑아 standard method와 Linux method를 비교한다. 설명을 위해 standard method의 1s minimum RTO는 제거되어 있다.
 
-![Figure 14-3](@/assets/images/256_figure_14_3_page_701.png)
+![Figure 14-3](@/assets/images/cs-tcp-ip-illustrated-256-figure-14-3-page-701.png)
 *Figure 14-3 · PDF p. 701 · standard RTO와 Linux RTO estimator의 synthetic sample 대응 비교*
 
 sample 100 이후 RTT 평균이 급격히 낮아질 때 Linux RTO는 빠르게 낮아진다. 반면 standard method는 `rttvar`가 커지는 영향 때문에 약 20 sample 정도 더 늦게 따라간다. Linux의 `rttvar`는 50ms minimum 때문에 비교적 일정하게 유지되고, 그 결과 RTO가 200ms 아래로 내려가지 않는다. 이 보수성은 loss가 났을 때 timer가 더 늦게 fire될 수 있다는 비용을 만들지만, RTO가 너무 낮아지는 spurious retransmission을 막는 데 도움이 된다.
@@ -244,7 +244,7 @@ TSOPT 기반 RTTM은 정상 순서 전달뿐 아니라 loss와 reordering 상황
 
 이 동작은 sender의 RTT sample을 크게 만드는 방향으로 bias를 준다. RTT estimate가 커지면 RTO도 커지고, sender는 reordering을 loss로 성급하게 판단하지 않게 된다. 즉 packet reordering이 있을 때 TCP가 조금 덜 공격적으로 retransmit하도록 만드는 안전장치다.
 
-![Figure 14-4](@/assets/images/257_figure_14_4_page_702.png)
+![Figure 14-4](@/assets/images/cs-tcp-ip-illustrated-257-figure-14-4-page-702.png)
 *Figure 14-4 · PDF p. 702 · reordering 상황에서 TSER가 window를 advance한 마지막 segment의 timestamp를 반영하는 방식*
 
 Figure 14-4의 예시는 `S1(1-1024)`, `S3(2049-3072)`, `S2(1025-2048)` 순서로 segment가 도착하는 reordering 상황이다. receiver는 처음에 ACK 1025를 보내며 segment 1의 timestamp를 echo한다. segment 3이 먼저 도착해도 hole이 있으므로 duplicate ACK 1025를 보내며 여전히 segment 1의 timestamp를 echo한다. 나중에 segment 2가 도착해 hole이 메워지면 ACK 3073을 보내며 segment 2의 timestamp를 echo한다.
@@ -278,7 +278,7 @@ backed-off RTO = gamma * RTO
 
 본문 예제는 sequence number 1401인 segment를 의도적으로 두 번 drop해 timer-based retransmission을 관찰한다. 첫 번째 data pair에서 sequence 1과 1401이 전송되지만, 1401 segment가 drop된다. receiver는 delayed ACK 정책 때문에 즉시 응답하지 않고, sender는 219ms 안에 ACK를 받지 못해 retransmission timer가 expire된다.
 
-![Figure 14-5](@/assets/images/258_figure_14_5_page_705.png)
+![Figure 14-5](@/assets/images/cs-tcp-ip-illustrated-258-figure-14-5-page-705.png)
 *Figure 14-5 · PDF p. 705 · segment 1401 loss로 timer-based retransmission이 발생하는 예제*
 
 timeout 후 sender는 sequence 1 segment를 다시 보낸다. 이 retransmission이 receiver에 도착하면 ACK가 돌아오고, 이 ACK는 sender window를 advance하므로 TSER 값을 이용해 `srtt`와 `RTO`를 갱신한다. 예제에서는 `srtt = 34`, `RTO = 234`로 업데이트된다.
@@ -310,17 +310,17 @@ SACK이 없으면 sender는 대개 acceptable ACK가 돌아오기 전까지 한 
 
 본문 예제는 SACK을 끈 상태에서 segment 23801과 26601을 drop한다. sender는 Linux 2.6, receiver는 FreeBSD 5.4다. 이 예제는 non-SACK TCP가 duplicate ACK와 partial ACK를 이용해 hole을 하나씩 복구하는 모습을 보여 준다.
 
-![Figure 14-6](@/assets/images/259_figure_14_6_page_707.png)
+![Figure 14-6](@/assets/images/cs-tcp-ip-illustrated-259-figure-14-6-page-707.png)
 *Figure 14-6 · PDF p. 707 · duplicate ACK 3개로 fast retransmit이 발생하고 partial ACK가 다음 retransmission을 유발하는 흐름*
 
 Figure 14-6에서 time 0.993s에 sequence number 23801이 fast retransmit된다. 초기 전송본은 TCP 아래에서 drop되었기 때문에 plot에는 보이지 않는다. retransmission trigger는 세 번째 duplicate ACK다. 이 connection은 SACK을 쓰지 않기 때문에 한 RTT에 한 receiver hole만 복구할 수 있다.
 
-![Figure 14-7](@/assets/images/260_figure_14_7_page_708.png)
+![Figure 14-7](@/assets/images/cs-tcp-ip-illustrated-260-figure-14-7-page-708.png)
 *Figure 14-7 · PDF p. 708 · Wireshark trace에서 packet 50과 66이 retransmission으로 표시되는 예*
 
 Wireshark trace에서는 ACK 23801이 처음 등장한 뒤, 같은 ACK number가 반복되는 duplicate ACK들이 보인다. 단, time 0.853의 ACK는 sequence number 관점에서는 duplicate처럼 보일 수 있지만 flow control window update를 포함하므로 fast retransmit을 위한 duplicate ACK count에 포함되지 않는다. window update는 receiver의 advertised window 정보를 갱신하는 것이며 Chapter 15와 연결된다.
 
-![Figure 14-8](@/assets/images/261_figure_14_8_page_709.png)
+![Figure 14-8](@/assets/images/cs-tcp-ip-illustrated-261-figure-14-8-page-709.png)
 *Figure 14-8 · PDF p. 709 · duplicate ACK 3개가 fast retransmit trigger가 되는 Flow Graph*
 
 time 0.890, 0.926, 0.964에 도착한 ACK들은 모두 sequence number 23801에 대한 duplicate ACK다. 세 번째 duplicate ACK가 도착한 뒤 time 0.993에 segment 23801이 retransmit된다. timer expiration을 기다리지 않으므로 복구가 빠르다.
@@ -359,17 +359,17 @@ timer-based retransmission이 발생하면 sender는 SACK에서 얻은 out-of-se
 
 본문 예제는 앞의 fast retransmit 실험과 비슷하지만 sender와 receiver가 SACK을 사용한다. sequence number 23601과 28801을 drop한 상황에서, SACK sender는 첫 missing segment를 retransmit한 뒤 다음 RTT를 기다리지 않고 두 번째 missing segment도 같은 RTT 안에서 알게 된다.
 
-![Figure 14-9](@/assets/images/262_figure_14_9_page_713.png)
+![Figure 14-9](@/assets/images/cs-tcp-ip-illustrated-262-figure-14-9-page-713.png)
 *Figure 14-9 · PDF p. 713 · SACK 정보로 같은 RTT 안에서 두 번째 missing segment까지 복구하는 fast retransmit*
 
 Figure 14-9는 Figure 14-6과 비슷하지만, SACK sender가 lost segment 23601을 retransmit한 뒤 lost segment 28801을 알기 위해 한 RTT 전체를 기다리지 않는다는 점이 다르다. arriving ACK 안의 SACK information이 receiver의 다른 out-of-order block을 알려 주기 때문이다.
 
-![Figure 14-10](@/assets/images/263_figure_14_10_page_714.png)
+![Figure 14-10](@/assets/images/cs-tcp-ip-illustrated-263-figure-14-10-page-714.png)
 *Figure 14-10 · PDF p. 714 · SYN에서 SACK-Permitted option이 교환되는 connection setup*
 
 SACK은 connection setup 때 `SACK-Permitted` option으로 capability를 교환해야 한다. 이 option은 SYN bit가 켜진 segment에만 나타난다. 현대 TCP는 connection establishment 중 MSS, Timestamps, Window Scale, SACK-Permitted를 함께 사용하는 경우가 많다.
 
-![Figure 14-11](@/assets/images/264_figure_14_11_page_715.png)
+![Figure 14-11](@/assets/images/cs-tcp-ip-illustrated-264-figure-14-11-page-715.png)
 *Figure 14-11 · PDF p. 715 · SACK block의 left edge/right edge가 out-of-order range를 나타내는 예*
 
 Figure 14-11에서 ACK 23801은 SACK block `[25201, 26601]`을 포함한다. 이는 receiver가 25201부터 26600까지의 out-of-order block을 갖고 있다는 뜻이다. 따라서 hole은 `[23801, 25200]`이고, 이는 sequence number 23801에서 시작하는 1400-byte segment가 빠졌음을 의미한다.
@@ -391,7 +391,7 @@ spurious timeout 대응은 보통 detection algorithm과 response algorithm으�
 
 이 장에서 다루는 response는 주로 segment retransmission 동작이고, congestion control 상태 복구는 Chapter 16과 연결된다.
 
-![Figure 14-12](@/assets/images/265_figure_14_12_page_717.png)
+![Figure 14-12](@/assets/images/cs-tcp-ip-illustrated-265-figure-14-12-page-717.png)
 *Figure 14-12 · PDF p. 717 · delay spike로 spurious timeout이 발생하고 go-back-N식 낭비가 생기는 예*
 
 Figure 14-12는 packet 8 이후 ACK path에 delay spike가 생겨, sender가 packet 5에 대해 timeout을 잘못 판단하는 예다. sender는 packet 5를 retransmit하지만, 원래 전송된 packet 5-8에 대한 ACK들이 이미 network 안에 있다. 그 ACK들이 뒤늦게 도착하면 TCP는 이미 receiver가 가진 packet 6, 7, 8까지 다시 보내는 go-back-N behavior를 보일 수 있다. 이 중복 전송은 receiver에서 duplicate ACK를 만들고, 심하면 fast retransmit까지 유발할 수 있다.
@@ -480,7 +480,7 @@ ACK 방향 reordering은 sender가 window를 크게 advance하는 ACK를 먼저 
 
 data 방향 reordering은 loss와 더 직접적으로 헷갈린다. receiver는 expected sequence number보다 뒤쪽 data를 받으면 hole이 있다고 보고 duplicate ACK를 즉시 보낸다. 이것은 loss가 있을 때 fast retransmit을 빠르게 유도하는 데 필요하지만, 단순 reordering에서도 duplicate ACK가 만들어진다.
 
-![Figure 14-13](@/assets/images/266_figure_14_13_page_723.png)
+![Figure 14-13](@/assets/images/cs-tcp-ip-illustrated-266-figure-14-13-page-723.png)
 *Figure 14-13 · PDF p. 723 · mild reordering은 무시되지만 severe reordering은 spurious fast retransmit을 유발하는 예*
 
 Figure 14-13의 왼쪽처럼 작은 reordering에서는 duplicate ACK가 하나 정도만 생기므로 `dupthresh = 3` 기준에 도달하지 않고 TCP가 문제를 넘긴다. 오른쪽처럼 packet 4가 세 위치 이상 밀려 도착하면 receiver가 duplicate ACK를 세 개 만들 수 있고, sender는 이를 loss로 오해해 fast retransmit을 수행한다. 결과적으로 receiver가 이미 받거나 곧 받을 data에 대한 spurious retransmission이 생긴다.
@@ -491,7 +491,7 @@ loss와 reordering을 구분하는 문제는 "sender가 receiver hole을 메우�
 
 IP packet duplication은 드물지만 가능하다. 예를 들어 link-layer protocol이 retransmission을 수행하는 과정에서 같은 IP packet copy가 두 번 이상 전달될 수 있다. TCP receiver는 duplicate packet을 받으면 같은 ACK를 반복해 보내므로, sender는 이를 loss로 오인할 수 있다.
 
-![Figure 14-14](@/assets/images/267_figure_14_14_page_723.png)
+![Figure 14-14](@/assets/images/cs-tcp-ip-illustrated-267-figure-14-14-page-723.png)
 *Figure 14-14 · PDF p. 723 · packet duplication이 duplicate ACK를 만들어 spurious fast retransmission을 유발하는 예*
 
 Figure 14-14에서는 packet 3이 세 번 duplicate되어 receiver에 도착한다. 이로 인해 ACK 3이 여러 번 반복되고, non-SACK sender는 packet 5와 6이 먼저 도착한 것처럼 오해해 spurious fast retransmit을 수행할 수 있다.

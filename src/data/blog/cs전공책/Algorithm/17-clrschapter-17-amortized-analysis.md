@@ -62,7 +62,7 @@ MULTIPOP(S, k)
 3      k = k - 1
 ```
 
-![Figure 17.1](@/assets/images/089_figure_17-1_page_474.png)
+![Figure 17.1](@/assets/images/cs-algorithm-089-figure-17-1-page-474.png)
 *Figure 17.1 · PDF p. 474 · `MULTIPOP`이 stack top에서 여러 objects를 제거하는 과정*
 
 Stack size가 `s`일 때 `MULTIPOP(S, k)`의 actual cost는 loop iterations 수, 즉 `min(s, k)`다. 단일 `MULTIPOP`만 보면 worst-case cost가 `O(n)`일 수 있다. 그래서 각 operation의 individual worst-case만 단순히 더하면 `n` operations sequence가 `O(n^2)`처럼 보인다.
@@ -104,7 +104,7 @@ While loop는 trailing 1s를 0으로 바꾸며 carry를 전달한다. 처음 만
 
 단일 `INCREMENT`의 worst-case는 counter가 all 1s일 때 `Θ(k)`다. 따라서 단순 worst-case 곱셈으로는 `n` increments가 `O(nk)`처럼 보인다. 하지만 aggregate analysis로는 훨씬 작다.
 
-![Figure 17.2](@/assets/images/090_figure_17-2_page_476.png)
+![Figure 17.2](@/assets/images/cs-algorithm-090-figure-17-2-page-476.png)
 *Figure 17.2 · PDF p. 476 · 8-bit binary counter에서 16번 `INCREMENT` 동안 flip되는 bits와 누적 cost*
 
 Bit별 flip 빈도를 보면:
@@ -422,7 +422,7 @@ Potential method에서는 다음 potential function을 둔다.
 
 Insertion만 있는 경우 table은 항상 at least half full이므로 `Φ(T) >= 0`이다. Expansion 직후에는 `T.num = T.size/2`라서 `Φ(T)=0`이고, table이 full에 가까워질수록 potential이 커진다. 이 potential은 “다음 expansion에서 copy 비용으로 쓸 에너지”를 table state에 저장해 두는 역할을 한다.
 
-![Figure 17.3](@/assets/images/091_figure_17-3_page_488.png)
+![Figure 17.3](@/assets/images/cs-algorithm-091-figure-17-3-page-488.png)
 *Figure 17.3 · PDF p. 488 · insert-only dynamic table에서 num, size, potential 변화*
 
 Amortized cost 계산은 두 경우로 나뉜다.
@@ -458,7 +458,7 @@ Insertion-only potential `2*T.num - T.size`는 `α < 1/2`에서 negative가 될 
 
 이 potential은 `α=1/2`에서 0이고, table이 full에 가까워질수록 expansion 비용을 위해 증가하며, table이 `1/4`에 가까워질수록 contraction 비용을 위해 증가한다. Empty table에서도 `Φ(T)=0`으로 두며, 모든 state에서 nonnegative다.
 
-![Figure 17.4](@/assets/images/092_figure_17-4_page_490.png)
+![Figure 17.4](@/assets/images/cs-algorithm-092-figure-17-4-page-490.png)
 *Figure 17.4 · PDF p. 490 · expansion/contraction dynamic table의 piecewise potential*
 
 Amortized analysis는 operation 직전과 직후의 load factor에 따라 나뉜다.

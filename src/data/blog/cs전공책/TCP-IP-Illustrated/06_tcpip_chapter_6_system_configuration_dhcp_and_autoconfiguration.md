@@ -102,7 +102,7 @@ DHCP request에는 client가 server 판단에 도움을 줄 정보를 넣을 수
 
 DHCP는 BOOTP message format을 확장해서 쓴다. 이 덕분에 BOOTP relay agent가 DHCP message를 처리할 수 있고, BOOTP client와 DHCP server 사이의 backward compatibility도 가능하다. message는 fixed-length initial portion과 variable-length options portion으로 나뉜다.
 
-![Figure 6-1](@/assets/images/076_figure_6_1_page_276.png)
+![Figure 6-1](@/assets/images/cs-tcp-ip-illustrated-076-figure-6-1-page-276.png)
 *Figure 6-1 · PDF p. 276 · BOOTP/DHCP message format과 주요 address/options field*
 
 핵심 field는 다음과 같다.
@@ -170,7 +170,7 @@ DHCP message는 본질적으로 BOOTP message에 DHCP-specific options를 붙인
 | 3 | DHCPREQUEST | client -> broadcast | client가 특정 server와 offered address를 선택했음을 알림 |
 | 4 | DHCPACK | selected server -> client/broadcast | server가 address binding과 lease를 확정 |
 
-![Figure 6-2](@/assets/images/077_figure_6_2_page_279.png)
+![Figure 6-2](@/assets/images/cs-tcp-ip-illustrated-077-figure-6-2-page-279.png)
 *Figure 6-2 · PDF p. 279 · DHCPDISCOVER/OFFER/REQUEST/ACK 기반 DHCP exchange*
 
 client가 처음 보낼 때는 아직 자기 IP address를 모르므로 source IP address는 `0.0.0.0`, destination IP address는 limited broadcast `255.255.255.255`를 쓴다. UDP source port는 68, destination port는 67이다. DHCP request message는 BOOTP `BOOTREQUEST` operation과 `DHCP Message Type` option을 포함한다. DHCP/BOOTP message의 처음 Options 4 bytes에는 magic cookie 값 `99, 130, 83, 99`가 들어가 DHCP option 영역임을 표시한다.
@@ -220,7 +220,7 @@ DHCPOFFER 예시에서는 server `10.0.0.1`이 client에게 `10.0.0.57`을 12시
 
 DHCP client는 message와 timer에 따라 state machine으로 동작한다. 아래 그림은 lease를 처음 얻고, 유지하고, 실패 시 다시 얻는 흐름을 보여준다.
 
-![Figure 6-10](@/assets/images/087_figure_6_10_page_290.png)
+![Figure 6-10](@/assets/images/cs-tcp-ip-illustrated-087-figure-6-10-page-290.png)
 *Figure 6-10 · PDF p. 290 · DHCP client state machine과 T1/T2 timer 흐름*
 
 주요 state는 다음과 같다.
@@ -251,7 +251,7 @@ IPv6에서는 DHCPv6만이 유일한 자동 설정 방법이 아니다. host는 
 
 IPv6 interface는 보통 여러 address를 동시에 가진다. 각 address에는 `preferred lifetime`과 `valid lifetime`이 있고, 이 timer들이 address state를 바꾼다.
 
-![Figure 6-11](@/assets/images/088_figure_6_11_page_291.png)
+![Figure 6-11](@/assets/images/cs-tcp-ip-illustrated-088-figure-6-11-page-291.png)
 *Figure 6-11 · PDF p. 291 · IPv6 address lifecycle: tentative, preferred, deprecated, invalid*
 
 IPv6 address lifecycle은 다음처럼 이해하면 된다.
@@ -270,7 +270,7 @@ IPv6 address lifecycle은 다음처럼 이해하면 된다.
 
 DHCPv6 message는 UDP/IPv6 datagram으로 encapsulation된다. client는 UDP port 546, server는 UDP port 547을 사용한다. DHCPv4와 달리 legacy BOOTP format이 없고, message 구조가 더 단순하며 대부분의 정보가 options에 담긴다.
 
-![Figure 6-12](@/assets/images/089_figure_6_12_page_292.png)
+![Figure 6-12](@/assets/images/cs-tcp-ip-illustrated-089-figure-6-12-page-292.png)
 *Figure 6-12 · PDF p. 292 · DHCPv6 client/server message와 relay agent message format*
 
 DHCPv6에는 두 message format이 있다.
@@ -308,7 +308,7 @@ IA에 들어가는 configuration information은 다음을 포함한다.
 - lease 관련 `T1`, `T2`, total lease duration
 - nontemporary address 또는 temporary address 여부
 
-![Figure 6-13](@/assets/images/090_figure_6_13_page_295.png)
+![Figure 6-13](@/assets/images/cs-tcp-ip-illustrated-090-figure-6-13-page-295.png)
 *Figure 6-13 · PDF p. 295 · IA_NA와 IA_TA option format*
 
 `IA_NA`는 nontemporary address용 IA이고 `T1`, `T2` 값을 직접 포함한다. `IA_TA`는 temporary address용 IA이며 T1/T2를 직접 넣지 않는다. temporary address는 IPv6 privacy를 위해 random 요소를 사용해 더 자주 바뀌도록 설계된 address다.
@@ -345,7 +345,7 @@ M/O 조합은 다음처럼 해석할 수 있다.
 | 1 | 1 | stateful DHCPv6로 address와 기타 정보 획득 |
 | 1 | 0 | 가능은 하지만 실용성이 낮은 조합 |
 
-![Figure 6-14](@/assets/images/091_figure_6_14_page_297.png)
+![Figure 6-14](@/assets/images/cs-tcp-ip-illustrated-091-figure-6-14-page-297.png)
 *Figure 6-14 · PDF p. 297 · Router Advertisement의 M/O flag와 DHCPv6 operation 흐름*
 
 일반적인 DHCPv6 흐름은 DHCPv4와 비슷하게 네 message exchange를 가진다.
@@ -385,7 +385,7 @@ prefix delegation에는 주소용 IA와 비슷한 `IA_PD`가 사용된다. IA_PD
 
 작은 LAN에서는 DHCP server가 client와 같은 segment에 있으면 충분하다. 하지만 enterprise나 ISP 환경에서는 중앙 DHCP server가 여러 network segment의 client를 처리해야 할 수 있다. 이때 `DHCP relay agent`가 client의 broadcast/multicast DHCP traffic을 server 쪽으로 전달한다.
 
-![Figure 6-21](@/assets/images/098_figure_6_21_page_306.png)
+![Figure 6-21](@/assets/images/cs-tcp-ip-illustrated-098-figure-6-21-page-306.png)
 *Figure 6-21 · PDF p. 306 · DHCP relay agent가 다른 network segment의 server로 DHCP traffic을 전달*
 
 relay agent는 보통 모든 DHCP traffic에 끼어들지는 않는다. client가 처음 주소를 얻을 때처럼 broadcast 또는 IPv6 multicast를 쓰는 message를 relay한다. client가 주소와 server identity를 알게 되면 이후 renewal 같은 일부 대화는 server와 unicast로 직접 할 수 있어 relay를 거치지 않을 수 있다.
@@ -443,7 +443,7 @@ DHCP가 잘못 동작하면 host가 틀린 IP address, router, DNS server를 받
 
 DHCP Authentication option은 DHCP message가 authorized sender에게서 왔는지 확인하려는 기능이다.
 
-![Figure 6-22](@/assets/images/099_figure_6_22_page_311.png)
+![Figure 6-22](@/assets/images/cs-tcp-ip-illustrated-099-figure-6-22-page-311.png)
 *Figure 6-22 · PDF p. 311 · DHCP Authentication option의 replay detection과 authentication information*
 
 Authentication option의 주요 field는 다음과 같다.
@@ -530,7 +530,7 @@ IPv6 link-local address는 well-known prefix `fe80::/10`에 locally generated id
 
 `Duplicate Address Detection(DAD)`는 tentative IPv6 address가 attached link에서 이미 사용 중인지 확인하는 절차다. manual assignment, SLAAC, DHCPv6로 얻은 주소 모두에 DAD 사용이 권장된다.
 
-![Figure 6-23](@/assets/images/100_figure_6_23_page_318.png)
+![Figure 6-23](@/assets/images/cs-tcp-ip-illustrated-100-figure-6-23-page-318.png)
 *Figure 6-23 · PDF p. 318 · tentative link-local address에 대한 DAD Neighbor Solicitation*
 
 DAD 절차는 다음과 같다.
@@ -565,7 +565,7 @@ preferred lifetime과 valid lifetime도 Prefix option에서 제공된다. 따라
 
 RA가 SLAAC의 전체 방향을 정한다. 아래 figure는 default router, global prefix, DNS server, Mobile IPv6 home agent 가능성 등 host가 configuration에 쓸 정보를 RA가 제공하는 장면이다.
 
-![Figure 6-25](@/assets/images/102_figure_6_25_page_320.png)
+![Figure 6-25](@/assets/images/cs-tcp-ip-illustrated-102-figure-6-25-page-320.png)
 *Figure 6-25 · PDF p. 320 · ICMPv6 Router Advertisement가 prefix, router, DNS 정보를 제공하는 예*
 
 temporary IPv6 address는 privacy를 위해 낮은 bits를 다른 random number로 만들어 주기적으로 바뀌게 할 수 있다. 원문 예시에서는 stable global address와 temporary global address가 모두 만들어진다. temporary address는 더 짧은 lifetime을 가지며, local default와 RA의 Prefix Information option lifetime 중 더 작은 값을 따른다.
@@ -613,7 +613,7 @@ PPPoE가 등장하는 배경은 DHCP만으로는 access provider가 원하는 su
 
 DSL 환경에서는 전화 음성인 `POTS (Plain Old Telephone Service)`와 DSL data가 같은 copper pair를 공유하지만 서로 다른 frequency band를 사용한다. 전화기에는 filter가 필요하고, DSL modem은 subscriber side Ethernet과 provider side DSL/access network 사이를 이어 준다.
 
-![Figure 6-28](@/assets/images/105_figure_6_28_page_325.png)
+![Figure 6-28](@/assets/images/cs-tcp-ip-illustrated-105-figure-6-28-page-325.png)
 *Figure 6-28 · PDF p. 325 · DSL access에서 home system, DSL modem, ISP access concentrator가 PPPoE로 연결되는 구조*
 
 PPPoE는 크게 두 단계로 나뉜다. 먼저 `Discovery phase`에서 client가 사용할 access concentrator와 service를 찾고 session identifier를 얻는다. 그 다음 `PPP Session phase`에서 일반 PPP frame이 Ethernet frame 안에 실려 흐르며, PPP LCP, authentication, IPCP 같은 PPP 절차가 진행된다.
@@ -627,12 +627,12 @@ PPPoE는 크게 두 단계로 나뉜다. 먼저 `Discovery phase`에서 client�
 | Termination | `PADT (PPPoE Active Discovery Terminate)` | either side | PPPoE session 종료 |
 | Session | PPP data | both directions | PPP LCP, authentication, IPCP, network-layer data 전송 |
 
-![Figure 6-29](@/assets/images/106_figure_6_29_page_326.png)
+![Figure 6-29](@/assets/images/cs-tcp-ip-illustrated-106-figure-6-29-page-326.png)
 *Figure 6-29 · PDF p. 326 · PADI/PADO/PADR/PADS 이후 PPP Session으로 넘어가는 PPPoE 절차*
 
 PPPoE message는 Ethernet frame의 payload로 들어간다. Discovery 단계의 Ethernet Type은 `0x8863`, PPP Session 단계의 Ethernet Type은 `0x8864`이다. PPPoE header에는 version/type, message code, session identifier, payload length가 들어간다. 현재 PPPoE에서 `Ver`와 `Type`은 모두 `0x1`이다.
 
-![Figure 6-30](@/assets/images/107_figure_6_30_page_327.png)
+![Figure 6-30](@/assets/images/cs-tcp-ip-illustrated-107-figure-6-30-page-327.png)
 *Figure 6-30 · PDF p. 327 · PPPoE message format과 Discovery tag의 TLV 구조*
 
 PPPoE Discovery에서 `Session ID`는 아직 session이 확정되지 않은 PADI/PADO/PADR 동안 `0x0000`이다. PADS가 오면 server가 16-bit `Session ID`를 정하고, 이후 같은 Ethernet endpoints 사이의 PPP Session traffic은 이 identifier로 구분된다. 여러 subscriber나 여러 service가 같은 access concentrator를 지나갈 수 있으므로, MAC address만으로는 부족하고 session identifier가 필요하다.

@@ -73,7 +73,7 @@ Stop-and-wait의 한계는 assembly line 비유로 이해할 수 있다. 완성�
 
 `window of packets`는 sender가 이미 network에 넣었지만 아직 complete ACK를 받지 못한 packet 또는 sequence number의 집합이다. `window size`는 이 window 안에 들어갈 수 있는 packet 수다. Stop-and-wait에서는 outstanding packet이 최대 1개지만, sliding window에서는 여러 packet이 동시에 outstanding 상태가 될 수 있다.
 
-![Figure 12-1](@/assets/images/241_figure_12_1_page_621.png)
+![Figure 12-1](@/assets/images/cs-tcp-ip-illustrated-241-figure-12-1-page-621.png)
 *Figure 12-1 · PDF p. 621 · sender window에서 이미 ACK된 packet, 전송 가능한 packet, 아직 보낼 수 없는 packet의 구분*
 
 Figure 12-1의 예에서 window size는 3이다. Packet 3은 이미 sent and acknowledged 상태이므로 sender가 보관하던 copy를 버릴 수 있다. Packet 4, 5, 6은 current window 안에 있으므로 이미 보냈거나 보낼 수 있는 packet이다. Packet 7은 sender 쪽에 준비되어 있어도 아직 right window edge 밖에 있으므로 보낼 수 없다. 이후 packet 4에 대한 ACK가 오면 left window edge가 오른쪽으로 이동하고, packet 7이 window 안으로 들어와 전송 가능해진다. 이 움직임 때문에 `sliding window protocol`이라고 부른다.
@@ -205,12 +205,12 @@ TCP는 IP 위에서 동작하므로 IP의 특성도 그대로 받아들여야 �
 
 TCP segment는 IP datagram 안에 encapsulate된다. IPv4에서는 IP header의 `Protocol` field가 6이면 payload가 TCP임을 뜻하고, IPv6에서는 `Next Header` chain의 마지막 transport header 값이 6이면 TCP다.
 
-![Figure 12-2](@/assets/images/242_figure_12_2_page_626.png)
+![Figure 12-2](@/assets/images/cs-tcp-ip-illustrated-242-figure-12-2-page-626.png)
 *Figure 12-2 · PDF p. 626 · IP datagram 안에서 TCP header와 TCP/application data가 놓이는 위치*
 
 TCP header는 IP header 또는 마지막 IPv6 extension header 바로 뒤에 온다. TCP header는 options가 없으면 보통 20 bytes이고, options가 있으면 최대 60 bytes까지 커질 수 있다. 흔한 TCP option에는 `MSS (Maximum Segment Size)`, `Timestamps`, `Window Scaling`, `SACK (Selective ACK)`가 있다. TCP segment의 data portion은 optional이다. Connection establishment/termination, pure ACK, window update, 일부 timeout-related segment는 application data 없이 TCP header만 가질 수 있다.
 
-![Figure 12-3](@/assets/images/243_figure_12_3_page_627.png)
+![Figure 12-3](@/assets/images/cs-tcp-ip-illustrated-243-figure-12-3-page-627.png)
 *Figure 12-3 · PDF p. 627 · TCP header format과 Sequence Number, Acknowledgment Number, flags, Window Size field*
 
 Figure 12-3의 TCP header는 UDP보다 복잡하다. TCP는 양 endpoint의 connection state를 synchronize해야 하므로, reliability, ordering, flow control, connection management, congestion signaling에 필요한 field가 header에 들어간다.

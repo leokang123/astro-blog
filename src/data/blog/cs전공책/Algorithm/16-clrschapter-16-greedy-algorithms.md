@@ -128,7 +128,7 @@ RECURSIVE-ACTIVITY-SELECTOR(s, f, k, n)
 
 Line 2-3은 현재 선택된 마지막 activity `a_k`와 compatible한 첫 activity `a_m`을 찾는다. Activities가 finish time 순서로 정렬되어 있으므로, 이 `a_m`은 `S_k`에서 가장 빨리 끝나는 activity다. 찾으면 `a_m`을 선택하고 subproblem `S_m`을 재귀적으로 푼다. 더 이상 compatible activity가 없으면 empty set을 반환한다.
 
-![Figure 16.1](@/assets/images/082_figure_16-1_page_441.png)
+![Figure 16.1](@/assets/images/cs-algorithm-082-figure-16-1-page-441.png)
 *Figure 16.1 · PDF p. 441 · `RECURSIVE-ACTIVITY-SELECTOR`가 activities를 순서대로 선택/거절하는 과정*
 
 Figure 16.1은 원문 11개 activities에서 recursive calls가 `a_1`, `a_4`, `a_8`, `a_11`을 선택하는 과정을 보여 준다. Shaded activities는 이미 선택된 것들이고, white activity는 현재 검사 중인 activity다. Start time이 최근 선택 activity의 finish time보다 작으면 거절하고, 그렇지 않으면 선택한다.
@@ -239,7 +239,7 @@ Greedy와 DP의 차이를 보여 주는 대표 예가 `knapsack problem`이다.
 
 하지만 greedy-choice property는 fractional knapsack에만 성립한다. Fractional knapsack에서는 value density `v_i / w_i`가 가장 큰 item부터 가능한 만큼 담으면 된다. 한 item이 다 떨어져도 capacity가 남으면 다음 density item을 담는다. Sorting을 쓰면 `O(n lg n)` time이다.
 
-![Figure 16.2](@/assets/images/083_figure_16-2_page_448.png)
+![Figure 16.2](@/assets/images/cs-algorithm-083-figure-16-2-page-448.png)
 *Figure 16.2 · PDF p. 448 · `0-1 knapsack`에서는 value density greedy가 실패하지만 fractional에서는 성공하는 예*
 
 Figure 16.2의 instance는 capacity `50`이고 items는 다음과 같다.
@@ -275,7 +275,7 @@ best(i, W) = max(
 
 100,000-character file에 characters `a`-`f`만 등장하고 frequencies가 다음과 같다고 하자.
 
-![Figure 16.3](@/assets/images/084_figure_16-3_page_450.png)
+![Figure 16.3](@/assets/images/cs-algorithm-084-figure-16-3-page-450.png)
 *Figure 16.3 · PDF p. 450 · fixed-length code와 variable-length code의 bit 수 비교*
 
 6개 characters를 fixed-length code로 표현하려면 character마다 3 bits가 필요하므로 전체 `300,000` bits가 든다. 반면 Figure 16.3의 variable-length code는 `a`를 `0`, `f`를 `1100`처럼 표현해 전체 bit 수를 줄인다.
@@ -300,7 +300,7 @@ Decoding은 왼쪽부터 codeword 하나씩 끊어 읽는다. Prefix-free 성질
 
 Prefix code는 binary tree로 표현하기 좋다. Root에서 왼쪽 edge는 `0`, 오른쪽 edge는 `1`로 보고, character leaf까지의 simple path가 codeword가 된다.
 
-![Figure 16.4](@/assets/images/085_figure_16-4_page_451.png)
+![Figure 16.4](@/assets/images/cs-algorithm-085-figure-16-4-page-451.png)
 *Figure 16.4 · PDF p. 451 · fixed-length code tree와 optimal prefix code tree*
 
 Figure 16.4의 tree들은 binary search tree가 아니다. Characters는 leaves에 있고, internal nodes는 keys가 아니라 subtree frequencies sum을 담는다. Optimal prefix code는 항상 `full binary tree`로 나타낼 수 있다. 즉 모든 internal node가 정확히 두 children을 가진다. Positive frequencies를 가진 alphabet `C`에 대해 optimal prefix-code tree는 `|C|` leaves와 `|C|-1` internal nodes를 가진다.
@@ -332,7 +332,7 @@ HUFFMAN(C)
 
 `Q`는 `freq`를 key로 하는 `min-priority queue`다. Line 5-6의 두 번의 `EXTRACT-MIN`이 greedy choice다. 가장 낮은 frequencies의 두 objects를 하나의 subtree로 합치고, 그 subtree를 다시 queue에 넣는다. `n-1`번 merge하면 queue에는 root 하나만 남는다.
 
-![Figure 16.5](@/assets/images/086_figure_16-5_page_453.png)
+![Figure 16.5](@/assets/images/cs-algorithm-086-figure-16-5-page-453.png)
 *Figure 16.5 · PDF p. 453 · Huffman algorithm이 lowest-frequency trees를 반복 merge하는 과정*
 
 Figure 16.5에서는 `f:5`와 `e:9`를 먼저 merge해 frequency `14` node를 만든다. 이후 queue에서 항상 가장 작은 두 trees를 merge한다. 최종 tree의 root-to-leaf edge labels가 codewords가 된다. Left/right child 순서는 임의이며, 바꾸면 codeword bit pattern은 달라지지만 cost는 같다.
@@ -347,7 +347,7 @@ Lemma 16.2는 Huffman의 greedy choice가 안전함을 보인다.
 
 Tree 관점으로 말하면, minimum-frequency characters `x`, `y`를 maximum depth의 sibling leaves로 두는 optimal tree가 존재한다.
 
-![Figure 16.6](@/assets/images/087_figure_16-6_page_455.png)
+![Figure 16.6](@/assets/images/cs-algorithm-087-figure-16-6-page-455.png)
 *Figure 16.6 · PDF p. 455 · minimum-frequency leaves를 deepest siblings로 교환하는 Lemma 16.2의 핵심*
 
 증명 아이디어는 exchange argument다.
@@ -620,7 +620,7 @@ SCHEDULE-WITH-DEADLINES(S)
 
 Independence check는 Lemma 16.12의 condition 2를 이용한다. 즉 candidate set에서 각 `t`에 대해 deadline `<= t`인 tasks 수가 `t` 이하인지 확인한다. 단순 구현에서는 each check가 `O(n)`이고 tasks가 `O(n)`개이므로 전체가 `O(n^2)`이다. Problem 16-4는 disjoint-set forest로 더 빠르게 구현하는 변형을 제시한다.
 
-![Figure 16.7](@/assets/images/088_figure_16-7_page_467.png)
+![Figure 16.7](@/assets/images/cs-algorithm-088-figure-16-7-page-467.png)
 *Figure 16.7 · PDF p. 467 · unit-time tasks의 deadlines와 penalties 예시*
 
 Figure 16.7의 tasks는 penalties 내림차순이 이미 `a_1, a_2, ..., a_7` 순서다. Greedy는 `a_1`, `a_2`, `a_3`, `a_4`를 early set에 넣고, `a_5`와 `a_6`은 넣으면 `N_4 = 5`가 되어 deadline 4까지 5개 tasks를 끝내야 하므로 reject한다. 마지막 `a_7`은 accept한다.

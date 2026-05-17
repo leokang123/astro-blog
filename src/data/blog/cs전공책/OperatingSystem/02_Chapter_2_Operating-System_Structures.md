@@ -36,7 +36,7 @@ Chapter 1이 운영체제의 역할과 하드웨어 기반을 소개했다면, �
 
 운영체제는 프로그램이 실행될 environment를 제공하며, programs와 users에게 공통 services를 제공한다. 특정 서비스의 세부는 운영체제마다 다르지만, 공통적으로 등장하는 service classes는 비슷하다.
 
-![Figure 2.1](@/assets/images/025_Figure_2.1_page_86.png)
+![Figure 2.1](@/assets/images/cs-operating-system-025-figure-2-1-page-86.png)
 <p align="center"><sub>Figure 2.1 · PDF p. 86 · user interfaces, system calls, OS services, hardware의 관계</sub></p>
 
 운영체제 서비스는 크게 두 묶음으로 볼 수 있다.
@@ -67,7 +67,7 @@ Protection and security는 Chapter 1의 개념이 Chapter 2에서 service 관점
 
 Command interpreter는 사용자가 입력한 다음 command를 받아 실행하는 프로그램이다. Linux, UNIX, Windows 같은 대부분의 운영체제는 command interpreter를 process 시작 시점이나 user login 시점에 실행되는 special program으로 취급한다. UNIX/Linux 계열에서 여러 command interpreters를 shells라고 부르며, C shell, Bourne-Again shell(bash), Korn shell 등이 예다.
 
-![Figure 2.2](@/assets/images/026_Figure_2.2_page_89.png)
+![Figure 2.2](@/assets/images/cs-operating-system-026-figure-2-2-page-89.png)
 <p align="center"><sub>Figure 2.2 · PDF p. 89 · macOS에서 동작하는 bash shell command interpreter</sub></p>
 
 Command 구현 방식은 두 가지다.
@@ -89,7 +89,7 @@ GUI는 사용성을 크게 높였지만, 모든 작업에 최적인 것은 아�
 
 Smartphones와 handheld tablets에서는 keyboard/mouse 기반 CLI나 GUI가 비현실적이므로 touch-screen interface가 일반적이다. 사용자는 press, swipe 같은 gestures로 상호작용하고, 물리 keyboard 대신 screen keyboard를 사용한다.
 
-![Figure 2.3](@/assets/images/027_Figure_2.3_page_90.png)
+![Figure 2.3](@/assets/images/cs-operating-system-027-figure-2-3-page-90.png)
 <p align="center"><sub>Figure 2.3 · PDF p. 90 · mobile device에서 touch-screen interface가 중심 UI가 되는 예</sub></p>
 
 Touch-screen interface는 mobile computing의 제약과 연결된다. 화면은 작고, 입력 장치는 손가락이며, 대부분의 interaction이 app 중심으로 이루어진다. 따라서 mobile OS는 UI event handling, power constraints, sensor/device integration을 사용자에게 자연스럽게 숨겨야 한다.
@@ -100,7 +100,7 @@ CLI와 GUI 선택은 대체로 preference와 task 특성의 문제다. System ad
 
 반대로 대부분의 desktop users는 GUI를 선호한다. Windows는 GUI 중심이지만 shell도 제공하고, macOS는 historically GUI 중심이었으나 UNIX kernel 기반 macOS 이후 Aqua GUI와 command-line interface를 모두 제공한다.
 
-![Figure 2.4](@/assets/images/028_Figure_2.4_page_91.png)
+![Figure 2.4](@/assets/images/cs-operating-system-028-figure-2-4-page-91.png)
 <p align="center"><sub>Figure 2.4 · PDF p. 91 · macOS의 GUI 환경 예</sub></p>
 
 운영체제 입장에서는 user programs와 system programs를 본질적으로 구분하지 않는다. 둘 다 OS services를 요청하는 programs이고, 차이는 사용자에게 보이는 역할과 배포 방식에 가깝다.
@@ -113,7 +113,7 @@ System calls는 operating system이 제공하는 services에 접근하기 위한
 
 단순한 file copy 프로그램도 많은 system calls를 사용한다. 예를 들어 UNIX command `cp in.txt out.txt`를 생각하면, 프로그램은 input file name과 output file name을 얻고, input file을 open하고, output file을 create/open한 뒤, loop를 돌며 read와 write를 반복하고, 마지막에 files를 close하고 정상 종료한다.
 
-![Figure 2.5](@/assets/images/029_Figure_2.5_page_93.png)
+![Figure 2.5](@/assets/images/cs-operating-system-029-figure-2-5-page-93.png)
 <p align="center"><sub>Figure 2.5 · PDF p. 93 · file copy 작업에서 system calls가 순차적으로 사용되는 예</sub></p>
 
 이 과정에서 각 단계는 error handling을 필요로 한다. Input file이 없거나 access가 금지될 수 있고, output file이 이미 있을 수 있으며, disk space가 부족하거나 read 중 hardware failure가 발생할 수 있다. 따라서 system call은 단지 kernel 기능을 호출하는 문법이 아니라, user program과 OS 사이의 오류 계약(error contract)이기도 하다. 호출 결과와 status information을 통해 program은 retry, abort, overwrite, error message 출력 같은 결정을 내린다.
@@ -139,7 +139,7 @@ API를 사용하는 이유는 두 가지가 크다.
 
 Run-time environment(RTE)는 특정 programming language로 작성된 application을 실행하는 데 필요한 compiler/interpreter, libraries, loader 등 전체 software suite다. RTE는 system-call interface를 제공해 API function calls를 가로채고 필요한 OS system calls를 호출한다.
 
-![Figure 2.6](@/assets/images/030_Figure_2.6_page_95.png)
+![Figure 2.6](@/assets/images/cs-operating-system-030-figure-2-6-page-95.png)
 <p align="center"><sub>Figure 2.6 · PDF p. 95 · user application의 open() 호출이 system-call interface를 거쳐 kernel의 open() implementation으로 연결되는 흐름</sub></p>
 
 일반적으로 각 system call에는 number가 붙고, system-call interface는 이 번호로 indexing되는 table을 유지한다. User program은 “어떤 kernel code가 어떻게 실행되는지”가 아니라 “API를 어떻게 호출하고, OS가 어떤 결과를 보장하는지”만 알면 된다. 예를 들어 Windows API의 `CreateProcess()`는 내부적으로 Windows kernel의 `NTCreateProcess()` system call을 호출한다.
@@ -152,7 +152,7 @@ System call parameter passing 방식은 세 가지가 있다.
 | block/table in memory | parameters를 memory block/table에 넣고 그 address를 register로 전달 | parameter 수나 길이 제한을 완화 |
 | stack | program이 parameters를 stack에 push하고 OS가 pop | parameter 수 제한을 줄일 수 있음 |
 
-![Figure 2.7](@/assets/images/031_Figure_2.7_page_96.png)
+![Figure 2.7](@/assets/images/cs-operating-system-031-figure-2-7-page-96.png)
 <p align="center"><sub>Figure 2.7 · PDF p. 96 · parameters를 memory table에 넣고 table address를 system call에 전달하는 방식</sub></p>
 
 Linux는 register 방식과 block 방식을 조합한다. Parameters가 다섯 개 이하이면 registers를 사용하고, 더 많으면 block method를 사용한다. 이 세부는 암기보다 “user mode에서 kernel mode로 넘어갈 때 data를 안전하고 표준화된 방식으로 전달해야 한다”는 점이 중요하다.
@@ -161,7 +161,7 @@ Linux는 register 방식과 block 방식을 조합한다. Parameters가 다섯 �
 
 System calls는 대략 process control, file management, device management, information maintenance, communications, protection 여섯 범주로 나뉜다.
 
-![Figure 2.8](@/assets/images/032_Figure_2.8_page_97.png)
+![Figure 2.8](@/assets/images/cs-operating-system-032-figure-2-8-page-97.png)
 <p align="center"><sub>Figure 2.8 · PDF p. 97 · operating system이 일반적으로 제공하는 system call types</sub></p>
 
 | 범주 | 대표 기능 | 뒤 장과 연결 |
@@ -177,12 +177,12 @@ Process control system calls는 running program의 normal termination과 abnorma
 
 Process control의 또 다른 핵심은 `load()`와 `execute()`다. 한 program이 다른 program을 load/execute할 때 기존 program으로 돌아갈지, 기존 memory image를 저장할지, 새 process로 concurrent execution할지가 설계 문제가 된다. UNIX/FreeBSD 계열에서는 shell이 `fork()`로 새 process를 만들고 `exec()`로 선택한 program을 load/execute한다.
 
-![Figure 2.9](@/assets/images/033_Figure_2.9_page_100.png)
+![Figure 2.9](@/assets/images/cs-operating-system-033-figure-2-9-page-100.png)
 <p align="center"><sub>Figure 2.9 · PDF p. 100 · Arduino에서 boot loader가 하나의 sketch를 memory에 올리는 single-tasking 실행 구조</sub></p>
 
 Arduino 예시는 운영체제가 없는 single-tasking system을 보여준다. Boot loader가 sketch를 flash memory에서 특정 memory region에 올리고, 한 번에 하나의 sketch만 존재한다. 새 sketch를 load하면 기존 sketch가 대체된다. 이 구조는 OS가 제공하는 process abstraction, multitasking, user interface가 얼마나 큰 역할을 하는지 반대로 드러낸다.
 
-![Figure 2.10](@/assets/images/034_Figure_2.10_page_101.png)
+![Figure 2.10](@/assets/images/cs-operating-system-034-figure-2-10-page-101.png)
 <p align="center"><sub>Figure 2.10 · PDF p. 101 · FreeBSD에서 shell과 여러 process가 memory에 함께 존재하는 multitasking 구조</sub></p>
 
 FreeBSD 예시는 multitasking system이다. User가 login하면 shell이 실행되고, shell은 command를 받아 `fork()`로 process를 만들고 `exec()`로 program을 실행한다. Foreground process라면 shell이 process 종료를 기다리고, background process라면 shell은 즉시 다음 command를 기다린다. Background process는 keyboard input을 직접 받을 수 없으므로 files나 GUI 등을 통해 I/O를 수행한다. Process가 끝나면 `exit()` system call로 status code를 반환한다.
@@ -226,7 +226,7 @@ Daemons는 system halt 전까지 계속 실행되는 system-program processes다
 
 Program은 보통 disk에 binary executable file 형태로 존재한다. 예를 들어 UNIX 계열의 `a.out`, Windows의 `prog.exe`처럼 저장되어 있다. CPU에서 실행되려면 이 executable file이 memory로 올라가 process의 address space 안에 배치되어야 한다.
 
-![Figure 2.11](@/assets/images/035_Figure_2.11_page_106.png)
+![Figure 2.11](@/assets/images/cs-operating-system-035-figure-2-11-page-106.png)
 <p align="center"><sub>Figure 2.11 · PDF p. 106 · source program이 compile, link, load를 거쳐 memory의 program이 되는 흐름</sub></p>
 
 실행 파일이 만들어지고 실행되는 흐름은 다음과 같다.
@@ -320,12 +320,12 @@ Higher-level language로 OS를 구현하는 장점은 다음과 같다.
 
 Monolithic structure는 kernel의 모든 기능을 하나의 static binary file에 넣고, single address space의 kernel mode에서 실행하는 구조다. Original UNIX는 kernel과 system programs로 크게 나뉘고, kernel 내부에는 system-call interface 아래 file system, CPU scheduling, memory management, device drivers 등이 들어 있다.
 
-![Figure 2.12](@/assets/images/036_Figure_2.12_page_112.png)
+![Figure 2.12](@/assets/images/cs-operating-system-036-figure-2-12-page-112.png)
 <p align="center"><sub>Figure 2.12 · PDF p. 112 · system-call interface 아래 대부분의 OS 기능이 kernel에 들어 있는 traditional UNIX system structure</sub></p>
 
 Linux도 UNIX 기반으로 유사하게 구성된다. Applications는 보통 glibc standard C library를 통해 kernel의 system-call interface와 통신한다.
 
-![Figure 2.13](@/assets/images/037_Figure_2.13_page_113.png)
+![Figure 2.13](@/assets/images/cs-operating-system-037-figure-2-13-page-113.png)
 <p align="center"><sub>Figure 2.13 · PDF p. 113 · applications, glibc, system-call interface, Linux kernel subsystems, device drivers, hardware의 구조</sub></p>
 
 Monolithic kernel의 장점은 performance다. System-call interface overhead가 작고 kernel 내부 communication이 빠르다. 단점은 implementation과 extension이 어렵다는 점이다. 하나의 address space에 많은 기능이 들어 있으므로 변경 영향 범위가 커질 수 있다. UNIX, Linux, Windows에 monolithic 흔적이 여전히 남아 있는 이유는 이 performance advantage가 크기 때문이다.
@@ -336,7 +336,7 @@ Monolithic approach는 tightly coupled system이다. 한 부분의 변화가 다
 
 Layered approach는 OS를 여러 layers로 나누는 방식이다. Layer 0은 hardware, 가장 높은 layer N은 user interface다. 각 layer는 data structures와 functions를 가진 abstract object처럼 동작하고, higher-level layers는 lower-level layers가 제공하는 operations만 사용한다.
 
-![Figure 2.14](@/assets/images/038_Figure_2.14_page_114.png)
+![Figure 2.14](@/assets/images/cs-operating-system-038-figure-2-14-page-114.png)
 <p align="center"><sub>Figure 2.14 · PDF p. 114 · hardware에서 user interface까지 계층화된 layered operating system</sub></p>
 
 Layered approach의 장점은 construction과 debugging이 단순해진다는 것이다. Layer 1은 hardware만 사용하므로 다른 layers를 신경 쓰지 않고 debug할 수 있고, Layer 1이 correct하다고 가정한 뒤 Layer 2를 debug하는 식으로 올라갈 수 있다. Error가 특정 layer에서 발견되면 아래 layers는 이미 debug되었으므로 문제 범위를 좁힐 수 있다.
@@ -347,7 +347,7 @@ Layered approach의 장점은 construction과 debugging이 단순해진다는 �
 
 Microkernel approach는 kernel에서 nonessential components를 제거하고, 가능한 많은 services를 user-level programs로 옮기는 방식이다. Kernel은 작아지고, 일반적으로 minimal process management, memory management, communication facility 정도만 제공한다.
 
-![Figure 2.15](@/assets/images/039_Figure_2.15_page_115.png)
+![Figure 2.15](@/assets/images/cs-operating-system-039-figure-2-15-page-115.png)
 <p align="center"><sub>Figure 2.15 · PDF p. 115 · application, file system, device driver가 user space service로 존재하고 microkernel이 IPC를 중재하는 구조</sub></p>
 
 Microkernel의 핵심 기능은 client program과 user space services 사이의 communication이다. 예를 들어 client program이 file access를 원하면 file server와 직접 상호작용하지 않고, microkernel을 통한 message passing으로 간접 통신한다.
@@ -385,7 +385,7 @@ Linux LKMs는 주로 device drivers와 file systems 지원에 쓰인다. USB dev
 
 macOS는 desktop/laptop용, iOS는 iPhone/iPad용 mobile OS지만, architecture는 공통점이 많다.
 
-![Figure 2.16](@/assets/images/040_Figure_2.16_page_117.png)
+![Figure 2.16](@/assets/images/cs-operating-system-040-figure-2-16-page-117.png)
 <p align="center"><sub>Figure 2.16 · PDF p. 117 · applications, user experience, application frameworks, core frameworks, Darwin kernel environment로 구성된 Apple OS architecture</sub></p>
 
 Apple OS 계층은 다음처럼 볼 수 있다.
@@ -401,7 +401,7 @@ macOS와 iOS의 차이도 있다. 원문 기준으로 macOS는 desktop/laptop을
 
 Darwin은 Mach microkernel과 BSD UNIX kernel을 주축으로 하는 layered hybrid structure다.
 
-![Figure 2.17](@/assets/images/041_Figure_2.17_page_118.png)
+![Figure 2.17](@/assets/images/cs-operating-system-041-figure-2-17-page-118.png)
 <p align="center"><sub>Figure 2.17 · PDF p. 118 · Mach traps와 BSD(POSIX) system calls를 함께 제공하는 Darwin 구조</sub></p>
 
 Darwin은 일반 UNIX/Linux처럼 단일 system-call interface만 제공하지 않고, Mach system calls(traps)와 BSD system calls(POSIX functionality)를 함께 제공한다. Mach는 memory management, CPU scheduling, IPC(message passing, RPCs) 같은 기본 services를 제공하고, tasks, threads, memory objects, ports 같은 kernel abstractions를 사용한다. 예를 들어 application이 BSD POSIX `fork()`를 호출해 process를 만들면, Mach는 kernel 내부에서 task abstraction으로 이를 표현한다.
@@ -412,7 +412,7 @@ Darwin은 순수 microkernel이 아니다. Microkernel의 message passing overhe
 
 Android는 Open Handset Alliance와 Google 중심으로 개발된 mobile OS다. iOS가 Apple mobile devices 중심의 closed-source OS인 반면, Android는 다양한 mobile platforms에서 동작하며 open-sourced라는 점이 다르다.
 
-![Figure 2.18](@/assets/images/042_Figure_2.18_page_120.png)
+![Figure 2.18](@/assets/images/cs-operating-system-042-figure-2-18-page-120.png)
 <p align="center"><sub>Figure 2.18 · PDF p. 120 · ART VM, Android frameworks, native libraries, HAL, Bionic, Linux kernel로 구성된 Android architecture</sub></p>
 
 Android application은 보통 Java로 작성되지만 표준 Java API가 아니라 Android API를 사용한다. Java source는 bytecode `.class` file로 compile된 뒤 Android 실행 파일 형식인 `.dex` file로 변환된다. Android RunTime(ART)은 mobile devices의 limited memory와 CPU processing capabilities에 맞춘 virtual machine이다.
@@ -519,7 +519,7 @@ Linux의 많은 counter-based tools는 `/proc` file system에서 statistics를 �
 
 Windows Task Manager는 current applications, processes, CPU/memory usage, networking statistics를 제공하는 대표 monitoring tool이다.
 
-![Figure 2.19](@/assets/images/043_Figure_2.19_page_127.png)
+![Figure 2.19](@/assets/images/cs-operating-system-043-figure-2-19-page-127.png)
 <p align="center"><sub>Figure 2.19 · PDF p. 127 · process와 resource usage를 보여주는 Windows 10 Task Manager</sub></p>
 
 #### Tracing
@@ -543,7 +543,7 @@ eBPF는 특정 event, 예를 들어 특정 system call 호출이나 disk I/O lat
 
 BCC는 eBPF의 C interface를 직접 다루기 어렵다는 문제를 줄이기 위해 Python front-end를 제공한다. BCC tool은 Python으로 작성되고, 내부에 eBPF instrumentation과 연결되는 C code를 embed한다. 이 C program은 eBPF instructions로 compile되어 probes 또는 tracepoints를 통해 kernel events를 추적한다.
 
-![Figure 2.20](@/assets/images/044_Figure_2.20_page_129.png)
+![Figure 2.20](@/assets/images/cs-operating-system-044-figure-2-20-page-129.png)
 <p align="center"><sub>Figure 2.20 · PDF p. 129 · Linux kernel의 다양한 영역을 추적하는 BCC와 eBPF tracing tools</sub></p>
 
 예를 들어 BCC `disksnoop.py`는 disk I/O activity를 추적해 timestamp, read/write 여부, bytes, latency(LAT)를 보여준다. `opensnoop -p 1225`는 process ID 1225가 수행하는 `open()` system calls만 추적한다. BCC의 강점은 live production systems에서 critical applications를 실행 중인 상태로도 비교적 안전하고 낮은 overhead로 bottlenecks나 security exploits를 관찰할 수 있다는 점이다.

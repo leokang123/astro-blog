@@ -62,7 +62,7 @@ CLRS는 asymptotic notation을 알고리즘의 running time을 표현하는 데 
 
 Figure 3.1은 Θ, O, Ω의 직관을 한 그림에 모아 보여준다. Θ는 위와 아래에서 동시에 묶는 tight bound이고, O는 위쪽 bound, Ω는 아래쪽 bound다.
 
-![Figure 3.1](@/assets/images/007_figure_3-1_page_66.png)
+![Figure 3.1](@/assets/images/cs-algorithm-007-figure-3-1-page-66.png)
 *Figure 3.1 · PDF p. 66 · Θ, O, Ω notation의 constant-factor bound 직관*
 
 정의에서 중요한 조건은 `n0` 이후만 본다는 점이다. `n < n0`에서 함수들이 어떻게 움직이는지는 asymptotic bound에 영향을 주지 않는다. 또한 `c1`, `c2`, `n0`는 하나로 고정된 “정답”이 아니라 존재하기만 하면 된다. 더 큰 `n0`나 다른 constants도 가능하다.

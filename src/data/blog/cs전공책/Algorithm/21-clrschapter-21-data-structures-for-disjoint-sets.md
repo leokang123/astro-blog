@@ -89,7 +89,7 @@ SAME-COMPONENT(u, v)
 
 Figure 21.1은 이 과정을 그대로 보여 준다. 그래프의 edges를 하나씩 처리하면서 `{a}`, `{b}`, ... 같은 singleton sets가 점차 `{a,b,c,d}`, `{e,f,g}`, `{h,i}`, `{j}`로 합쳐진다.
 
-![Figure 21.1](@/assets/images/116_figure_21-1_page_584.png)
+![Figure 21.1](@/assets/images/cs-algorithm-116-figure-21-1-page-584.png)
 *Figure 21.1 · PDF p. 584 · connected components 계산 중 edge 처리에 따라 disjoint sets가 합쳐지는 과정*
 
 #### 구현에서 놓치기 쉬운 연결
@@ -104,7 +104,7 @@ Graph와 disjoint-set structure는 서로 연결되어 있어야 한다. 실제 
 
 Figure 21.2(a)는 두 set을 linked list로 나타낸다. 예를 들어 `S1`의 representative는 첫 member `f`이고, `FIND-SET(g)`는 `g`의 back pointer로 set object에 간 뒤 `head`의 member `f`를 반환한다.
 
-![Figure 21.2](@/assets/images/117_figure_21-2_page_586.png)
+![Figure 21.2](@/assets/images/cs-algorithm-117-figure-21-2-page-586.png)
 *Figure 21.2 · PDF p. 586 · linked-list representation과 `UNION(g,e)` 후 두 lists를 이어 붙인 결과*
 
 #### Linked-list에서 쉬운 연산
@@ -132,7 +132,7 @@ UNION(x4, x3)   updates 3 objects
 UNION(xn, x_{n-1}) updates n-1 objects
 ```
 
-![Figure 21.3](@/assets/images/118_figure_21-3_page_587.png)
+![Figure 21.3](@/assets/images/cs-algorithm-118-figure-21-3-page-587.png)
 *Figure 21.3 · PDF p. 587 · simple linked-list `UNION`이 총 `Θ(n^2)` pointer updates를 만드는 연산열*
 
 총 pointer update 수는 다음과 같다.
@@ -183,7 +183,7 @@ Set size는 최대 `n`이므로 한 object의 pointer는 최대 `⌈lg n⌉`번 
 
 Figure 21.4(a)는 Figure 21.2의 두 linked-list sets를 forest로 표현한 모습이다. Figure 21.4(b)의 `UNION(e,g)`는 한 tree의 root가 다른 tree의 root를 parent로 가리키게 하여 두 sets를 합친다.
 
-![Figure 21.4](@/assets/images/120_figure_21-4_page_590.png)
+![Figure 21.4](@/assets/images/cs-algorithm-120-figure-21-4-page-590.png)
 *Figure 21.4 · PDF p. 590 · disjoint-set forest에서 두 rooted trees와 `UNION(e,g)` 후 root 연결*
 
 #### Forest에서의 기본 연산
@@ -216,7 +216,7 @@ Rank는 실제 height와 같을 필요가 없다. 특히 path compression이 tre
 
 Figure 21.5는 `FIND-SET(a)` 전후를 보여 준다. 실행 전에는 `a -> b -> c -> d -> e -> f`처럼 root까지 긴 path를 따라 올라가야 하지만, 실행 후에는 path 위의 nodes가 root `f`를 직접 가리킨다.
 
-![Figure 21.5](@/assets/images/121_figure_21-5_page_591.png)
+![Figure 21.5](@/assets/images/cs-algorithm-121-figure-21-5-page-591.png)
 *Figure 21.5 · PDF p. 591 · `FIND-SET(a)` 수행 중 find path의 nodes가 root를 직접 가리키도록 압축되는 과정*
 
 #### Forest pseudocode

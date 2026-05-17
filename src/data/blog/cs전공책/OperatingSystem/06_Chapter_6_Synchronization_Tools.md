@@ -103,7 +103,7 @@ Operating system 내부에서도 race condition은 흔하다. Open-file list, me
 
 Figure 6.1은 typical process가 entry section, critical section, exit section, remainder section으로 반복되는 구조를 보여준다.
 
-![General process structure](@/assets/images/143_Figure_6.1_page_335.png)
+![General process structure](@/assets/images/cs-operating-system-143-figure-6-1-page-335.png)
 <p align="center"><sub>Figure 6.1 · PDF p. 335 · entry section, critical section, exit section, remainder section으로 이루어진 process 구조</sub></p>
 
 Critical-section solution은 세 조건을 만족해야 한다.
@@ -118,7 +118,7 @@ Critical-section solution은 세 조건을 만족해야 한다.
 
 Kernel code도 critical-section problem의 대상이다. 예를 들어 `fork()` system call로 child process를 만들 때 kernel variable `next_available_pid`를 읽고 갱신한다고 하자. 두 processes가 거의 동시에 `fork()`를 호출하면 같은 PID를 둘 다 받을 수 있다.
 
-![Race condition when assigning PID](@/assets/images/144_Figure_6.2_page_336.png)
+![Race condition when assigning PID](@/assets/images/cs-operating-system-144-figure-6-2-page-336.png)
 <p align="center"><sub>Figure 6.2 · PDF p. 336 · 두 fork() 호출이 같은 next_available_pid를 받아 같은 pid가 배정되는 race condition</sub></p>
 
 Single-core 환경에서는 shared variable을 수정하는 동안 interrupts를 disable하면 간단히 race를 막을 수 있다. 현재 instruction sequence가 preemption 없이 순서대로 실행되므로 다른 code가 끼어들 수 없기 때문이다. 하지만 multiprocessor 환경에서는 이 방법이 부적절하다. 모든 processors에 interrupt disable message를 보내야 하므로 critical section 진입이 느려지고, system clock처럼 interrupts에 의존하는 기능에도 영향을 줄 수 있다.
@@ -146,7 +146,7 @@ boolean flag[2];
 - `turn`: critical section에 들어갈 차례가 누구인지 나타낸다. `turn == i`이면 `Pi`가 들어갈 수 있다.
 - `flag[i]`: `Pi`가 critical section에 들어가고 싶다는 의사를 나타낸다.
 
-![Peterson's solution](@/assets/images/145_Figure_6.3_page_338.png)
+![Peterson's solution](@/assets/images/cs-operating-system-145-figure-6-3-page-338.png)
 <p align="center"><sub>Figure 6.3 · PDF p. 338 · process Pi가 flag와 turn으로 critical section 진입을 조정하는 Peterson's solution</sub></p>
 
 `Pi`는 critical section에 들어가기 전에 `flag[i] = true`로 자기 의사를 표시하고, `turn = j`로 상대에게 우선권을 양보한다. 그런 다음 `flag[j] && turn == j`인 동안 기다린다. 즉 상대도 들어가고 싶고 상대 차례라면 기다리고, 그렇지 않으면 critical section에 들어간다.
@@ -172,7 +172,7 @@ int x = 0;
 
 Thread 1은 `while (!flag) ;`로 기다린 뒤 `x`를 출력하고, Thread 2는 `x = 100; flag = true;`를 실행한다. 기대 결과는 Thread 1이 `100`을 출력하는 것이다. 그러나 `x`와 `flag` 사이에 data dependency가 없으므로 Thread 2의 stores가 `flag = true` 다음 `x = 100` 순서로 reorder될 수 있다. 그러면 Thread 1은 `flag`가 true인 것을 보고 빠져나왔지만 `x == 0`을 출력할 수 있다. 반대로 Thread 1 쪽 load가 reorder되어 `x`를 먼저 읽어도 같은 문제가 생긴다.
 
-![Instruction reordering in Peterson's solution](@/assets/images/146_Figure_6.4_page_340.png)
+![Instruction reordering in Peterson's solution](@/assets/images/cs-operating-system-146-figure-6-4-page-340.png)
 <p align="center"><sub>Figure 6.4 · PDF p. 340 · Peterson's solution의 entry assignment가 reorder되어 두 process가 동시에 critical section에 들어갈 수 있는 경우</sub></p>
 
 Figure 6.4는 Peterson's solution에서 entry section의 처음 두 assignments가 reorder되면 두 threads가 동시에 critical section에 있을 수 있음을 보여준다. 결론은 software-only reasoning만으로는 현대 hardware/compiler 환경에서 mutual exclusion을 보장하기 어렵고, 올바른 synchronization tools가 필요하다는 것이다.
@@ -216,31 +216,31 @@ Modern systems는 한 word를 test-and-modify하거나 두 words의 내용을 sw
 
 대표 추상 instruction은 `test_and_set()`과 `compare_and_swap()`이다.
 
-![Atomic test_and_set](@/assets/images/147_Figure_6.5_page_341.png)
+![Atomic test_and_set](@/assets/images/cs-operating-system-147-figure-6-5-page-341.png)
 <p align="center"><sub>Figure 6.5 · PDF p. 341 · target의 기존 값을 반환하고 target을 true로 설정하는 atomic test_and_set() 정의</sub></p>
 
 `test_and_set()`은 target의 old value를 반환하면서 target을 `true`로 바꾼다. 이 전체가 atomic이다. 이를 사용하면 boolean `lock`, 초기값 `false`로 mutual exclusion을 구현할 수 있다.
 
-![Mutual exclusion with test_and_set](@/assets/images/148_Figure_6.6_page_342.png)
+![Mutual exclusion with test_and_set](@/assets/images/cs-operating-system-148-figure-6-6-page-342.png)
 <p align="center"><sub>Figure 6.6 · PDF p. 342 · test_and_set()으로 lock이 false가 될 때까지 spin한 뒤 critical section에 들어가는 구조</sub></p>
 
 Figure 6.6의 핵심은 `while (test_and_set(&lock)) ;`이다. Lock이 이미 잡혀 있으면 `test_and_set()`은 old value `true`를 반환하므로 계속 기다린다. Lock이 풀린 순간 old value `false`를 반환하고 동시에 lock을 `true`로 만들기 때문에, 한 process만 critical section에 들어간다.
 
 `compare_and_swap (CAS)`는 세 operands를 사용한다.
 
-![Atomic compare_and_swap](@/assets/images/149_Figure_6.7_page_342.png)
+![Atomic compare_and_swap](@/assets/images/cs-operating-system-149-figure-6-7-page-342.png)
 <p align="center"><sub>Figure 6.7 · PDF p. 342 · value가 expected와 같을 때만 new_value로 바꾸고 old value를 반환하는 atomic CAS</sub></p>
 
 `compare_and_swap(value, expected, new_value)`는 `*value == expected`이면 `*value = new_value`로 바꾸고, 항상 original `*value`를 반환한다. 이 동작도 atomic이다.
 
-![Mutual exclusion with CAS](@/assets/images/150_Figure_6.8_page_343.png)
+![Mutual exclusion with CAS](@/assets/images/cs-operating-system-150-figure-6-8-page-343.png)
 <p align="center"><sub>Figure 6.8 · PDF p. 343 · compare_and_swap(&lock, 0, 1)이 성공할 때 critical section에 들어가는 CAS lock</sub></p>
 
 CAS lock에서는 global `lock`을 0으로 초기화한다. 처음 `compare_and_swap(&lock, 0, 1)`를 성공시킨 process가 lock을 1로 바꾸고 critical section에 들어간다. 다른 process들은 lock이 0이 아니므로 실패하며 spin한다. Exit section에서 `lock = 0`으로 되돌리면 다음 process가 들어갈 수 있다.
 
 하지만 Figure 6.8의 단순 CAS algorithm은 `mutual exclusion`은 만족해도 `bounded waiting`을 만족하지 않는다. 어떤 process가 계속 CAS 경쟁에서 밀리면 starvation이 가능하다.
 
-![Bounded waiting with CAS](@/assets/images/151_Figure_6.9_page_343.png)
+![Bounded waiting with CAS](@/assets/images/cs-operating-system-151-figure-6-9-page-343.png)
 <p align="center"><sub>Figure 6.9 · PDF p. 343 · waiting array와 cyclic scan으로 bounded waiting을 보장하는 CAS 기반 mutual exclusion</sub></p>
 
 Figure 6.9는 `waiting[n]` array와 `lock`을 사용해 bounded waiting을 추가한다. Process가 critical section을 나갈 때 `waiting` array를 `(i + 1, i + 2, ..., n - 1, 0, ..., i - 1)` 순서로 scan하고, entry section에서 기다리는 첫 process를 다음 진입자로 지정한다. 따라서 기다리는 process는 최대 `n - 1` turns 안에 들어갈 수 있다.
@@ -273,7 +273,7 @@ Hardware-based solutions는 복잡하고 application programmer가 직접 쓰기
 
 Mutex lock은 critical section을 보호한다. Process는 critical section에 들어가기 전에 `acquire()`로 lock을 얻고, 나올 때 `release()`로 lock을 반환한다. Mutex lock 내부에는 lock이 사용 가능한지를 나타내는 boolean variable `available`이 있다. Lock이 available이면 `acquire()`가 성공하고 lock은 unavailable이 된다. 이미 unavailable이면 process는 lock이 release될 때까지 기다린다.
 
-![Mutex lock structure](@/assets/images/152_Figure_6.10_page_346.png)
+![Mutex lock structure](@/assets/images/cs-operating-system-152-figure-6-10-page-346.png)
 <p align="center"><sub>Figure 6.10 · PDF p. 346 · acquire lock 후 critical section에 들어가고 release lock 후 remainder section으로 돌아가는 mutex 구조</sub></p>
 
 기본 `acquire()`와 `release()`는 다음처럼 표현된다.
@@ -420,12 +420,12 @@ Binary semaphore `mutex`를 사용한 critical section 보호를 생각해 보�
 
 `abstract data type (ADT)`는 data와 그 data를 조작하는 functions를 encapsulate한다. `monitor type`은 여기에 mutual exclusion을 포함한 ADT다. Monitor 안에는 shared state variables와 programmer-defined operations가 있고, monitor가 보장하는 중요한 성질은 한 번에 하나의 process만 monitor 내부에서 active할 수 있다는 것이다.
 
-![Monitor syntax](@/assets/images/153_Figure_6.11_page_352.png)
+![Monitor syntax](@/assets/images/cs-operating-system-153-figure-6-11-page-352.png)
 <p align="center"><sub>Figure 6.11 · PDF p. 352 · shared variables, operations, initialization code를 캡슐화한 monitor pseudocode syntax</sub></p>
 
 Monitor의 representation은 외부 processes가 직접 사용할 수 없다. Monitor function은 monitor 내부 variables와 formal parameters에만 접근하고, monitor local variables는 monitor functions만 접근한다. 이 encapsulation 덕분에 programmer가 모든 operation마다 `wait(mutex)`와 `signal(mutex)`를 직접 쓰지 않아도 monitor 내부 mutual exclusion이 유지된다.
 
-![Schematic view of a monitor](@/assets/images/154_Figure_6.12_page_353.png)
+![Schematic view of a monitor](@/assets/images/cs-operating-system-154-figure-6-12-page-353.png)
 <p align="center"><sub>Figure 6.12 · PDF p. 353 · entry queue를 통해 한 process만 monitor operations 안에서 active해지는 구조</sub></p>
 
 하지만 monitor만으로는 모든 synchronization scheme을 표현하기 부족하다. 어떤 condition이 만족될 때까지 monitor 내부에서 기다려야 할 수 있다. 이를 위해 `condition variable`을 둔다.
@@ -443,7 +443,7 @@ x.signal();
 
 `x.wait()`는 호출한 process를 suspend한다. 이 process는 다른 process가 `x.signal()`을 호출할 때까지 기다린다. `x.signal()`은 condition `x`에서 suspend된 process 하나를 resume한다. Suspend된 process가 없으면 아무 효과가 없다. 이 점은 semaphore의 `signal()`과 다르다. Semaphore `signal()`은 value를 증가시켜 state를 바꾸지만, monitor condition `signal()`은 기다리는 process가 없으면 lost signal처럼 아무 상태도 남기지 않는다.
 
-![Monitor with condition variables](@/assets/images/155_Figure_6.13_page_354.png)
+![Monitor with condition variables](@/assets/images/cs-operating-system-155-figure-6-13-page-354.png)
 <p align="center"><sub>Figure 6.13 · PDF p. 354 · condition variables x, y별 waiting queue가 monitor 내부 synchronization을 보강하는 구조</sub></p>
 
 `x.signal()` 호출 시 condition `x`에서 기다리던 process `Q`가 있고, signal을 호출한 process `P`도 monitor 안에 있다면 문제가 생긴다. Monitor는 한 번에 하나만 active해야 하므로 `P`와 `Q`가 동시에 monitor 안에서 실행될 수 없다. 두 semantics가 가능하다.
@@ -486,7 +486,7 @@ x.wait(c);
 
 여기서 `c`는 wait 실행 시 evaluation되는 integer expression이며, `priority number`로 저장된다. `x.signal()`이 실행되면 가장 작은 priority number를 가진 process가 다음으로 resume된다.
 
-![ResourceAllocator monitor](@/assets/images/156_Figure_6.14_page_356.png)
+![ResourceAllocator monitor](@/assets/images/cs-operating-system-156-figure-6-14-page-356.png)
 <p align="center"><sub>Figure 6.14 · PDF p. 356 · single resource를 busy flag와 condition x로 할당하는 ResourceAllocator monitor</sub></p>
 
 Figure 6.14의 `ResourceAllocator` monitor는 single resource를 competing processes 사이에 배정한다. Process가 resource를 요청할 때 사용 예정 최대 시간 `time`을 넘기고, monitor는 가장 짧은 time-allocation request를 가진 process에 resource를 배정할 수 있다. 사용 sequence는 다음처럼 의도된다.

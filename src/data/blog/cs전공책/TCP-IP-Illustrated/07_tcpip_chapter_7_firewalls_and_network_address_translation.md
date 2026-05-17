@@ -56,7 +56,7 @@ firewall의 공통 역할은 traffic을 선별하는 것이지만, 어디에서 
 
 전형적인 packet-filtering firewall은 `inside`, `outside`, 그리고 optional `DMZ` interface를 가진 router다. inside에서 outside로 나가는 traffic은 비교적 넓게 허용하고, outside에서 inside로 들어오는 traffic은 보수적으로 막는 구성이 흔하다. DMZ에는 Internet에서 접근해야 하는 public-facing server를 두되, 허용된 service만 통과시킨다.
 
-![Figure 7-1](@/assets/images/111_figure_7_1_page_340.png)
+![Figure 7-1](@/assets/images/cs-tcp-ip-illustrated-111-figure-7-1-page-340.png)
 *Figure 7-1 · PDF p. 340 · inside/outside/DMZ 사이에서 ACL로 traffic을 선별하는 packet-filtering firewall*
 
 ACL은 "어떤 packet을 버릴지/통과시킬지"를 적은 policy list다. 예를 들어 outside에서 들어오는 임의 TCP connection은 막고, inside client가 시작한 DNS/HTTP/HTTPS에 대한 reply traffic이나 DMZ server로 향하는 특정 service만 허용할 수 있다. 이 모델은 단순하지만, "packet이 어떤 connection의 일부인가"라는 state 판단이 들어가면 rule 설계가 훨씬 중요해진다.
@@ -65,7 +65,7 @@ ACL은 "어떤 packet을 버릴지/통과시킬지"를 적은 policy list다. �
 
 `proxy firewall`은 일반 IP router처럼 packet을 그대로 forwarding하지 않는다. firewall 자체가 multihomed Internet host가 되어 내부 client와 connection을 맺고, 외부 server와 별도 connection을 맺은 뒤 application layer에서 중계한다. 그래서 proxy firewall은 `Application-Layer Gateway (ALG)`로 이해하는 편이 정확하다.
 
-![Figure 7-2](@/assets/images/112_figure_7_2_page_341.png)
+![Figure 7-2](@/assets/images/cs-tcp-ip-illustrated-112-figure-7-2-page-341.png)
 *Figure 7-2 · PDF p. 341 · proxy firewall이 TCP/UDP association을 terminate하고 service별 proxy agent로 중계하는 구조*
 
 proxy firewall에서는 내부 client가 실제 외부 server가 아니라 proxy에 접속하도록 설정되는 경우가 많다. firewall의 IP forwarding은 대개 꺼져 있고, 외부 interface는 globally routable address, 내부 interface는 private address를 가진다. 이 구조는 private address realm 사용과도 잘 맞는다.
@@ -86,7 +86,7 @@ NAT의 핵심 비용은 middlebox가 packet을 단순 forwarding하지 않는다
 
 기본적인 NAT forwarding은 다음처럼 보인다. 내부 host가 밖으로 나갈 때 source IP address가 NAT router의 public address로 바뀌고, 돌아오는 packet은 destination IP address가 다시 내부 private address로 바뀐다.
 
-![Figure 7-3](@/assets/images/113_figure_7_3_page_343.png)
+![Figure 7-3](@/assets/images/cs-tcp-ip-illustrated-113-figure-7-3-page-343.png)
 *Figure 7-3 · PDF p. 343 · private address realm과 public Internet 사이에서 NAT가 address를 변환하는 구조*
 
 대부분 NAT는 address translation과 packet filtering을 함께 수행한다. 특히 NAT state와 filtering policy가 얽힌다. 예를 들어 내부에서 시작한 flow의 reply는 허용하지만, 외부에서 처음 들어오는 unsolicited packet은 막는 식이다. 이 때문에 NAT는 자연스러운 firewall-like behavior를 제공하지만, NAT마다 filtering granularity와 state handling이 달라 application 입장에서는 예측하기 어려운 환경이 된다.
@@ -156,7 +156,7 @@ IPv6에서 NAT가 필요한지는 논쟁적이다. IPv6는 address space가 크�
 
 NAT 구현은 address와 port mapping을 어떻게 만드는지에 따라 크게 달라진다. 원문은 내부 host `X:x`가 외부 endpoint `Y1:y1`, `Y2:y2`와 통신할 때 NAT가 어떤 external endpoint `X1':x1'`, `X2':x2'`를 할당하는지로 behavior를 설명한다.
 
-![Figure 7-5](@/assets/images/114_figure_7_5_page_350.png)
+![Figure 7-5](@/assets/images/cs-tcp-ip-illustrated-114-figure-7-5-page-350.png)
 *Figure 7-5 · PDF p. 350 · NAT mapping이 내부/외부 endpoint 중 무엇에 의존하는지 비교하는 모델*
 
 | NAT behavior | translation behavior | 의미 |
@@ -195,7 +195,7 @@ port forwarding은 사실상 항상 존재하는 static NAT mapping이다. 예�
 
 `hairpinning` 또는 `NAT loopback`은 같은 private side에 있는 client가 server의 private address가 아니라 server의 external public mapping을 사용해 접근할 때 NAT가 traffic을 다시 inside로 꺾어 보내는 기능이다.
 
-![Figure 7-6](@/assets/images/115_figure_7_6_page_354.png)
+![Figure 7-6](@/assets/images/cs-tcp-ip-illustrated-115-figure-7-6-page-354.png)
 *Figure 7-6 · PDF p. 354 · 같은 NAT 내부의 client가 server의 external mapping을 사용해 접근하는 hairpinning*
 
 예를 들어 내부 host `X1`이 내부 server `X2:x2`의 private address를 알면 직접 연결하면 된다. 하지만 DNS나 rendezvous server를 통해 `X2':x2'`라는 public mapping만 알고 있으면, packet은 NAT로 향한다. NAT는 `X2':x2' -> X2:x2` mapping을 보고 packet을 다시 내부로 전달한다.
@@ -234,7 +234,7 @@ NAT mapping이 만들어지면 특정 application flow가 NAT를 통과할 수 �
 4. S가 A에게 B의 external address/port를, B에게 A의 external address/port를 알려 준다.
 5. A와 B가 서로의 external endpoint로 직접 packet을 보내 각 NAT의 filtering 조건을 통과하려 한다.
 
-![Figure 7-7](@/assets/images/116_figure_7_7_page_357.png)
+![Figure 7-7](@/assets/images/cs-tcp-ip-illustrated-116-figure-7-7-page-357.png)
 *Figure 7-7 · PDF p. 357 · rendezvous server가 NAT 뒤 client들의 external endpoint 정보를 교환해 hole punching을 돕는 구조*
 
 hole punching이 성공하려면 NAT behavior가 중요하다. 모든 NAT가 `endpoint-independent mapping/filtering`에 가깝다면 server S를 통해 배운 external endpoint로 direct communication이 가능할 수 있다. 하지만 address-dependent 또는 address-and-port-dependent mapping/filtering이 있으면, NAT가 S가 아닌 peer에서 온 packet을 거부하거나 다른 mapping을 만들어 직접 통신이 실패할 수 있다. double NAT 환경에서는 어떤 server를 기준으로 보느냐에 따라 "외부 address"가 달라지는 문제도 생긴다.
@@ -263,7 +263,7 @@ STUN의 기본 역할은 client가 NAT 바깥에서 어떤 IP address/port로 �
 
 STUN은 UDP, TCP, TCP/TLS 위에서 동작할 수 있다. 기본 port는 UDP/TCP `3478`, TCP/TLS `3479`다. STUN base protocol의 transaction은 response가 필요한 `request/response transaction`과 response가 없는 `indication transaction`으로 나뉜다.
 
-![Figure 7-8](@/assets/images/117_figure_7_8_page_360.png)
+![Figure 7-8](@/assets/images/cs-tcp-ip-illustrated-117-figure-7-8-page-360.png)
 *Figure 7-8 · PDF p. 360 · STUN header: message type, length, magic cookie, transaction ID, attributes*
 
 STUN message는 항상 처음 2 bits가 0이고, 기본 header는 20 bytes다. 주요 field는 다음과 같다.
@@ -306,7 +306,7 @@ STUN은 authentication과 message integrity도 제공한다. `short-term credent
 
 TURN client는 보통 public Internet의 TURN server에 접속하고, server는 client를 대신해 peer와 통신할 `relayed transport address`를 할당한다. client 자신이 NAT 밖에서 어떻게 보이는지는 `server-reflexive transport address`이고, TURN server가 peer에게 알려 줄 중계 endpoint가 relayed transport address다. peer들도 각각 host transport address와 server-reflexive transport address를 가질 수 있다. 이 주소들을 어떻게 교환할지는 TURN 자체의 범위가 아니며, 보통 ICE 같은 signaling/framework가 담당한다.
 
-![Figure 7-11](@/assets/images/120_figure_7_11_page_366.png)
+![Figure 7-11](@/assets/images/cs-tcp-ip-illustrated-120-figure-7-11-page-366.png)
 *Figure 7-11 · PDF p. 366 · TURN server가 client와 peer 사이 traffic을 relay하는 last-resort NAT traversal 구조*
 
 TURN server에는 `allocation`이 만들어진다. allocation은 multiway NAT binding과 비슷하며, client에게 할당된 unique relayed transport address와 그 주소로 통신할 peer 관련 state를 포함한다. client-server 구간은 UDP, TCP, TCP/TLS가 가능하고, server-peer 구간은 UDP 중심이다. 확장으로 TCP와 IPv6, IPv4/IPv6 간 relaying도 지원된다.
@@ -457,7 +457,7 @@ IPv4 address depletion 이후 IPv6 도입은 빨라졌지만, IPv4와 IPv6는 �
 
 `Dual-Stack Lite (DS-Lite)`는 service provider가 core network를 IPv6-only로 운영하면서도 customer에게 IPv4 connectivity를 제공하기 위한 architecture다. 핵심은 customer side에서 IPv4 traffic을 IPv6 tunnel에 실어 provider edge로 보내고, provider edge에서 SPNAT를 수행하는 것이다.
 
-![Figure 7-16](@/assets/images/125_figure_7_16_page_379.png)
+![Figure 7-16](@/assets/images/cs-tcp-ip-illustrated-125-figure-7-16-page-379.png)
 *Figure 7-16 · PDF p. 379 · IPv6-only provider core에서 B4와 AFTR가 IPv4-in-IPv6 tunnel과 SPNAT를 제공하는 DS-Lite 구조*
 
 DS-Lite의 구성 요소는 다음과 같다.

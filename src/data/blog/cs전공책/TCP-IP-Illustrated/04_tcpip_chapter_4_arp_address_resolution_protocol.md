@@ -64,7 +64,7 @@ direct delivery는 IP datagram의 목적지가 sender와 같은 IP prefix에 있
 7. 같은 broadcast domain의 모든 system이 request를 받는다. IP를 쓰지 않는 host도 frame을 받으면 적극적으로 discard해야 한다. 요청된 IPv4 address를 가진 host만 ARP reply를 보낸다.
 8. ARP reply는 보통 broadcast가 아니라 requester에게 unicast로 직접 보내진다. requester는 받은 mapping으로 처음 보내려던 IP datagram을 Ethernet frame에 담아 전송한다.
 
-![Figure 4-1](@/assets/images/054_figure_4_1_page_207.png)
+![Figure 4-1](@/assets/images/cs-tcp-ip-illustrated-054-figure-4-1-page-207.png)
 *Figure 4-1 · PDF p. 207 · 같은 broadcast domain에서 ARP request가 broadcast되고 대상 host만 ARP reply를 보내는 direct delivery 구조*
 
 ARP의 중요한 제약은 일반적인 형태가 broadcast network를 가정한다는 점이다. ARP request는 "모두에게 물어보기"로 시작하므로, link layer가 한 frame을 모든 attached device에 전달할 수 있어야 한다. NBMA(Non-Broadcast Multiple Access) network에서는 더 복잡한 address mapping protocol이 필요할 수 있다.
@@ -93,7 +93,7 @@ P flag는 proxy ARP 설정과 연결된다. 즉, 어떤 host가 자기 자신이
 
 ARP request/reply는 Ethernet frame payload 안에 들어간다. Ethernet/IPv4 mapping의 경우 Ethernet header 14 bytes 뒤에 ARP protocol field가 오며, ARP 자체의 처음 8 bytes는 address type에 일반적인 형식이고, 뒤쪽 sender/target address field는 protocol과 hardware address size에 따라 길이가 달라진다.
 
-![Figure 4-2](@/assets/images/055_figure_4_2_page_209.png)
+![Figure 4-2](@/assets/images/cs-tcp-ip-illustrated-055-figure-4-2-page-209.png)
 *Figure 4-2 · PDF p. 209 · IPv4 address를 48-bit Ethernet MAC address로 mapping할 때의 ARP frame format*
 
 Ethernet/IPv4에서 ARP frame의 주요 field는 다음처럼 해석된다.

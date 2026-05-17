@@ -6,7 +6,7 @@ description: "코덱스를 처음 써보면서 했던 처음의 생각은 \"지�
 tags:
   - "일반"
   - "vscode확장"
-banner: "@/assets/images/waterfallgirl.jpg"
+banner: "@/assets/images/misc-vscode-extension-waterfallgirl.jpg"
 ---
 
 # Programmers-helper 확장 만들기
@@ -70,12 +70,12 @@ banner: "@/assets/images/waterfallgirl.jpg"
 
 #### 앱 화면
 
-![CleanShot_20260504164802](@/assets/images/cleanshot_20260504164802.png)
+![CleanShot_20260504164802](@/assets/images/misc-vscode-extension-cleanshot-20260504164802.png)
 
 #### 충돌 처리
 
-![CleanShot_20260504174509](@/assets/images/cleanshot_20260504174509.png)
+![CleanShot_20260504174509](@/assets/images/misc-vscode-extension-cleanshot-20260504174509.png)
 
 #### 옵션
 
-![CleanShot_20260504174737](@/assets/images/cleanshot_20260504174737.png)
+![CleanShot_20260504174737](@/assets/images/misc-vscode-extension-cleanshot-20260504174737.png)

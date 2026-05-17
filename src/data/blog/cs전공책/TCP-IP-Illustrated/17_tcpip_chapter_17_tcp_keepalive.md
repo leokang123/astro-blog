@@ -77,7 +77,7 @@ RFC1122가 요구하는 핵심 제약은 두 가지다. 첫째, keepalive time�
 
 Figure 17-1은 이 동작을 가장 잘 보여준다. Connection이 idle해진 뒤 ACK을 받는 동안에는 7초마다 keepalive가 나간다. Cable을 뽑은 뒤에는 keepalive ACK이 돌아오지 않으므로 sender는 1초 간격으로 빠르게 probe를 반복하고, 총 10개의 unacknowledged keepalives 뒤에 connection을 종료한다.
 
-![Figure 17-1](@/assets/images/307_figure_17_1_page_837.png)
+![Figure 17-1](@/assets/images/cs-tcp-ip-illustrated-307-figure-17-1-page-837.png)
 *Figure 17-1 · PDF p. 837 · server가 crash/down된 것처럼 보일 때 keepalive probe가 반복되고 최종 RST로 종료되는 흐름*
 
 Trace에서 packets 1, 3, 5, 7, 14, 16, 18, 20, 22-31이 keepalive이고, packets 2, 4, 6, 8, 15, 17, 19, 21이 대응 ACK이다. ACK이 정상적으로 돌아오는 동안에는 7초 간격이 유지된다. Packet 22 이후 ACK이 없자 packet 23부터 1초 간격으로 probe가 반복된다. 마지막 packet 32는 connection termination을 알리는 RST지만, server cable이 빠져 있으므로 server는 이 RST를 듣지 못한다.
@@ -96,7 +96,7 @@ Write failed: Connection reset by peer
 
 두 번째 예시는 peer가 crash한 뒤 reboot까지 끝난 경우다. 처음에는 이전 예시처럼 TCP keepalive가 켜진 connection을 만들고, `KeepAliveTime`을 120,000ms, 즉 2분으로 둔다. 첫 keepalive probe는 정상 ACK된다. 그 뒤 server를 network에서 분리하고 reboot한 다음 다시 연결한다. 이때 server의 TCP stack은 reboot 전 connection state를 잃었으므로, 같은 4-tuple에 대해 들어온 keepalive probe를 기존 connection의 일부로 인식하지 못한다.
 
-![Figure 17-2](@/assets/images/308_figure_17_2_page_839.png)
+![Figure 17-2](@/assets/images/cs-tcp-ip-illustrated-308-figure-17-2-page-839.png)
 *Figure 17-2 · PDF p. 839 · server가 reboot되어 connection state를 잃은 뒤 keepalive probe에 RST로 응답하는 흐름*
 
 Figure 17-2에서 client는 time 123.47에 첫 keepalive probe를 보내고 ACK을 받는다. 이후 server가 disconnect/reboot/reconnect된다. 120초 뒤 time 243.47에 두 번째 keepalive probe가 server에 도달하지만, server는 이 connection을 알지 못하므로 RST를 보낸다. Client는 RST를 보고 connection이 더 이상 active하지 않음을 알며, 사용자에게는 앞 예시와 같은 “Connection reset by peer”류 error가 보인다.
@@ -107,7 +107,7 @@ Figure 17-2에서 client는 time 123.47에 첫 keepalive probe를 보내고 ACK�
 
 세 번째 예시는 server host 자체는 crash하지 않았지만, keepalive probe가 오가는 동안 network path가 unreachable해진 경우다. 중간 router가 crash했거나 phone line/WAN link가 일시적으로 내려간 상황과 같다. 원문은 Mac OS X client에서 `net.inet.tcp.keepidle=75000`으로 첫 keepalive time을 75초로 줄이고, `sock -K`로 LDAP server(port 389)에 연결한 뒤 network를 끊는 방식으로 이를 보여준다.
 
-![Figure 17-3](@/assets/images/309_figure_17_3_page_840.png)
+![Figure 17-3](@/assets/images/cs-tcp-ip-illustrated-309-figure-17-3-page-840.png)
 *Figure 17-3 · PDF p. 840 · WAN path가 끊긴 뒤 keepalive probe가 ACK 없이 반복되고 timeout으로 종료되는 흐름*
 
 Figure 17-3에서는 initial three-way handshake 뒤 connection이 idle 상태가 된다. 약 75초에 첫 keepalive가 나가고 ACK된다. 이것은 `net.inet.tcp.keepidle` 값으로 트리거된 정상 상태 확인이다. 곧이어 network가 끊기고, 다음 keepalive는 75초 뒤, 즉 `net.inet.tcp.keepintvl` 값에 맞춰 time 150에 전송된다. 이후 packets 7-14도 ACK 없이 반복된다. Server는 실제로 살아 있지만 network가 packet을 전달하지 못하므로 client 입장에서는 server crash와 구분할 수 없다.

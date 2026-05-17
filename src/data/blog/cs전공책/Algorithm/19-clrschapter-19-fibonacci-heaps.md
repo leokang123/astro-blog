@@ -49,7 +49,7 @@ tags:
 
 Figure 19.1은 binary heap과 Fibonacci heap의 asymptotic bounds를 비교한다. Binary heap은 `UNION`이 약하고 `DECREASE-KEY`가 `Θ(lg n)`이지만, Fibonacci heap은 이 둘을 amortized constant time으로 만든다.
 
-![Figure 19.1](@/assets/images/102_figure_19-1_page_527.png)
+![Figure 19.1](@/assets/images/cs-algorithm-102-figure-19-1-page-527.png)
 *Figure 19.1 · PDF p. 527 · binary heap과 Fibonacci heap의 mergeable-heap operation 비용 비교*
 
 | Operation | Binary heap worst-case | Fibonacci heap amortized | 차이의 의미 |
@@ -74,7 +74,7 @@ Fibonacci heap은 `min-heap-ordered rooted trees`의 collection이다. 각 tree�
 
 Figure 19.2(a)는 5개의 min-heap-ordered trees와 14 nodes를 가진 Fibonacci heap을 보여 준다. Dashed line이 root list이고, key 3을 가진 root가 `H.min`이다. Black nodes는 marked nodes이며, 이 heap의 potential은 `5 + 2*3 = 11`이다.
 
-![Figure 19.2](@/assets/images/103_figure_19-2_page_529.png)
+![Figure 19.2](@/assets/images/cs-algorithm-103-figure-19-2-page-529.png)
 *Figure 19.2 · PDF p. 529 · root list, child list, marked nodes, `H.min`을 가진 Fibonacci heap 구조*
 
 #### Node representation
@@ -183,7 +183,7 @@ FIB-HEAP-INSERT(H, x)
 
 Figure 19.3은 key 21을 가진 node가 새 singleton tree가 되어 root list에 붙는 모습을 보여 준다. Existing tree 구조는 건드리지 않는다. 필요하면 `H.min`만 갱신한다.
 
-![Figure 19.3](@/assets/images/104_figure_19-3_page_532.png)
+![Figure 19.3](@/assets/images/cs-algorithm-104-figure-19-3-page-532.png)
 *Figure 19.3 · PDF p. 532 · 새 node를 singleton tree로 만들어 Fibonacci heap root list에 삽입*
 
 Potential 변화는 단순하다. Insertion 후 tree 수가 하나 늘고 marked nodes 수는 그대로다.
@@ -267,12 +267,12 @@ FIB-HEAP-EXTRACT-MIN(H)
 
 Figure 19.4는 `EXTRACT-MIN`의 전체 흐름을 보여 준다. 먼저 minimum node가 제거되고 그 children이 roots가 된다. 이후 같은 degree의 roots가 발견될 때마다 더 작은 key를 가진 root가 parent가 되도록 link한다.
 
-![Figure 19.4](@/assets/images/106_figure_19-4_page_535.png)
+![Figure 19.4](@/assets/images/cs-algorithm-106-figure-19-4-page-535.png)
 *Figure 19.4 · PDF p. 535 · `FIB-HEAP-EXTRACT-MIN`에서 minimum 제거 후 roots를 degree별로 link하는 과정*
 
 Figure 19.4의 이어지는 부분은 consolidation이 끝난 뒤 array `A`에서 root list를 재구성하고 새 `H.min`을 찾는 마지막 단계를 보여 준다.
 
-![Figure 19.4 continued](@/assets/images/107_figure_19-4_page_536.png)
+![Figure 19.4 continued](@/assets/images/cs-algorithm-107-figure-19-4-page-536.png)
 *Figure 19.4 · PDF p. 536 · `CONSOLIDATE` 완료 후 root list 재구성과 새 `H.min` 결정*
 
 #### Consolidation: degree가 같은 roots를 하나로 합치기
@@ -412,7 +412,7 @@ CASCADING-CUT(H, y)
 
 Figure 19.5는 두 번의 `FIB-HEAP-DECREASE-KEY`를 보여 준다. 첫 번째는 key 46을 15로 줄여 해당 node만 root가 되고 parent 24가 marked된다. 두 번째는 key 35를 5로 줄이며 node 26과 24가 이미 marked 상태라 연쇄적으로 cut된다.
 
-![Figure 19.5](@/assets/images/108_figure_19-5_page_542.png)
+![Figure 19.5](@/assets/images/cs-algorithm-108-figure-19-5-page-542.png)
 *Figure 19.5 · PDF p. 542 · `DECREASE-KEY`에서 cut과 cascading cut이 root list와 mark 상태를 바꾸는 과정*
 
 #### 왜 cascading cut이 `O(1)` amortized인가
@@ -578,7 +578,7 @@ k <= log_φ n
 
 Problem 19-2는 `binomial tree`와 `binomial heap`을 다룬다. Figure 19.6은 binomial tree `B_k`의 recursive definition과 `B_0`부터 `B_4`까지의 형태를 보여 준다.
 
-![Figure 19.6](@/assets/images/109_figure_19-6_page_549.png)
+![Figure 19.6](@/assets/images/cs-algorithm-109-figure-19-6-page-549.png)
 *Figure 19.6 · PDF p. 549 · binomial tree `B_k`의 recursive 구조와 degree/height 관계*
 
 Binomial tree `B_k`는 두 개의 `B_{k-1}`을 link해 만들며, root degree는 `k`, node 수는 `2^k`, height는 `k`다. Binomial heap은 degree별 binomial tree가 최대 하나씩 있는 heap이다. 이는 `EXTRACT-MIN`의 consolidation 결과와 닮아 있다.

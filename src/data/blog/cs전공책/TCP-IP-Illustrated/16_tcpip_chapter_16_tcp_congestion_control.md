@@ -67,7 +67,7 @@ BDP = bottleneck bandwidth * RTT
 
 TCP congestion control은 ACK receipt에 의해 clocked된다. steady state에서 ACK 하나가 sender에 도착했다는 것은 network 안에 있던 packet 하나 이상이 receiver에 도착했고, 그만큼 network 안에 새 packet을 넣을 기회가 생겼다는 뜻이다. 이것이 ACK clock 또는 self-clocking이다.
 
-![Figure 16-1](@/assets/images/286_figure_16_1_page_770.png)
+![Figure 16-1](@/assets/images/cs-tcp-ip-illustrated-286-figure-16-1-page-770.png)
 *Figure 16-1 · PDF p. 770 · packet conservation과 ACK clock이 sender 전송 타이밍을 만드는 구조*
 
 Figure 16-1의 핵심은 conservation of packets다. Bottleneck link를 지나며 data packet은 시간적으로 벌어지고, receiver는 그 간격에 맞춰 ACK를 생성한다. ACK도 reverse path를 따라 sender에 도착하면서 비슷한 pacing signal을 제공한다. sender는 ACK arrival을 “새 packet을 넣어도 되는 시점”으로 사용하므로, steady state TCP는 network 자체가 clock을 제공하는 형태가 된다.
@@ -91,7 +91,7 @@ k ~= log2(W)
 
 Delayed ACK로 두 packet마다 ACK 하나가 오면 증가 속도는 여전히 exponential이지만 더 느려진다. 일부 TCP가 slow start 동안 quick acknowledgments(quickack mode)를 쓰는 이유도 ACK clock을 더 촘촘히 세워 slow start 진행을 원활히 하기 위해서다.
 
-![Figure 16-2](@/assets/images/287_figure_16_2_page_773.png)
+![Figure 16-2](@/assets/images/cs-tcp-ip-illustrated-287-figure-16-2-page-773.png)
 *Figure 16-2 · PDF p. 773 · slow start에서 ACK마다 전송 가능량이 늘어 exponential growth가 생기는 구조*
 
 Slow start가 너무 커진 `cwnd`로 network를 압박해 packet loss를 만나면, TCP는 `cwnd`를 크게 줄이고 slow start threshold(`ssthresh`)를 기준으로 다음 단계인 congestion avoidance로 넘어간다. `ssthresh`는 loss가 없던 마지막 operating window에 대한 TCP의 기억, 즉 optimal window size에 대한 lower bound 추정값처럼 동작한다.
@@ -108,7 +108,7 @@ cwnd(t+1) = cwnd(t) + SMSS * SMSS / cwnd(t)
 
 예를 들어 `cwnd = k * SMSS`라면 ACK 하나가 올 때마다 증가량은 대략 `(1/k) * SMSS`다. 한 RTT 동안 k개의 ACK가 오면 전체적으로 약 1 SMSS 증가한다. 이 때문에 congestion avoidance는 additive increase라고도 부른다.
 
-![Figure 16-3](@/assets/images/288_figure_16_3_page_774.png)
+![Figure 16-3](@/assets/images/cs-tcp-ip-illustrated-288-figure-16-3-page-774.png)
 *Figure 16-3 · PDF p. 774 · congestion avoidance에서 ACK마다 작은 비율로 증가해 linear growth가 되는 흐름*
 
 Congestion avoidance는 packet loss가 congestion을 뜻한다는 가정에 의존한다. wired network에서는 대체로 맞지만, wireless error가 loss를 만드는 환경에서는 congestion이 아닌데도 TCP가 `cwnd`를 줄여 throughput을 잃을 수 있다. 또한 high-capacity/high-BDP network에서는 linear increase가 너무 느려 큰 `cwnd`까지 도달하는 데 많은 RTT가 필요하다. 이 한계가 뒤의 HSTCP, BIC, CUBIC, delay-based 방식이 등장한 배경이다.
@@ -254,7 +254,7 @@ ECN-Echo가 있으면 실제 congestion signal일 수 있으므로 reduction을 
 
 tcptrace summary에서 sender는 총 2,621,440 unique bytes를 보냈고, retransmitted data는 37,800 bytes, 27 retransmitted packets였다. 전체 전송 시간은 약 100.476s이고 average goodput은 약 26,090 B/s, 약 209Kb/s다. 이 숫자는 이후 Figure 16-4 이후의 time-sequence graph에서 slow start, local congestion, SACK recovery, timeout, undo 같은 사건을 해석하는 기준이 된다.
 
-![Figure 16-4](@/assets/images/289_figure_16_4_page_787.png)
+![Figure 16-4](@/assets/images/cs-tcp-ip-illustrated-289-figure-16-4-page-787.png)
 *Figure 16-4 · PDF p. 787 · 2.5MB upload trace에서 sequence progress, receiver window, ACK progress, 11개 congestion event를 함께 표시한 그래프*
 
 Figure 16-4의 y-axis는 relative TCP sequence number, x-axis는 time이다. 짙은 선은 sender가 보낸 sequence range를 나타내고, 아래 선은 sender가 지금까지 본 highest ACK, 위 선은 receiver가 accept할 수 있는 highest advertised window edge다. 짙은 선의 slope는 특정 시간 구간의 achieved data rate를 뜻한다. 선이 lower right로 움직이면 retransmission이 있었다는 신호다.
@@ -282,7 +282,7 @@ Figure 16-4에서 time 5.512 근처에 sender pause가 생기고 time 6.162 이�
 
 Linux TCP는 이런 local congestion을 감지하면 Congestion Window Reducing(CWR) state에 들어갈 수 있다. 이 예시에서는 `ssthresh = cwnd/2 = 49 packets`로 줄이고, `cwnd = min(cwnd, flight size + sent burst)`에 해당하는 식으로 87 packets 근처로 낮춘 뒤, ACK 두 개당 `cwnd`를 1 packet 줄이는 rate-halving식 동작을 한다. 그래서 time 8.364 근처까지 `cwnd`가 66 packets로 내려가며 sending rate가 줄어든다.
 
-![Figure 16-8](@/assets/images/293_figure_16_8_page_793.png)
+![Figure 16-8](@/assets/images/cs-tcp-ip-illustrated-293-figure-16-8-page-793.png)
 *Figure 16-8 · PDF p. 793 · sender rate가 path forwarding rate를 넘으면 queue가 차 RTT가 증가하고, sender가 느려지면 queue가 비며 RTT가 감소하는 흐름*
 
 Figure 16-8은 local congestion 이후 RTT가 어떻게 변하는지 보여준다. Sender가 bottleneck capacity보다 빠르게 보내면 router queue가 차서 RTT가 증가한다. Sender가 CWR state에서 rate를 낮추면 network에서 data가 빠져나가는 속도가 새로 들어오는 속도보다 커지고, queue가 drain되며 RTT가 내려간다. 다만 TCP는 “pipe를 비우는 것” 자체가 목표가 아니라 “pipe를 full로 유지하되 queue를 과도하게 채우지 않는 것”이 목표다.
@@ -299,7 +299,7 @@ CWR state에서 delayed ACK가 섞이면 “두 ACK가 도착하면 `cwnd`는 2 
 
 첫 fast retransmission은 time 21.209에 발생한다. ACK number는 690201에 머물러 있고, duplicate ACK 하나가 SACK block `[698601,700001]`을 싣고 와서 receiver가 뒤쪽 한 packet을 이미 받았음을 알려준다. 이때 sender는 sequence 690201부터의 packet을 retransmit한다.
 
-![Figure 16-12](@/assets/images/297_figure_16_12_page_797.png)
+![Figure 16-12](@/assets/images/cs-tcp-ip-illustrated-297-figure-16-12-page-797.png)
 *Figure 16-12 · PDF p. 797 · 첫 fast retransmission과 SACK block 기반 recovery 시작*
 
 이 시점에서 `cwnd = 52`, `ssthresh`는 49에서 26으로 줄고 TCP는 Recovery state로 들어간다. Recovery는 cumulative ACK가 recovery point인 763000 이상을 ACK할 때까지 유지된다.
@@ -326,7 +326,7 @@ Timeout은 fast retransmit보다 더 심각한 신호로 취급된다. Duplicate
 
 Event 7의 first timeout은 time 62.486에 sequence 1773801 retransmission으로 나타난다. 이때 sender는 `cwnd = 1`, `ssthresh = 5`로 slow start에 들어가지만, timestamp evidence로 timeout이 spurious였다고 판단해 Eifel-like response로 상태를 되돌린다.
 
-![Figure 16-15](@/assets/images/300_figure_16_15_page_802.png)
+![Figure 16-15](@/assets/images/cs-tcp-ip-illustrated-300-figure-16-15-page-802.png)
 *Figure 16-15 · PDF p. 802 · first timeout이 spurious로 판정되어 congestion control state가 undo되는 흐름*
 
 Spurious 판정의 핵심은 TSOPT timestamp다. Retransmission을 덮는 ACK의 TSER 값이 retransmission의 TSV보다 이르면, ACK가 실제 retransmitted packet이 아니라 original transmission을 보고 생성되었음을 뜻한다. 즉 “hole”은 진짜 hole이 아니었고 RTO가 잘못 발생했다. 그래서 Linux TCP는 `cwnd`와 `ssthresh`를 이전 값 10으로 복원하고 normal state/congestion avoidance로 돌아간다.
@@ -335,7 +335,7 @@ Event 8은 다시 fast retransmit이며, SACK block과 duplicate ACK로 Disorder
 
 Event 11은 undo되지 않는 timeout이다. time 88.929에 retransmission timer가 만료되어 sequence 2185401을 retransmit하고, sender는 slow start로 진행한다.
 
-![Figure 16-16](@/assets/images/301_figure_16_16_page_804.png)
+![Figure 16-16](@/assets/images/cs-tcp-ip-illustrated-301-figure-16-16-page-804.png)
 *Figure 16-16 · PDF p. 804 · undo되지 않는 retransmission timeout 뒤 slow start가 재개되는 흐름*
 
 Figure 16-17은 이 timeout 뒤 ACK 하나가 두세 packet을 liberate하는 slow start 패턴이 다시 나타남을 보여준다. `cwnd`가 `ssthresh = 5`에 도달하면 sender는 congestion avoidance로 넘어간다.
@@ -389,7 +389,7 @@ High-speed, large-BDP network에서는 standard TCP congestion avoidance의 fixe
 
 HSTCP(HighSpeed TCP)는 `cwnd`가 일정 기준, 예를 들어 Low_Window = 38 MSS-size segments보다 커진 뒤에는 standard TCP response function을 바꿔 더 aggressive하게 동작한다. Packet drop rate가 충분히 낮고 window가 큰 영역에서는 더 큰 throughput을 허용하지만, drop rate가 큰 일반 환경에서는 standard TCP와 같은 response를 유지한다.
 
-![Figure 16-19](@/assets/images/304_figure_16_19_page_810.png)
+![Figure 16-19](@/assets/images/cs-tcp-ip-illustrated-304-figure-16-19-page-810.png)
 *Figure 16-19 · PDF p. 810 · HSTCP가 낮은 packet drop rate와 큰 window 영역에서 더 aggressive한 response function을 쓰는 모습*
 
 HSTCP는 additive increase와 multiplicative decrease 계수를 고정하지 않고 current window size의 함수로 둔다.
@@ -423,7 +423,7 @@ W(t) = C(t - K)^3 + Wmax
 
 여기서 `Wmax`는 마지막 window reduction 전의 window size, `t`는 마지막 reduction 이후 경과 시간, `C`는 상수, `K`는 loss가 없으면 다시 `Wmax`에 도달하는 데 걸리는 시간이다.
 
-![Figure 16-20](@/assets/images/305_figure_16_20_page_815.png)
+![Figure 16-20](@/assets/images/cs-tcp-ip-illustrated-305-figure-16-20-page-815.png)
 *Figure 16-20 · PDF p. 815 · CUBIC window growth가 Wmax 전에는 concave, 이후에는 convex로 capacity를 탐색하는 구조*
 
 CUBIC의 좋은 점은 ACK arrival pattern이 아니라 elapsed time since last reduction을 중심으로 window를 조정한다는 것이다. 이 때문에 RTT가 짧은 flow가 ACK를 더 자주 받아 과도하게 유리해지는 문제를 줄이는 데 도움이 된다. `W(t) < Wmax` 영역에서는 saturation point를 조심스럽게 찾아가고, `W(t) > Wmax`가 되면 더 적극적으로 max probing을 한다.
@@ -496,7 +496,7 @@ Buffer bloat는 network device의 buffer가 너무 커서 packet drop signal이 
 
 특히 home/small office의 residential gateway나 access point uplink에서 문제가 잘 드러난다. Uplink bandwidth는 수백 Kb/s에서 몇 Mb/s인데 commodity router buffer가 수십-수백 KB 이상이면, 대용량 upload가 buffer를 가득 채운 동안 interactive application의 packet도 긴 queue 뒤에 서게 된다.
 
-![Figure 16-21](@/assets/images/306_figure_16_21_page_821.png)
+![Figure 16-21](@/assets/images/cs-tcp-ip-illustrated-306-figure-16-21-page-821.png)
 *Figure 16-21 · PDF p. 821 · buffer size와 link rate에 따라 fully congested queue가 만드는 queueing delay*
 
 Figure 16-21의 의미는 단순하다. 같은 buffer size라도 link rate가 낮으면 queue를 비우는 데 오래 걸린다. Residential upload rate 범위에서 수백 KB buffer가 꽉 차 있으면 multiple-second latency가 생길 수 있다. Interactive application은 대체로 one-way delay가 150ms 이하일 때 좋은 사용자 경험을 제공하므로, 큰 competing upload 하나가 voice/video/game/remote desktop 같은 traffic을 크게 망칠 수 있다.

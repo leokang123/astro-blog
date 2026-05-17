@@ -33,12 +33,12 @@ Chapter 5의 질문은 “이 table들이 어떻게 계산되고, 유지되고, 
 
 `per-router control`에서는 모든 router가 routing algorithm을 실행한다. 각 router의 routing component가 다른 routers의 routing component와 정보를 주고받고, 그 결과로 자기 forwarding table을 계산한다. Internet에서 오래 사용된 전통적인 방식이고, 이 장의 OSPF/BGP가 이 model에 속한다.
 
-![Figure 5.1](@/assets/images/150_figure_5-1_page_389.png)
+![Figure 5.1](@/assets/images/cs-computer-network-150-figure-5-1-page-389.png)
 *Figure 5.1 · PDF p. 389 · 각 router 내부 routing algorithm이 control plane에서 상호작용해 forwarding table을 만든다*
 
 `logically centralized control`에서는 controller가 각 router의 forwarding/flow table을 계산하고 배포한다. router 내부의 `control agent (CA)`는 기능이 작다. CA는 controller와 protocol로 통신하고, controller가 내려주는 명령을 수행한다. CA끼리는 직접 routing 정보를 교환하지 않으며, path 계산에도 적극 참여하지 않는다.
 
-![Figure 5.2](@/assets/images/151_figure_5-2_page_390.png)
+![Figure 5.2](@/assets/images/cs-computer-network-151-figure-5-2-page-390.png)
 *Figure 5.2 · PDF p. 390 · logically centralized controller가 각 router의 CA와 통신해 flow table을 관리한다*
 
 여기서 `logically centralized`는 실제 구현이 반드시 단일 서버라는 뜻이 아니다. 외부에서는 하나의 central service처럼 접근되지만, 내부적으로는 fault tolerance와 scalability를 위해 여러 servers로 구현될 수 있다. SDN controller도 이 의미에서 logically centralized다. 중요한 점은 “control decision의 논리적 관점이 중앙화되어 있다”는 것이지, 물리적으로 한 장비에 모든 것이 몰려 있다는 뜻이 아니다.
@@ -51,7 +51,7 @@ control plane이 per-router 방식이든 SDN 방식이든, packet이 실제로 �
 
 routing 문제는 graph `G = (N, E)`로 모델링한다. `N`은 nodes의 집합, `E`는 edges의 집합이다. network-layer routing에서는 보통 node가 router이고, edge가 routers 사이의 physical link다. BGP 같은 inter-domain routing에서는 node가 network/AS를 뜻하고, edge는 networks 사이의 direct connectivity 또는 `peering`을 뜻할 수 있다.
 
-![Figure 5.3](@/assets/images/152_figure_5-3_page_392.png)
+![Figure 5.3](@/assets/images/cs-computer-network-152-figure-5-3-page-392.png)
 *Figure 5.3 · PDF p. 392 · routers와 links를 nodes/edges로 추상화한 routing graph*
 
 edge cost `c(x, y)`는 link 길이, link speed, monetary cost 등으로 정할 수 있다. `(x, y)`가 edge가 아니면 `c(x, y) = infinity`로 본다. 이 장의 기본 설명은 undirected graph를 가정하지만, 알고리즘은 방향별 cost가 다른 directed links에도 확장할 수 있다. node `y`가 node `x`에 직접 연결되어 있으면 `y`는 `x`의 neighbor다.
@@ -86,14 +86,14 @@ routing algorithms는 세 축으로 분류할 수 있다.
 
 Dijkstra의 핵심 루프는 “아직 확정되지 않은 node 중 `D(w)`가 최소인 `w`를 골라 `N'`에 넣고, `w`의 neighbors에 대해 `D(v) = min(D(v), D(w) + c(w, v))`로 갱신”하는 것이다. k번째 iteration이 끝나면 k개의 destination nodes에 대한 least-cost paths가 확정된다. 종료 후 각 destination의 predecessor chain을 거꾸로 따라가면 full path를 복원할 수 있고, source router의 forwarding table에는 각 destination으로 가는 `next-hop`만 저장하면 된다.
 
-![Figure 5.4](@/assets/images/153_figure_5-4_page_397.png)
+![Figure 5.4](@/assets/images/cs-computer-network-153-figure-5-4-page-397.png)
 *Figure 5.4 · PDF p. 397 · node u 기준 least-cost paths와 forwarding table의 next-hop 관계*
 
 단순 구현에서 Dijkstra는 매 iteration마다 아직 확정되지 않은 nodes 중 minimum `D(w)`를 찾아야 하므로 worst-case complexity가 `O(n^2)`다. heap 같은 자료구조를 사용하면 minimum search를 logarithmic time으로 줄일 수 있다. routing protocol 설명에서 중요한 포인트는 복잡도 자체보다 “global state를 수집한 뒤 각 router가 shortest-path tree를 계산한다”는 구조다.
 
 LS algorithm의 주의점은 `load-sensitive` metric을 쓸 때 `route oscillation`이 생길 수 있다는 점이다. link cost가 그 link의 현재 traffic load나 delay를 반영하면, routers가 동시에 “혼잡한 곳을 피하자”고 판단하면서 traffic을 반대편으로 몰고, 다음 계산 때 다시 되돌리는 진동이 발생할 수 있다.
 
-![Figure 5.5](@/assets/images/154_figure_5-5_page_398.png)
+![Figure 5.5](@/assets/images/cs-computer-network-154-figure-5-5-page-398.png)
 *Figure 5.5 · PDF p. 398 · congestion-sensitive routing에서 traffic load와 route choice가 서로 밀어내며 oscillation을 만드는 예*
 
 oscillation을 줄이는 방법 중 하나는 모든 routers가 LS algorithm을 동시에 실행하지 않게 만드는 것이다. 하지만 같은 period를 가진 routers가 시간이 지나며 `self-synchronize`될 수 있으므로, link advertisement 전송 시간을 randomize하는 방식이 필요할 수 있다. 이 때문에 실제 Internet의 OSPF/BGP 같은 algorithms는 current congestion을 link cost에 직접 넣지 않는 load-insensitive 성격을 갖는다.
@@ -120,14 +120,14 @@ Dx(y) = min over v { c(x, v) + Dv(y) }  for each destination y
 
 node x는 직접 link cost가 바뀌거나 neighbor로부터 distance vector update를 받으면 위 식으로 자기 vector를 갱신한다. 자기 vector가 바뀌면 그 새 vector를 neighbors에게 보낸다. 충분히 update가 교환되면 각 `Dx(y)`는 실제 least-cost `dx(y)`로 수렴한다.
 
-![Figure 5.6](@/assets/images/155_figure_5-6_page_402.png)
+![Figure 5.6](@/assets/images/cs-computer-network-155-figure-5-6-page-402.png)
 *Figure 5.6 · PDF p. 402 · DV algorithm에서 neighbors의 vectors를 받아 distance table을 갱신하는 흐름*
 
 DV가 감소한 link cost를 전파할 때는 보통 빠르게 수렴한다. 예를 들어 y-x link cost가 4에서 1로 줄면, y가 자기 vector를 갱신해 z에게 알리고, z도 더 싼 path를 계산한 뒤 update하면 짧은 교환 뒤 quiescent state에 도달한다. 책은 이를 “good news travels fast”로 설명한다.
 
 문제는 link cost 증가나 link failure다. y-x cost가 4에서 60으로 증가했는데 z가 예전 정보로 “나는 x까지 5로 갈 수 있다”고 y에게 알려 둔 상태라면, y는 z를 통해 x로 가는 cost 6을 믿고 z로 보낸다. 그런데 z도 y를 통해 x로 간다고 생각하면 y-z 사이에 `routing loop`가 생긴다. 이후 y와 z가 서로 더 큰 cost를 조금씩 주고받으며 수렴하는데, 이 현상이 `count-to-infinity problem`이다.
 
-![Figure 5.7](@/assets/images/156_figure_5-7_page_404.png)
+![Figure 5.7](@/assets/images/cs-computer-network-156-figure-5-7-page-404.png)
 *Figure 5.7 · PDF p. 404 · link cost 감소는 빠르게 전파되지만 cost 증가는 count-to-infinity를 만들 수 있다*
 
 `poisoned reverse`는 인접한 두 node 사이의 특정 loop를 막기 위한 기법이다. z가 destination x로 가기 위해 y를 next-hop으로 쓰고 있다면, z는 y에게 “내가 x까지 가는 cost는 infinity”라고 광고한다. 즉 실제로는 y를 통해 x에 갈 수 있더라도, y가 다시 z를 통해 x로 우회하려는 잘못된 판단을 하지 않도록 reverse path를 poison한다. 다만 poisoned reverse는 2-node loop에는 효과적이지만, 세 개 이상의 nodes가 얽힌 loop까지 일반적으로 해결하지는 못한다.
@@ -213,14 +213,14 @@ BGP가 각 router에게 제공하는 기능은 두 가지다.
 
 BGP advertisement는 AS 전체가 추상적으로 말하는 것이 아니라, routers 사이의 BGP sessions를 통해 전달된다. AS edge에서 다른 AS router와 직접 연결된 router를 `gateway router`라 하고, AS 내부 host/router에만 연결된 router를 `internal router`라 한다.
 
-![Figure 5.8](@/assets/images/157_figure_5-8_page_412.png)
+![Figure 5.8](@/assets/images/cs-computer-network-157-figure-5-8-page-412.png)
 *Figure 5.8 · PDF p. 412 · AS3의 prefix x를 AS2와 AS1로 광고하는 기본 BGP 예*
 
 예를 들어 AS3에 prefix `x`가 있으면, AS3는 AS2에게 “AS3 x”라는 reachability를 알린다. AS2는 AS1에게 “AS2 AS3 x”라고 광고한다. 이때 AS1은 x의 존재뿐 아니라 x로 가려면 AS2와 AS3를 차례로 지나야 한다는 AS-level path도 배운다.
 
 BGP routers는 semi-permanent TCP connection으로 routing information을 교환하며, BGP는 TCP port `179`를 사용한다. 이 TCP connection과 그 위의 BGP messages를 `BGP connection`이라고 한다. 두 AS 사이 gateway routers를 잇는 BGP connection은 `external BGP (eBGP)`이고, 같은 AS 내부 routers 사이의 BGP session은 `internal BGP (iBGP)`다.
 
-![Figure 5.9](@/assets/images/158_figure_5-9_page_413.png)
+![Figure 5.9](@/assets/images/cs-computer-network-158-figure-5-9-page-413.png)
 *Figure 5.9 · PDF p. 413 · AS 사이 eBGP와 AS 내부 iBGP sessions가 prefix reachability를 전파한다*
 
 prefix x가 AS3에서 AS1 전체로 전파되는 흐름은 다음과 같다.
@@ -249,7 +249,7 @@ eBGP는 AS boundary를 넘는 advertisement를 담당하고, iBGP는 AS 내부 r
 | `NEXT-HOP` | AS-PATH가 시작되는 router interface의 IP address | inter-AS route와 intra-AS path를 연결 |
 | `local preference` | AS 내부 policy로 정하는 preference 값 | BGP route selection에서 가장 먼저 적용 |
 
-![Figure 5.10](@/assets/images/159_figure_5-10_page_414.png)
+![Figure 5.10](@/assets/images/cs-computer-network-159-figure-5-10-page-414.png)
 *Figure 5.10 · PDF p. 414 · AS1이 prefix x로 가는 두 BGP routes와 서로 다른 NEXT-HOP을 배우는 상황*
 
 `AS-PATH`는 route advertisement가 AS를 통과할 때마다 해당 AS가 자기 ASN을 앞에 붙여 만든다. router가 advertisement에서 자기 AS를 발견하면 loop를 막기 위해 그 advertisement를 reject한다.
@@ -258,7 +258,7 @@ eBGP는 AS boundary를 넘는 advertisement를 담당하고, iBGP는 AS 내부 r
 
 `hot potato routing`은 가능한 routes 중 `NEXT-HOP router`까지의 intra-AS cost가 가장 작은 route를 고르는 방식이다. 목표는 packet을 자기 AS 밖으로 가능한 빨리 던지는 것이다. 그래서 end-to-end cost를 보지 않고 자기 AS 내부 cost만 최소화하는 selfish algorithm 성격이 있다. 같은 AS 내부의 서로 다른 routers가 같은 prefix에 대해 서로 다른 AS paths를 선택할 수도 있다.
 
-![Figure 5.11](@/assets/images/160_figure_5-11_page_415.png)
+![Figure 5.11](@/assets/images/cs-computer-network-160-figure-5-11-page-415.png)
 *Figure 5.11 · PDF p. 415 · 외부 prefix를 forwarding table에 넣을 때 BGP와 intra-AS routing이 함께 쓰이는 단계*
 
 실제 BGP route-selection algorithm은 hot potato만 쓰지 않는다. 같은 prefix에 대해 여러 accepted routes가 있으면 대략 다음 순서로 elimination한다.
@@ -276,7 +276,7 @@ eBGP는 AS boundary를 넘는 advertisement를 담당하고, iBGP는 AS 내부 r
 
 `IP-anycast`는 여러 지리적 위치에 같은 service를 복제해 두고, 사용자를 BGP 관점에서 가까운 instance로 보내는 기법이다. CDN이나 DNS처럼 같은 content/record를 여러 locations에 복제하는 경우가 대표적이다.
 
-![Figure 5.12](@/assets/images/161_figure_5-12_page_418.png)
+![Figure 5.12](@/assets/images/cs-computer-network-161-figure-5-12-page-418.png)
 *Figure 5.12 · PDF p. 418 · 여러 locations가 같은 IP address를 BGP로 광고하고 사용자를 가까운 server로 유도하는 IP-anycast*
 
 configuration 단계에서 service provider는 여러 servers에 같은 IP address를 부여하고, 각 location에서 그 IP address를 BGP로 광고한다. Internet routers는 이를 “같은 IP prefix로 가는 여러 paths”로 보고 자기 BGP route-selection algorithm에 따라 best path를 고른다. 이후 client가 그 common IP address로 packet을 보내면, routers는 BGP가 고른 “가까운” location으로 packet을 forward한다.
@@ -287,7 +287,7 @@ CDN 예시는 개념을 보여 주기 좋지만, 실제 CDNs는 TCP connection�
 
 BGP에서는 `routing policy`가 route selection을 압도할 수 있다. route-selection algorithm의 첫 단계가 local preference인 이유가 여기에 있다. policy는 “어떤 traffic을 carry할 것인가”, “어떤 neighbor에게 어떤 routes를 advertise할 것인가”를 결정한다.
 
-![Figure 5.13](@/assets/images/162_figure_5-13_page_419.png)
+![Figure 5.13](@/assets/images/cs-computer-network-162-figure-5-13-page-419.png)
 *Figure 5.13 · PDF p. 419 · provider/customer 관계에서 selective route advertisement로 transit traffic을 제어하는 BGP policy 예*
 
 access ISP나 customer network는 자기 network가 source 또는 destination인 traffic만 처리하고, 다른 provider들 사이의 transit traffic을 대신 운반하지 않으려 한다. multi-homed access ISP X가 provider B와 C에 모두 연결되어 있더라도, X가 “나는 나 자신 외의 destination으로 가는 path가 없다”고 광고하면 B나 C는 X를 통해 다른 AS로 traffic을 보내지 않는다. 이것이 selective route advertisement로 stub network behavior를 구현하는 방식이다.
@@ -323,7 +323,7 @@ SDN architecture의 네 가지 특징은 다음과 같다.
 | external control functions | control software가 switches 내부가 아니라 remote servers에서 실행 |
 | programmable network | network-control applications가 controller APIs로 forwarding, access control, load balancing 등을 program |
 
-![Figure 5.14](@/assets/images/163_figure_5-14_page_424.png)
+![Figure 5.14](@/assets/images/cs-computer-network-163-figure-5-14-page-424.png)
 *Figure 5.14 · PDF p. 424 · SDN-controlled switches, SDN controller, network-control applications의 계층 구조*
 
 SDN은 network functionality의 `unbundling`이다. 기존 router/switch는 forwarding hardware, control-plane software, routing protocol implementation이 한 vendor의 vertically integrated product로 묶여 있었다. SDN에서는 data-plane switches, SDN controller, network-control applications가 분리되며, 서로 다른 vendors/organizations가 각각 제공할 수 있다. 이 분리는 routing, access control, firewalling, load balancing 같은 functions를 software applications로 바꾸어 더 빠르게 실험하고 배포하게 만든다.
@@ -332,7 +332,7 @@ SDN은 network functionality의 `unbundling`이다. 기존 router/switch는 forw
 
 SDN control plane은 크게 `SDN controller`와 `SDN network-control applications`로 나뉜다. controller는 단일 중앙 서버처럼 보이지만, 실제로는 fault tolerance, high availability, performance를 위해 distributed servers로 구현되는 경우가 많다. 따라서 logically centralized이면서 physically distributed인 구조다.
 
-![Figure 5.15](@/assets/images/164_figure_5-15_page_426.png)
+![Figure 5.15](@/assets/images/cs-computer-network-164-figure-5-15-page-426.png)
 *Figure 5.15 · PDF p. 426 · communication, state management, northbound API로 나뉘는 SDN controller 구성*
 
 controller 기능은 세 layers로 정리할 수 있다.
@@ -367,7 +367,7 @@ OpenFlow의 의미는 “routing algorithm 자체”가 아니라 “controller�
 
 SDN에서 link-state routing을 구현하면 traditional OSPF와 구조가 달라진다. Dijkstra's algorithm은 switches 안에서 실행되지 않고, controller 위의 network-control application으로 실행된다. switches는 link-state updates를 서로 flooding하지 않고 controller에게 보낸다.
 
-![Figure 5.16](@/assets/images/165_figure_5-16_page_429.png)
+![Figure 5.16](@/assets/images/cs-computer-network-165-figure-5-16-page-429.png)
 *Figure 5.16 · PDF p. 429 · SDN controller에서 link-state change가 routing application과 flow table update로 이어지는 흐름*
 
 link `s1-s2`가 down된 상황에서 SDN control plane은 다음 흐름으로 동작한다.
@@ -400,7 +400,7 @@ ICMP는 흔히 IP의 일부처럼 취급되지만, 구조적으로는 IP 바로 
 
 ICMP message는 `type`과 `code` field를 갖고, error를 발생시킨 원래 IP datagram의 header와 처음 8 bytes를 포함한다. 이렇게 해야 sender가 어떤 datagram 때문에 error가 발생했는지 식별할 수 있다.
 
-![Figure 5.19](@/assets/images/168_figure_5-19_page_435.png)
+![Figure 5.19](@/assets/images/cs-computer-network-168-figure-5-19-page-435.png)
 *Figure 5.19 · PDF p. 435 · ping, unreachable, TTL expired 등 대표 ICMP type/code*
 
 `ping`은 ICMP의 가장 잘 알려진 사용 예다. ping client는 destination host에게 `type 8 code 0` ICMP echo request를 보낸다. destination host는 이를 보고 `type 0 code 0` ICMP echo reply를 돌려준다. 많은 TCP/IP implementations에서는 ping server가 user process가 아니라 operating system 안에 직접 구현되어 있다.
@@ -421,7 +421,7 @@ network는 links, switches, routers, hosts, middleboxes, protocols가 얽힌 복
 
 network management framework의 핵심 구성요소는 managing server, managed device, data, agent, protocol이다.
 
-![Figure 5.20](@/assets/images/169_figure_5-20_page_438.png)
+![Figure 5.20](@/assets/images/cs-computer-network-169-figure-5-20-page-438.png)
 *Figure 5.20 · PDF p. 438 · managing server/controller, agents, managed devices, device data의 관계*
 
 | 구성요소 | 의미 |
@@ -464,7 +464,7 @@ SNMPv3의 PDU types는 다음처럼 이해하면 된다.
 | `InformRequest` | manager -> manager | 다른 managing entity에게 remote MIB 정보를 알림 |
 | `SNMPv2-Trap` | agent -> manager | exceptional event를 비동기적으로 알림 |
 
-![Figure 5.21](@/assets/images/170_figure_5-21_page_441.png)
+![Figure 5.21](@/assets/images/cs-computer-network-170-figure-5-21-page-441.png)
 *Figure 5.21 · PDF p. 441 · get/set PDU와 trap PDU의 header 및 variable binding 구조*
 
 SNMP PDU는 여러 transport protocols에 실릴 수 있지만, 일반적으로 UDP datagram payload로 운반된다. UDP는 unreliable이므로 request나 response가 반드시 도착한다는 보장은 없다. SNMP PDU의 `request ID`는 managing server가 request와 response를 matching하고 lost request/reply를 감지하는 데 쓰인다. 다만 SNMP standard는 retransmission 절차를 강제하지 않고, managing server가 “responsibly” 재전송 여부와 빈도를 결정하도록 둔다.
@@ -477,7 +477,7 @@ SNMPv3는 SNMPv2에 security와 administration capabilities를 더한 것으로 
 
 NETCONF는 `RPC (remote procedure call)` paradigm을 사용한다. protocol messages와 device configurations는 XML로 encoding되고, TLS over TCP 같은 secure, connection-oriented session 위에서 교환된다.
 
-![Figure 5.22](@/assets/images/171_figure_5-22_page_444.png)
+![Figure 5.22](@/assets/images/cs-computer-network-171-figure-5-22-page-444.png)
 *Figure 5.22 · PDF p. 444 · NETCONF session에서 hello, rpc/rpc-reply, notification, close-session이 오가는 흐름*
 
 NETCONF session의 흐름은 다음과 같다.

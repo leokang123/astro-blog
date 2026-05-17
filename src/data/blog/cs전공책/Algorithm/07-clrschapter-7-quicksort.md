@@ -76,7 +76,7 @@ PARTITION(A, p, r)
 
 `i`는 pivot 이하 영역의 끝을 가리키고, `j`는 아직 검사 중인 element를 가리킨다. Loop가 끝나면 `i+1`은 pivot보다 큰 첫 위치가 되고, pivot `A[r]`를 그 위치와 swap하면 pivot이 최종 partition 위치 `q`에 놓인다.
 
-![Figure 7.1](@/assets/images/021_figure_7-1_page_193.png)
+![Figure 7.1](@/assets/images/cs-algorithm-021-figure-7-1-page-193.png)
 *Figure 7.1 · PDF p. 193 · `PARTITION`이 pivot `A[r]`를 기준으로 sample array를 나누는 과정*
 
 Figure 7.1은 pivot `4`를 기준으로 `<= x` 영역과 `> x` 영역이 커지는 과정을 보여준다. Loop 중에는 아직 처리하지 않은 영역도 남아 있고, 마지막에 pivot을 두 영역 사이로 옮긴다.
@@ -85,7 +85,7 @@ Figure 7.1은 pivot `4`를 기준으로 `<= x` 영역과 `> x` 영역이 커지�
 
 `PARTITION`의 correctness는 네 영역을 유지하는 loop invariant로 설명한다.
 
-![Figure 7.2](@/assets/images/022_figure_7-2_page_194.png)
+![Figure 7.2](@/assets/images/cs-algorithm-022-figure-7-2-page-194.png)
 *Figure 7.2 · PDF p. 194 · `PARTITION` loop 중 유지되는 네 영역*
 
 Loop lines 3-6의 각 iteration 시작 시점에 다음이 성립한다.
@@ -105,7 +105,7 @@ Maintenance:
 
 각 iteration에서 `A[j]`를 검사한다.
 
-![Figure 7.3](@/assets/images/023_figure_7-3_page_195.png)
+![Figure 7.3](@/assets/images/cs-algorithm-023-figure-7-3-page-195.png)
 *Figure 7.3 · PDF p. 195 · `PARTITION` 한 iteration의 두 경우: `A[j] > x`와 `A[j] <= x`*
 
 두 경우가 있다.
@@ -214,7 +214,7 @@ T(n) = T(9n/10) + T(n/10) + cn
 
 이 split은 꽤 불균형해 보이지만, 전체 running time은 여전히 `O(n lg n)`이다.
 
-![Figure 7.4](@/assets/images/024_figure_7-4_page_197.png)
+![Figure 7.4](@/assets/images/cs-algorithm-024-figure-7-4-page-197.png)
 *Figure 7.4 · PDF p. 197 · 매번 9-to-1 split이 나도 level cost가 `O(n)`이고 height가 `Θ(lg n)`인 recursion tree*
 
 Figure 7.4의 요점은 다음과 같다.
@@ -238,7 +238,7 @@ Average case를 논하려면 input permutations가 어떻게 나타나는지 가
 
 Random input에서 partition이 매 level마다 똑같은 방식으로 나뉘지는 않는다. 어떤 split은 good split이고, 어떤 split은 bad split이다. 원문은 직관을 위해 good split과 bad split이 alternating한다고 생각해 보라고 한다.
 
-![Figure 7.5](@/assets/images/025_figure_7-5_page_198.png)
+![Figure 7.5](@/assets/images/cs-algorithm-025-figure-7-5-page-198.png)
 *Figure 7.5 · PDF p. 198 · bad split 다음 good split이 오면 두 level의 비용이 balanced split 한 level처럼 흡수되는 직관*
 
 Figure 7.5(a)는 root에서 worst-case split `(0, n-1)`이 나오고, 다음 level에서 size `n-1` subarray가 best-case split으로 갈라지는 경우다. 두 level의 combined partition cost는

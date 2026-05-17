@@ -59,7 +59,7 @@ a_i <= a_j
 
 Comparison sort의 모든 가능한 실행 흐름은 `decision tree`로 표현할 수 있다. Internal node는 어떤 두 elements를 비교하는지 나타내고, left/right branch는 comparison 결과에 따른 다음 비교를 나타낸다. Leaf는 알고리즘이 결정한 final ordering, 즉 permutation을 나타낸다.
 
-![Figure 8.1](@/assets/images/026_figure_8-1_page_213.png)
+![Figure 8.1](@/assets/images/cs-algorithm-026-figure-8-1-page-213.png)
 *Figure 8.1 · PDF p. 213 · 세 원소 insertion sort의 decision tree와 가능한 `3!` permutations*
 
 Figure 8.1에서 internal node `i:j`는 `a_i <= a_j` 비교를 뜻한다. 어떤 input에 대해 sorting algorithm을 실행하면 root에서 시작해 comparison 결과에 따라 leaf까지 내려간다. Leaf에는 예를 들어 `<3,1,2>`처럼 sorted order가 permutation으로 표시된다.
@@ -151,7 +151,7 @@ COUNTING-SORT(A, B, k)
 12     C[A[j]] = C[A[j]] - 1
 ```
 
-![Figure 8.2](@/assets/images/027_figure_8-2_page_216.png)
+![Figure 8.2](@/assets/images/cs-algorithm-027-figure-8-2-page-216.png)
 *Figure 8.2 · PDF p. 216 · `COUNTING-SORT`에서 count array `C`가 frequency에서 prefix sum으로 바뀌고 output `B`를 채우는 과정*
 
 Figure 8.2는 세 단계를 보여준다.
@@ -230,7 +230,7 @@ Counting sort가 `Ω(n lg n)` lower bound를 깨는 이유는 comparison sort가
 
 이 과정을 마치면 전체 `d`-digit keys가 정렬된다.
 
-![Figure 8.3](@/assets/images/028_figure_8-3_page_219.png)
+![Figure 8.3](@/assets/images/cs-algorithm-028-figure-8-3-page-219.png)
 *Figure 8.3 · PDF p. 219 · 3자리 숫자들을 least significant digit부터 stable sort하는 radix sort 과정*
 
 Figure 8.3에서는 3-digit numbers가 일의 자리, 십의 자리, 백의 자리 순으로 정렬된다. 각 pass는 해당 digit만 기준으로 정렬하지만, 이전 pass에서 만들어 둔 lower-order digit의 ordering은 stable sort 덕분에 보존된다.
@@ -345,7 +345,7 @@ floor(n A[i])
 
 번째 bucket으로 들어간다. 이후 각 bucket의 linked list를 insertion sort로 정렬하고, bucket index 순서대로 concatenate하면 전체 sorted output이 된다.
 
-![Figure 8.4](@/assets/images/029_figure_8-4_page_222.png)
+![Figure 8.4](@/assets/images/cs-algorithm-029-figure-8-4-page-222.png)
 *Figure 8.4 · PDF p. 222 · `[0,1)` 입력 10개를 10개 bucket에 분산하고 bucket 순서대로 연결하는 BUCKET-SORT*
 
 Figure 8.4에서 `n = 10`이므로 `B[0]`은 `[0, .1)`, `B[1]`은 `[.1, .2)`, ..., `B[9]`는 `[.9, 1)` 범위를 담당한다. 예를 들어 `.78`은 `floor(10 * .78) = 7`이므로 `B[7]`로 들어간다.

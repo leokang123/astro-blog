@@ -97,7 +97,7 @@ Modern OS의 핵심 component인 kernel은 system resources와 hardware access�
 
 `protection rings` model은 execution levels를 concentric rings로 정의한다. Inner ring일수록 더 많은 privileges를 갖고, ring 0은 full privileges를 제공한다.
 
-![Protection-ring structure](@/assets/images/332_Figure_17.1_page_806.png)
+![Protection-ring structure](@/assets/images/cs-operating-system-332-figure-17-1-page-806.png)
 <p align="center"><sub>Figure 17.1 · PDF p. 806 · ring 0이 가장 privileged하고 바깥 ring으로 갈수록 제한되는 protection-ring 구조</sub></p>
 
 System boot는 가장 privileged level에서 시작해 initialization을 수행한 뒤 less privileged level로 내려간다. 다시 higher privilege level로 돌아가려면 `gate` 역할의 special instruction을 호출해야 한다. Intel의 `syscall` instruction은 user mode에서 kernel mode로 통제된 진입을 제공한다. System call은 caller가 arbitrary kernel address를 지정하지 못하게 하고, predefined address와 restricted code path로만 execution을 이동시킨다.
@@ -108,12 +108,12 @@ Intel architecture는 user mode code를 ring 3, kernel mode code를 ring 0에 �
 
 ARM architecture는 user/kernel mode에서 출발해 TrustZone과 exception levels로 확장되었다.
 
-![Android uses of TrustZone](@/assets/images/333_Figure_17.2_page_807.png)
+![Android uses of TrustZone](@/assets/images/cs-operating-system-333-figure-17-2-page-807.png)
 <p align="center"><sub>Figure 17.2 · PDF p. 807 · Android에서 TrustZone이 password/key handling 같은 민감 기능을 kernel보다 더 trusted context에 두는 구조</sub></p>
 
 TrustZone은 kernel조차 직접 읽을 수 없는 hardware-backed cryptographic features와 on-chip key를 제공한다. Kernel은 `SMC(Secure Monitor Call)` 같은 specialized instruction으로 TrustZone service를 요청할 뿐, TrustZone 내부 address로 직접 실행을 이동할 수 없다. Kernel이 compromise되어도 key가 kernel memory에 노출되지 않으므로 brute-force 제한, key verification 같은 민감 기능을 더 안전하게 둘 수 있다.
 
-![ARM architecture](@/assets/images/334_Figure_17.3_page_808.png)
+![ARM architecture](@/assets/images/cs-operating-system-334-figure-17-3-page-808.png)
 <p align="center"><sub>Figure 17.3 · PDF p. 808 · ARMv8 exception levels에서 user, kernel, hypervisor, secure monitor가 서로 다른 privilege level에 위치하는 구조</sub></p>
 
 ARMv8은 `EL0` user mode, `EL1` kernel mode, `EL2` hypervisor, `EL3` secure monitor를 제공한다. Secure monitor는 general-purpose kernel보다 높은 execution level이므로 kernel integrity checking 같은 기능을 배치하기에 적합하다.
@@ -132,7 +132,7 @@ Process는 authorization을 가진 objects에만 접근해야 하며, 동시에 
 
 `protection domain`은 process가 access할 수 있는 resources를 지정한다. 각 domain은 objects와 각 object에 대해 허용된 operations의 set을 정의한다. 어떤 operation을 object에 수행할 수 있는 능력이 `access right`다. Domain은 access rights의 collection이며, 각 right는 `<object-name, rights-set>` 형태다.
 
-![System with three protection domains](@/assets/images/335_Figure_17.4_page_809.png)
+![System with three protection domains](@/assets/images/cs-operating-system-335-figure-17-4-page-809.png)
 <p align="center"><sub>Figure 17.4 · PDF p. 809 · 세 protection domains가 서로 다른 objects/operations access rights를 갖고 일부 권한을 공유하는 예</sub></p>
 
 Figure 17.4에서 domain D2와 D3는 `<O4, {print}>` right를 공유하므로 둘 다 O4를 print할 수 있다. 반면 O1을 read/write하려면 D1에서 실행되어야 하고, O1을 execute하려면 D3에서 실행되어야 한다.
@@ -167,7 +167,7 @@ Android는 여기에 kernel modification을 더해 특정 operations를 특정 G
 
 Protection의 general model은 `access matrix`로 추상화할 수 있다. Matrix rows는 protection domains, columns는 objects를 나타내고, 각 entry는 access rights set이다. `access(i, j)`는 domain `D_i`에서 실행 중인 process가 object `O_j`에 수행할 수 있는 operations를 정의한다.
 
-![Access matrix](@/assets/images/336_Figure_17.5_page_812.png)
+![Access matrix](@/assets/images/cs-operating-system-336-figure-17-5-page-812.png)
 <p align="center"><sub>Figure 17.5 · PDF p. 812 · domains와 objects 사이 allowed operations를 matrix entries로 표현하는 access matrix</sub></p>
 
 Figure 17.5에서 D1은 F1과 F3를 read할 수 있고, D4는 F1/F3를 read/write할 수 있다. Printer는 D2에서만 print할 수 있다. Access matrix는 “어떤 policy를 구현할지”를 표현하는 mechanism이며, OS는 process가 row i에 명시된 objects를 해당 entry의 operations로만 접근하게 enforce해야 한다.
@@ -176,7 +176,7 @@ Users는 보통 자신이 만든 object의 access-matrix column contents를 결�
 
 Access matrix는 static/dynamic domain association을 모두 표현할 수 있다. Domain switching도 object operation으로 볼 수 있으므로 domains 자체를 matrix의 objects로 넣을 수 있다.
 
-![Access matrix with domains as objects](@/assets/images/337_Figure_17.6_page_813.png)
+![Access matrix with domains as objects](@/assets/images/cs-operating-system-337-figure-17-6-page-813.png)
 <p align="center"><sub>Figure 17.6 · PDF p. 813 · domains도 objects로 포함해 `switch` right로 domain switching을 통제하는 access matrix</sub></p>
 
 `D_i`에서 `D_j`로 switch하려면 `switch ∈ access(i, j)`여야 한다. Figure 17.6에서는 D2에서 D3 또는 D4로 switch할 수 있고, D4에서 D1로, D1에서 D2로 switch할 수 있다.
@@ -191,17 +191,17 @@ Access matrix entries 자체를 바꾸는 권한도 control되어야 한다. 이
 | `owner` | object column | 해당 object column의 rights를 add/remove 가능 |
 | `control` | domain object row | 특정 domain row에서 rights를 remove 가능 |
 
-![Access matrix with copy rights](@/assets/images/338_Figure_17.7_page_813.png)
+![Access matrix with copy rights](@/assets/images/cs-operating-system-338-figure-17-7-page-813.png)
 <p align="center"><sub>Figure 17.7 · PDF p. 813 · `read*`처럼 copy 가능한 right가 다른 domain entry로 전파되는 예</sub></p>
 
 Figure 17.7은 `read*` right가 같은 object column 안에서 다른 domain entry로 복사될 수 있음을 보여 준다. Asterisk는 right 자체뿐 아니라 copy permission이 붙어 있음을 나타낸다. Limited copy를 쓰면 복사된 entry에는 `read`만 생기고 `read*`는 생기지 않아 further propagation을 막을 수 있다.
 
-![Access matrix with owner rights](@/assets/images/339_Figure_17.8_page_814.png)
+![Access matrix with owner rights](@/assets/images/cs-operating-system-339-figure-17-8-page-814.png)
 <p align="center"><sub>Figure 17.8 · PDF p. 814 · `owner` right가 object column의 권한 추가·삭제를 허용하는 예</sub></p>
 
 `owner` right가 있으면 해당 object column에서 valid rights를 add/remove할 수 있다. 예를 들어 D1이 F1의 owner이면 F1 column의 권한을 조정할 수 있고, D2가 F2/F3의 owner이면 두 object columns의 권한을 조정할 수 있다.
 
-![Modified access matrix](@/assets/images/340_Figure_17.9_page_815.png)
+![Modified access matrix](@/assets/images/cs-operating-system-340-figure-17-9-page-815.png)
 <p align="center"><sub>Figure 17.9 · PDF p. 815 · `control` right로 특정 domain row의 access rights를 제거할 수 있는 access matrix 수정 예</sub></p>
 
 `control` right는 domain objects에만 적용된다. `access(i, j)`에 control이 있으면 domain `D_i`에서 실행 중인 process가 row `j`의 access rights를 remove할 수 있다. 즉 column-based right propagation과 달리 row-based domain rights를 조정하는 권한이다.
@@ -287,7 +287,7 @@ Capabilities는 어렵다. Capabilities가 system 전체 domains에 distributed�
 
 RBAC에서는 privileges를 processes에 직접 줄 수도 있고, programs와 roles에 부여할 수도 있다. Users는 roles를 assigned받거나 role password를 통해 role을 assume한다. 그러면 user는 특정 task를 수행하기 위한 privilege를 가진 role로 program을 실행할 수 있다.
 
-![Role-based access control](@/assets/images/341_Figure_17.10_page_820.png)
+![Role-based access control](@/assets/images/cs-operating-system-341-figure-17-10-page-820.png)
 <p align="center"><sub>Figure 17.10 · PDF p. 820 · user가 role을 통해 필요한 privileges를 얻어 process를 실행하는 Solaris RBAC 구조</sub></p>
 
 Figure 17.10의 핵심은 superuser/setuid binary에 모든 힘을 집중하지 않고, task별 privileges를 role로 나누는 것이다. 이렇게 하면 setuid programs의 bug나 root 권한의 과도한 범위를 줄일 수 있다. RBAC는 access matrix와도 닮아 있다. Role은 domain처럼 볼 수 있고, privilege set은 rights set처럼 볼 수 있다.
@@ -312,7 +312,7 @@ Capability-based protection은 1970년대 연구 systems인 Hydra, CAP 등에서
 
 Linux capabilities는 전통적 UNIX root model의 한계를 줄이기 위해 root powers를 여러 distinct areas로 “slice”한다. 각 capability는 bitmask의 bit로 표현된다.
 
-![Capabilities in POSIX.1e](@/assets/images/342_Figure_17.11_page_822.png)
+![Capabilities in POSIX.1e](@/assets/images/cs-operating-system-342-figure-17-11-page-822.png)
 <p align="center"><sub>Figure 17.11 · PDF p. 822 · POSIX.1e/Linux capabilities가 root 권한을 여러 bit 영역으로 나누는 개념</sub></p>
 
 Linux는 permitted, effective, inheritable 세 bitmasks를 사용한다. Bitmasks는 process 또는 thread 단위로 적용될 수 있다. 보통 process/thread는 permitted capabilities set을 가지고 시작한 뒤 execution 중 자발적으로 줄인다. 예를 들어 network port를 연 뒤에는 더 이상 port를 열 capability를 제거할 수 있다.
@@ -325,7 +325,7 @@ Linux는 permitted, effective, inheritable 세 bitmasks를 사용한다. Bitmask
 
 Apple Darwin의 `entitlements`는 declaratory permissions다. Program이 필요한 permissions를 XML property list로 선언한다.
 
-![Apple Darwin entitlements](@/assets/images/343_Figure_17.12_page_823.png)
+![Apple Darwin entitlements](@/assets/images/cs-operating-system-343-figure-17-12-page-823.png)
 <p align="center"><sub>Figure 17.12 · PDF p. 823 · Apple Darwin에서 app이 필요한 privileged operations를 entitlements로 선언하는 예</sub></p>
 
 Process가 privileged operation을 시도하면 OS는 필요한 entitlement가 있는지 확인하고, 있으면 허용한다. App이 임의로 entitlement를 주장하지 못하게 하기 위해 Apple은 entitlements를 `code signature`에 포함한다. Process가 load된 뒤에는 자신의 code signature에 직접 접근할 수 없지만, kernel과 다른 processes는 signature와 entitlements를 query할 수 있다. Verification은 string matching처럼 단순해지고, authenticated apps만 entitlements를 claim할 수 있다. `com.apple.*` system entitlements는 Apple binaries로 제한된다.
@@ -373,7 +373,7 @@ Android는 SELinux만으로 individual system calls를 충분히 제한하기 �
 
 Apple의 sandboxing은 macOS 10.5의 `Seatbelt`에서 시작했다. 초기에는 opt-in 방식이었고, Scheme language로 작성된 dynamic profiles를 사용해 operations뿐 아니라 arguments까지 제어할 수 있었다. 이 덕분에 Apple은 system binaries마다 custom-fit profiles를 만들 수 있었다.
 
-![Sandbox profile](@/assets/images/344_Figure_17.13_page_826.png)
+![Sandbox profile](@/assets/images/cs-operating-system-344-figure-17-13-page-826.png)
 <p align="center"><sub>Figure 17.13 · PDF p. 826 · macOS daemon이 대부분의 operations를 deny하고 일부 file/sysctl/mach lookup만 allow하는 sandbox profile 예</sub></p>
 
 Figure 17.13의 profile은 `(deny default)`로 대부분의 operations를 막고 필요한 operations만 allow한다. 이 구조는 least privilege를 policy file 수준에서 표현한 것이다. iOS와 macOS App Store apps에서는 sandbox가 mandatory로 적용되며, iOS에서는 code signing과 함께 untrusted third-party code에 대한 핵심 protection이 된다. SIP는 더 넓은 관점에서 system-wide platform profile처럼 동작한다.
@@ -449,7 +449,7 @@ Protected resource 접근이 요청되면 `checkPermissions()`가 stack inspecti
 | disallowed protection domain frame을 먼저 발견 | `AccessControlException` throw |
 | 둘 다 찾지 못하고 stack exhausted | JVM implementation에 따라 허용 또는 거부 |
 
-![Stack inspection](@/assets/images/345_Figure_17.14_page_831.png)
+![Stack inspection](@/assets/images/cs-operating-system-345-figure-17-14-page-831.png)
 <p align="center"><sub>Figure 17.14 · PDF p. 831 · untrusted applet, URL loader, networking library 사이에서 stack inspection이 privilege assertion을 검사하는 흐름</sub></p>
 
 Figure 17.14에서 untrusted applet의 `gui()` method는 `get()`과 `open()`을 호출한다. `get()`은 URL loader protection domain의 method이고, 이 method는 `doPrivileged` block 안에서 proxy server(`proxy.lucent.com:80`)로 network connection을 연다. 따라서 networking library의 `checkPermissions()`가 stack을 검사할 때 URL loader의 `doPrivileged` frame을 발견하고 access를 허용한다. 반면 untrusted applet이 직접 `open()`을 호출하면 `doPrivileged` annotation을 만나기 전에 untrusted applet domain frame을 만나므로 exception이 발생한다.

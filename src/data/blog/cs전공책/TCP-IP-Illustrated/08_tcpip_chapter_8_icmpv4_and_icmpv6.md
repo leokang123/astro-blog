@@ -44,7 +44,7 @@ ICMP message는 보통 IP layer, TCP/UDP 같은 transport layer, 또는 user app
 
 ICMP message는 IP datagram payload로 encapsulation된다. IPv4에서는 IP header의 Protocol field가 `1`이면 ICMPv4이고, IPv6에서는 extension header들을 지난 뒤 Next Header field가 `58`이면 ICMPv6다.
 
-![Figure 8-1](@/assets/images/126_figure_8_1_page_393.png)
+![Figure 8-1](@/assets/images/cs-tcp-ip-illustrated-126-figure-8-1-page-393.png)
 *Figure 8-1 · PDF p. 393 · IPv4 Protocol=1, IPv6 Next Header=58로 ICMP message가 encapsulation되는 구조*
 
 ICMP message 자체는 IP datagram처럼 fragmentation될 수 있지만 흔한 일은 아니다. ICMP error message는 대개 원래 packet 일부를 payload로 담기 때문에, fragmentation이나 MTU 제한과 함께 다룰 때 주의가 필요하다.
@@ -60,7 +60,7 @@ ICMP message는 크게 두 종류다.
 
 모든 ICMPv4/ICMPv6 message는 처음 4 bytes가 공통이다. `Type`이 message family를 정하고, `Code`가 그 안의 세부 이유를 정한다. `Checksum`은 ICMP message 전체를 보호한다.
 
-![Figure 8-2](@/assets/images/127_figure_8_2_page_394.png)
+![Figure 8-2](@/assets/images/cs-tcp-ip-illustrated-127-figure-8-2-page-394.png)
 *Figure 8-2 · PDF p. 394 · ICMP 공통 header: Type, Code, Checksum 뒤에 message-specific content가 붙음*
 
 ICMPv4 checksum은 ICMPv4 message 전체를 덮는다. ICMPv6 checksum은 ICMPv6 message뿐 아니라 IPv6 header에서 만든 pseudo-header, 즉 Source/Destination IPv6 Address, Length, Next Header까지 포함한다. ICMP message checksum이 틀리면 message는 조용히 discard된다. 잘못된 ICMP checksum을 알리기 위한 또 다른 ICMP error는 만들지 않는다.
@@ -131,7 +131,7 @@ ICMP error message에는 항상 offending datagram의 IP header와 payload 앞�
 
 초기 ICMP 규격은 offending datagram의 처음 `8 bytes`만 포함해도 충분하다고 보았다. UDP/TCP port number를 확인하는 데는 그 정도면 충분했기 때문이다. 하지만 IP-in-IP처럼 protocol layering이 복잡해지고, 진단에 더 많은 context가 필요해지면서 RFC4884는 ICMP message 뒤에 extension data structure를 붙이는 방식을 정의했다.
 
-![Figure 8-3](@/assets/images/128_figure_8_3_page_402.png)
+![Figure 8-3](@/assets/images/cs-tcp-ip-illustrated-128-figure-8-3-page-402.png)
 *Figure 8-3 · PDF p. 402 · Extended ICMP message는 기본 ICMP payload 뒤에 extension header와 object들을 붙일 수 있다.*
 
 Extended ICMP의 구조는 기본 ICMP message, 충분히 긴 ICMP payload, extension header, 하나 이상의 extension object로 이어진다. object는 고정 크기 header와 variable-length data area를 가진다. 호환성을 위해 original datagram을 담는 primary ICMP payload area는 최소 `128 bytes` 이상이어야 한다.
@@ -144,7 +144,7 @@ Extended ICMP의 구조는 기본 ICMP message, 충분히 긴 ICMP payload, exte
 
 ICMPv4에서는 `Destination Unreachable`이 `Type 3`이고 여러 code를 가진다. 자주 쓰이는 code는 `Host Unreachable (code 1)`, `Port Unreachable (code 3)`, `Fragmentation Required/Don't-Fragment Specified (code 4)`, `Communication Administratively Prohibited (code 13)`이다. ICMPv6에서는 `Destination Unreachable`이 `Type 1`이며, IPv4의 fragmentation-needed 성격은 별도 message인 `Packet Too Big (PTB, Type 2, Code 0)`로 분리된다.
 
-![Figure 8-4](@/assets/images/129_figure_8_4_page_404.png)
+![Figure 8-4](@/assets/images/cs-tcp-ip-illustrated-129-figure-8-4-page-404.png)
 *Figure 8-4 · PDF p. 404 · ICMPv4/ICMPv6 Destination Unreachable format과 RFC4884 Length/extension 위치.*
 
 주요 code의 의미는 다음처럼 연결해서 이해하면 좋다.
@@ -166,7 +166,7 @@ IPv4 router가 datagram을 forwarding하려는데 outgoing interface의 MTU보�
 
 IPv6에서는 router가 packet fragmentation을 하지 않는다. fragmentation은 sender만 수행하며, MTU discovery는 항상 사용되어야 한다. 그래서 IPv6는 별도의 ICMPv6 `Packet Too Big (Type 2, Code 0)` message를 사용한다. 이 message는 packet이 next-hop MTU보다 커서 전달될 수 없음을 알리고, sender가 packet size를 줄여 다시 보내도록 `next-hop MTU`를 전달한다.
 
-![Figure 8-6](@/assets/images/131_figure_8_6_page_410.png)
+![Figure 8-6](@/assets/images/cs-tcp-ip-illustrated-131-figure-8-6-page-410.png)
 *Figure 8-6 · PDF p. 410 · ICMPv6 Packet Too Big은 MTU field에 next-hop MTU를 담아 PMTUD에 사용된다.*
 
 PMTUD(Path MTU Discovery)의 관점에서 PTB는 “실패 통지”이면서 동시에 “더 작은 packet size를 선택하기 위한 feedback”이다. IPv4에서는 DF bit와 fragmentation 회피 전략이 결합되고, IPv6에서는 router fragmentation 부재 때문에 PTB가 더 구조적인 역할을 한다. route가 바뀌면 이전 PMTUD 결과가 더 이상 맞지 않을 수 있으므로, 정상 통신 중에도 PTB가 다시 나타날 수 있다.
@@ -179,7 +179,7 @@ ICMPv6에는 정책과 routing table을 더 세밀하게 표현하는 Destinatio
 
 `Redirect`는 host가 같은 link 위에서 더 나쁜 next hop을 선택했을 때 router가 “앞으로 이 destination은 저 router/host로 보내라”고 알려 주는 ICMP error/control message다. Router R2가 host로부터 datagram을 받았는데, 같은 link의 R1이 더 적절한 next hop임을 알면 R2는 두 일을 한다. 현재 datagram은 R1로 forwarding하고, host에는 Redirect를 보내 forwarding table을 고치게 한다.
 
-![Figure 8-7](@/assets/images/132_figure_8_7_page_412.png)
+![Figure 8-7](@/assets/images/cs-tcp-ip-illustrated-132-figure-8-7-page-412.png)
 *Figure 8-7 · PDF p. 412 · Host가 R2로 잘못 보낸 datagram을 R2가 R1으로 forwarding하면서 ICMP Redirect로 host를 교정한다.*
 
 Redirect는 host에게는 조잡한 routing protocol처럼 동작할 수 있지만, router가 Redirect를 받아 routing table을 갱신하는 것은 권장되지 않는다. router는 dynamic routing protocol을 통해 이미 적절한 next hop을 알아야 한다는 가정 때문이다.
@@ -194,7 +194,7 @@ ICMPv6 Redirect는 ND option을 포함할 수 있다. 대표적으로 `Target Li
 
 IPv4 header에는 `Time-to-Live (TTL)`, IPv6 header에는 `Hop Limit`이 있다. 이름은 다르지만 현대적 의미는 거의 같다. router가 packet을 forwarding할 때 이 값을 줄이고, 더 이상 forwarding할 수 없을 정도로 낮으면 packet을 discard한 뒤 ICMP `Time Exceeded`를 보낸다. IPv4에서는 `Type 11`, IPv6에서는 `Type 3`이며, hop count 초과는 `code 0`이다.
 
-![Figure 8-10](@/assets/images/135_figure_8_10_page_415.png)
+![Figure 8-10](@/assets/images/cs-tcp-ip-illustrated-135-figure-8-10-page-415.png)
 *Figure 8-10 · PDF p. 415 · ICMP Time Exceeded format: TTL/Hop Limit 초과(code 0)와 fragment reassembly timeout(code 1)을 표현한다.*
 
 TTL은 처음에는 datagram이 network 안에 머무를 수 있는 초 단위 시간처럼 설계되었지만, router가 최소 1씩 decrement해야 한다는 규칙과 빠른 forwarding 속도 때문에 실제로는 hop count 제한으로 굳어졌다. IPv6는 이 의미를 명확히 반영해 `Hop Limit`이라는 이름을 쓴다.
@@ -205,7 +205,7 @@ TTL은 처음에는 datagram이 network 안에 머무를 수 있는 초 단위 �
 
 `traceroute`는 Time Exceeded를 의도적으로 유발해 path상의 router를 찾아낸다. 첫 probe는 TTL=1로 보내고, 첫 router가 TTL을 0으로 만든 뒤 ICMP Time Exceeded를 돌려보낸다. 다음 round에서는 TTL=2, 그 다음은 TTL=3처럼 늘려 가면, 한 hop씩 더 먼 router가 Time Exceeded의 source가 된다.
 
-![Figure 8-12](@/assets/images/137_figure_8_12_page_416.png)
+![Figure 8-12](@/assets/images/cs-tcp-ip-illustrated-137-figure-8-12-page-416.png)
 *Figure 8-12 · PDF p. 416 · traceroute는 TTL을 1, 2, ...로 늘린 UDP/IPv4 datagram을 보내 각 hop의 ICMPv4 Time Exceeded를 받는다.*
 
 책의 예시에서 traceroute는 UDP datagram을 destination port `33435`부터 순차적으로 보내며, 각 TTL 값마다 3번씩 시도한다. 출력 한 줄은 해당 TTL에서 발견된 router와 세 번의 round-trip time을 보여 준다. 첫 측정이 뒤의 측정보다 오래 걸릴 수 있는데, 첫 packet에서 ARP 같은 link-layer resolution이 추가로 필요했기 때문이다.
@@ -218,7 +218,7 @@ TTL은 처음에는 datagram이 network 안에 머무를 수 있는 초 단위 �
 
 ICMPv4 Parameter Problem의 `code 0`은 대부분의 IPv4 header field 오류에 사용된다. `code 1`은 예전에는 필수 option 누락을 나타냈지만 현재는 historic이다. `code 2`는 IPv4 `IHL` 또는 `Total Length` field가 잘못된 경우를 나타낸다. 예를 들어 Pointer가 `1`이면 IPv4 header의 DS Field/ECN field 위치에 문제가 있음을 뜻할 수 있다.
 
-![Figure 8-15](@/assets/images/140_figure_8_15_page_419.png)
+![Figure 8-15](@/assets/images/cs-tcp-ip-illustrated-140-figure-8-15-page-419.png)
 *Figure 8-15 · PDF p. 419 · ICMPv6 Parameter Problem은 Pointer로 오류 offset을 표시하고 code로 header/Next Header/option 문제를 구분한다.*
 
 ICMPv6는 Parameter Problem을 세 가지로 더 명확히 나눈다.
@@ -241,7 +241,7 @@ IPv4에서는 informational ICMP가 “있으면 편한 보조 기능”에 가�
 
 `Echo Request`와 `Echo Reply`는 가장 널리 알려진 ICMP message pair다. ICMPv4에서는 Echo Request가 `Type 8`, Echo Reply가 `Type 0`이고, ICMPv6에서는 Echo Request가 `Type 128`, Echo Reply가 `Type 129`다. Request에 optional data가 들어 있으면 Reply는 그 data를 그대로 돌려줘야 한다.
 
-![Figure 8-16](@/assets/images/141_figure_8_16_page_420.png)
+![Figure 8-16](@/assets/images/cs-tcp-ip-illustrated-141-figure-8-16-page-420.png)
 *Figure 8-16 · PDF p. 420 · Echo Request/Reply format: Identifier와 Sequence Number로 reply를 원래 request에 대응시킨다.*
 
 `Identifier`는 ICMP에는 TCP/UDP port가 없다는 약점을 보완한다. UNIX 계열 ping은 보통 process ID를 Identifier로 넣어 같은 host에서 여러 ping instance가 실행되어도 reply를 구분할 수 있게 한다. NAT도 Chapter 7에서 보았듯 Echo Request/Reply를 매칭할 때 이 Identifier를 활용할 수 있다.
@@ -286,7 +286,7 @@ RtSolPr는 code `0`, subtype `2`를 사용하며 mobile node가 관심 있는 �
 
 MLDv1은 ICMPv6 `Multicast Listener Query (Type 130)`, `Report (Type 131)`, `Done (Type 132)`를 사용한다. 이 message들은 IPv6 `Hop Limit = 1`로 보내지고, Router Alert Hop-by-Hop IPv6 option을 포함한다.
 
-![Figure 8-24](@/assets/images/149_figure_8_24_page_428.png)
+![Figure 8-24](@/assets/images/cs-tcp-ip-illustrated-149-figure-8-24-page-428.png)
 *Figure 8-24 · PDF p. 428 · MLDv1 Query/Report/Done common format: Maximum Response Delay와 Multicast Address가 핵심이다.*
 
 MLD Query에는 두 형태가 있다. `general query`는 host들이 사용 중인 multicast address를 보고하게 하고, `multicast-address-specific query`는 특정 multicast address가 아직 사용 중인지 확인한다. Router가 query를 보내면 host는 report로 응답하고, membership이 바뀌면 unsolicited report를 보낼 수도 있다.
@@ -301,7 +301,7 @@ MLDv2 Query의 처음 24 bytes는 MLDv1 common format과 같다. 뒤에는 sourc
 
 `QRV (Querier Robustness Variable)`는 link의 packet loss 기대치에 따라 MLD update rate를 조절하는 데 쓰이고, `QQIC (Querier's Query Interval Code)`는 query interval을 encoding한다. `Number of Sources (N)`은 query에 포함된 source address 개수이며, general query와 multicast-address-specific query에서는 0이고 source-specific query에서는 0이 아니다.
 
-![Figure 8-28](@/assets/images/153_figure_8_28_page_431.png)
+![Figure 8-28](@/assets/images/cs-tcp-ip-illustrated-153-figure-8-28-page-431.png)
 *Figure 8-28 · PDF p. 431 · MLDv2 Report는 여러 multicast address record를 vector 형태로 담는다.*
 
 MLDv2 Report는 여러 `Multicast Address Record`를 담는다. 각 record는 current state, filter mode change, source list change 중 하나의 의미를 가진다.
@@ -318,7 +318,7 @@ MLDv2 Report는 여러 `Multicast Address Record`를 담는다. 각 record는 cu
 
 `Multicast Router Discovery (MRD)`는 multicast packet을 forwarding할 수 있는 router의 존재와 일부 configuration parameter를 찾기 위한 방식이다. IPv4에서는 IGMP type `48/49/50`, IPv6에서는 ICMPv6 type `151/152/153`이 쓰인다. 주된 사용 배경은 `IGMP/MLD snooping`이다. Layer 2 switch 같은 장비가 multicast router와 관심 host 위치를 학습해 multicast flooding을 줄이는 데 필요하다.
 
-![Figure 8-30](@/assets/images/155_figure_8_30_page_434.png)
+![Figure 8-30](@/assets/images/cs-tcp-ip-illustrated-155-figure-8-30-page-434.png)
 *Figure 8-30 · PDF p. 434 · MRD Advertisement는 광고 주기, QQI, Robustness Variable을 담아 multicast router 존재를 알린다.*
 
 MRD message는 항상 IPv4 `TTL = 1` 또는 IPv6 `Hop Limit = 1`로 보내고 Router Alert option을 포함한다. `Advertisement (ICMPv6 Type 151)`는 multicast router가 자신이 multicast traffic을 forwarding할 의사가 있음을 주기적으로 알린다. IPv6에서는 sender의 link-local address가 router 식별에 쓰이고, destination은 `All Snoopers ff02::6a`다.
@@ -346,7 +346,7 @@ ND의 큰 기능 축은 두 가지다.
 
 `Router Advertisement (RA, Type 134)`는 nearby router의 존재와 link configuration 정보를 알린다. Router가 주기적으로 `All Nodes multicast address ff02::1`에 보내거나, RS에 대한 응답으로 요청 host의 unicast address에 보낼 수 있다.
 
-![Figure 8-33](@/assets/images/158_figure_8_33_page_436.png)
+![Figure 8-33](@/assets/images/cs-tcp-ip-illustrated-158-figure-8-33-page-436.png)
 *Figure 8-33 · PDF p. 436 · ICMPv6 Router Advertisement는 Hop Limit, M/O/H flag, preference, lifetime, reachability timer 등을 전달한다.*
 
 RA의 주요 field는 IPv6 host configuration의 “초기 조건”을 만든다.
@@ -369,7 +369,7 @@ RA에는 보통 `Source Link-Layer Address option`, 필요하면 `MTU option`, �
 
 `Neighbor Solicitation (NS, Type 135)`는 IPv4의 ARP Request에 해당하는 역할을 한다. 가장 기본적인 목적은 target IPv6 address에 대응하는 link-layer address를 알아내는 것이다. 동시에 neighbor가 reachable한지, bidirectional connectivity가 가능한지도 확인한다.
 
-![Figure 8-34](@/assets/images/159_figure_8_34_page_437.png)
+![Figure 8-34](@/assets/images/cs-tcp-ip-illustrated-159-figure-8-34-page-437.png)
 *Figure 8-34 · PDF p. 437 · Neighbor Solicitation은 Target Address를 담고, multicast 또는 unicast로 neighbor mapping/reachability를 확인한다.*
 
 address mapping을 위한 NS는 target IPv6 address에 대응하는 `Solicited-Node multicast address`로 전송된다. 이 주소는 `ff02::1:ff00:0/104` 성격의 prefix에 target IPv6 address의 low-order 24 bits를 결합해 만든다. 이미 알고 있는 neighbor의 reachability만 확인할 때는 multicast가 아니라 그 neighbor의 unicast IPv6 address로 NS를 보낸다.
@@ -378,7 +378,7 @@ NS에는 link-layer address를 쓰는 network에서 `Source Link-Layer Address o
 
 `Neighbor Advertisement (NA, Type 136)`는 IPv4의 ARP Response에 해당하며, NUD에도 사용된다. NA는 NS에 대한 응답으로 보내거나, node의 IPv6 address/link-layer mapping이 바뀌었을 때 unsolicited로 보낼 수 있다. soliciting node가 unspecified source address를 썼다면 All Nodes multicast address로 보낼 수 있고, 보통은 요청자에게 unicast로 보낸다.
 
-![Figure 8-35](@/assets/images/160_figure_8_35_page_438.png)
+![Figure 8-35](@/assets/images/cs-tcp-ip-illustrated-160-figure-8-35-page-438.png)
 *Figure 8-35 · PDF p. 438 · Neighbor Advertisement는 R/S/O flag와 Target Address, Target Link-Layer Address option으로 mapping과 reachability를 알린다.*
 
 NA의 flag는 cache update와 reachability 판단에 직접 영향을 준다.
@@ -403,7 +403,7 @@ IND Solicitation은 IPv6 layer에서는 `All Nodes multicast address`로 보내�
 
 `Neighbor Unreachability Detection (NUD)`는 같은 link의 neighbor와 reachability가 끊겼는지, 또는 한쪽 방향만 되는 asymmetric 상태인지 감지한다. NUD는 각 node의 `neighbor cache`를 관리한다. neighbor cache는 IPv4의 ARP cache와 비슷하지만, 단순 mapping뿐 아니라 state를 함께 갖는다.
 
-![Figure 8-37](@/assets/images/162_figure_8_37_page_441.png)
+![Figure 8-37](@/assets/images/cs-tcp-ip-illustrated-162-figure-8-37-page-441.png)
 *Figure 8-37 · PDF p. 441 · NUD는 neighbor cache entry를 INCOMPLETE, REACHABLE, STALE, DELAY, PROBE 상태로 관리한다.*
 
 NUD state는 다음처럼 이해하면 된다.
@@ -438,7 +438,7 @@ SEND가 가정하는 기본 재료는 세 가지다.
 
 SEND의 핵심은 `Cryptographically Generated Address (CGA)`다. CGA는 node의 public key information을 IPv6 address와 연결한다. 따라서 해당 public key에 대응하는 private key를 가진 address owner만이 “이 CGA를 사용할 권한이 있다”고 증명할 수 있다. CGA에는 subnet prefix도 encoding되므로, 한 subnet에서 만든 CGA를 다른 subnet으로 그대로 옮기기 어렵다.
 
-![Figure 8-38](@/assets/images/163_figure_8_38_page_443.png)
+![Figure 8-38](@/assets/images/cs-tcp-ip-illustrated-163-figure-8-38-page-443.png)
 *Figure 8-38 · PDF p. 443 · SEND의 CGA 생성은 CGA parameters, Hash1, Hash2, Sec 값을 조합해 subnet prefix와 interface identifier를 만든다.*
 
 CGA는 64-bit subnet prefix와 특별히 만든 interface identifier를 OR/결합해 만든다. interface identifier는 node public key와 `CGA parameters data structure`를 입력으로 하는 secure hash function 결과를 이용한다. 이때 두 hash가 등장한다.
@@ -466,7 +466,7 @@ Solicitation의 `Identifier`는 request와 response를 matching하기 위한 ran
 
 ND message는 zero or more option을 포함할 수 있고, 일부 message에서는 특정 option이 사실상 필수다. IPv6 계열 protocol답게 option은 TLV(Type-Length-Value) 형태의 공통 구조를 가진다.
 
-![Figure 8-41](@/assets/images/166_figure_8_41_page_447.png)
+![Figure 8-41](@/assets/images/cs-tcp-ip-illustrated-166-figure-8-41-page-447.png)
 *Figure 8-41 · PDF p. 447 · ND option 공통 TLV 구조: Type과 Length 뒤에 type별 contents가 붙는다.*
 
 `Type`과 `Length`는 각각 8 bits다. `Length`는 Type/Length field까지 포함한 전체 option 길이를 `8-byte unit`으로 표현하며 최소값은 1이다. option은 8-byte boundary에 맞게 padding된다. 이 공통 규칙 때문에 다양한 ND/SEND/FMIPv6/DNS 관련 option이 같은 확장 틀 안에 들어간다.
@@ -501,7 +501,7 @@ ND message는 zero or more option을 포함할 수 있고, 일부 message에서�
 
 `Prefix Information option (PIO, Type 3)`은 RA와 Mobile Prefix Advertisement에서 local link의 IPv6 prefix 또는 경우에 따라 router의 complete IPv6 address를 전달한다. Router는 자신이 사용하는 각 prefix마다 PIO를 포함하는 것이 원칙이다.
 
-![Figure 8-43](@/assets/images/168_figure_8_43_page_449.png)
+![Figure 8-43](@/assets/images/cs-tcp-ip-illustrated-168-figure-8-43-page-449.png)
 *Figure 8-43 · PDF p. 449 · Prefix Information option은 Prefix Length, L/A/R flag, Valid/Preferred Lifetime, Prefix를 담는다.*
 
 PIO의 flag와 lifetime은 IPv6 host가 주소와 on-link 판단을 어떻게 할지 결정한다.
@@ -537,7 +537,7 @@ FMIPv6 관련 option들은 handoff 직전/직후에 care-of address, next access
 
 SEND option은 ND message의 authenticity와 replay 방지를 담당한다. `CGA option (Type 11)`은 verifier가 CGA validation/signature validation을 수행하는 데 필요한 CGA parameters를 담는다. `RSA Signature option (Type 12)`은 sender가 CGA public key에 대응하는 private key를 가지고 있음을 증명한다.
 
-![Figure 8-50](@/assets/images/175_figure_8_50_page_454.png)
+![Figure 8-50](@/assets/images/cs-tcp-ip-illustrated-175-figure-8-50-page-454.png)
 *Figure 8-50 · PDF p. 454 · SEND RSA Signature option은 Key Hash와 Digital Signature를 담아 CGA owner 검증에 사용된다.*
 
 RSA Signature option의 `Key Hash`는 signature 생성에 쓰인 public key의 SHA-1 hash 상위 128 bits다. `Digital Signature`는 SEND CGA Message Type tag, source/destination IP address, ICMPv6 header 첫 32 bits, ND message header와 options를 대상으로 만든다. RSA Signature option 자신은 signature 대상에서 제외된다.
@@ -550,7 +550,7 @@ RSA Signature option의 `Key Hash`는 signature 생성에 쓰인 public key의 S
 
 `Recursive DNS Server option (RDNSS, Type 25)`은 RA에 recursive DNS server IPv6 address list를 넣어 SLAAC 환경에서도 DNS server 정보를 얻을 수 있게 한다.
 
-![Figure 8-59](@/assets/images/184_figure_8_59_page_460.png)
+![Figure 8-59](@/assets/images/cs-tcp-ip-illustrated-184-figure-8-59-page-460.png)
 *Figure 8-59 · PDF p. 460 · RDNSS option은 recursive DNS server IPv6 address list와 Lifetime을 RA에 실어 보낸다.*
 
 `RA Flags Extension option (EFO, Type 26)`은 RA flags 공간을 확장하기 위한 option이다. `DNS Search List option (DNSSL, Type 31)`은 host가 DNS query를 만들 때 partial name 뒤에 붙일 domain search suffix list를 제공한다. domain name encoding은 DNS name format을 사용하며 compression은 쓰지 않는다.

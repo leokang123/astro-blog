@@ -53,7 +53,7 @@ TCP connection의 생애는 크게 세 단계다.
 
 일반적인 연결 설정은 3-way handshake다. 먼저 active opener, 보통 client가 SYN segment를 보낸다. 이 segment에는 destination port, client의 ISN(c), 그리고 client가 사용하려는 TCP options가 들어간다. server는 passive open 상태에서 이 SYN을 받으면 자신의 ISN(s)을 고르고, SYN+ACK segment로 응답한다. 이때 ACK number는 `ISN(c) + 1`이다. 마지막으로 client가 `ISN(s) + 1`을 ACK하면 연결이 established 상태가 된다.
 
-![Figure 13-1](@/assets/images/244_figure_13_1_page_635.png)
+![Figure 13-1](@/assets/images/cs-tcp-ip-illustrated-244-figure-13-1-page-635.png)
 *Figure 13-1 · PDF p. 635 · TCP three-way handshake와 normal close 흐름*
 
 SYN이 sequence number space에서 1을 소비한다는 점이 중요하다. SYN segment가 실제 application payload를 싣지 않더라도, 상대는 다음에 올 데이터의 sequence number를 `ISN + 1`부터 기대한다. SYN이 손실되면 다른 TCP segment처럼 재전송된다.
@@ -70,7 +70,7 @@ SYN이 sequence number space에서 1을 소비한다는 점이 중요하다. SYN
 
 TCP half-close는 한쪽 방향의 byte stream만 닫고 반대 방향은 계속 열어 두는 기능이다. `close()`는 보통 양방향 사용을 끝내겠다는 뜻에 가깝지만, `shutdown()` API를 쓰면 "나는 더 이상 보내지 않지만, 상대가 보내는 데이터는 계속 받겠다"는 상태를 만들 수 있다.
 
-![Figure 13-2](@/assets/images/245_figure_13_2_page_638.png)
+![Figure 13-2](@/assets/images/cs-tcp-ip-illustrated-245-figure-13-2-page-638.png)
 *Figure 13-2 · PDF p. 638 · TCP half-close에서 한 방향 FIN 이후 반대 방향 data가 계속 흐르는 모습*
 
 half-close에서는 먼저 한쪽이 FIN+ACK를 보내 자신의 송신 방향을 닫는다. 상대는 이를 ACK하지만 connection 전체는 아직 끝나지 않는다. 상대는 필요한 데이터를 계속 보낼 수 있고, 마지막에 자신의 FIN을 보낸다. 그 FIN이 ACK되면 connection이 완전히 닫힌다.
@@ -81,14 +81,14 @@ half-close에서는 먼저 한쪽이 FIN+ACK를 보내 자신의 송신 방향�
 
 일반적인 TCP 설명은 client가 active open, server가 passive open을 한다고 가정한다. 하지만 TCP 자체는 양쪽이 동시에 active open을 시도하는 simultaneous open도 허용한다. 이 경우 두 application이 서로의 IP address와 port number를 이미 알고 있어야 하며, 양쪽이 상대의 SYN을 받기 전에 자기 SYN을 먼저 보낸다.
 
-![Figure 13-3](@/assets/images/246_figure_13_3_page_639.png)
+![Figure 13-3](@/assets/images/cs-tcp-ip-illustrated-246-figure-13-3-page-639.png)
 *Figure 13-3 · PDF p. 639 · simultaneous open에서 양쪽이 모두 active opener가 되는 흐름*
 
 simultaneous open은 두 개의 독립적인 TCP connection이 만들어지는 상황이 아니다. 같은 4-tuple을 양방향에서 바라본 하나의 connection이 만들어진다. 보통의 3-way handshake보다 segment 수가 하나 더 필요하며, 양쪽 모두 SYN을 보내고, 받은 SYN을 ACK하는 구조가 된다. 전통적인 client/server 모델에서는 드물지만 NAT traversal이나 hole punching 같은 상황을 이해할 때 배경 개념이 된다.
 
 simultaneous close는 양쪽 application이 거의 동시에 active close를 하는 경우다. 두 쪽 모두 FIN을 보내고, 각자 상대 FIN을 ACK한다.
 
-![Figure 13-4](@/assets/images/247_figure_13_4_page_639.png)
+![Figure 13-4](@/assets/images/cs-tcp-ip-illustrated-247-figure-13-4-page-639.png)
 *Figure 13-4 · PDF p. 639 · simultaneous close에서 양쪽 FIN이 교차하는 흐름*
 
 simultaneous close는 normal close와 segment 수는 같을 수 있지만 state transition은 다르다. 한쪽이 FIN을 보낸 뒤 상대 FIN도 받는 중간 상태들이 등장하기 때문에, TCP 구현의 finite state machine을 볼 때 이 예외 경로를 빠뜨리면 안 된다.
@@ -109,7 +109,7 @@ TCP checksum은 오류 검출용이지 강한 무결성 보장 장치가 아니�
 
 본문의 예제는 Windows Telnet client가 `10.0.0.2`의 HTTP port 80으로 TCP connection을 열었다가, application data를 보내지 않고 약 4.4초 뒤 종료하는 흐름이다. Telnet이 23번이 아닌 다른 port에 연결되면 Telnet application protocol을 수행하지 않고, 표준 입력과 TCP connection 사이에서 byte를 복사하는 단순 client처럼 동작한다. Web server는 HTTP request를 기다리지만 client가 아무 요청도 보내지 않으므로 data segment 없이 connection management segment만 관찰하기 좋다.
 
-![Figure 13-5](@/assets/images/248_figure_13_5_page_642.png)
+![Figure 13-5](@/assets/images/cs-tcp-ip-illustrated-248-figure-13-5-page-642.png)
 *Figure 13-5 · PDF p. 642 · data 없이 TCP connection을 설정하고 종료한 Wireshark trace*
 
 trace의 앞 세 segment는 3-way handshake다. client SYN에는 `ISN = 685506836`, advertised window `65535`, 그리고 여러 TCP options가 들어 있다. server의 SYN+ACK는 `ISN = 1479690171`을 사용하고, client SYN을 받았다는 뜻으로 `ACK = 685506837`을 보낸다. 마지막 client ACK는 `ACK = 1479690172`로 server SYN을 확인한다.
@@ -203,7 +203,7 @@ WSOPT는 SYN segment에만 등장할 수 있으므로 scale factor는 connection
 
 Timestamps option(TSOPT/TSopt)은 각 segment에 두 개의 4-byte timestamp 값을 넣는다. sender는 Timestamp Value(TSV 또는 TSval)를 채우고, receiver는 이를 Timestamp Echo Reply(TSER 또는 TSecr)에 그대로 반사한다. kind/length 2 bytes까지 합치면 TSOPT는 TCP header를 10 bytes 늘린다.
 
-![Figure 13-6](@/assets/images/249_figure_13_6_page_648.png)
+![Figure 13-6](@/assets/images/cs-tcp-ip-illustrated-249-figure-13-6-page-648.png)
 *Figure 13-6 · PDF p. 648 · Timestamp, Window Scaling, MSS options가 SYN에 포함된 TCP header*
 
 timestamp 값은 monotonically increasing이면 충분하다. receiver는 상대 timestamp의 단위나 실제 시각을 알 필요가 없고, 두 host 간 clock synchronization도 필요 없다. 처음 client SYN에서는 server timestamp를 아직 모르므로 TSER가 0이고, server의 SYN+ACK가 client의 TSV를 echo하면서 자신의 TSV를 함께 보낸다.
@@ -268,7 +268,7 @@ PMTUD의 대표 운용 문제는 PMTUD black hole이다. firewall이나 NAT가 P
 
 본문 예제는 PPPoE link가 있는 topology에서 PMTUD가 segment size를 줄이는 과정을 보여 준다. PPPoE는 Ethernet 1500-byte MTU에서 PPPoE overhead 6 bytes와 PPP overhead 2 bytes를 빼 MTU를 1492 bytes로 낮춘다. 예제에서는 효과를 분명히 보기 위해 PPPoE interface MTU를 288 bytes로 더 낮춘다.
 
-![Figure 13-7](@/assets/images/250_figure_13_7_page_653.png)
+![Figure 13-7](@/assets/images/cs-tcp-ip-illustrated-250-figure-13-7-page-653.png)
 *Figure 13-7 · PDF p. 653 · PPPoE link에서 PMTU가 줄어드는 TCP PMTUD 예제 topology*
 
 client C는 `10.0.0.123`, gateway는 `10.0.0.1`, Internet server S는 `169.229.62.97`이다. gateway의 PPPoE MTU를 288로 낮추고, client의 `net.ipv4.route.min_pmtu`도 68로 낮춰 Linux가 너무 작은 PMTU를 clamp하지 않게 한다. 기본 clamp가 있으면 작은 MTU 공격을 줄이는 데는 도움이 되지만, 여기서는 288-byte PMTU 관찰을 방해한다.
@@ -287,7 +287,7 @@ TCP가 어떤 segment를 보내고 어떤 segment를 받아들이는지는 현�
 
 TCP는 초기화되면 CLOSED에서 시작한다. application이 passive open을 요청하면 LISTEN으로 가고, active open을 요청하면 SYN_SENT로 간다. 이후 SYN, ACK, FIN, RST 같은 control bit가 있는 segment를 주고받으며 state가 전이된다.
 
-![Figure 13-8](@/assets/images/251_figure_13_8_page_656.png)
+![Figure 13-8](@/assets/images/cs-tcp-ip-illustrated-251-figure-13-8-page-656.png)
 *Figure 13-8 · PDF p. 656 · TCP finite state machine과 active/passive close 경로*
 
 주요 state는 다음처럼 묶어 이해하면 좋다.
@@ -308,7 +308,7 @@ TCP는 초기화되면 CLOSED에서 시작한다. application이 passive open을
 
 ESTABLISHED는 Chapter 14-17의 대부분 TCP data transfer 논의가 벌어지는 상태다. FIN_WAIT_1, FIN_WAIT_2, TIME_WAIT은 local application이 먼저 close한 active close 경로에 속한다. CLOSE_WAIT과 LAST_ACK는 peer가 먼저 FIN을 보낸 passive close 경로다. CLOSING은 simultaneous close에서 등장한다.
 
-![Figure 13-9](@/assets/images/252_figure_13_9_page_658.png)
+![Figure 13-9](@/assets/images/cs-tcp-ip-illustrated-252-figure-13-9-page-658.png)
 *Figure 13-9 · PDF p. 658 · normal TCP establishment/termination에서 client와 server가 지나는 state*
 
 일반 client/server 흐름에서 client는 active open으로 SYN_SENT에 들어가고, server는 LISTEN에서 SYN을 받아 SYN_RCVD로 간다. 3-way handshake가 끝나면 둘 다 ESTABLISHED가 된다. 종료 예시에서는 client가 active close를 하므로 FIN_WAIT_1, FIN_WAIT_2, TIME_WAIT을 지나고, server는 CLOSE_WAIT, LAST_ACK를 지난다. 물론 active close는 client만 하는 것이 아니며 어느 쪽도 먼저 close할 수 있다.
@@ -387,7 +387,7 @@ half-open connection은 한쪽 endpoint가 connection을 닫거나 abort했지�
 
 TIME_WAIT state는 closed connection의 delayed datagram을 폐기하기 위해 존재한다. 하지만 TIME_WAIT 중 특정 segment, 특히 RST를 처리하는 방식이 잘못되면 TIME_WAIT이 조기에 사라질 수 있다. 이를 TIME-WAIT Assassination(TWA)이라고 한다.
 
-![Figure 13-10](@/assets/images/253_figure_13_10_page_670.png)
+![Figure 13-10](@/assets/images/cs-tcp-ip-illustrated-253-figure-13-10-page-670.png)
 *Figure 13-10 · PDF p. 670 · RST가 TIME_WAIT state를 조기 종료시키는 TIME-WAIT Assassination 흐름*
 
 Figure 13-10의 흐름은 다음과 같다. server는 connection state를 이미 CLOSED로 정리했고, client는 final ACK 후 TIME_WAIT에 남아 있다. 이때 server에서 client 방향의 오래된 segment가 뒤늦게 도착한다. client는 old sequence/ACK 값을 보고 현재 값 `K`, `L`을 담은 ACK를 보낸다. 그러나 server는 이미 connection 정보를 모르는 CLOSED 상태이므로 이 ACK에 대해 RST를 보낸다.

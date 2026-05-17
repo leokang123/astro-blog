@@ -6,7 +6,7 @@ description: "add를 잘못한 경우는 비교적 간단하다"
 tags:
   - "일반"
   - "깃"
-banner: "@/assets/images/cavemansitting.jpg"
+banner: "@/assets/images/shared-cavemansitting.jpg"
 ---
 
 # 잘못 Add, Commit, Push 한 경우
@@ -32,7 +32,7 @@ add를 잘못한 경우는 비교적 간단하다
 
 이 명령어를 통해 지금까지 커밋한 내용중 n개를 보여준다
 거기서 pick, edit. drop 등 명령어를 사용할수 있는데
-![Pasted image 20241123190831](@/assets/images/pasted-image-20241123190831.png)
+![Pasted image 20241123190831](@/assets/images/legacy-git-pasted-image-20241123190831.png)
 위와 같이 생겼다
 
 pick은 문제없이 사용하겠다는 의미이고,

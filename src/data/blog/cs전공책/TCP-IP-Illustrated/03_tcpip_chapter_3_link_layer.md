@@ -50,12 +50,12 @@ CSMA/CD의 동작은 다음처럼 이해할 수 있다.
 3. Collision Detection: 동시에 전송이 발생하면 전기적 충돌을 감지한다.
 4. Backoff: 충돌한 host들은 즉시 멈추고 random time을 기다린 뒤 재시도한다. 충돌이 반복되면 backoff window가 커져 재충돌 확률을 낮춘다.
 
-![Figure 3-1](@/assets/images/026_figure_3_1_page_119.png)
+![Figure 3-1](@/assets/images/cs-tcp-ip-illustrated-026-figure-3-1-page-119.png)
 *Figure 3-1 · PDF p. 119 · shared Ethernet에서 여러 station이 하나의 cable을 공유하고 CSMA/CD로 접근을 조정하는 구조*
 
 초기 shared Ethernet에서는 충돌이 정상적인 동작 일부였지만, 현대 Ethernet은 대부분 switched Ethernet이다. 각 host는 switch의 port에 point-to-point로 연결되고, switch가 frame을 적절한 port로 전달한다. 이 구조에서는 각 link가 full-duplex로 동작할 수 있으므로 전통적인 CSMA/CD의 필요성이 크게 줄어든다.
 
-![Figure 3-2](@/assets/images/027_figure_3_2_page_120.png)
+![Figure 3-2](@/assets/images/cs-tcp-ip-illustrated-027-figure-3-2-page-120.png)
 *Figure 3-2 · PDF p. 120 · switched Ethernet에서 host와 switch가 star 형태로 연결되고 switch가 frame forwarding을 담당하는 구조*
 
 Ethernet의 발전은 속도만 바뀐 것이 아니다. 10Mb/s shared cable에서 100Mb/s, 1Gb/s, 10Gb/s, 100Gb/s 이상의 switched full-duplex link로 이동하면서, LAN의 중심 문제도 "공유 매체 충돌 제어"에서 "switching, loop 방지, VLAN, QoS, aggregation" 쪽으로 이동했다.
@@ -77,7 +77,7 @@ IEEE 802 계열에서는 link layer를 대략 두 하위 계층으로 나누어 
 
 Ethernet frame은 preamble과 SFD(Start Frame Delimiter)로 수신 측 clock recovery와 frame 시작 인식을 돕고, 그 뒤에 MAC destination/source address, type/length, payload, FCS(Frame Check Sequence)가 이어지는 구조를 가진다. 구체적인 field 크기와 CRC 계산, frame size 제한은 다음 구간에서 Figure 3-3과 함께 정리한다.
 
-![Figure 3-3](@/assets/images/028_figure_3_3_page_124.png)
+![Figure 3-3](@/assets/images/cs-tcp-ip-illustrated-028-figure-3-3-page-124.png)
 *Figure 3-3 · PDF p. 124 · Ethernet/IEEE 802.3 frame format, 802.1p/q tag, FCS/CRC32, envelope frame 확장 위치*
 
 Ethernet frame의 주요 field는 다음처럼 해석하면 된다.
@@ -103,7 +103,7 @@ FCS(Frame Check Sequence)는 Ethernet frame 끝의 32-bit CRC32 값이다. CRC�
 
 수신 측도 같은 계산을 수행한다. 계산 결과와 FCS가 맞지 않으면 frame은 손상되었을 가능성이 높으므로 보통 폐기된다. 이때 Ethernet 자체가 손상 frame을 재전송해 주는 것은 아니다. 재전송이 필요하면 상위 계층, 예를 들어 TCP 같은 reliability mechanism이 감지하고 처리한다.
 
-![Figure 3-4](@/assets/images/029_figure_3_4_page_126.png)
+![Figure 3-4](@/assets/images/cs-tcp-ip-illustrated-029-figure-3-4-page-126.png)
 *Figure 3-4 · PDF p. 126 · CRC4 예시로 보는 modulo-2 binary division과 remainder 계산*
 
 CRC를 공부할 때 주의할 점은 "나머지를 붙이면 오류를 정정한다"가 아니라 "수신자가 오류 가능성을 검출하게 한다"는 것이다. CRC가 틀린 frame은 조용히 버려질 수 있으므로, link layer 위의 protocol은 loss 가능성을 항상 염두에 두어야 한다.
@@ -139,7 +139,7 @@ VLAN membership은 여러 방식으로 정할 수 있다.
 
 여러 switch 사이로 VLAN을 확장하려면 trunk link에서 frame이 어느 VLAN에 속하는지 표시해야 한다. IEEE 802.1q tag는 12-bit VLAN ID를 담아 최대 4096개의 값을 표현하지만, VLAN 0과 VLAN 4095는 예약되어 있다. 같은 tag 안에는 IEEE 802.1p priority 3 bits도 있어 8개의 service class를 표현할 수 있다. class 0은 일반 best-effort traffic, class 7은 routing/network management 같은 높은 우선순위 용도로 쓰일 수 있다. 다만 표준은 priority 값을 어떻게 표시할지를 정하고, 실제 scheduling/queuing 정책은 구현 또는 vendor 정책에 맡긴다.
 
-![Figure 3-5](@/assets/images/030_figure_3_5_page_130.png)
+![Figure 3-5](@/assets/images/cs-tcp-ip-illustrated-030-figure-3-5-page-130.png)
 *Figure 3-5 · PDF p. 130 · Wireshark에서 VLAN ID가 붙은 Q-tagged Ethernet frame을 확인한 예*
 
 Figure 3-5의 예시는 ARP packet이 VLAN 2 위에서 Ethernet II encapsulation으로 실린 모습이다. EtherType `0x8100`은 뒤에 VLAN header가 있음을 뜻하고, VLAN header가 VLAN ID와 priority를 제공한 뒤 실제 upper-layer protocol 정보가 이어진다.
@@ -173,7 +173,7 @@ Wake-on LAN(WoL)은 host 또는 network interface가 저전력 상태에 있을 
 
 magic packet은 가장 대표적인 WoL trigger이다. 보통 broadcast Ethernet frame 안에 UDP packet 형태로 실리지만, 핵심은 UDP port가 아니라 payload pattern이다. payload는 먼저 6 bytes의 `0xFF`로 시작하고, 이어서 깨울 대상의 MAC address를 16번 반복한다.
 
-![Figure 3-7](@/assets/images/032_figure_3_7_page_136.png)
+![Figure 3-7](@/assets/images/cs-tcp-ip-illustrated-032-figure-3-7-page-136.png)
 *Figure 3-7 · PDF p. 136 · magic packet이 6개의 0xFF 뒤에 대상 MAC address를 16회 반복하는 WoL payload pattern*
 
 WoL은 편리하지만 보안 관점에서는 "누가 어떤 네트워크 범위에서 깨울 수 있는가"를 함께 봐야 한다. 특히 broadcast로 전달되는 magic packet은 관리망, 방화벽, 스위치 정책과 맞물려 동작한다.
@@ -190,12 +190,12 @@ switched full-duplex Ethernet에서도 congestion이 사라지는 것은 아니�
 
 IEEE 802.1d는 bridge의 동작을 정의한다. switch는 본질적으로 고성능 multiport bridge로 볼 수 있다. bridge/switch는 여러 physical link-layer segment를 연결해 하나의 extended LAN처럼 보이게 하며, frame의 source MAC address를 관찰해 어느 address가 어느 port 뒤에 있는지 학습한다. 다음 구간에서는 이 learning/filtering database와 loop 방지를 위한 STP(Spanning Tree Protocol)를 자세히 정리한다.
 
-![Figure 3-8](@/assets/images/033_figure_3_8_page_138.png)
+![Figure 3-8](@/assets/images/cs-tcp-ip-illustrated-033-figure-3-8-page-138.png)
 *Figure 3-8 · PDF p. 138 · 두 switch가 연결된 extended Ethernet LAN과 각 station/switch의 MAC address*
 
 switch가 처음 켜지면 filtering database 또는 forwarding database(FDB)는 비어 있다. 이때 목적지 MAC address의 위치를 모르는 frame은 수신 port를 제외한 모든 port로 flooding된다. 이후 switch는 들어오는 frame의 source MAC address를 보고 "이 address는 이 port 뒤에 있다"는 mapping을 학습한다.
 
-![Figure 3-9](@/assets/images/034_figure_3_9_page_138.png)
+![Figure 3-9](@/assets/images/cs-tcp-ip-illustrated-034-figure-3-9-page-138.png)
 *Figure 3-9 · PDF p. 138 · source address 관찰로 학습된 Switch A/B의 filtering database 예*
 
 bridge/switch learning의 핵심 규칙은 간단하다.
@@ -208,7 +208,7 @@ bridge/switch learning의 핵심 규칙은 간단하다.
 | broadcast/multicast | 정책에 따라 여러 port로 전달. multicast 최적화는 뒤의 MMRP/IGMP/MLD와 연결 |
 | entry ageing timeout | 오래 보이지 않은 MAC entry 삭제 후 다시 학습 |
 
-![Figure 3-11](@/assets/images/036_figure_3_11_page_140.png)
+![Figure 3-11](@/assets/images/cs-tcp-ip-illustrated-036-figure-3-11-page-140.png)
 *Figure 3-11 · PDF p. 140 · Linux PC가 두 Ethernet segment 사이에서 learning bridge로 동작하는 예*
 
 FDB entry에는 ageing timer가 붙는다. station이 이동하거나 NIC가 교체되거나 MAC address가 바뀔 수 있으므로, 한 번 배운 mapping을 영원히 믿으면 안 된다. entry가 만료되면 다음 destination frame은 다시 flooding되고, 이후 source address 관찰로 새 위치를 학습한다. 따라서 learning bridge는 table이 비어 있어도 동작은 하지만, overhead가 커진다.
@@ -217,12 +217,12 @@ FDB entry에는 ageing timer가 붙는다. station이 이동하거나 NIC가 교
 
 redundant link는 장애 대응에는 좋지만 Ethernet bridge에서는 loop를 만든다. loop가 있는 상태에서 flooding이 발생하면 frame copy가 계속 증폭되고, broadcast storm처럼 LAN 전체를 마비시킬 수 있다. 더 나쁘게는 같은 source MAC address가 여러 port에서 반복 관측되어 FDB가 흔들린다.
 
-![Figure 3-12](@/assets/images/037_figure_3_12_page_142.png)
+![Figure 3-12](@/assets/images/cs-tcp-ip-illustrated-037-figure-3-12-page-142.png)
 *Figure 3-12 · PDF p. 142 · redundant link가 있는 extended LAN에서 단순 flooding이 broadcast storm을 만들 수 있는 구조*
 
 STP(Spanning Tree Protocol)는 일부 port를 forwarding하지 않도록 막아 graph의 loop를 제거한다. 목표는 전체 bridge graph를 spanning tree로 바꾸는 것이다. spanning tree는 모든 node가 연결되어 있지만 cycle은 없는 edge 집합이다. 즉, 모든 station은 도달 가능해야 하지만 두 station 사이의 활성 path는 하나만 남긴다.
 
-![Figure 3-13](@/assets/images/038_figure_3_13_page_142.png)
+![Figure 3-13](@/assets/images/cs-tcp-ip-illustrated-038-figure-3-13-page-142.png)
 *Figure 3-13 · PDF p. 142 · STP가 일부 port를 blocked 상태로 두어 loop 없는 forwarding topology를 만든 예*
 
 STP는 BPDU(Bridge Protocol Data Unit)를 교환해 분산 알고리즘으로 tree를 만든다. 먼저 root bridge를 선출하고, 각 bridge는 root bridge까지의 least-cost path를 계산한다. link cost는 권장값 기준으로 link speed에 반비례한다. 예를 들어 10Mb/s link는 cost 100, 100Mb/s link는 19, 1000Mb/s link는 4처럼 빠른 link일수록 낮은 cost를 갖는다.
@@ -231,7 +231,7 @@ STP는 BPDU(Bridge Protocol Data Unit)를 교환해 분산 알고리즘으로 tr
 
 전통적인 STP의 port state는 blocking, listening, learning, forwarding, disabled이다. 이 state machine은 "loop가 생기지 않도록 충분히 기다리면서도, 결국 필요한 port는 forwarding에 참여시키는" 절충이다.
 
-![Figure 3-14](@/assets/images/039_figure_3_14_page_144.png)
+![Figure 3-14](@/assets/images/cs-tcp-ip-illustrated-039-figure-3-14-page-144.png)
 *Figure 3-14 · PDF p. 144 · STP port state transition과 RSTP에서 대응되는 discarding/learning/forwarding 상태*
 
 | STP state | data forwarding | address learning | BPDU 처리 | 의미 |
@@ -248,7 +248,7 @@ port role도 중요하다. root port는 해당 bridge에서 root bridge로 가�
 
 BPDU는 bridge들이 STP/RSTP 상태를 맞추기 위해 주고받는 control frame이다. BPDU는 bridge group address `01:80:C2:00:00:00`으로 전송되며, 일반 data frame처럼 bridge를 그대로 통과하지 않고 bridge가 처리하고 필요한 정보를 반영해 새로 전파한다.
 
-![Figure 3-15](@/assets/images/040_figure_3_15_page_145.png)
+![Figure 3-15](@/assets/images/cs-tcp-ip-illustrated-040-figure-3-15-page-145.png)
 *Figure 3-15 · PDF p. 145 · BPDU format과 Root ID, Root Path Cost, Bridge ID, Port ID, timer field의 위치*
 
 BPDU에서 특히 중요한 field는 다음과 같다.
@@ -323,7 +323,7 @@ MVRP는 VLAN topology 변화가 있을 때 무조건 STP 재계산으로 몰고 
 
 Wi-Fi, 즉 IEEE 802.11은 Ethernet과 같은 link-layer 계열이지만 매체가 무선이라는 점 때문에 훨씬 복잡하다. 무선에서는 송신 중 충돌을 신뢰성 있게 감지하기 어렵고, interference, signal strength, hidden terminal, power saving 같은 문제가 직접 성능과 correctness에 영향을 준다.
 
-![Figure 3-17](@/assets/images/042_figure_3_17_page_151.png)
+![Figure 3-17](@/assets/images/cs-tcp-ip-illustrated-042-figure-3-17-page-151.png)
 *Figure 3-17 · PDF p. 151 · IEEE 802.11의 STA, AP, BSS, DS, ESS 용어와 infrastructure mode 구조*
 
 IEEE 802.11 용어는 다음처럼 정리된다.
@@ -345,7 +345,7 @@ infrastructure mode에서는 station이 AP에 association을 맺고, AP는 DS를
 
 802.11에는 공통적인 frame 골격이 있지만 management, control, data frame에 따라 실제 field 사용이 달라진다. Ethernet frame과 비슷하게 MAC address와 FCS가 있지만, DS 방향, QoS, 802.11n high-throughput 기능, aggregation 여부 때문에 field 수가 더 많다.
 
-![Figure 3-18](@/assets/images/043_figure_3_18_page_152.png)
+![Figure 3-18](@/assets/images/cs-tcp-ip-illustrated-043-figure-3-18-page-152.png)
 *Figure 3-18 · PDF p. 152 · 802.11 physical-layer PDU와 MPDU/MAC header의 기본 data frame format*
 
 802.11 frame은 크게 physical-layer PDU와 MAC PDU(MPDU)로 볼 수 있다. preamble은 synchronization을 담당하고, PLCP(Physical Layer Convergence Procedure) header는 특정 PHY 정보를 PHY-independent하게 제공한다. PLCP 부분은 보통 낮은 rate로 전송되어 legacy 장비와의 호환 및 간섭 방지에 도움을 준다.
@@ -387,7 +387,7 @@ fragmentation의 직관은 bit error rate(BER)로 설명된다. bit 하나가 �
 
 802.11n의 aggregation은 overhead를 줄여 throughput을 높이는 방향이다.
 
-![Figure 3-19](@/assets/images/044_figure_3_19_page_157.png)
+![Figure 3-19](@/assets/images/cs-tcp-ip-illustrated-044-figure-3-19-page-157.png)
 *Figure 3-19 · PDF p. 157 · 802.11n의 A-MSDU와 A-MPDU frame aggregation 구조와 FCS/ACK 차이*
 
 | Aggregation | 구성 | 장점 | 약점 |
@@ -460,14 +460,14 @@ EDCA는 8개 UP(User Priority)을 4개 AC(Access Category)로 매핑한다. AC�
 
 2.4GHz 802.11b/g channel은 각 channel이 22MHz 폭을 가지며 서로 많이 overlap된다.
 
-![Figure 3-20](@/assets/images/045_figure_3_20_page_164.png)
+![Figure 3-20](@/assets/images/cs-tcp-ip-illustrated-045-figure-3-20-page-164.png)
 *Figure 3-20 · PDF p. 164 · 2.4GHz ISM band의 802.11b/g 14개 overlapping channel과 1/6/11 비중첩 배치*
 
 미국 기준으로 흔히 channel 1, 6, 11을 함께 쓰는 이유는 세 channel이 서로 겹치지 않는 대표 조합이기 때문이다. 여러 AP가 같은 공간에서 동작하면 같은 channel뿐 아니라 인접 overlapping channel도 성능을 떨어뜨릴 수 있다.
 
 5GHz 계열은 channel set이 더 복잡하지만 nonoverlapping channel을 더 많이 제공한다.
 
-![Figure 3-21](@/assets/images/046_figure_3_21_page_165.png)
+![Figure 3-21](@/assets/images/cs-tcp-ip-illustrated-046-figure-3-21-page-165.png)
 *Figure 3-21 · PDF p. 165 · 5GHz U-NII 중심의 802.11a/n/y channel number와 center frequency 범위*
 
 AP는 설치 시 operating channel을 정하고, client station은 AP에 association하기 위해 channel을 바꾼다. ad hoc mode에서는 조정 AP가 없으므로 station이 channel을 직접 맞춰야 한다. 사용 가능한 channel과 power는 국가별 regulatory domain, hardware capability, driver software에 의해 제한된다.
@@ -539,7 +539,7 @@ LCP는 point-to-point link의 low-level 양방향 communication path를 만들�
 
 PPP의 기본 framing은 HDLC 계열에서 빌려왔다.
 
-![Figure 3-22](@/assets/images/047_figure_3_22_page_170.png)
+![Figure 3-22](@/assets/images/cs-tcp-ip-illustrated-047-figure-3-22-page-170.png)
 *Figure 3-22 · PDF p. 170 · HDLC에서 차용한 PPP basic frame format, Protocol field, payload, FCS, Flag 구조*
 
 PPP frame field는 다음처럼 이해하면 된다.
@@ -564,7 +564,7 @@ PPP는 일반적으로 link-layer retransmission을 제공하지 않는다. Ethe
 
 LCP packet은 PPP frame의 Protocol field가 `0xC021`일 때 payload로 들어간다.
 
-![Figure 3-23](@/assets/images/048_figure_3_23_page_172.png)
+![Figure 3-23](@/assets/images/cs-tcp-ip-illustrated-048-figure-3-23-page-172.png)
 *Figure 3-23 · PDF p. 172 · PPP frame 안에 들어가는 LCP packet format과 Code/Ident/Length/Data field*
 
 LCP의 핵심 field는 Code, Ident, Length, LCP Data이다. Ident는 request와 response를 대응시키는 sequence number 역할을 한다. sender가 configure-request를 보낼 때 Ident를 넣고, peer가 configure-ACK/NACK/REJECT를 만들 때 같은 Ident를 복사한다.
@@ -587,7 +587,7 @@ ACK는 제안 option을 그대로 수락한다는 뜻이고, NACK는 일부 opti
 
 LCP는 looped line detection도 지원한다. 전화망 같은 WAN circuit은 시험을 위해 loopback mode가 될 수 있는데, 이 상태에서는 한쪽에서 보낸 data가 그대로 돌아온다. LCP는 magic number를 보내고 같은 message type으로 즉시 되돌아오는지 확인해 line이 looped인지 판단할 수 있다.
 
-![Figure 3-24](@/assets/images/049_figure_3_24_page_174.png)
+![Figure 3-24](@/assets/images/cs-tcp-ip-illustrated-049-figure-3-24-page-174.png)
 *Figure 3-24 · PDF p. 174 · LCP configure request/ACK, authentication, data exchange, termination으로 이어지는 PPP link establishment 흐름*
 
 PPP link는 underlying layer가 active라고 알려 주면 Establish 단계로 들어가고, LCP configure exchange로 option을 맞춘다. 필요한 경우 Auth 단계에서 authentication을 수행한 뒤 Network 단계에서 NCP가 network-layer 설정을 진행한다. 종료는 carrier loss 같은 하위 신호 또는 terminate-request/terminate-ACK 교환으로 이루어진다.
@@ -615,7 +615,7 @@ Multilink PPP(MP)는 여러 point-to-point link를 하나의 logical bundle로 �
 
 단순히 packet을 member link에 번갈아 보내는 bank teller's algorithm은 reordering을 만들 수 있다. TCP/IP는 packet reordering을 견딜 수 있지만 성능은 나빠질 수 있다. 그래서 MP는 fragment마다 sequencing header를 붙이고, 수신 측이 순서를 복원한다.
 
-![Figure 3-25](@/assets/images/050_figure_3_25_page_177.png)
+![Figure 3-25](@/assets/images/cs-tcp-ip-illustrated-050-figure-3-25-page-177.png)
 *Figure 3-25 · PDF p. 177 · Multilink PPP fragment header의 Begin/End bit와 sequence number 구조*
 
 MP fragment header에는 B(Begin) bit, E(End) bit, Sequence Number가 있다. fragment되지 않은 frame이 이 형식으로 전송되면 B와 E가 모두 1이다. 첫 fragment는 `B=1, E=0`, 마지막 fragment는 `B=0, E=1`, 중간 fragment는 `B=0, E=0`이다. short sequence number option을 협상하면 2-byte header를 쓰고, 그렇지 않으면 4-byte header를 사용할 수 있다.
@@ -712,7 +712,7 @@ tunneling은 어떤 protocol packet을 다른 protocol packet 안에 넣어 virt
 
 대표 tunnel protocol은 GRE(Generic Routing Encapsulation), PPTP(Point-to-Point Tunneling Protocol), L2TP(Layer 2 Tunneling Protocol), IP-in-IP 등이 있다. GRE와 L2TP는 각각 IP-in-IP와 PPTP의 표준적 대체/발전으로 볼 수 있지만, 실제 환경에서는 여러 방식이 함께 남아 있다.
 
-![Figure 3-26](@/assets/images/051_figure_3_26_page_188.png)
+![Figure 3-26](@/assets/images/cs-tcp-ip-illustrated-051-figure-3-26-page-188.png)
 *Figure 3-26 · PDF p. 188 · GRE header의 C/K/S bit, Protocol Type, optional Checksum/Key/Sequence Number 구조*
 
 GRE 기본 header는 4 bytes로 단순하다. C bit가 set이면 checksum이 있고, RFC 2890 확장에서는 K bit와 S bit로 optional Key field와 Sequence Number field를 표시한다. Key는 여러 packet이 같은 flow에 속함을 나타내는 식별자로 쓸 수 있고, Sequence Number는 서로 다른 link를 거치며 순서가 바뀐 packet을 재정렬하는 데 도움을 준다.
@@ -726,7 +726,7 @@ GRE와 PPTP는 관련 있지만 목적이 다르다.
 | 보안 | 자체 encryption은 일반적으로 없음. IPsec과 결합 가능 | MPPE 등 PPP 쪽 encryption과 결합되는 경우가 많음 |
 | 표준성 | IETF RFC 기반 | Microsoft proprietary 성격, nonstandard GRE 변형 사용 |
 
-![Figure 3-27](@/assets/images/053_figure_3_27_page_189.png)
+![Figure 3-27](@/assets/images/cs-tcp-ip-illustrated-053-figure-3-27-page-189.png)
 *Figure 3-27 · PDF p. 189 · PPTP가 사용하는 nonstandard GRE 기반 header와 sequence/acknowledgment field*
 
 PPTP header는 오래된 nonstandard GRE header에서 왔고, K/S/A bit로 Key, Sequence Number, Acknowledgment Number 존재 여부를 나타낸다. Sequence/Acknowledgment는 PPTP가 data delivery와 flow control을 추적하는 데 쓰이며, adaptive timeout으로 RTT를 추정한다. 이 개념은 나중에 TCP의 timeout/RTT 추정과 연결된다.

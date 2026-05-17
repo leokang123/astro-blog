@@ -7,13 +7,13 @@ tags:
   - "일반"
   - "함수형프로그래밍"
   - "개념"
-banner: "@/assets/images/surfingboards.jpg"
+banner: "@/assets/images/legacy-functional-programming-surfingboards.jpg"
 ---
 
 # LISP
 
 #함수형프로그래밍 #개념
-![Pasted image 20240812162039](@/assets/images/pasted-image-20240812162039.png)
+![Pasted image 20240812162039](@/assets/images/legacy-functional-programming-pasted-image-20240812162039.png)
 
 ## LISP란
 

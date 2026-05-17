@@ -83,7 +83,7 @@ T.nil.color    = BLACK
 
 각 `NIL`마다 별도 sentinel node를 만들면 parent가 명확해지지만 공간을 낭비한다. 하나의 `T.nil`을 공유하면 공간을 아끼면서도 `NIL` child를 ordinary black node처럼 다룰 수 있다. 다만 procedure 중 편의를 위해 `T.nil.p` 같은 attribute가 임시로 설정될 수 있으므로, sentinel의 key나 child pointer 값에 의미를 두면 안 된다.
 
-![Figure 13.1](@/assets/images/054_figure_13-1_page_331.png)
+![Figure 13.1](@/assets/images/cs-algorithm-054-figure-13-1-page-331.png)
 *Figure 13.1 · PDF p. 331 · red-black tree, `T.nil` sentinel, NIL leaves 생략 표기*
 
 Figure 13.1은 같은 red-black tree를 세 방식으로 보여준다. (a)는 모든 `NIL` leaf를 표시하고 각 non-NIL node 옆에 black-height를 적는다. (b)는 모든 `NIL`을 하나의 sentinel `T.nil`로 대체한 모습을 보여준다. (c)는 이후 장에서 사용할 관례처럼 leaves와 root parent를 생략한 그림이다. 실제 알고리즘은 `T.nil`을 쓰지만, 이해용 그림에서는 보통 생략된다는 점을 기억해야 한다.
@@ -135,7 +135,7 @@ Red nodes를 black parent에 “흡수(absorb)”하면 black node 하나가 2-n
 
 Rotation은 `binary-search-tree property`를 보존한다. 즉 subtree의 모양과 parent-child 관계는 바뀌지만, inorder traversal 결과는 그대로다.
 
-![Figure 13.2](@/assets/images/056_figure_13-2_page_334.png)
+![Figure 13.2](@/assets/images/cs-algorithm-056-figure-13-2-page-334.png)
 *Figure 13.2 · PDF p. 334 · BST property를 보존하는 left/right rotation의 기본 형태*
 
 Figure 13.2에서 `LEFT-ROTATE(T, x)`는 `x`의 right child `y`를 subtree의 새 root로 올리고, `x`를 `y.left`로 내린다. 기존 `y.left`였던 subtree `β`는 `x.right`가 된다. 이때 key 순서는 항상 다음을 만족한다.
@@ -177,7 +177,7 @@ Pointer 변화는 네 묶음으로 읽으면 쉽다.
 
 Rotation은 node의 `key`, `color`, satellite data 같은 attributes를 바꾸지 않는다. 바뀌는 것은 constant number of pointers뿐이다. 따라서 `LEFT-ROTATE`와 `RIGHT-ROTATE`는 모두 `O(1)` time이다.
 
-![Figure 13.3](@/assets/images/057_figure_13-3_page_335.png)
+![Figure 13.3](@/assets/images/cs-algorithm-057-figure-13-3-page-335.png)
 *Figure 13.3 · PDF p. 335 · `LEFT-ROTATE(T, x)` 전후에도 inorder key order가 유지되는 예*
 
 Figure 13.3은 `x = 11`, `y = 18`인 곳에서 left rotation을 수행한다. Rotation 후 `18`이 해당 subtree의 root로 올라가고 `11`은 그 left child가 된다. 하지만 input tree와 modified tree의 inorder traversal은 같은 key listing을 만든다. Red-black insertion/deletion fixup이 rotation을 안심하고 쓰는 이유가 바로 이 ordering 보존성이다.
@@ -271,7 +271,7 @@ Loop 시작 시 유지되는 핵심 invariant는 다음과 같다.
 
 이 invariant 덕분에 loop 안에서 `z.p.p`를 안전하게 참조할 수 있다. Loop에 들어왔다는 것은 `z.p`가 red라는 뜻이고, root가 red parent일 수는 없으므로 `z.p`는 root가 아니다. 따라서 grandparent `z.p.p`가 존재한다.
 
-![Figure 13.4](@/assets/images/058_figure_13-4_page_338.png)
+![Figure 13.4](@/assets/images/cs-algorithm-058-figure-13-4-page-338.png)
 *Figure 13.4 · PDF p. 338 · `RB-INSERT-FIXUP`이 case 1, 2, 3을 거쳐 red-red violation을 복구하는 예*
 
 Figure 13.4는 insertion 후 `z`와 parent가 모두 red인 상태에서 시작해, case 1로 violation을 위로 올리고, case 2로 모양을 바꾼 뒤, case 3으로 rotation과 recoloring을 수행해 legal red-black tree가 되는 과정을 보여준다.
@@ -287,7 +287,7 @@ z.p.p.color = RED
 z           = z.p.p
 ```
 
-![Figure 13.5](@/assets/images/059_figure_13-5_page_341.png)
+![Figure 13.5](@/assets/images/cs-algorithm-059-figure-13-5-page-341.png)
 *Figure 13.5 · PDF p. 341 · uncle이 red인 insertion fixup case 1의 recoloring*
 
 Case 1은 rotation 없이 recoloring만 한다. Parent와 uncle을 black으로 바꾸면 `z`와 `z.p` 사이의 red-red violation은 사라진다. Grandparent를 red로 바꾸는 이유는 property 5를 유지하기 위해서다. Local subtree에서 아래 path들이 보는 black count가 그대로 유지된다.
@@ -303,7 +303,7 @@ Uncle `y`가 black이면 rotation을 통해 violation을 국소적으로 끝낼 
 | case 2 | `y` is black and `z == z.p.right` | left rotation으로 case 3 모양으로 바꾼다 |
 | case 3 | `y` is black and `z == z.p.left` | recoloring + right rotation으로 violation을 제거한다 |
 
-![Figure 13.6](@/assets/images/060_figure_13-6_page_342.png)
+![Figure 13.6](@/assets/images/cs-algorithm-060-figure-13-6-page-342.png)
 *Figure 13.6 · PDF p. 342 · insertion fixup에서 uncle이 black인 case 2와 case 3*
 
 Case 2는 삼각형 모양을 직선형으로 바꾸는 준비 단계다.
@@ -470,7 +470,7 @@ Loop의 종료 목표는 세 가지 중 하나다.
 - `x`가 root라면 extra black을 제거한다.
 - 적절한 rotation/recoloring으로 extra black을 없애고 loop를 끝낸다.
 
-![Figure 13.7](@/assets/images/061_figure_13-7_page_350.png)
+![Figure 13.7](@/assets/images/cs-algorithm-061-figure-13-7-page-350.png)
 *Figure 13.7 · PDF p. 350 · `RB-DELETE-FIXUP`의 네 가지 extra black 처리 case*
 
 Figure 13.7의 `x`는 extra black을 갖고 있다. 각 case의 변환은 `x`의 extra black까지 포함해 subtree root에서 `α, β, ..., ζ`로 내려가는 black count를 보존하도록 설계되어 있다.
@@ -512,7 +512,7 @@ Sentinel `T.nil`은 deletion fixup에서 실제로 검사되거나 parent pointe
 
 `persistent dynamic set`은 update 이후에도 과거 버전을 계속 사용할 수 있는 set이다. 가장 단순한 방법은 update마다 전체 tree를 복사하는 것이지만, 이는 시간과 공간을 크게 낭비한다. Binary search tree에서는 update path만 새로 복사하고 나머지 subtree는 공유하는 방식으로 훨씬 효율적으로 persistent set을 만들 수 있다.
 
-![Figure 13.8](@/assets/images/062_figure_13-8_page_352.png)
+![Figure 13.8](@/assets/images/cs-algorithm-062-figure-13-8-page-352.png)
 *Figure 13.8 · PDF p. 352 · key 5 삽입 후 update path만 복사해 이전 BST version과 공유하는 persistent tree*
 
 Figure 13.8에서 key `5`를 삽입할 때 기존 node들을 직접 수정하지 않는다. Root `4`, 그 아래 `8`, 그 아래 `7`처럼 insertion path 위 node들만 새로 복사하고, 삽입과 무관한 subtree는 이전 version과 공유한다. 각 version은 별도의 root pointer를 가진다.
@@ -545,7 +545,7 @@ AVL tree의 height가 `O(lg n)`임은 height `h`인 AVL tree가 적어도 Fibona
 
 `treap`은 `tree + heap`의 결합이다. 각 node는 `key`와 random `priority`를 가지며, key에 대해서는 BST property를, priority에 대해서는 min-heap order property를 만족한다.
 
-![Figure 13.9](@/assets/images/063_figure_13-9_page_355.png)
+![Figure 13.9](@/assets/images/cs-algorithm-063-figure-13-9-page-355.png)
 *Figure 13.9 · PDF p. 355 · key와 random priority를 함께 갖는 treap 예*
 
 Treap의 ordering rules는 다음과 같다.
@@ -558,7 +558,7 @@ if v is child of u:        v.priority > u.priority
 
 Priority가 작을수록 heap에서 위에 온다. 모든 keys와 priorities가 distinct라면 treap shape는 유일하다. 또한 treap은 “priority가 작은 순서대로 ordinary BST에 삽입했다면 생겼을 tree”와 같다. Priorities가 random이므로 randomly built BST의 균형 효과를 online insertion 상황에서도 얻는 구조라고 볼 수 있다.
 
-![Figure 13.10](@/assets/images/064_figure_13-10_page_356.png)
+![Figure 13.10](@/assets/images/cs-algorithm-064-figure-13-10-page-356.png)
 *Figure 13.10 · PDF p. 356 · `TREAP-INSERT`가 BST insertion 후 rotations로 heap priority를 복구하는 과정*
 
 `TREAP-INSERT`는 먼저 key 기준으로 ordinary BST insertion을 수행한다. 그런 다음 새 node의 priority가 parent보다 작으면 rotations를 반복해 min-heap order property를 회복한다.
@@ -575,7 +575,7 @@ TREAP-INSERT(T, x)
 
 Treap의 expected height는 `Θ(lg n)`이고, search expected time도 `Θ(lg n)`이다. Insert는 search path를 따라 내려간 뒤 rotations로 올라오므로 expected running time도 `Θ(lg n)`이다.
 
-![Figure 13.11](@/assets/images/065_figure_13-11_page_357.png)
+![Figure 13.11](@/assets/images/cs-algorithm-065-figure-13-11-page-357.png)
 *Figure 13.11 · PDF p. 357 · treap insertion rotation 수 분석에 쓰이는 left spine과 right spine*
 
 Treap insertion에서 search는 읽기 중심이고 rotation은 pointer write를 발생시킨다. 실제 machine에서는 write가 더 비싸므로 rotations 수가 중요하다. CLRS 문제는 삽입된 node `x`의 left subtree의 right spine 길이 `C`와 right subtree의 left spine 길이 `D`를 정의하고, insertion 중 rotations 수가 `C + D`임을 보인다. 기대값 계산 결과 `E[C] < 1`, `E[D] < 1`이 되어, treap insertion의 expected rotations 수는 2보다 작다.

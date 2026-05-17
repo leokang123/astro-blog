@@ -60,19 +60,19 @@ Maximum-subarray problem은 숫자 array에서 sum이 가장 큰 nonempty contig
 
 Figure 4.1은 17일 동안의 stock price와 daily change를 보여준다. 단순히 lowest price에 사고 highest price에 팔면 될 것 같지만, highest price가 lowest price보다 먼저 오면 불가능하다.
 
-![Figure 4.1](@/assets/images/008_figure_4-1_page_89.png)
+![Figure 4.1](@/assets/images/cs-algorithm-008-figure-4-1-page-89.png)
 *Figure 4.1 · PDF p. 89 · 주식 가격과 전일 대비 change를 함께 보여 주는 maximum-subarray 예시*
 
 Figure 4.2는 maximum profit이 overall lowest price에서 시작하지도, overall highest price에서 끝나지도 않을 수 있음을 보여준다. 즉 문제는 단순히 전역 최소/최대 가격을 찾는 문제가 아니다.
 
-![Figure 4.2](@/assets/images/009_figure_4-2_page_90.png)
+![Figure 4.2](@/assets/images/cs-algorithm-009-figure-4-2-page-90.png)
 *Figure 4.2 · PDF p. 90 · maximum profit이 global minimum/maximum price 쌍으로 결정되지 않는 반례*
 
 핵심 변환은 price 자체가 아니라 daily change를 array `A`로 보는 것이다. Day `i`의 change는 day `i-1` 종료 가격과 day `i` 종료 가격의 차이다. 어떤 기간에 사고팔아 얻는 profit은 그 기간의 daily changes를 더한 값과 같다. 따라서 maximum profit은 daily-change array에서 maximum-sum contiguous subarray를 찾는 문제로 바뀐다.
 
 Figure 4.3의 array에서는 `A[8..11] = <18, 20, -7, 12>`의 sum이 43으로 최대다. 이는 day 7 이후에 사고 day 11 이후에 팔면 주당 43달러 profit을 얻는다는 뜻이다.
 
-![Figure 4.3](@/assets/images/010_figure_4-3_page_91.png)
+![Figure 4.3](@/assets/images/cs-algorithm-010-figure-4-3-page-91.png)
 *Figure 4.3 · PDF p. 91 · daily change array에서 `A[8..11]`이 maximum subarray가 되는 예*
 
 #### Brute force와 문제의 성격
@@ -93,7 +93,7 @@ Brute-force solution은 모든 buy/sell date pair, 또는 모든 contiguous suba
 
 Figure 4.4는 이 세 위치와 crossing subarray의 구조를 보여준다. Crossing subarray는 반드시 `A[i..mid]`와 `A[mid+1..j]`의 결합이다.
 
-![Figure 4.4](@/assets/images/011_figure_4-4_page_92.png)
+![Figure 4.4](@/assets/images/cs-algorithm-011-figure-4-4-page-92.png)
 *Figure 4.4 · PDF p. 92 · maximum subarray가 left, right, crossing midpoint 중 하나에 속한다는 divide-and-conquer 구조*
 
 #### FIND-MAX-CROSSING-SUBARRAY
@@ -458,7 +458,7 @@ T(n) = 3T(n/4) + c n^2
 
 Figure 4.5는 이 recurrence의 recursion tree를 보여준다. Root cost는 `cn^2`이고, 각 node는 세 children을 가지며 subproblem size는 매 level마다 1/4로 줄어든다.
 
-![Figure 4.5](@/assets/images/012_figure_4-5_page_110.png)
+![Figure 4.5](@/assets/images/cs-algorithm-012-figure-4-5-page-110.png)
 *Figure 4.5 · PDF p. 110 · `T(n) = 3T(n/4) + cn^2`의 recursion tree와 level별 비용 감소*
 
 Depth `i`의 subproblem size는 `n/4^i`다. `n/4^i = 1`이 될 때 `i = log_4 n`이므로 tree height는 `log_4 n`이고, level 수는 `log_4 n + 1`이다.
@@ -497,7 +497,7 @@ Figure 4.6은 unequal split recurrence를 보여준다.
 T(n) = T(n/3) + T(2n/3) + cn
 ```
 
-![Figure 4.6](@/assets/images/013_figure_4-6_page_112.png)
+![Figure 4.6](@/assets/images/cs-algorithm-013-figure-4-6-page-112.png)
 *Figure 4.6 · PDF p. 112 · `T(n) = T(n/3) + T(2n/3) + cn`의 unequal split recursion tree*
 
 상단 levels에서는 각 level의 cost를 합하면 `cn`처럼 보인다. 가장 긴 root-to-leaf path는 매번 `2n/3` 쪽으로 내려가는 path이고,
@@ -655,7 +655,7 @@ T(n) = aT(n/b) + f(n)
 
 여기서 `a >= 1`, `b > 1`, `f(n)`은 nonnegative function이고, 우선 `n = b^i`라고 가정한다. Lemma 4.2는 이 recurrence를 직접 푸는 대신, recursion tree의 level cost 합으로 바꾼다.
 
-![Figure 4.7](@/assets/images/014_figure_4-7_page_120.png)
+![Figure 4.7](@/assets/images/cs-algorithm-014-figure-4-7-page-120.png)
 *Figure 4.7 · PDF p. 120 · `T(n)=aT(n/b)+f(n)`이 만드는 complete `a`-ary recursion tree*
 
 tree에서 depth `j`에는 node가 `a^j`개 있고, 각 node의 subproblem size는 `n/b^j`다. 따라서 depth `j`의 internal-node cost는
@@ -748,7 +748,7 @@ n_j < n/b^j + b/(b-1)
 
 `j = ⌊log_b n⌋`이면 `n_j = O(1)`이므로 tree depth는 여전히 `Θ(lg n)`이다. 따라서 ceiling이 있어도 tree는 대략 Figure 4.8처럼 읽을 수 있다.
 
-![Figure 4.8](@/assets/images/015_figure_4-8_page_125.png)
+![Figure 4.8](@/assets/images/cs-algorithm-015-figure-4-8-page-125.png)
 *Figure 4.8 · PDF p. 125 · `T(n)=aT(⌈n/b⌉)+f(n)`에서 recursive argument `n_j`를 쓰는 recursion tree*
 
 전체 cost는 exact powers의 식과 거의 같은 형태가 된다.

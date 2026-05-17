@@ -108,19 +108,19 @@ Process가 부분적으로만 memory에 있어도 실행 가능하면 다음 이
 
 Virtual memory는 developer가 보는 logical memory와 실제 physical memory를 분리한다. 작은 physical memory만 있어도 매우 큰 virtual memory를 제공할 수 있다.
 
-![Virtual memory larger than physical memory](@/assets/images/219_Figure_10.1_page_503.png)
+![Virtual memory larger than physical memory](@/assets/images/cs-operating-system-219-figure-10-1-page-503.png)
 <p align="center"><sub>Figure 10.1 · PDF p. 503 · virtual memory가 physical memory보다 크고, 일부 page만 physical memory에 mapping되는 구조</sub></p>
 
 Process의 `virtual address space`는 보통 address 0부터 시작하는 contiguous memory처럼 보인다. 하지만 Chapter 9의 paging 관점에서 실제 physical memory는 page frames로 구성되고, process pages는 physical frames 여기저기에 noncontiguous하게 배치될 수 있다. 이 mapping은 `MMU`가 담당한다.
 
-![Virtual address space](@/assets/images/220_Figure_10.2_page_503.png)
+![Virtual address space](@/assets/images/cs-operating-system-220-figure-10-2-page-503.png)
 <p align="center"><sub>Figure 10.2 · PDF p. 503 · text, data, heap, stack으로 구성된 process virtual address space와 heap/stack 사이의 hole</sub></p>
 
 Heap은 dynamic memory allocation에 따라 upward로 자라고, stack은 function calls에 따라 downward로 자란다. Heap과 stack 사이의 large blank space는 virtual address space에는 있지만, 실제 heap/stack이 자라 그 영역을 쓰기 전까지 physical pages가 필요하지 않다. 이런 hole을 포함한 address space가 `sparse address space`다. Sparse address space는 stack/heap growth와 dynamic libraries/shared objects mapping에 유리하다.
 
 Virtual memory는 page sharing으로 files와 memory를 둘 이상의 processes가 공유하게 한다.
 
-![Shared library using virtual memory](@/assets/images/221_Figure_10.3_page_504.png)
+![Shared library using virtual memory](@/assets/images/cs-operating-system-221-figure-10-3-page-504.png)
 <p align="center"><sub>Figure 10.3 · PDF p. 504 · 각 process의 virtual address space에 library가 있는 것처럼 보이지만 physical shared pages는 하나만 존재하는 구조</sub></p>
 
 System libraries, 예를 들어 standard C library는 각 process의 virtual address space에 mapping되지만, 실제 physical pages는 모든 processes가 공유할 수 있다. 보통 library는 각 process 공간에 read-only로 mapping된다. Chapter 3의 shared memory IPC도 virtual memory를 통해 구현될 수 있다. Process creation에서도 `fork()` 시 pages를 공유하면 child creation을 빠르게 만들 수 있으며, 이 아이디어가 Section 10.3의 `copy-on-write`로 이어진다.
@@ -140,12 +140,12 @@ Demand paging에서는 process 실행 중 일부 pages는 memory에 있고, 일�
 | `valid` | page가 legal하고 현재 memory에 있다. |
 | `invalid` | page가 process logical address space 밖이거나, legal하지만 현재 secondary storage에 있다. |
 
-![Page table with nonresident pages](@/assets/images/222_Figure_10.4_page_505.png)
+![Page table with nonresident pages](@/assets/images/cs-operating-system-222-figure-10-4-page-505.png)
 <p align="center"><sub>Figure 10.4 · PDF p. 505 · 일부 pages는 physical memory에 있고 나머지는 backing store에 있어 page table entry가 invalid로 표시되는 demand paging 상태</sub></p>
 
 Process가 invalid로 표시된 page를 참조하면 `page fault`가 발생한다. Paging hardware가 page table translation 중 invalid bit를 보고 OS로 trap한다. 이 trap은 desired page를 아직 memory에 가져오지 않은 OS의 지연 load 결과다.
 
-![Page fault handling](@/assets/images/223_Figure_10.5_page_506.png)
+![Page fault handling](@/assets/images/cs-operating-system-223-figure-10-5-page-506.png)
 <p align="center"><sub>Figure 10.5 · PDF p. 506 · page fault 발생 후 reference 검사, free frame 확보, missing page read, page table 갱신, instruction restart까지의 흐름</sub></p>
 
 Page fault 처리 절차는 다음과 같다.
@@ -178,7 +178,7 @@ Instruction fetch에서 fault가 나면 instruction을 다시 fetch하면 된다
 
 Page fault가 발생하면 OS는 desired page를 secondary storage에서 main memory로 가져와야 한다. 대부분의 OS는 page fault 처리를 위해 `free-frame list`를 유지한다. 이 list는 page-in 요청과 stack/heap expansion 때 사용할 free frames pool이다.
 
-![Free-frame list](@/assets/images/224_Figure_10.6_page_508.png)
+![Free-frame list](@/assets/images/cs-operating-system-224-figure-10-6-page-508.png)
 <p align="center"><sub>Figure 10.6 · PDF p. 508 · page fault와 stack/heap growth를 처리하기 위해 OS가 유지하는 free-frame list</sub></p>
 
 OS는 보통 `zero-fill-on-demand`를 사용한다. Frame을 allocation하기 전에 0으로 지워 이전 contents를 제거한다. 그렇지 않으면 새 process가 이전 process의 memory contents를 볼 수 있어 security 문제가 된다.
@@ -221,12 +221,12 @@ Mobile OS는 일반적으로 swapping을 지원하지 않는다. 대신 file sys
 
 `copy-on-write (COW)`는 parent와 child가 처음에는 같은 pages를 공유하게 하고, 둘 중 하나가 shared page에 write하려 할 때만 그 page를 copy한다. Shared pages는 `copy-on-write pages`로 marked된다.
 
-![Before copy-on-write modification](@/assets/images/225_Figure_10.7_page_512.png)
+![Before copy-on-write modification](@/assets/images/cs-operating-system-225-figure-10-7-page-512.png)
 <p align="center"><sub>Figure 10.7 · PDF p. 512 · process 1과 process 2가 page A, B, C를 공유하고 있는 copy-on-write 전 상태</sub></p>
 
 예를 들어 child가 stack 일부가 들어 있는 COW page를 수정하려 하면 OS는 free-frame list에서 frame을 얻고 해당 page copy를 만든다. Child page table은 새 copy를 가리키도록 바뀌고, child는 parent의 page가 아니라 자기 copy를 수정한다.
 
-![After copy-on-write modification](@/assets/images/226_Figure_10.8_page_512.png)
+![After copy-on-write modification](@/assets/images/cs-operating-system-226-figure-10-8-page-512.png)
 <p align="center"><sub>Figure 10.8 · PDF p. 512 · process 1이 page C를 수정하자 page C copy가 만들어지고 modified process만 새 page를 가리키는 상태</sub></p>
 
 COW를 쓰면 modified pages만 copy되고, unmodified pages는 parent/child가 계속 공유한다. Executable code pages처럼 수정될 수 없는 pages는 애초에 COW가 아니라 read-only shared pages로 공유하면 된다. Windows, Linux, macOS가 모두 COW를 사용한다.
@@ -241,7 +241,7 @@ System memory는 program pages만 담지 않는다. I/O buffers도 많은 memory
 
 Free-frame list가 비어 있는데 page fault가 발생하면 OS는 desired page의 secondary storage 위치를 알아도 넣을 frame이 없다.
 
-![Need for page replacement](@/assets/images/227_Figure_10.9_page_514.png)
+![Need for page replacement](@/assets/images/cs-operating-system-227-figure-10-9-page-514.png)
 <p align="center"><sub>Figure 10.9 · PDF p. 514 · page fault가 났지만 free frame이 없어 page replacement가 필요한 상황</sub></p>
 
 Process를 terminate하는 것은 paging의 transparency 목표와 맞지 않는다. Entire process를 standard swapping으로 빼는 것도 현대 OS에서는 비용이 너무 크다. 그래서 대부분의 OS는 pages 단위 swapping과 `page replacement`를 결합한다.
@@ -250,7 +250,7 @@ Process를 terminate하는 것은 paging의 transparency 목표와 맞지 않는
 
 `page replacement`는 free frame이 없을 때 현재 덜 필요한 frame을 골라 비우고, 그 frame에 fault를 일으킨 desired page를 load하는 방식이다.
 
-![Page replacement](@/assets/images/228_Figure_10.10_page_515.png)
+![Page replacement](@/assets/images/cs-operating-system-228-figure-10-10-page-515.png)
 <p align="center"><sub>Figure 10.10 · PDF p. 515 · victim page를 page out하고 page table을 invalid로 바꾼 뒤 desired page를 page in하는 replacement 과정</sub></p>
 
 Page fault service routine은 replacement를 포함해 다음처럼 바뀐다.
@@ -290,21 +290,21 @@ reference string:
 
 Available frames 수가 늘면 일반적으로 page faults는 줄어든다.
 
-![Page faults versus frames](@/assets/images/229_Figure_10.11_page_517.png)
+![Page faults versus frames](@/assets/images/cs-operating-system-229-figure-10-11-page-517.png)
 <p align="center"><sub>Figure 10.11 · PDF p. 517 · frames 수가 증가하면 page faults가 감소해 최소 수준으로 접근하는 일반적 경향</sub></p>
 
 ### 10.4.2 FIFO Page Replacement
 
 `FIFO page replacement`는 page가 memory에 들어온 시간을 기준으로 가장 오래된 page를 replace한다. 실제 time을 저장할 필요는 없고, resident pages를 FIFO queue에 넣으면 된다. Replacement 때 queue head의 page를 victim으로 고르고, 새 page는 tail에 넣는다.
 
-![FIFO page replacement](@/assets/images/230_Figure_10.12_page_517.png)
+![FIFO page replacement](@/assets/images/cs-operating-system-230-figure-10-12-page-517.png)
 <p align="center"><sub>Figure 10.12 · PDF p. 517 · 3 frames와 reference string에서 FIFO가 oldest page를 순서대로 replace하는 예</sub></p>
 
 FIFO는 이해와 구현이 쉽지만 성능이 항상 좋지는 않다. 가장 오래 전에 들어온 page가 initialization module처럼 더 이상 안 쓰이는 page일 수도 있지만, 반대로 일찍 초기화된 heavily used variable을 담은 page일 수도 있다. Active page를 잘못 내보내도 correctness는 깨지지 않는다. 곧바로 page fault가 나서 다시 가져올 뿐이다. 문제는 page-fault rate 증가와 execution slowdown이다.
 
 FIFO의 중요한 약점은 `Belady's anomaly`다. 어떤 reference string에서는 allocated frames 수를 늘렸는데 page faults가 오히려 증가한다.
 
-![Belady's anomaly with FIFO](@/assets/images/231_Figure_10.13_page_518.png)
+![Belady's anomaly with FIFO](@/assets/images/cs-operating-system-231-figure-10-13-page-518.png)
 <p align="center"><sub>Figure 10.13 · PDF p. 518 · FIFO에서 frames 수가 3에서 4로 늘었는데 page faults가 증가하는 Belady's anomaly 예</sub></p>
 
 우리는 memory를 더 주면 performance가 좋아질 것이라고 기대하지만, FIFO 같은 일부 algorithms에서는 이 가정이 항상 성립하지 않는다.
@@ -317,7 +317,7 @@ FIFO의 중요한 약점은 `Belady's anomaly`다. 어떤 reference string에서
 Replace the page that will not be used for the longest period of time.
 ```
 
-![Optimal page replacement](@/assets/images/232_Figure_10.14_page_519.png)
+![Optimal page replacement](@/assets/images/cs-operating-system-232-figure-10-14-page-519.png)
 <p align="center"><sub>Figure 10.14 · PDF p. 519 · future reference string을 알고 있을 때 page faults를 최소화하는 optimal replacement 예</sub></p>
 
 OPT는 fixed number of frames에서 lowest possible page-fault rate를 보장하고 Belady's anomaly를 겪지 않는다. 하지만 future reference string을 알아야 하므로 실제 OS에서 구현할 수 없다. Chapter 5의 `SJF` CPU scheduling이 future CPU burst를 알아야 하는 것과 비슷하다. 따라서 OPT는 practical algorithm이 아니라 comparison baseline이다.
@@ -326,7 +326,7 @@ OPT는 fixed number of frames에서 lowest possible page-fault rate를 보장하
 
 `LRU (Least Recently Used)`는 near future를 recent past로 근사한다. OPT가 “앞으로 가장 늦게 쓸 page”를 내보낸다면, LRU는 “과거에 가장 오래 안 쓴 page”를 내보낸다.
 
-![LRU page replacement](@/assets/images/233_Figure_10.15_page_520.png)
+![LRU page replacement](@/assets/images/cs-operating-system-233-figure-10-15-page-520.png)
 <p align="center"><sub>Figure 10.15 · PDF p. 520 · 최근 사용 시점을 기준으로 가장 오래 참조되지 않은 page를 replace하는 LRU 예</sub></p>
 
 LRU는 FIFO보다 좋은 경우가 많고 널리 쓰이는 policy지만 구현이 어렵다. Page마다 last-use time을 알아야 하므로 hardware assistance가 필요하다.
@@ -338,7 +338,7 @@ LRU는 FIFO보다 좋은 경우가 많고 널리 쓰이는 policy지만 구현�
 | `Counters` | CPU logical clock/counter를 두고, page reference마다 page-table entry의 time-of-use field에 현재 clock을 기록한다. 가장 작은 time value를 가진 page가 LRU다. | 모든 memory reference마다 page table write가 필요하고, replacement 때 page table search가 필요하다. clock overflow와 context switch 처리도 고려해야 한다. |
 | `Stack` | referenced page를 stack top으로 옮긴다. top은 most recently used, bottom은 least recently used다. | doubly linked list로 구현하면 update마다 여러 pointers를 바꿔야 하지만 replacement search는 tail pointer로 해결된다. |
 
-![LRU stack implementation](@/assets/images/234_Figure_10.16_page_521.png)
+![LRU stack implementation](@/assets/images/cs-operating-system-234-figure-10-16-page-521.png)
 <p align="center"><sub>Figure 10.16 · PDF p. 521 · page reference가 발생할 때 해당 page를 stack top으로 옮겨 LRU order를 유지하는 방식</sub></p>
 
 LRU와 OPT는 `stack algorithms`에 속해 Belady's anomaly가 없다. Stack algorithm은 n frames에서 memory에 있는 pages set이 n+1 frames에서 memory에 있는 pages set의 subset임을 보일 수 있는 algorithm이다.
@@ -361,7 +361,7 @@ LRU와 OPT는 `stack algorithms`에 속해 Belady's anomaly가 없다. Stack alg
 
 이 algorithm은 보통 circular queue와 clock hand로 구현되어 `clock algorithm`이라고도 부른다.
 
-![Second-chance clock algorithm](@/assets/images/235_Figure_10.17_page_523.png)
+![Second-chance clock algorithm](@/assets/images/cs-operating-system-235-figure-10-17-page-523.png)
 <p align="center"><sub>Figure 10.17 · PDF p. 523 · circular queue에서 clock hand가 reference bit를 확인하고 1이면 clear, 0이면 victim으로 선택하는 second-chance algorithm</sub></p>
 
 Worst case에서 모든 reference bits가 1이면 hand가 전체 queue를 한 바퀴 돌며 모든 bits를 0으로 clear한 뒤 다음 page를 replace한다. 이 경우 second-chance는 FIFO처럼 동작한다.
@@ -457,7 +457,7 @@ OS는 `major page faults`와 `minor page faults`를 구분한다. Major page fau
 
 Global replacement를 구현하는 한 방법은 free-frame list가 완전히 0이 될 때까지 기다리지 않고, minimum threshold 아래로 떨어질 때 page reclamation을 시작하는 것이다.
 
-![Reclaiming pages](@/assets/images/236_Figure_10.18_page_529.png)
+![Reclaiming pages](@/assets/images/cs-operating-system-236-figure-10-18-page-529.png)
 <p align="center"><sub>Figure 10.18 · PDF p. 529 · free memory가 minimum threshold 아래로 떨어지면 kernel reaper가 pages를 회수하고 maximum threshold에 도달하면 중단하는 흐름</sub></p>
 
 이때 kernel routine을 `reaper`라고 부르며, LRU approximation 같은 replacement algorithm으로 pages를 reclaim한다. Free memory가 maximum threshold에 도달하면 reaper는 중단되고, 다시 minimum threshold 아래로 떨어지면 재개된다. Reaper가 free-frame list를 유지하지 못하면 더 aggressive한 strategy로 바꾸거나, Linux처럼 `OOM killer`가 process를 terminate할 수 있다. Linux의 OOM score는 process가 사용하는 memory percentage 등에 기반하며, score가 높을수록 terminate될 가능성이 크다.
@@ -466,7 +466,7 @@ Global replacement를 구현하는 한 방법은 free-frame list가 완전히 0�
 
 지금까지는 main memory access latency가 모두 같다고 가정했다. 하지만 `NUMA (Non-Uniform Memory Access)` systems에서는 CPU마다 local memory가 있고, 어떤 memory section은 더 빠르게 접근할 수 있다.
 
-![NUMA architecture](@/assets/images/237_Figure_10.19_page_530.png)
+![NUMA architecture](@/assets/images/cs-operating-system-237-figure-10-19-page-530.png)
 <p align="center"><sub>Figure 10.19 · PDF p. 530 · 각 CPU가 local memory를 가지고 interconnect로 연결되는 NUMA multiprocessing architecture</sub></p>
 
 NUMA systems는 uniform memory systems보다 single access latency는 나쁠 수 있지만, 더 많은 CPUs를 수용해 throughput과 parallelism을 높일 수 있다. 따라서 virtual memory system은 frame을 process가 실행되는 CPU에 “가까운” memory에 할당해야 한다. 여기서 가깝다는 것은 minimum latency, 보통 같은 system board 또는 NUMA node를 뜻한다.
@@ -498,14 +498,14 @@ Thrashing은 severe performance problem이다. CPU가 일을 하지 않는 것�
 7. Scheduler는 CPU utilization이 낮다고 보고 또 multiprogramming degree를 높인다.
 8. Page faults와 paging queue가 폭증하고 throughput이 붕괴한다.
 
-![Thrashing](@/assets/images/238_Figure_10.20_page_532.png)
+![Thrashing](@/assets/images/cs-operating-system-238-figure-10-20-page-532.png)
 <p align="center"><sub>Figure 10.20 · PDF p. 532 · multiprogramming degree가 일정 수준을 넘으면 thrashing으로 CPU utilization이 급격히 떨어지는 현상</sub></p>
 
 Thrashing이 시작된 지점에서는 CPU utilization을 높이려면 multiprogramming degree를 늘리는 것이 아니라 줄여야 한다. Local replacement나 priority replacement는 한 process가 다른 process frames를 빼앗아 함께 thrashing하게 만드는 효과를 제한할 수 있다. 하지만 paging device queue가 길어지면 thrashing하지 않는 process의 page fault service time도 늘어난다.
 
 Thrashing을 막으려면 process에 필요한 만큼 frames를 줘야 한다. 이 “필요한 만큼”을 이해하기 위한 모델이 `locality model`이다. `locality`는 함께 active하게 사용되는 pages set이다. Function call은 function instructions, local variables, 일부 global variables로 새 locality를 만들 수 있다. Function에서 return하면 그 locality를 떠난다.
 
-![Locality pattern](@/assets/images/239_Figure_10.21_page_533.png)
+![Locality pattern](@/assets/images/cs-operating-system-239-figure-10-21-page-533.png)
 <p align="center"><sub>Figure 10.21 · PDF p. 533 · execution time에 따라 process가 서로 겹치기도 하는 다른 localities로 이동하는 memory-reference pattern</sub></p>
 
 Localities는 program structure와 data structures가 만든다. 이 원리는 cache가 동작하는 이유와도 같다. Data access가 완전히 random이라면 caching은 쓸모가 없다. Process에 current locality를 담을 frames를 주면 locality pages를 load할 때만 fault가 나고, 이후 locality가 바뀔 때까지 fault가 줄어든다. Current locality를 담지 못하면 process는 active pages를 모두 유지하지 못해 thrashing한다.
@@ -514,7 +514,7 @@ Localities는 program structure와 data structures가 만든다. 이 원리는 c
 
 `working-set model`은 locality assumption에 기반한다. Parameter `Δ`가 `working-set window`를 정의하고, 최근 `Δ` page references 안에 등장한 pages set이 `working set`이다.
 
-![Working-set model](@/assets/images/240_Figure_10.22_page_534.png)
+![Working-set model](@/assets/images/cs-operating-system-240-figure-10-22-page-534.png)
 <p align="center"><sub>Figure 10.22 · PDF p. 534 · 최근 Δ references 안의 pages set을 working set으로 보고 locality를 근사하는 모델</sub></p>
 
 Page가 active use 중이면 working set 안에 있다. 더 이상 사용되지 않으면 마지막 reference 후 Δ time units가 지나 working set에서 빠진다. 따라서 working set은 current locality의 approximation이다.
@@ -543,7 +543,7 @@ Working set과 page-fault rate는 직접 연결된다. Process가 새 locality�
 
 `page-fault frequency (PFF)` strategy는 working set을 직접 추적하지 않고 page-fault rate를 바로 제어한다. Thrashing은 high page-fault rate이므로, page-fault rate가 너무 높으면 process가 frames를 더 필요로 한다고 보고, 너무 낮으면 frames가 과다할 수 있다고 본다.
 
-![Page-fault frequency](@/assets/images/241_Figure_10.23_page_536.png)
+![Page-fault frequency](@/assets/images/cs-operating-system-241-figure-10-23-page-536.png)
 <p align="center"><sub>Figure 10.23 · PDF p. 536 · page-fault rate의 upper/lower bounds에 따라 process frames를 늘리거나 줄이는 PFF 제어</sub></p>
 
 Actual page-fault rate가 upper bound를 넘으면 process에 frame을 추가한다. Lower bound 아래로 떨어지면 process에서 frame을 회수한다. Free frames가 없는데 page-fault rate가 높아지면 어떤 process를 선택해 backing store로 swap out하고, freed frames를 high page-fault-rate processes에 나눠 줄 수 있다.
@@ -556,12 +556,12 @@ Thrashing과 그 결과로 생기는 swapping은 performance impact가 매우 �
 
 `memory compression`은 paging의 대안 또는 보완책이다. Modified frames를 swap space로 page out하는 대신, 여러 frames를 압축해 하나의 frame에 저장한다. 이렇게 하면 pages를 secondary storage로 내보내지 않고도 memory usage를 줄일 수 있다.
 
-![Free-frame list before compression](@/assets/images/242_Figure_10.24_page_537.png)
+![Free-frame list before compression](@/assets/images/cs-operating-system-242-figure-10-24-page-537.png)
 <p align="center"><sub>Figure 10.24 · PDF p. 537 · free-frame list가 threshold 아래로 떨어지면 replacement 대상 frames가 modified-frame list에 모이는 compression 전 상태</sub></p>
 
 예를 들어 free-frame list가 threshold 아래로 떨어지면 replacement algorithm이 frames 15, 3, 35, 26을 선택할 수 있다. 전통적 방식이면 modified-frame list의 pages를 swap space에 write하고 frames를 free-frame list에 넣는다. Memory compression에서는 frames 15, 3, 35를 압축해 frame 7 하나에 저장하고, 원래 frames 15, 3, 35를 free-frame list로 돌려보낸다.
 
-![Free-frame list after compression](@/assets/images/243_Figure_10.25_page_538.png)
+![Free-frame list after compression](@/assets/images/cs-operating-system-243-figure-10-25-page-538.png)
 <p align="center"><sub>Figure 10.25 · PDF p. 538 · frames 15, 3, 35를 압축해 frame 7에 저장하고 원래 frames를 free-frame list에 돌려보낸 상태</sub></p>
 
 나중에 압축된 pages 중 하나가 reference되면 page fault가 발생하고, compressed frame을 decompress해 pages를 memory에 복원한다.
@@ -583,7 +583,7 @@ Kernel memory는 보통 user-mode process용 free-page list와 다른 pool에서
 
 `buddy system`은 physically contiguous pages로 된 fixed-size segment에서 memory를 할당한다. Allocation unit은 4 KB, 8 KB, 16 KB처럼 power of 2 크기다. 요청 크기가 power of 2가 아니면 다음 power of 2로 round up된다. 예를 들어 11 KB 요청은 16-KB segment로 충족된다.
 
-![Buddy system allocation](@/assets/images/244_Figure_10.26_page_540.png)
+![Buddy system allocation](@/assets/images/cs-operating-system-244-figure-10-26-page-540.png)
 <p align="center"><sub>Figure 10.26 · PDF p. 540 · 256-KB contiguous segment를 buddies로 반복 분할해 21-KB 요청을 32-KB unit으로 만족시키는 buddy system</sub></p>
 
 256 KB segment에서 21 KB를 요청하면 256 KB를 128 KB buddies로 나누고, 다시 64 KB, 다시 32 KB buddies로 나눈 뒤 32 KB unit 하나를 할당한다. Buddy system의 장점은 `coalescing`이 빠르다는 것이다. Allocated unit이 release되면 adjacent buddy가 free인지 확인해 64 KB, 128 KB, 256 KB처럼 다시 합칠 수 있다.
@@ -594,7 +594,7 @@ Kernel memory는 보통 user-mode process용 free-page list와 다른 pool에서
 
 `slab allocation`은 kernel objects를 빠르게 할당하고 fragmentation을 줄이기 위한 방식이다. `slab`은 하나 이상의 physically contiguous pages로 구성된다. `cache`는 하나 이상의 slabs로 구성되며, 각 unique kernel data structure마다 별도 cache가 있다. 예를 들어 process descriptors, file objects, semaphores는 각각 자기 cache를 가질 수 있다. Cache 안의 `objects`는 해당 kernel data structure의 instances다.
 
-![Slab allocation](@/assets/images/245_Figure_10.27_page_540.png)
+![Slab allocation](@/assets/images/cs-operating-system-245-figure-10-27-page-540.png)
 <p align="center"><sub>Figure 10.27 · PDF p. 540 · kernel object type별 cache가 slabs를 가지고, slab 안에 fixed-size objects를 담는 slab allocation 구조</sub></p>
 
 Cache가 생성되면 objects가 미리 allocated되고 free로 표시된다. Kernel이 특정 data structure object를 요청하면 allocator는 그 cache의 free object를 반환하고 used로 표시한다. Linux의 `struct task_struct` 같은 process descriptor도 이런 cache에서 빠르게 할당될 수 있다.
@@ -700,7 +700,7 @@ Data structures도 locality를 좌우한다. Stack은 top 근처를 반복 접�
 
 Demand paging에서는 어떤 pages는 memory에 `locked`되어야 한다. 대표 사례는 user virtual memory를 대상으로 하는 I/O다. USB storage controller 같은 I/O processor는 transfer bytes 수와 memory buffer address를 받고, transfer 완료 후 CPU에 interrupt를 보낸다.
 
-![I/O buffer frame must stay in memory](@/assets/images/246_Figure_10.28_page_547.png)
+![I/O buffer frame must stay in memory](@/assets/images/cs-operating-system-246-figure-10-28-page-547.png)
 <p align="center"><sub>Figure 10.28 · PDF p. 547 · I/O가 진행되는 동안 buffer가 담긴 frame이 다른 page로 replacement되면 안 되는 이유</sub></p>
 
 문제 시나리오는 이렇다. Process가 I/O request를 내고 device queue에서 기다린다. 그동안 CPU는 다른 processes를 실행한다. Global replacement가 waiting process의 I/O buffer page를 victim으로 골라 page out한다. 나중에 I/O request가 device queue head가 되어 지정된 physical address로 transfer가 일어나면, 그 frame은 이미 다른 process의 다른 page일 수 있다. 그러면 wrong memory가 overwrite된다.
@@ -724,7 +724,7 @@ Linux, Windows, Solaris는 모두 virtual memory의 핵심 기법인 demand pagi
 
 Linux는 `demand paging`을 사용하고, free frames list에서 pages를 할당한다. Page replacement는 Section 10.4.5.2의 LRU-approximation clock algorithm과 유사한 global policy를 사용한다. Linux는 pages를 크게 `active list`와 `inactive list`로 관리한다.
 
-![Linux active and inactive lists](@/assets/images/247_Figure_10.29_page_549.png)
+![Linux active and inactive lists](@/assets/images/cs-operating-system-247-figure-10-29-page-549.png)
 <p align="center"><sub>Figure 10.29 · PDF p. 549 · Linux가 active list와 inactive list로 pages의 최근 reference 여부와 reclaim 가능성을 관리하는 구조</sub></p>
 
 `active list`에는 in use로 간주되는 pages가 들어 있고, `inactive list`에는 recently referenced되지 않아 reclaim 대상이 될 수 있는 pages가 들어 있다. 각 page에는 referenced/accessed bit가 있다. Page가 처음 allocated되면 accessed bit가 set되고 active list의 rear에 들어간다. Active list의 page가 reference되면 accessed bit가 set되고 list rear로 이동한다. Periodically, active list pages의 accessed bits는 reset된다. 시간이 지나면 least recently used page가 active list front로 이동하고, 거기서 inactive list rear로 migrate될 수 있다. Inactive list page가 reference되면 다시 active list rear로 이동한다.
@@ -749,7 +749,7 @@ Solaris `pageout`은 second-chance algorithm과 유사하지만 clock hand를 �
 
 Solaris는 minor page faults도 최적화한다. Page가 free list에 있지만 아직 다른 process에 reassigned되지 않았다면, process가 다시 access할 때 free list에서 reclaim해 mapping할 수 있다.
 
-![Solaris page scanner](@/assets/images/248_Figure_10.30_page_551.png)
+![Solaris page scanner](@/assets/images/cs-operating-system-248-figure-10-30-page-551.png)
 <p align="center"><sub>Figure 10.30 · PDF p. 551 · Solaris page scanner가 free memory thresholds에 따라 slowscan부터 fastscan까지 scanrate를 조절하는 구조</sub></p>
 
 Pageout algorithm은 `scanrate`로 pages per second를 조절한다. Free memory가 lotsfree 아래로 내려가면 `slowscan`에서 시작해 free memory 양에 따라 `fastscan`까지 증가한다. Front hand와 back hand 사이 거리는 `handspread`가 정한다. Scanrate와 handspread가 reference bit clear와 검사 사이 시간을 결정한다.

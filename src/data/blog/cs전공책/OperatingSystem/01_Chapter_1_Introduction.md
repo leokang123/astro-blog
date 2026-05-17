@@ -37,7 +37,7 @@ tags:
 
 컴퓨터 시스템은 크게 hardware, operating system, application programs, user로 볼 수 있다. Hardware는 CPU, memory, I/O devices처럼 실제 계산 자원을 제공하고, application programs는 word processor, compiler, web browser처럼 사용자 문제를 풀기 위해 그 자원을 사용하는 방식을 정의한다. Operating system은 이 둘 사이에서 하드웨어를 제어하고 여러 application programs가 자원을 사용하도록 조정한다.
 
-![Figure 1.1](@/assets/images/001_Figure_1.1_page_32.png)
+![Figure 1.1](@/assets/images/cs-operating-system-001-figure-1-1-page-32.png)
 <p align="center"><sub>Figure 1.1 · PDF p. 32 · 컴퓨터 시스템을 user, application programs, operating system, hardware 계층으로 본 추상 구조</sub></p>
 
 이 구조에서 운영체제는 정부(government)와 비슷하다. 정부 자체가 직접 생산 활동을 하는 것은 아니지만 사람들이 일을 할 수 있는 규칙과 환경을 제공하듯, 운영체제도 직접 사용자 문제를 해결하기보다는 다른 프로그램이 유용한 일을 할 수 있는 실행 환경을 제공한다.
@@ -77,7 +77,7 @@ tags:
 
 현대 general-purpose computer system은 하나 이상의 CPU, 여러 device controllers, shared memory, 그리고 이들을 연결하는 common bus 또는 system bus로 구성된다. Device controller는 disk drive, audio device, graphics display 같은 특정 장치 유형을 담당하고, 자체 local buffer storage와 special-purpose registers를 가진다.
 
-![Figure 1.2](@/assets/images/002_Figure_1.2_page_35.png)
+![Figure 1.2](@/assets/images/cs-operating-system-002-figure-1-2-page-35.png)
 <p align="center"><sub>Figure 1.2 · PDF p. 35 · CPU, device controllers, memory가 system bus로 연결된 전형적 PC 구조</sub></p>
 
 운영체제는 각 device controller마다 보통 device driver를 둔다. Device driver는 controller의 세부 동작을 이해하고, 운영체제의 나머지 부분에는 장치를 균일한 인터페이스로 보이게 한다. CPU와 device controllers는 병렬로 실행될 수 있고, shared memory 접근을 두고 경쟁할 수 있으므로 memory controller가 memory access를 동기화한다.
@@ -88,7 +88,7 @@ Interrupt는 하드웨어나 장치가 CPU의 주의를 필요로 하는 사건�
 
 CPU가 interrupt를 받으면 현재 실행을 멈추고 정해진 위치의 interrupt service routine 또는 interrupt handler로 제어를 넘긴다. Handler는 필요한 상태를 저장하고, interrupt 원인을 확인하고, 필요한 처리를 수행한 뒤 상태를 복원하고 return from interrupt instruction으로 이전 계산을 재개한다. 이때 interrupted computation은 논리적으로 interrupt가 없었던 것처럼 이어진다.
 
-![Figure 1.4](@/assets/images/004_Figure_1.4_page_38.png)
+![Figure 1.4](@/assets/images/cs-operating-system-004-figure-1-4-page-38.png)
 <p align="center"><sub>Figure 1.4 · PDF p. 38 · device driver가 I/O를 시작하고 interrupt handler가 완료 사건을 처리하는 interrupt-driven I/O cycle</sub></p>
 
 Interrupt 처리는 매우 자주 발생하므로 빠른 dispatch가 중요하다. 단일 handler가 모든 장치를 검사하면 느리기 때문에, 대부분의 시스템은 interrupt number를 interrupt vector의 index로 사용해 해당 interrupt service routine 주소를 바로 찾는다. 이 방식은 Windows와 UNIX처럼 다른 운영체제에서도 공통적으로 사용된다.
@@ -126,7 +126,7 @@ Memory unit은 주소 흐름만 본다. 그 주소가 instruction counter, index
 
 Main memory만으로 모든 프로그램과 데이터를 영구히 보관할 수 없는 이유는 두 가지다. 첫째, 용량이 충분하지 않다. 둘째, volatile이라 전원이 사라지면 내용이 사라진다. 그래서 대부분의 시스템은 secondary storage를 main memory의 확장처럼 사용한다. 대표적인 secondary-storage devices는 hard-disk drives(HDDs)와 nonvolatile memory(NVM) devices다.
 
-![Figure 1.6](@/assets/images/006_Figure_1.6_page_41.png)
+![Figure 1.6](@/assets/images/cs-operating-system-006-figure-1-6-page-41.png)
 <p align="center"><sub>Figure 1.6 · PDF p. 41 · registers에서 magnetic tapes까지 이어지는 storage-device hierarchy</sub></p>
 
 Storage hierarchy의 핵심 trade-off는 speed, size, volatility다. CPU에 가까울수록 registers, cache, main memory처럼 작고 빠르며 비싸고, 멀수록 HDD, optical disk, magnetic tapes처럼 크고 느리며 저렴하다. Volatile storage는 전원이 꺼지면 내용을 잃고, nonvolatile storage(NVS)는 내용을 유지한다. 이 책의 용어에서는 volatile storage를 보통 memory라고 부르고, NVS 중 secondary storage를 많이 다룬다.
@@ -146,7 +146,7 @@ NVS는 크게 mechanical storage와 electrical storage로 나눌 수 있다.
 
 Interrupt-driven I/O는 keyboard 입력처럼 작은 데이터 이동에는 적합하지만, NVS I/O처럼 큰 block을 옮길 때는 interrupt가 너무 자주 발생해 overhead가 커진다. 이를 줄이기 위해 direct memory access(DMA)를 사용한다. DMA에서는 운영체제와 device driver가 buffer, pointer, counter를 설정한 뒤, device controller가 CPU 개입 없이 device와 main memory 사이의 block 전체를 직접 전송한다. CPU는 block마다 한 번의 interrupt만 받으므로 그 사이 다른 작업을 수행할 수 있다.
 
-![Figure 1.7](@/assets/images/007_Figure_1.7_page_43.png)
+![Figure 1.7](@/assets/images/cs-operating-system-007-figure-1-7-page-43.png)
 <p align="center"><sub>Figure 1.7 · PDF p. 43 · CPU, cache, memory, device, DMA, interrupt가 함께 동작하는 현대 컴퓨터 시스템</sub></p>
 
 Bus architecture에서는 여러 구성요소가 shared bus를 두고 경쟁하지만, 일부 high-end systems는 switch architecture를 사용해 여러 구성요소가 동시에 통신할 수 있게 한다. 이런 구조에서는 DMA의 장점이 더 커진다.
@@ -167,7 +167,7 @@ Multiprocessor system은 둘 이상의 processor를 사용해 throughput을 높�
 
 가장 흔한 구조는 symmetric multiprocessing(SMP)이다. SMP에서는 각 peer CPU processor가 user processes뿐 아니라 operating-system functions도 수행할 수 있다. 각 CPU는 own registers와 local cache를 가지지만, physical memory는 system bus를 통해 공유한다.
 
-![Figure 1.8](@/assets/images/008_Figure_1.8_page_45.png)
+![Figure 1.8](@/assets/images/cs-operating-system-008-figure-1-8-page-45.png)
 <p align="center"><sub>Figure 1.8 · PDF p. 45 · 여러 CPU가 memory를 공유하는 symmetric multiprocessing(SMP) 구조</sub></p>
 
 SMP의 장점은 여러 process가 동시에 실행될 수 있다는 점이다. N CPUs가 있으면 이상적으로 N processes가 동시에 실행될 수 있다. 하지만 CPU별 부하가 불균형하면 한 CPU는 idle이고 다른 CPU는 overloaded일 수 있다. 이를 줄이려면 processors가 scheduling state, memory state 같은 일부 data structures를 공유해야 하며, 이 공유는 Chapter 5의 CPU scheduling과 Chapter 6의 synchronization 문제로 이어진다.
@@ -176,7 +176,7 @@ SMP의 장점은 여러 process가 동시에 실행될 수 있다는 점이다. 
 
 NUMA(non-uniform memory access)는 processor 또는 processor group마다 local memory를 두고, 전체는 shared system interconnect로 하나의 physical address space를 공유하는 구조다.
 
-![Figure 1.10](@/assets/images/010_Figure_1.10_page_47.png)
+![Figure 1.10](@/assets/images/cs-operating-system-010-figure-1-10-page-47.png)
 <p align="center"><sub>Figure 1.10 · PDF p. 47 · CPU마다 local memory를 두어 확장성을 높이는 NUMA multiprocessing architecture</sub></p>
 
 NUMA의 장점은 CPU가 자기 local memory에 접근할 때 빠르고 system interconnect contention이 작다는 것이다. 단점은 remote memory 접근 latency가 커져 성능 penalty가 생긴다는 점이다. 운영체제는 CPU scheduling과 memory management를 통해 “프로세스가 실행되는 CPU와 그 process가 자주 쓰는 memory의 위치”를 가깝게 유지해야 한다.
@@ -187,7 +187,7 @@ Clustered system은 여러 독립 시스템 또는 nodes를 network로 묶은 lo
 
 Cluster의 대표 목적은 high availability다. 일부 node가 실패해도 서비스를 계속 제공하기 위해 redundancy를 둔다. Cluster software는 node들을 감시하다가 monitored machine이 실패하면 다른 machine이 storage ownership을 가져가고 applications를 재시작한다. 사용자는 짧은 service interruption만 경험한다.
 
-![Figure 1.11](@/assets/images/011_Figure_1.11_page_49.png)
+![Figure 1.11](@/assets/images/cs-operating-system-011-figure-1-11-page-49.png)
 <p align="center"><sub>Figure 1.11 · PDF p. 49 · 여러 computer가 interconnect와 storage-area network로 연결된 clustered system 구조</sub></p>
 
 Cluster 관련 용어는 다음처럼 구분된다.
@@ -216,7 +216,7 @@ Event는 대부분 interrupt로 신호된다. 여기에는 hardware interrupt뿐
 
 단일 프로그램은 일반적으로 CPU와 I/O devices를 항상 바쁘게 유지하지 못한다. 어떤 process가 I/O를 기다리는 동안 CPU가 idle이 되면 자원이 낭비된다. Multiprogramming은 여러 processes를 memory에 동시에 두고, 하나가 I/O 등을 기다리면 운영체제가 다른 process로 CPU를 넘겨 CPU utilization을 높이는 방식이다.
 
-![Figure 1.12](@/assets/images/012_Figure_1.12_page_51.png)
+![Figure 1.12](@/assets/images/cs-operating-system-012-figure-1-12-page-51.png)
 <p align="center"><sub>Figure 1.12 · PDF p. 51 · 여러 process가 memory에 동시에 올라간 multiprogramming system의 memory layout</sub></p>
 
 Multitasking은 multiprogramming의 논리적 확장이다. CPU가 여러 processes 사이를 자주 switching하여 사용자가 빠른 response time을 느끼게 한다. Interactive I/O는 사람의 입력 속도에 묶이므로 컴퓨터 기준에서는 매우 느리다. 따라서 사용자가 keyboard, mouse, touch screen 입력을 하는 동안 운영체제는 CPU를 다른 process에 할당한다.
@@ -244,7 +244,7 @@ Multiprogramming과 multitasking은 다음 운영체제 기능을 필수로 요�
 - Kernel mode: operating system을 대신해 실행되는 모드다. privileged instructions를 실행할 수 있다.
 - Mode bit: 현재 모드를 표시하는 hardware bit다. 보통 kernel mode는 0, user mode는 1로 표현된다.
 
-![Figure 1.13](@/assets/images/013_Figure_1.13_page_53.png)
+![Figure 1.13](@/assets/images/cs-operating-system-013-figure-1-13-page-53.png)
 <p align="center"><sub>Figure 1.13 · PDF p. 53 · user process가 system call을 호출하면 trap을 통해 kernel mode로 전환되고, 처리 후 user mode로 돌아가는 흐름</sub></p>
 
 System boot time에는 hardware가 kernel mode에서 시작한다. 운영체제가 load된 뒤 user applications는 user mode에서 시작된다. Trap, interrupt, system call이 발생하면 hardware가 mode bit를 0으로 바꾸어 kernel mode로 전환한다. 운영체제가 user program에 제어를 넘기기 전에는 다시 mode bit를 1로 바꾸어 user mode로 돌아간다.
@@ -332,14 +332,14 @@ Tertiary storage는 backup, seldom-used data, long-term archival storage처럼 �
 
 Caching은 느린 저장 계층에 있는 정보를 더 빠른 저장 계층에 임시로 복사해 두는 원리다. 어떤 정보가 필요하면 먼저 cache에 있는지 확인하고, 있으면 cache copy를 직접 사용한다. 없으면 원래 storage에서 가져오고, 곧 다시 쓸 것이라는 기대 아래 cache에 복사한다.
 
-![Figure 1.14](@/assets/images/014_Figure_1.14_page_59.png)
+![Figure 1.14](@/assets/images/cs-operating-system-014-figure-1-14-page-59.png)
 <p align="center"><sub>Figure 1.14 · PDF p. 59 · registers, cache, main memory, SSD, magnetic disk의 크기·속도·관리 주체 비교</sub></p>
 
 일부 cache는 hardware가 관리한다. Instruction cache와 data cache는 CPU가 main memory를 기다리는 시간을 줄인다. Registers는 compiler 또는 programmer가 register allocation/replacement를 통해 활용하는 고속 cache처럼 볼 수 있다. 반면 disk에서 memory로 data를 옮기는 일은 보통 operating system이 제어한다.
 
 Cache는 크기가 제한되어 있으므로 replacement policy가 중요하다. 어떤 항목을 cache에 남기고 어떤 항목을 내보낼지의 선택이 성능을 크게 바꾼다. Software-controlled cache의 replacement algorithms는 Chapter 10의 virtual memory에서도 중요하게 등장한다.
 
-![Figure 1.15](@/assets/images/015_Figure_1.15_page_60.png)
+![Figure 1.15](@/assets/images/cs-operating-system-015-figure-1-15-page-60.png)
 <p align="center"><sub>Figure 1.15 · PDF p. 60 · disk의 integer A가 main memory, cache, hardware register로 이동하며 여러 copy가 생기는 흐름</sub></p>
 
 같은 data가 여러 storage hierarchy level에 동시에 존재하면 consistency 문제가 생긴다. Single process 환경에서는 가장 높은 계층의 copy를 쓰면 되지만, multitasking environment에서는 여러 processes가 같은 data에 접근할 때 최신 값을 보장해야 한다. Multiprocessor environment에서는 여러 CPUs의 local caches에 같은 data copy가 존재할 수 있으므로 cache coherency가 필요하다. Distributed environment에서는 서로 다른 computers에 replicas가 있을 수 있어 replica update propagation 문제가 추가된다.
@@ -385,7 +385,7 @@ Emulation과 virtualization은 구분해야 한다.
 | emulation | source CPU type과 target CPU type이 다를 때 hardware를 software로 흉내냄 | machine-level instruction을 번역해야 하므로 느릴 수 있음 |
 | virtualization | 같은 CPU architecture용으로 compile된 OS를 다른 native OS 또는 VMM 위에서 실행 | native execution에 가까워 emulation보다 효율적 |
 
-![Figure 1.16](@/assets/images/016_Figure_1.16_page_63.png)
+![Figure 1.16](@/assets/images/cs-operating-system-016-figure-1-16-page-63.png)
 <p align="center"><sub>Figure 1.16 · PDF p. 63 · 단일 operating system 실행 구조와 VMM 위의 세 virtual machines 실행 구조 비교</sub></p>
 
 Virtual machine manager(VMM)는 guest operating systems를 실행하고, guest들의 resource use를 관리하며, guest 간 isolation을 제공한다. 초기 desktop virtualization에서는 host operating system 위에서 VMM application이 실행되었지만, data center 환경에서는 VMware ESX, Citrix XenServer처럼 VMM 자체가 host operating system 역할을 하며 virtual machine processes에 services와 resource management를 제공하기도 한다.
@@ -435,7 +435,7 @@ Queue는 first in, first out(FIFO) 원칙을 따른다. 먼저 들어온 item이
 
 Tree는 hierarchical data를 표현하는 구조다. Parent-child relationships로 data values를 연결하며, binary tree는 parent가 최대 두 children(left child, right child)을 가진다. Binary search tree(BST)는 ordering을 추가해 left child <= right child 관계를 유지한다.
 
-![Figure 1.20](@/assets/images/020_Figure_1.20_page_67.png)
+![Figure 1.20](@/assets/images/cs-operating-system-020-figure-1-20-page-67.png)
 <p align="center"><sub>Figure 1.20 · PDF p. 67 · 값의 ordering으로 검색 경로를 줄이는 binary search tree 예</sub></p>
 
 BST 검색의 worst-case는 tree가 한쪽으로 치우치면 O(n)이 될 수 있다. 이를 줄이기 위해 balanced binary search tree를 사용하면 n items가 있을 때 height를 최대 lg n 수준으로 유지하여 worst-case O(lg n)을 보장할 수 있다. Linux CPU-scheduling algorithm은 balanced BST의 한 종류인 red-black tree를 사용한다. 이 연결은 Chapter 5의 scheduler 구현에서 중요하다.
@@ -446,7 +446,7 @@ Hash function은 input data에 numeric operation을 적용해 numeric value를 �
 
 Hash collision은 서로 다른 inputs가 같은 output value를 만드는 상황이다. 흔한 해결책은 해당 table location에 linked list를 두어 같은 hash value를 가진 items를 연결하는 것이다. Collision이 많아질수록 hash function 효율은 떨어진다.
 
-![Figure 1.21](@/assets/images/021_Figure_1.21_page_67.png)
+![Figure 1.21](@/assets/images/cs-operating-system-021-figure-1-21-page-67.png)
 <p align="center"><sub>Figure 1.21 · PDF p. 67 · key에 hash_function을 적용해 value 위치를 찾는 hash map 구조</sub></p>
 
 Hash map은 [key:value] pairs를 hash function으로 연결한다. 예를 들어 user name을 key로 password를 찾는 authentication 구조를 생각할 수 있다. 실제 보안 시스템은 password를 평문으로 저장하지 않는 등 더 복잡하지만, 여기서 중요한 점은 hash map이 “key 기반 빠른 lookup”을 제공한다는 것이다.
@@ -486,7 +486,7 @@ iOS와 Android는 mobile computing의 대표 operating systems이며, Chapter 2�
 
 Client-server system은 server systems가 client systems의 requests를 처리하는 specialized distributed system이다.
 
-![Figure 1.22](@/assets/images/022_Figure_1.22_page_70.png)
+![Figure 1.22](@/assets/images/cs-operating-system-022-figure-1-22-page-70.png)
 <p align="center"><sub>Figure 1.22 · PDF p. 70 · server가 network를 통해 desktop, laptop, smartphone clients의 요청을 처리하는 client-server system</sub></p>
 
 Server systems는 크게 두 범주로 볼 수 있다.
@@ -502,7 +502,7 @@ Client-server 구조의 핵심은 역할 분리다. Client는 요청과 사용�
 
 Peer-to-peer(P2P) model에서는 clients와 servers를 고정적으로 구분하지 않는다. 모든 nodes는 peers이며, 어떤 순간에는 service를 요청하는 client처럼, 다른 순간에는 service를 제공하는 server처럼 동작할 수 있다. Traditional client-server system에서는 server가 bottleneck이 될 수 있지만, P2P에서는 services가 network 전체의 여러 nodes에 분산될 수 있다.
 
-![Figure 1.23](@/assets/images/023_Figure_1.23_page_72.png)
+![Figure 1.23](@/assets/images/cs-operating-system-023-figure-1-23-page-72.png)
 <p align="center"><sub>Figure 1.23 · PDF p. 72 · 중앙 service 없이 peers가 서로 요청과 응답을 주고받는 peer-to-peer system</sub></p>
 
 P2P에서 service discovery 방식은 두 가지로 나눌 수 있다.
@@ -527,7 +527,7 @@ Cloud 유형은 다음처럼 구분된다.
 | PaaS(Platform as a service) | application 실행을 위한 software stack 제공 |
 | IaaS(Infrastructure as a service) | servers 또는 storage 같은 infrastructure 제공 |
 
-![Figure 1.24](@/assets/images/024_Figure_1.24_page_73.png)
+![Figure 1.24](@/assets/images/cs-operating-system-024-figure-1-24-page-73.png)
 <p align="center"><sub>Figure 1.24 · PDF p. 73 · firewall, load balancer, virtual machines, storage, cloud management services로 구성된 public cloud 예</sub></p>
 
 Cloud infrastructure 안에는 traditional operating systems, virtual machines를 관리하는 VMMs, 그리고 그 VMMs와 cloud resources를 관리하는 cloud management tools가 함께 존재한다. 이 tools는 cloud components에 대한 interface와 resource management를 제공하므로, 넓은 의미에서 새로운 종류의 operating system처럼 볼 수 있다.

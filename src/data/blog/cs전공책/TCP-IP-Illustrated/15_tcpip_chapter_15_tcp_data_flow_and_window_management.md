@@ -37,7 +37,7 @@ Interactive communication의 대표 예시는 ssh(Secure Shell)이다. 사용자
 
 하지만 실제 TCP는 보통 2번 ACK와 3번 echo를 한 packet에 합친다. 이 방식이 delayed acknowledgment와 piggybacking이다. ACK만 따로 보내는 대신, 곧 보낼 reverse-direction data가 있으면 ACK를 그 data segment에 얹어 packet 수를 줄인다.
 
-![Figure 15-1](@/assets/images/268_figure_15_1_page_732.png)
+![Figure 15-1](@/assets/images/cs-tcp-ip-illustrated-268-figure-15-1-page-732.png)
 *Figure 15-1 · PDF p. 732 · interactive keystroke에서 ACK와 echo가 분리되거나 piggyback되는 흐름*
 
 Figures 15-2와 15-3의 ssh trace는 `date` 명령을 입력할 때 각 글자 `d`, `a`, `t`, `e`, Enter가 독립적인 작은 TCP data packet 흐름을 만든다는 점을 보여준다. 예시에서 각 입력 글자는 client-to-server data, server-to-client ACK+echo, client-to-server echo ACK의 3-packet 패턴에 가깝게 나타난다. Figure 15-3은 같은 trace를 TCP sequence number 중심으로 풀어 보여주며, TCP 연결에는 client -> server 방향 sequence space와 server -> client 방향 sequence space가 별도로 존재한다는 점을 드러낸다. ACK number는 `마지막으로 성공적으로 받은 byte의 다음 sequence number`를 가리키므로, 48-byte ssh encrypted payload를 받은 뒤 ACK number가 48로 진행한다.
@@ -68,7 +68,7 @@ Nagle algorithm의 규칙은 간단하다.
 
 Figure 15-4와 Figure 15-5의 ssh 비교에서 RTT가 약 190ms일 때 Nagle disabled는 19 packets, 약 0.58s였고, Nagle enabled는 11 packets, 약 0.80s였다. packet 수는 줄었지만, request/response가 0.0, 0.19, 0.38, 0.57s처럼 RTT 간격에 맞춰 lockstep으로 진행되면서 총 지연은 늘었다. Figure 15-6은 이 차이를 한눈에 보여준다.
 
-![Figure 15-6](@/assets/images/273_figure_15_6_page_737.png)
+![Figure 15-6](@/assets/images/cs-tcp-ip-illustrated-273-figure-15-6-page-737.png)
 *Figure 15-6 · PDF p. 737 · Nagle disabled/enabled에서 small packet 수와 delay가 달라지는 비교*
 
 ### 15.4.1 Delayed ACK and Nagle Algorithm Interaction
@@ -84,7 +84,7 @@ Delayed ACK와 Nagle algorithm은 각각 따로 보면 합리적이지만, 함�
 
 이 deadlock은 영구적이지 않다. delayed ACK timer가 만료되면 client가 ACK를 보내고 server는 다시 보낼 수 있다. 문제는 timer가 깨질 때까지 transfer가 idle이 된다는 점이다. interactive application에서는 이 짧은 정지가 사용자에게 지연으로 보일 수 있다.
 
-![Figure 15-7](@/assets/images/274_figure_15_7_page_738.png)
+![Figure 15-7](@/assets/images/cs-tcp-ip-illustrated-274-figure-15-7-page-738.png)
 *Figure 15-7 · PDF p. 738 · delayed ACK와 Nagle algorithm 조합이 만드는 temporary deadlock*
 
 ### 15.4.2 Disabling the Nagle Algorithm
@@ -97,7 +97,7 @@ Berkeley sockets API에서는 application이 `TCP_NODELAY` option으로 Nagle al
 
 TCP connection은 bidirectional이다. 한 방향으로 data가 흐르면 반대 방향 segment에는 그 data에 대한 ACK number와 window advertisement가 실려 돌아온다. 그리고 반대 방향 data도 동일하게 자기 Sequence Number, ACK Number, Window Size 정보를 가진다. connection establishment 뒤의 거의 모든 TCP segment는 유효한 Sequence Number, ACK Number, Window Size field를 포함한다.
 
-![Figure 15-8](@/assets/images/275_figure_15_8_page_739.png)
+![Figure 15-8](@/assets/images/cs-tcp-ip-illustrated-275-figure-15-8-page-739.png)
 *Figure 15-8 · PDF p. 739 · TCP 양방향 data flow와 ACK/window advertisement의 대응*
 
 Window Size field는 segment를 보내는 쪽이 `reverse direction으로 받아들일 수 있는 receive buffer의 빈 공간`을 byte 단위로 광고하는 값이다. TCP header의 Window Size field 자체는 16 bits라 기본적으로 65,535 bytes가 상한이지만, Chapter 13의 Window Scale option(WSCALE/WSOPT)을 사용하면 더 큰 advertised window를 표현할 수 있다.
@@ -129,7 +129,7 @@ Sender-side sliding window는 다음 값을 중심으로 움직인다.
 usable window = SND.UNA + SND.WND - SND.NXT
 ```
 
-![Figure 15-9](@/assets/images/276_figure_15_9_page_741.png)
+![Figure 15-9](@/assets/images/cs-tcp-ip-illustrated-276-figure-15-9-page-741.png)
 *Figure 15-9 · PDF p. 741 · sender-side sliding window의 ACKed/in-flight/usable/cannot-send 영역*
 
 Window edge의 움직임에는 세 용어가 붙는다.
@@ -148,7 +148,7 @@ Receiver-side sliding window는 sender 쪽보다 단순하다. receiver는 `이�
 | `RCV.WND` | 받을 수 있는 receive window 크기 |
 | `RCV.NXT + RCV.WND` | receive window의 right edge |
 
-![Figure 15-10](@/assets/images/277_figure_15_10_page_742.png)
+![Figure 15-10](@/assets/images/cs-tcp-ip-illustrated-277-figure-15-10-page-742.png)
 *Figure 15-10 · PDF p. 742 · receiver-side sliding window와 duplicate/out-of-window discard 기준*
 
 receiver는 `RCV.NXT`보다 작은 sequence number를 duplicate로 버리고, `RCV.NXT + RCV.WND`를 넘는 byte는 scope 밖이므로 버린다. window 안에 들어온 byte는 저장할 수 있지만, cumulative ACK number 자체는 left edge에서 연속적으로 채워진 data가 도착할 때만 전진한다. 중간 이후의 in-window segment는 SACK(Selective ACK) option으로 별도 표시할 수 있지만, 기본 ACK number가 전진하려면 contiguous byte stream이 left edge부터 채워져야 한다.
@@ -168,12 +168,12 @@ Window probe는 보통 1 byte data를 포함한다. data segment이므로 손실
 
 Example trace에서는 Windows 7 receiver가 application read를 20초 지연시킨다. 처음에는 receive window auto adjustment 때문에 window가 64KB 근처로 유지되지만, application이 data를 consume하지 않으므로 결국 buffer가 차고 advertised window가 줄어든다.
 
-![Figure 15-11](@/assets/images/278_figure_15_11_page_744.png)
+![Figure 15-11](@/assets/images/cs-tcp-ip-illustrated-278-figure-15-11-page-744.png)
 *Figure 15-11 · PDF p. 744 · receiver application이 읽지 않을 때 ACK는 전진하지만 advertised window가 감소하는 흐름*
 
 receiver buffer가 꽉 차면 마지막 작은 window까지 채워지고, 약 200ms 뒤 zero window advertisement가 나온다. 이후 sender는 receiver의 window가 열렸는지 확인하기 위해 5초 간격으로 여러 번 probe한다. receiver application이 다시 읽기 시작하면 window update가 두 번 전송되고, sender는 최대 64KB까지 전송 가능한 상태로 돌아가 normal data transmission을 재개한다.
 
-![Figure 15-12](@/assets/images/279_figure_15_12_page_745.png)
+![Figure 15-12](@/assets/images/cs-tcp-ip-illustrated-279-figure-15-12-page-745.png)
 *Figure 15-12 · PDF p. 745 · zero window 이후 application read와 window update로 전송이 재개되는 흐름*
 
 Figures 15-11/15-12에서 얻어야 할 정리는 네 가지다.
@@ -216,7 +216,7 @@ Sender-side SWS avoidance는 `작은 segment를 보내지 않는다`에 가깝�
 
 Example에서는 Windows XP sender가 2048-byte write를 3번 수행하고, FreeBSD receiver는 3000-byte receive buffer, 15초 initial pause, 2초 간격의 256-byte read를 사용한다. receiver buffer를 일부러 채운 뒤 조금씩 읽게 만들어 receiver-side SWS avoidance와 sender-side SWS avoidance를 함께 관찰한다.
 
-![Figure 15-14](@/assets/images/281_figure_15_14_page_749.png)
+![Figure 15-14](@/assets/images/cs-tcp-ip-illustrated-281-figure-15-14-page-749.png)
 *Figure 15-14 · PDF p. 749 · sender/receiver SWS avoidance와 persist timer가 얽힌 TCP transfer trace*
 
 초기 흐름은 다음과 같다.
@@ -261,14 +261,14 @@ Windows Vista/7과 Linux는 receive window auto-tuning을 지원한다. Linux는
 
 Example에서는 Windows XP sender가 large window/window scaling을 사용하고, Linux 2.6.11 receiver가 auto-tuning을 수행한다. receiver application은 20초 동안 read를 미룬다. connection establishment 때 receiver는 initial window 1460 bytes와 MSS 1412 bytes로 시작하고, Window Scale shift 2를 사용해 최대 usable window를 256KB 수준까지 표현할 수 있다.
 
-![Figure 15-15](@/assets/images/282_figure_15_15_page_756.png)
+![Figure 15-15](@/assets/images/cs-tcp-ip-illustrated-282-figure-15-15-page-756.png)
 *Figure 15-15 · PDF p. 756 · Linux receiver auto-tuning이 ACK 진행에 맞춰 advertised window를 키우는 흐름*
 
 trace에서 advertised window는 10712, 13536, 16360, 19184처럼 ACK마다 두 MSS 정도씩 증가한다. 이는 sender의 congestion control이 ACK를 받을수록 outstanding data를 늘리는 흐름을 따라잡기 위한 receiver 측 조정이다. 이상적인 경우 receiver advertised window는 sender의 congestion control limit보다 항상 넉넉해서, sender가 receiver window 때문에 막히지 않는다.
 
 하지만 receiver buffer가 다 차면 auto-tuning도 제한된다. 예시에서는 application이 20초 동안 읽지 않기 때문에 window 증가가 어느 순간 멈추고 감소하다가 zero window로 간다. application이 다시 읽기 시작하면 window update가 보내지고, advertised window가 다시 증가해 이전 최고값을 넘어선다.
 
-![Figure 15-16](@/assets/images/283_figure_15_16_page_757.png)
+![Figure 15-16](@/assets/images/cs-tcp-ip-illustrated-283-figure-15-16-page-757.png)
 *Figure 15-16 · PDF p. 757 · application pause로 auto-tuning이 막혔다가 read 재개 후 window가 다시 커지는 흐름*
 
 이 Linux 구현은 인접한 application read completion 사이의 시간과 estimated RTT를 비교해 buffer size를 조정한다. RTT estimate가 증가하면 BDP가 커졌을 가능성이 있으므로 buffer도 키우지만, RTT가 작아졌다고 즉시 줄이지는 않는다. 이렇게 해야 receiver advertised window가 sender window보다 앞서가며 path capacity 증가를 막지 않는다.
@@ -289,7 +289,7 @@ Example에서는 Linux receiver의 receive window auto-tuning을 4KB 정도로 �
 
 Figure 15-17은 여섯 번의 write 뒤 receiver window가 더 이상 증가하지 않아 sender가 멈추고, time 10 이후 receiver가 읽기 시작하면서 window update로 전송이 재개되는 배경을 보여준다. 전체 packet 흐름과 urgent pointer는 Figure 15-18에서 더 잘 드러난다.
 
-![Figure 15-18](@/assets/images/285_figure_15_18_page_761.png)
+![Figure 15-18](@/assets/images/cs-tcp-ip-illustrated-285-figure-15-18-page-761.png)
 *Figure 15-18 · PDF p. 761 · zero window 중 urgent mode 진입, URG bit, Urgent Pointer exit point가 보이는 전체 전송 흐름*
 
 Urgent mode의 exit point는 TCP segment의 `Sequence Number + Urgent Pointer`로 계산된다. 중요한 제약은 TCP connection당 urgent point가 하나뿐이라는 점이다. 새 valid Urgent Pointer가 도착하면 이전 urgent pointer 정보는 덮인다. 또한 urgent pointer가 설정된 segment 자체가 반드시 urgent byte를 포함해야 하는 것은 아니다. 어떤 segment는 data 없이 urgent pointer만 포함할 수도 있고, 실제 urgent byte는 뒤/앞 흐름의 다른 segment와 연결해 해석해야 한다.

@@ -22,12 +22,12 @@ Wireless and mobile networks는 wired network와 같은 Internet protocol stack 
 
 Wireless network의 기본 구성 요소는 `wireless host`, `wireless link`, `base station`, `network infrastructure`다. Wireless host는 smartphone, laptop, tablet뿐 아니라 sensor, appliance, automobile 같은 IoT device일 수 있고, mobile일 수도 아닐 수도 있다. Wireless link는 host와 base station 또는 host와 host를 radio communication으로 연결하며, link technology마다 transmission rate, coverage range, channel condition이 다르다.
 
-![Figure 7.1](@/assets/images/205_figure_7-1_page_544.png)
+![Figure 7.1](@/assets/images/cs-computer-network-205-figure-7-1-page-544.png)
 *Figure 7.1 · PDF p. 544 · wireless host, wireless access point, coverage area, network infrastructure의 관계*
 
 `base station`은 wireless host와 larger network 사이의 relay 역할을 한다. Cellular network의 cell tower, 802.11 wireless LAN의 `access point (AP)`가 대표적인 base station이다. Wireless host가 어떤 base station과 `associated`되어 있다는 말은, host가 그 base station의 communication range 안에 있고, 그 base station을 통해 larger network와 데이터를 주고받는다는 뜻이다.
 
-![Figure 7.2](@/assets/images/206_figure_7-2_page_545.png)
+![Figure 7.2](@/assets/images/cs-computer-network-206-figure-7-2-page-545.png)
 *Figure 7.2 · PDF p. 545 · WiFi, 4G/5G cellular, Bluetooth의 대략적 transmission rate와 coverage range 비교*
 
 Base station을 통해 address assignment, routing 같은 traditional network services를 받는 방식을 `infrastructure mode`라고 한다. 반대로 `ad hoc networks`에서는 base station이 없으므로 wireless hosts가 routing, address assignment, DNS-like name translation 같은 기능을 스스로 제공해야 한다. 이 차이는 뒤에서 Bluetooth, wireless mesh, MANET, VANET을 이해할 때 중요한 기준이 된다.
@@ -55,7 +55,7 @@ Wireless link는 wired link보다 훨씬 불안정하다. 주요 원인은 세 �
 
 Wireless receiver는 sender가 보낸 original signal의 약해지고 왜곡된 형태와 background noise가 합쳐진 electromagnetic signal을 받는다. `SNR (signal-to-noise ratio)`는 received signal strength와 noise strength의 상대적 비율이며 보통 `dB (decibel)`로 표현한다. SNR이 클수록 receiver가 noise 속에서 transmitted signal을 더 쉽게 추출한다.
 
-![Figure 7.3](@/assets/images/207_figure_7-3_page_548.png)
+![Figure 7.3](@/assets/images/cs-computer-network-207-figure-7-3-page-548.png)
 *Figure 7.3 · PDF p. 548 · SNR, BER, modulation technique, transmission rate의 관계*
 
 `BER (bit error rate)`는 전송된 bit가 receiver에서 잘못 수신될 확률에 가깝다. Figure 7.3은 higher-layer protocol을 이해하는 데 중요한 세 가지 원리를 보여준다.
@@ -68,7 +68,7 @@ Wireless receiver는 sender가 보낸 original signal의 약해지고 왜곡된 
 
 Wireless multiple access가 어려운 또 다른 이유는 모든 node가 서로의 transmissions를 들을 수 없다는 점이다. Wired broadcast link에서는 모든 nodes가 같은 wire의 신호를 보지만, wireless에서는 obstacle과 fading 때문에 sender끼리 서로를 못 들어도 receiver에서 충돌할 수 있다.
 
-![Figure 7.4](@/assets/images/208_figure_7-4_page_549.png)
+![Figure 7.4](@/assets/images/cs-computer-network-208-figure-7-4-page-549.png)
 *Figure 7.4 · PDF p. 549 · obstacle과 fading이 만드는 hidden terminal problem*
 
 `hidden terminal problem`은 A와 C가 서로의 transmission을 감지하지 못하지만 둘 다 B에게 보내는 signal은 B에서 interfere하는 상황이다. Figure 7.4(a)는 물리적 장애물이 A와 C 사이를 막는 경우이고, Figure 7.4(b)는 signal strength가 distance/fading 때문에 A와 C 사이에서는 너무 약하지만 B에서는 서로 간섭할 만큼 강한 경우다. 이 문제 때문에 wireless MAC은 Ethernet처럼 collision detection에만 의존하기 어렵고, collision avoidance가 중요해진다.
@@ -89,12 +89,12 @@ Receiver가 다른 sender interference가 없는 상황에서 original data bit�
 di = (1/M) * Σ(Zi,m * cm),  m = 1..M
 ```
 
-![Figure 7.5](@/assets/images/209_figure_7-5_page_551.png)
+![Figure 7.5](@/assets/images/cs-computer-network-209-figure-7-5-page-551.png)
 *Figure 7.5 · PDF p. 551 · 단일 sender CDMA에서 code로 data bit를 encoding하고 같은 code로 decoding하는 예*
 
 현실에서는 여러 senders가 동시에 전송하고, receiver는 각 mini-slot에서 모든 senders의 encoded signals가 더해진 aggregate signal을 받는다. CDMA가 성립하려면 sender들의 codes가 carefully chosen되어야 한다. 그러면 receiver는 aggregate signal `Z*i,m`에 원하는 sender의 code를 곱해 합산함으로써 다른 sender의 signal을 cancel하고 원하는 data를 복원할 수 있다.
 
-![Figure 7.6](@/assets/images/210_figure_7-6_page_553.png)
+![Figure 7.6](@/assets/images/cs-computer-network-210-figure-7-6-page-553.png)
 *Figure 7.6 · PDF p. 553 · 두 sender의 signals가 더해져도 receiver가 한 sender의 code로 원래 data를 복원하는 예*
 
 직관적으로 CDMA는 여러 사람이 같은 방에서 서로 다른 언어로 동시에 말하는 것과 비슷하다. 내가 이해하는 언어(code)에 집중하면 다른 언어의 대화는 배경 소음처럼 걸러진다. 단, 실제 CDMA에서는 codes 선택, sender별 received signal strength가 서로 다를 때의 near-far 문제, synchronization 같은 어려운 문제가 남는다.
@@ -109,14 +109,14 @@ di = (1/M) * Σ(Zi,m * cm),  m = 1..M
 
 802.11 architecture의 기본 building block은 `BSS (basic service set)`이다. BSS는 하나 이상의 wireless stations와 central base station인 `AP (access point)`로 구성된다. AP는 switch나 router 같은 interconnection device에 연결되어 Internet 또는 wired Ethernet infrastructure로 이어진다. Home network에서는 AP와 router가 하나의 장비로 통합되어 있는 경우가 많다.
 
-![Figure 7.7](@/assets/images/211_figure_7-7_page_555.png)
+![Figure 7.7](@/assets/images/cs-computer-network-211-figure-7-7-page-555.png)
 *Figure 7.7 · PDF p. 555 · AP와 BSS가 switch/router를 통해 Internet에 연결되는 IEEE 802.11 LAN architecture*
 
 802.11 wireless station과 AP의 wireless interface도 Ethernet처럼 6-byte `MAC address`를 가진다. 이 MAC addresses는 IEEE가 관리하고 이론적으로 globally unique하다. AP를 사용하는 WLAN을 `infrastructure wireless LAN`이라고 부르며, AP와 AP를 연결하는 wired Ethernet infrastructure가 여기서 말하는 infrastructure다.
 
 802.11 stations는 AP 없이도 `ad hoc network`를 만들 수 있다. 이 경우 중앙 제어도 없고 outside world로의 연결도 없으며, 주변에 있는 devices가 즉석에서 network를 구성한다. 예를 들어 conference room이나 train 안에서 laptops끼리 AP 없이 data를 주고받는 상황이다. 이 장에서는 주로 infrastructure wireless LAN을 다룬다.
 
-![Figure 7.8](@/assets/images/212_figure_7-8_page_556.png)
+![Figure 7.8](@/assets/images/cs-computer-network-212-figure-7-8-page-556.png)
 *Figure 7.8 · PDF p. 556 · 중앙 AP 없이 stations가 직접 구성하는 IEEE 802.11 ad hoc network*
 
 ##### Channels and Association
@@ -127,7 +127,7 @@ di = (1/M) * Σ(Zi,m * cm),  m = 1..M
 
 AP는 주기적으로 `beacon frames`를 보낸다. Beacon frame에는 AP의 SSID와 MAC address가 들어 있다. Station은 channels를 scan하며 beacon frames를 듣고, 발견한 AP들 중 하나를 association 대상으로 선택한다. 802.11 standard는 AP selection algorithm을 정하지 않는다. 보통 firmware/software가 strongest signal AP를 고르지만, signal이 가장 강한 AP가 이미 overloaded일 수 있으므로 실제 performance와 항상 일치하지는 않는다.
 
-![Figure 7.9](@/assets/images/213_figure_7-9_page_558.png)
+![Figure 7.9](@/assets/images/cs-computer-network-213-figure-7-9-page-558.png)
 *Figure 7.9 · PDF p. 558 · passive scanning과 active scanning으로 AP를 찾고 association하는 절차*
 
 `passive scanning`에서는 station이 channels를 돌며 AP의 beacon frames를 기다린다. 이후 selected AP에 `Association Request frame`을 보내고, AP는 `Association Response frame`으로 응답한다. `active scanning`에서는 station이 먼저 `Probe Request frame`을 broadcast하고, range 안의 AP들이 `Probe Response frame`으로 답한다. 그 다음 station은 선택한 AP와 association request/response handshake를 수행한다. Active scanning에서도 두 번째 association handshake가 필요한 이유는, probe response를 보낸 여러 AP 중 station이 결국 어느 AP를 고를지 각 AP가 알 수 없기 때문이다.
@@ -142,7 +142,7 @@ Associated wireless device가 AP와 data frame을 주고받으려면 같은 chan
 
 Wireless channel의 error probability가 높기 때문에 802.11은 link-layer ACK와 retransmission을 사용한다. Destination station이 frame을 받고 CRC check를 통과하면 짧은 시간인 `SIFS (Short Inter-frame Spacing)`를 기다린 뒤 ACK frame을 보낸다. Sender가 정해진 시간 안에 ACK를 받지 못하면 error 또는 collision이 발생했다고 보고 CSMA/CA를 통해 frame을 retransmit한다. 정해진 retransmission 횟수를 넘으면 frame을 포기하고 discard한다.
 
-![Figure 7.10](@/assets/images/214_figure_7-10_page_560.png)
+![Figure 7.10](@/assets/images/cs-computer-network-214-figure-7-10-page-560.png)
 *Figure 7.10 · PDF p. 560 · DATA frame 후 SIFS를 지나 link-layer ACK를 보내는 802.11 ARQ 흐름*
 
 802.11 `CSMA/CA`의 기본 흐름은 다음과 같다.
@@ -162,12 +162,12 @@ Wireless channel의 error probability가 높기 때문에 802.11은 link-layer A
 
 802.11 MAC에는 hidden terminals를 완화하기 위한 optional reservation scheme도 있다. `RTS (Request to Send)`와 `CTS (Clear to Send)` control frames를 사용해 long DATA frame 전송 전에 channel을 예약하는 방식이다.
 
-![Figure 7.11](@/assets/images/215_figure_7-11_page_562.png)
+![Figure 7.11](@/assets/images/cs-computer-network-215-figure-7-11-page-562.png)
 *Figure 7.11 · PDF p. 562 · H1과 H2는 서로 hidden terminal이지만 둘 다 AP와 통신 가능한 상황*
 
 Hidden terminal 상황에서 H1이 AP로 전송 중인데 H2가 H1을 듣지 못하면, H2는 channel이 idle이라고 생각하고 AP로 frame을 보내 충돌을 만든다. RTS/CTS는 긴 DATA frame을 보내기 전에 짧은 control frames로 예약을 걸어 이 비용을 줄인다.
 
-![Figure 7.12](@/assets/images/216_figure_7-12_page_563.png)
+![Figure 7.12](@/assets/images/cs-computer-network-216-figure-7-12-page-563.png)
 *Figure 7.12 · PDF p. 563 · RTS/CTS로 hidden terminal의 전송을 defer시키고 DATA/ACK를 보호하는 흐름*
 
 Sender는 DATA frame과 ACK에 필요한 total time을 담아 RTS를 AP에 보낸다. AP는 CTS를 broadcast한다. CTS는 sender에게 전송 허가를 주는 동시에, CTS를 들은 다른 stations에게 그 duration 동안 transmit하지 말라고 알린다. RTS/CTS의 장점은 hidden station problem을 완화하고, collision이 나더라도 짧은 RTS/CTS frame에서만 발생하게 해 긴 DATA frame 낭비를 막는 것이다. 단점은 delay와 channel resource overhead다. 그래서 실제로는 long DATA frame에만 쓰도록 `RTS threshold`를 둔다. 많은 devices에서는 default RTS threshold가 maximum frame length보다 커서 모든 DATA frames에서 RTS/CTS를 건너뛰기도 한다.
@@ -178,7 +178,7 @@ Sender는 DATA frame과 ACK에 필요한 total time을 담아 RTS를 AP에 보�
 
 802.11 frame은 Ethernet frame과 비슷하지만 wireless link와 AP/Ethernet interworking 때문에 추가 fields가 있다. Payload는 보통 IP datagram 또는 ARP packet이며 최대 2,312 bytes까지 가능하지만, 일반적으로 1,500 bytes보다 작다. Wireless LAN에서는 bit errors가 더 흔하므로 32-bit `CRC (cyclic redundancy check)`의 역할이 특히 중요하다.
 
-![Figure 7.13](@/assets/images/217_figure_7-13_page_565.png)
+![Figure 7.13](@/assets/images/cs-computer-network-217-figure-7-13-page-565.png)
 *Figure 7.13 · PDF p. 565 · 802.11 frame format과 frame control subfields*
 
 가장 눈에 띄는 차이는 802.11 frame에 6-byte MAC address fields가 네 개 있다는 점이다. Infrastructure network에서 핵심은 앞의 세 address fields다.
@@ -190,7 +190,7 @@ Sender는 DATA frame과 ACK에 필요한 total time을 담아 RTS를 AP에 보�
 | `Address 3` | BSS와 wired LAN을 interconnect하기 위한 주소. 보통 router interface 또는 wired side의 source/destination MAC을 보존하는 데 쓰인다. |
 | `Address 4` | AP들이 ad hoc mode 등에서 서로 frame을 forward할 때 사용된다. 이 정리에서는 infrastructure network 중심이라 깊게 다루지 않는다. |
 
-![Figure 7.14](@/assets/images/218_figure_7-14_page_566.png)
+![Figure 7.14](@/assets/images/cs-computer-network-218-figure-7-14-page-566.png)
 *Figure 7.14 · PDF p. 566 · H1과 router interface R1 사이 frame 전달에서 802.11 address fields가 쓰이는 방식*
 
 AP는 link-layer device이므로 IP를 이해하거나 IP address로 routing하지 않는다. Router R1이 wireless station H1로 datagram을 보낼 때, router는 ARP로 H1의 MAC address를 얻고 Ethernet frame을 만든다. 이 Ethernet frame이 AP에 도착하면 AP는 이를 802.11 frame으로 변환한다. AP가 H1로 보낼 때 `Address 1`은 H1 MAC, `Address 2`는 AP MAC, `Address 3`은 R1 MAC이 된다. 반대로 H1이 R1로 보낼 때 H1은 `Address 1`에 AP MAC, `Address 2`에 H1 MAC, `Address 3`에 R1 MAC을 넣는다. AP는 이를 받아 Ethernet frame으로 바꾸면서 source를 H1 MAC, destination을 R1 MAC으로 채운다. 즉 `Address 3`은 wireless BSS와 wired LAN 사이에서 원래 router/interface MAC 정보를 잃지 않게 해 준다.
@@ -201,7 +201,7 @@ AP는 link-layer device이므로 IP를 이해하거나 IP address로 routing하�
 
 하나의 organization은 wireless LAN coverage를 넓히기 위해 같은 IP subnet 안에 여러 BSSs를 배치할 수 있다. 이 경우 station이 BSS1에서 BSS2로 이동해도 IP address를 유지하므로 ongoing TCP sessions를 계속 유지할 수 있다. 반대로 interconnection device가 router이고 새 BSS가 다른 subnet이면 station은 새 IP address를 받아야 하고, 기존 TCP connections는 깨질 수 있다. 이런 경우에는 Section 7.5-7.6의 network-layer mobility management가 필요하다.
 
-![Figure 7.15](@/assets/images/219_figure_7-15_page_568.png)
+![Figure 7.15](@/assets/images/cs-computer-network-219-figure-7-15-page-568.png)
 *Figure 7.15 · PDF p. 568 · 같은 subnet 안에서 H1이 AP1/BSS1에서 AP2/BSS2로 이동하는 상황*
 
 Same subnet mobility의 local flow는 다음과 같다. H1이 AP1에서 멀어지며 signal이 약해지는 것을 감지하고 scan을 시작한다. H1은 AP2의 beacon frames를 받고, AP1과 disassociate한 뒤 AP2와 associate한다. 이때 AP1과 AP2가 같은 SSID를 쓸 수 있고, H1은 IP address와 TCP sessions를 유지한다.
@@ -224,7 +224,7 @@ Bluetooth는 작고 단순한 network처럼 보이지만, link layer 안에는 �
 
 Bluetooth wireless channel은 625 microseconds time slots를 사용하는 TDM 방식으로 동작한다. 각 slot에서 sender는 79 channels 중 하나를 사용하고, slot마다 frequency가 pseudo-random하게 바뀐다. 이 방식은 `FHSS (frequency-hopping spread spectrum)`라고 하며, ISM band의 interference가 일부 slots만 망치게 만들어 전체 통신을 더 견고하게 한다. Bluetooth data rate는 최대 약 3 Mbps 수준이다.
 
-![Figure 7.16](@/assets/images/220_figure_7-16_page_572.png)
+![Figure 7.16](@/assets/images/cs-computer-network-220-figure-7-16-page-572.png)
 *Figure 7.16 · PDF p. 572 · master, active clients, parked devices로 구성된 Bluetooth piconet*
 
 Bluetooth는 AP가 없는 ad hoc network다. 최대 8개의 active devices가 하나의 piconet을 이루며, 그중 하나가 `master`, 나머지가 `clients`가 된다. Master는 piconet의 time slot boundaries를 정하는 clock, slot-to-slot frequency hopping sequence, client admission, client transmit power, polling permission을 제어한다. 즉 802.11 AP처럼 infrastructure에 붙는 장비는 아니지만, piconet 내부에서는 매우 강한 coordinator 역할을 한다.
@@ -243,7 +243,7 @@ Wi-Fi AP는 coverage area가 작고, moving user가 만나는 모든 AP에 자�
 
 `4G LTE (Long-Term Evolution)` architecture는 크게 radio network at the edge와 all-IP core network로 나뉜다. 모든 network elements는 IP protocol로 서로 통신한다. Figure 7.17은 mobile device가 base station을 통해 LTE carrier network의 EPC core로 들어가고, gateway를 거쳐 Internet으로 나가는 구조를 보여준다.
 
-![Figure 7.17](@/assets/images/221_figure_7-17_page_576.png)
+![Figure 7.17](@/assets/images/cs-computer-network-221-figure-7-17-page-576.png)
 *Figure 7.17 · PDF p. 576 · mobile device, base station, MME, HSS, S-GW, P-GW로 구성된 4G LTE architecture*
 
 주요 LTE elements는 다음처럼 이해하면 된다.
@@ -259,7 +259,7 @@ Wi-Fi AP는 coverage area가 작고, moving user가 만나는 모든 AP에 자�
 
 LTE에서 data plane과 control plane은 분명히 분리된다. `S-GW`와 `P-GW`는 user data path 위에 있는 routers이고, `MME`와 `HSS`는 control plane에서 attach/authentication/location/tunnel setup을 담당한다.
 
-![Figure 7.18](@/assets/images/222_figure_7-18_page_578.png)
+![Figure 7.18](@/assets/images/cs-computer-network-222-figure-7-18-page-578.png)
 *Figure 7.18 · PDF p. 578 · LTE data-plane elements와 control-plane elements의 분리*
 
 MME는 세 가지 핵심 기능을 한다. 첫째, `authentication`에서 mobile device와 network가 서로 legitimate한지 확인하도록 HSS와 mobile device 사이의 middleman 역할을 한다. Roaming 중이면 visited network의 MME가 home network의 HSS에 접촉한다. 둘째, `path setup`에서 mobile device와 P-GW 사이 data path에 필요한 tunnels를 설정한다. Mobile device와 base station 사이 wireless first hop 뒤에는 base station-S-GW, S-GW-P-GW 사이 IP tunnels가 이어진다. 이 tunnel 구조 덕분에 device가 이동해도 base station 쪽 tunnel endpoint만 바꾸면 되고, 나머지 tunnel/QoS 설정은 유지할 수 있다. 셋째, `cell location tracking`에서 active device의 cell 위치를 관리한다. Device가 sleep mode라 base stations가 위치를 직접 추적하지 못하면 MME가 `paging`으로 device를 찾아 wake up시킨다.
@@ -268,7 +268,7 @@ MME는 세 가지 핵심 기능을 한다. 첫째, `authentication`에서 mobile
 
 4G LTE는 all-IP architecture이므로 application/transport/network layer에서는 IP, TCP, UDP, application protocols가 그대로 등장한다. 새롭고 중요한 부분은 wireless radio link의 link layer/physical layer와 mobility management다. Figure 7.21은 mobile device, base station, S-GW, P-GW 사이 user-plane protocol stacks를 보여준다.
 
-![Figure 7.21](@/assets/images/225_figure_7-21_page_581.png)
+![Figure 7.21](@/assets/images/cs-computer-network-225-figure-7-21-page-581.png)
 *Figure 7.21 · PDF p. 581 · LTE user-plane data path와 PDCP/RLC/MAC link-layer sublayers*
 
 LTE mobile device의 link layer는 세 sublayers로 나뉜다.
@@ -285,7 +285,7 @@ Figure 7.21의 user data path에는 tunnels도 보인다. Mobile device가 netwo
 
 `LTE Radio Access Network`의 downstream channel은 `OFDM (orthogonal frequency division multiplexing)`을 사용한다. 이름의 orthogonal은 서로 다른 frequency channels가 촘촘히 배치되어도 interference가 작도록 signal을 구성한다는 뜻이다. LTE는 frequency division multiplexing과 time division multiplexing을 함께 사용해, active mobile device에 하나 이상의 frequency에서 하나 이상의 0.5 ms time slot을 할당한다.
 
-![Figure 7.22](@/assets/images/226_figure_7-22_page_583.png)
+![Figure 7.22](@/assets/images/cs-computer-network-226-figure-7-22-page-583.png)
 *Figure 7.22 · PDF p. 583 · 각 frequency에서 10 ms frame이 20개의 0.5 ms slots로 나뉘고, shaded slots가 한 device에 할당된 예*
 
 전송률은 두 축에서 조절된다. 첫째, mobile device에 더 많은 time slots를 주면 같은 시간 안에 더 많은 data를 보낼 수 있다. 이 slots는 같은 frequency에 있을 수도 있고, 여러 frequencies에 흩어져 있을 수도 있다. LTE에서는 slot reallocation이 최대 1 ms마다 일어날 수 있다. 둘째, Wi-Fi의 rate adaptation처럼 modulation scheme을 channel condition에 맞춰 바꿀 수 있다.
@@ -310,7 +310,7 @@ LTE standard는 특정 scheduling algorithm을 강제하지 않는다. 어느 mo
 
 Cellular network도 Internet처럼 `network of networks`다. 한 사용자의 `home cellular carrier network`는 HSS와 gateway를 갖고, 다른 carrier networks 및 public Internet과 연결된다. Carrier networks는 public Internet을 통해 연결될 수도 있고, cellular carriers 사이 interconnection을 위해 관리되는 `IPX (Internet Protocol Packet eXchange)` network를 통해 연결될 수도 있다.
 
-![Figure 7.23](@/assets/images/227_figure_7-23_page_585.png)
+![Figure 7.23](@/assets/images/cs-computer-network-227-figure-7-23-page-585.png)
 *Figure 7.23 · PDF p. 585 · home cellular carrier network, visited mobile carrier network, public Internet/IPX가 연결된 global cellular data network*
 
 이 구조는 Chapter 1의 ISP interconnection과 연결된다. Internet의 ISPs가 peering과 transit을 통해 하나의 global Internet을 만들듯, cellular carriers도 gateways와 IPX/public Internet을 통해 서로 붙는다. 4G network는 3G voice/data networks나 이전 voice-only networks와도 interwork할 수 있다. 뒤의 mobility management와 security는 이 network-of-networks 구조 위에서 동작한다.
@@ -357,7 +357,7 @@ FR2에서는 range가 짧아 더 많은 base stations가 필요하므로 `cell d
 
 Figure 7.24는 mobility를 network-layer 관점에서 네 단계로 나눈다.
 
-![Figure 7.24](@/assets/images/228_figure_7-24_page_590.png)
+![Figure 7.24](@/assets/images/cs-computer-network-228-figure-7-24-page-590.png)
 *Figure 7.24 · PDF p. 590 · access network 이동, 같은 provider 내 이동, 여러 providers 사이 이동으로 나뉘는 mobility degrees*
 
 | 경우 | network-layer 관점 | 필요한 기능 |
@@ -381,7 +381,7 @@ Home network가 중요한 이유는 두 가지다. 첫째, mobile device에 대�
 
 Mobility architecture의 기본 구성요소는 correspondent, home network, visited network, mobility manager, HSS, gateway다. Mobile device에는 cellular에서는 `IMSI`와 phone number 같은 permanent identifier가 있고, Mobile IP 관점에서는 home network address range에 속한 `permanent IP address`가 있을 수 있다.
 
-![Figure 7.25](@/assets/images/229_figure_7-25_page_592.png)
+![Figure 7.25](@/assets/images/cs-computer-network-229-figure-7-25-page-592.png)
 *Figure 7.25 · PDF p. 592 · permanent IP/IMSI를 가진 mobile device와 home/visited network, mobility managers, correspondent*
 
 가장 단순한 접근은 기존 IP addressing infrastructure를 그대로 써서 visited network가 mobile device의 full 32-bit permanent IP address에 대한 매우 specific route를 BGP로 advertise하는 것이다. Longest prefix matching 때문에 datagrams는 visited network로 향하게 된다. 이 방식은 architectural change가 적지만, routers가 billions of mobile devices 각각에 대한 forwarding table entries를 유지하고 이동할 때마다 update해야 하므로 scalability가 치명적으로 나쁘다. 그래서 실제적인 해결은 mobility 기능을 core routers가 아니라 network edge와 home network 쪽으로 밀어내는 것이다.
@@ -392,7 +392,7 @@ Mobile device가 visited network에 붙으면, visited network와 home network �
 
 `Indirect routing`에서는 correspondent가 mobile device의 이동 여부를 모른다. Correspondent는 permanent address로 datagram을 보내고, datagram은 평소처럼 home network로 간다. Home network gateway는 HSS를 조회해 mobile device가 현재 어느 visited network에 있는지 확인한 뒤, original datagram을 더 큰 datagram 안에 encapsulate해 visited network gateway로 tunnel한다. Visited network gateway는 decapsulation과 필요 시 NAT translation을 수행하고 mobile device로 전달한다.
 
-![Figure 7.26](@/assets/images/230_figure_7-26_page_594.png)
+![Figure 7.26](@/assets/images/cs-computer-network-230-figure-7-26-page-594.png)
 *Figure 7.26 · PDF p. 594 · correspondent datagram이 home network를 거쳐 visited network로 tunnel되는 indirect routing*
 
 Indirect routing에 필요한 기능은 세 가지다.
@@ -409,7 +409,7 @@ Mobile device가 다른 visited network로 이동하면 HSS의 visited network �
 
 `Direct routing`은 `triangle routing problem`을 피하려는 방식이다. Indirect routing에서는 correspondent와 mobile device가 물리적으로 가까워도 datagram이 먼저 home network로 갔다가 visited network로 되돌아올 수 있다. Direct routing에서는 correspondent가 먼저 HSS에 query해 mobile device의 visited network를 알아낸 뒤, correspondent 쪽에서 visited network gateway로 직접 tunnel한다.
 
-![Figure 7.27](@/assets/images/231_figure_7-27_page_597.png)
+![Figure 7.27](@/assets/images/cs-computer-network-231-figure-7-27-page-597.png)
 *Figure 7.27 · PDF p. 597 · correspondent가 HSS를 조회한 뒤 visited network로 직접 tunnel하는 direct routing*
 
 Direct routing의 장점은 path inefficiency를 줄인다는 점이다. 하지만 complexity가 늘어난다. Correspondent가 HSS에 mobile-user location을 query하는 protocol이 필요하고, session 도중 mobile device가 새 visited network로 이동하면 correspondent에게 새 tunnel endpoint를 알려야 한다. Indirect routing에서는 HSS update와 home gateway tunnel endpoint 변경으로 충분했지만, direct routing에서는 correspondent까지 proactive update해야 하므로 ongoing session mobility 처리가 더 어렵다.
@@ -420,7 +420,7 @@ Direct routing의 장점은 path inefficiency를 줄인다는 점이다. 하지�
 
 앞 절의 원리는 실제 4G/5G network에서 home/visited network, HSS/MME, tunnels, handover로 구현된다. 예시는 사용자가 visited 4G/5G network에 attach하고, remote streaming server에서 HD video를 보다가 다른 base station coverage로 이동하는 상황이다.
 
-![Figure 7.28](@/assets/images/232_figure_7-28_page_599.png)
+![Figure 7.28](@/assets/images/cs-computer-network-232-figure-7-28-page-599.png)
 *Figure 7.28 · PDF p. 599 · visited network에 attach한 mobile device가 streaming 중 handover하는 4G/5G mobility scenario*
 
 #### 7.6.1 Mobility Management in 4G/5G Networks
@@ -436,14 +436,14 @@ Direct routing의 장점은 path inefficiency를 줄인다는 점이다. 하지�
 
 Data-plane 구성에서는 두 tunnels가 핵심이다. 하나는 visited network 안의 base station과 `S-GW (Serving Gateway)` 사이, 다른 하나는 visited network의 S-GW와 mobile device home network의 `P-GW (PDN Gateway)` 사이에 생긴다. 이것은 symmetric indirect routing이다. Mobile device로 오고 가는 traffic은 home network의 P-GW를 거친다.
 
-![Figure 7.29](@/assets/images/233_figure_7-29_page_600.png)
+![Figure 7.29](@/assets/images/cs-computer-network-233-figure-7-29-page-600.png)
 *Figure 7.29 · PDF p. 600 · visited network의 S-GW와 home network의 P-GW 사이 4G/5G tunneling*
 
 4G/5G tunnel은 `GTP (GPRS Tunneling Protocol)`을 사용한다. GTP header의 `TEID (Tunnel Endpoint ID)`는 datagram이 어느 tunnel에 속하는지 나타내므로, tunnel endpoints 사이에서 여러 flows를 multiplex/demultiplex할 수 있다. Figure 7.29는 mobile device가 visited network에 roaming 중인 경우이고, Figure 7.18은 home network 안에서만 mobility가 있는 경우다. 두 경우 모두 S-GW는 mobile device와 같은 network에 있지만, P-GW는 항상 device의 home network에 있으므로 visited network roaming에서는 indirect routing 구조가 된다. `Local breakout`은 visited network의 local P-GW로 tunnel을 만드는 대안이지만 널리 쓰이지 않는다.
 
 Handover는 mobile device가 현재 base station과의 association을 끊고 다른 base station에 붙는 절차다. 현재 base station을 `source base station`, 새 base station을 `target base station`이라고 부른다. Handover의 결과는 wireless link만 바뀌는 것이 아니라, S-GW-to-base-station tunnel의 base-station-side endpoint도 source에서 target으로 바뀐다는 점이 중요하다.
 
-![Figure 7.30](@/assets/images/234_figure_7-30_page_601.png)
+![Figure 7.30](@/assets/images/cs-computer-network-234-figure-7-30-page-601.png)
 *Figure 7.30 · PDF p. 601 · source base station에서 target base station으로 handover할 때의 tunnel 재구성 단계*
 
 Handover가 발생하는 이유는 단순히 사용자가 움직이기 때문만은 아니다. Current base station과 mobile device 사이 signal이 나빠질 수도 있고, cell이 overloaded되어 nearby cell로 일부 mobile devices를 넘기는 편이 나을 수도 있다. Mobile device는 current base station과 nearby base stations의 beacon signal characteristics를 주기적으로 측정해 source base station에 보고한다. Source base station은 이 measurements, nearby cell load, 기타 factors를 바탕으로 handover 여부와 target base station을 결정한다. 4G/5G standards는 구체적인 handover decision algorithm을 정하지 않는다.

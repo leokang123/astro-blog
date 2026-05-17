@@ -6,7 +6,7 @@ description: "옵시디언에서 원하는 기능이 있다면 CSS 를 찾아보
 tags:
   - "일반"
   - "옵시디언"
-banner: "@/assets/images/milkyway.jpg"
+banner: "@/assets/images/shared-milkyway.jpg"
 ---
 
 # 옵시디언 Css 설정
@@ -27,7 +27,7 @@ banner: "@/assets/images/milkyway.jpg"
 ## 제목
 
 - ### 리스트 1 #mcl/list-card
-  ![univercity](@/assets/images/univercity.jpg)
+  ![univercity](@/assets/images/shared-univercity.jpg)
 - ### 리스트 2
   내용 1
   내용 2
@@ -55,7 +55,7 @@ mcl/list-grid 를 통해 이렇게 만들 수 있다
 ### 사진
 
 > [!white|left-side]
-> ![univercity](@/assets/images/univercity.jpg)
+> ![univercity](@/assets/images/shared-univercity.jpg)
 
 **고양이**(cat) 는 [식육목](https://namu.wiki/w/%EC%8B%9D%EC%9C%A1%EB%AA%A9 '식육목') [고양이과](https://namu.wiki/w/%EA%B3%A0%EC%96%91%EC%9D%B4%EA%B3%BC '고양이과') 고양이속의 한 종 (*Felis catus*) 이다. 고양이의 신체적 특성과 습성은 다른 고양이과 동물들과 유사하게 빠른 반사신경, 탁월한 유연성, 날카로운 이빨, 넣고 꺼낼 수 있는 발톱 등이 있다.
 

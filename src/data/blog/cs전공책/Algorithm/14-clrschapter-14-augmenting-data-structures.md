@@ -60,7 +60,7 @@ T.nil.size = 0
 x.size = x.left.size + x.right.size + 1
 ```
 
-![Figure 14.1](@/assets/images/066_figure_14-1_page_361.png)
+![Figure 14.1](@/assets/images/cs-algorithm-066-figure-14-1-page-361.png)
 *Figure 14.1 · PDF p. 361 · 각 node에 subtree size를 저장한 order-statistic tree*
 
 Figure 14.1은 red-black tree의 각 node에 key와 `size`를 함께 표시한다. `size`는 sentinel을 제외한 internal nodes만 센다. 이 field 덕분에 특정 node의 left subtree에 몇 개의 원소가 있는지 즉시 알 수 있고, rank 기반 navigation이 가능해진다.
@@ -146,7 +146,7 @@ Red-black insertion의 첫 단계는 root에서 leaf position까지 내려가며
 
 Insertion fixup의 structural changes는 rotations뿐이고, red-black insertion은 최대 두 번 rotation한다. Rotation은 local operation이므로 size 갱신도 local하다.
 
-![Figure 14.2](@/assets/images/067_figure_14-2_page_365.png)
+![Figure 14.2](@/assets/images/cs-algorithm-067-figure-14-2-page-365.png)
 *Figure 14.2 · PDF p. 365 · rotation 후 영향을 받는 두 node의 subtree size 갱신*
 
 `LEFT-ROTATE(T, x)`에서 pivot node를 `y = x.right`라고 하면, rotation 후 `y`가 기존 `x`의 subtree root가 된다. 따라서 CLRS는 `LEFT-ROTATE` 끝에 다음 두 줄을 추가한다.
@@ -265,7 +265,7 @@ i overlaps i'  <=>  i.low <= i'.high and i'.low <= i.high
 
 Open interval이나 half-open interval도 개념적으로 확장할 수 있지만, endpoint 포함 여부에 따라 inequality가 달라진다.
 
-![Figure 14.3](@/assets/images/068_figure_14-3_page_370.png)
+![Figure 14.3](@/assets/images/cs-algorithm-068-figure-14-3-page-370.png)
 *Figure 14.3 · PDF p. 370 · 두 closed intervals의 overlap/non-overlap trichotomy*
 
 Figure 14.3의 `interval trichotomy`는 두 closed intervals `i`, `i'`에 대해 정확히 하나만 성립한다고 말한다.
@@ -293,7 +293,7 @@ x.max = maximum high endpoint among intervals in subtree rooted at x
 x.max = max(x.int.high, x.left.max, x.right.max)
 ```
 
-![Figure 14.4](@/assets/images/069_figure_14-4_page_371.png)
+![Figure 14.4](@/assets/images/cs-algorithm-069-figure-14-4-page-371.png)
 *Figure 14.4 · PDF p. 371 · interval을 low endpoint로 정렬하고 subtree max endpoint를 저장한 interval tree*
 
 Figure 14.4에서 각 node는 dashed line 위에 interval을, 아래에 subtree의 maximum high endpoint `max`를 표시한다. 예를 들어 어떤 node의 left subtree 안에 high endpoint가 큰 interval이 있다면, `x.left.max`가 그 가능성을 요약한다. Query는 이 값만 보고 left subtree에 overlap 후보가 있을 수 있는지 판단한다.
@@ -356,7 +356,7 @@ then the subtree rooted at x contains such an interval.
 
 즉 search가 한 path만 내려가더라도, 겹치는 interval이 존재한다면 현재 `x`가 root인 subtree 안에 아직 후보가 남아 있다는 뜻이다.
 
-![Figure 14.5](@/assets/images/070_figure_14-5_page_373.png)
+![Figure 14.5](@/assets/images/cs-algorithm-070-figure-14-5-page-373.png)
 *Figure 14.5 · PDF p. 373 · `INTERVAL-SEARCH`가 left/right로 안전하게 이동하는 이유*
 
 Right로 가는 경우는 쉽다. `x.left == T.nil`이거나 `x.left.max < i.low`이면 left subtree의 모든 interval `i'`에 대해

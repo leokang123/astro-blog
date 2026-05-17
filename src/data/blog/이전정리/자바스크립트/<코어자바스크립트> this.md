@@ -7,7 +7,7 @@ tags:
   - "일반"
   - "자바스크립트"
   - "책리뷰"
-banner: "@/assets/images/flightsupply.jpg"
+banner: "@/assets/images/shared-flightsupply.jpg"
 ---
 
 # <코어자바스크립트> This

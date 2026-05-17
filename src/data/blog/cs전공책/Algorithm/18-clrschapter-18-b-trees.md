@@ -37,7 +37,7 @@ B-tree는 binary search tree의 자연스러운 일반화다. Binary search tree
 
 Figure 18.1은 consonants를 key로 가진 간단한 B-tree다. Root의 key `M`은 전체 range를 둘로 나누고, 아래 internal nodes의 keys가 다시 더 작은 subranges로 나눈다. 모든 leaves는 같은 depth에 있으므로 search path 길이가 균일하게 제한된다.
 
-![Figure 18.1](@/assets/images/093_figure_18-1_page_506.png)
+![Figure 18.1](@/assets/images/cs-algorithm-093-figure-18-1-page-506.png)
 *Figure 18.1 · PDF p. 506 · 여러 keys를 가진 node가 key range를 여러 child subranges로 나누는 B-tree*
 
 #### Secondary storage와 cost model
@@ -46,7 +46,7 @@ Main memory는 빠르지만 비싸고 용량이 제한적이다. Disk 같은 sec
 
 Figure 18.2는 disk drive의 기본 구조를 보여 준다. `platter`, `track`, `read/write head`, `arm`, `spindle` 같은 구성 요소는 이 장에서 세부 하드웨어 암기 대상이라기보다, 왜 page 단위 I/O가 중요한지를 설명하는 배경이다. 원하는 byte 하나만 읽더라도 head positioning과 rotation wait가 필요하므로, disk는 보통 여러 bytes를 묶은 page 단위로 읽고 쓴다.
 
-![Figure 18.2](@/assets/images/094_figure_18-2_page_506.png)
+![Figure 18.2](@/assets/images/cs-algorithm-094-figure-18-2-page-506.png)
 *Figure 18.2 · PDF p. 506 · disk access가 mechanical movement와 page 단위 전송에 묶이는 이유*
 
 CLRS는 B-tree 알고리즘의 running time을 두 성분으로 나누어 본다.
@@ -131,7 +131,7 @@ B-tree의 key 수 제한은 fixed integer `t >= 2`, 즉 `minimum degree`로 표�
 
 Figure 18.3은 height 2의 B-tree가 얼마나 많은 keys를 담을 수 있는지 보여 준다. 각 node가 1000 keys를 담고 internal node가 1001 children을 가진다면, root를 포함해 depth 2까지만 내려가도 10억 개가 넘는 keys를 저장할 수 있다. Root를 main memory에 상주시킨다면 search에서 필요한 disk access는 최대 두 번이다.
 
-![Figure 18.3](@/assets/images/095_figure_18-3_page_509.png)
+![Figure 18.3](@/assets/images/cs-algorithm-095-figure-18-3-page-509.png)
 *Figure 18.3 · PDF p. 509 · height 2 B-tree가 큰 branching factor로 10억 개 이상 keys를 저장하는 구조*
 
 #### Theorem 18.1: B-tree height bound
@@ -148,7 +148,7 @@ h <= log_t((n + 1) / 2)
 
 Figure 18.4는 height 3에서 key 수를 최소화한 B-tree의 모양을 보여 준다. Root에는 key 1개, 그 아래 nonroot nodes에는 모두 `t - 1`개 keys가 들어 있다.
 
-![Figure 18.4](@/assets/images/096_figure_18-4_page_511.png)
+![Figure 18.4](@/assets/images/cs-algorithm-096-figure-18-4-page-511.png)
 *Figure 18.4 · PDF p. 511 · height가 주어졌을 때 key 수를 최소화한 B-tree 구조*
 
 최소 key 수를 합치면:
@@ -239,7 +239,7 @@ Insertion은 root에서 내려가는 동안 full child를 만나면 먼저 split
 
 Figure 18.5는 `t=4`에서 full child `y`를 split하는 과정을 보여 준다. Median key `S`가 parent로 올라가고, `S`보다 큰 keys와 corresponding children은 새 node `z`로 이동한다.
 
-![Figure 18.5](@/assets/images/097_figure_18-5_page_515.png)
+![Figure 18.5](@/assets/images/cs-algorithm-097-figure-18-5-page-515.png)
 *Figure 18.5 · PDF p. 515 · full child를 median key 기준으로 split하고 parent에 separator를 올리는 과정*
 
 ```text
@@ -284,7 +284,7 @@ B-TREE-INSERT(T, k)
 
 Figure 18.6은 root split을 보여 준다. B-tree는 binary search tree처럼 아래쪽에 새 leaf를 붙여 height가 커지는 것이 아니라, full root를 split하면서 위쪽에 새 root가 생길 때 height가 1 증가한다. 즉 B-tree의 height growth는 top에서 일어난다.
 
-![Figure 18.6](@/assets/images/098_figure_18-6_page_517.png)
+![Figure 18.6](@/assets/images/cs-algorithm-098-figure-18-6-page-517.png)
 *Figure 18.6 · PDF p. 517 · full root를 split해 새 root가 생기고 B-tree height가 1 증가하는 과정*
 
 #### Nonfull node로만 내려가기: `B-TREE-INSERT-NONFULL`
@@ -317,7 +317,7 @@ Line 13-15의 효과는 “절대 full node로 recurse하지 않는다”는 것
 
 Figure 18.7은 `t=3`인 B-tree에 여러 keys를 삽입하는 예시다. 단순 leaf insertion, leaf split, root split, split 후 어느 절반으로 내려갈지 선택하는 경우가 한 그림 안에 모두 들어 있다.
 
-![Figure 18.7](@/assets/images/099_figure_18-7_page_519.png)
+![Figure 18.7](@/assets/images/cs-algorithm-099-figure-18-7-page-519.png)
 *Figure 18.7 · PDF p. 519 · B-tree insertion에서 leaf insertion, child split, root split이 나타나는 예시*
 
 #### Basic operations의 복잡도
@@ -350,12 +350,12 @@ Root는 예외적으로 `t - 1`보다 적은 keys를 가질 수 있다. 만약 d
 
 Figure 18.8은 `t=3`인 B-tree에서 여러 deletion cases를 보여 준다. Nonroot node는 최소 `t-1=2` keys를 가져야 하며, 수정되는 nodes가 음영으로 표시되어 있다.
 
-![Figure 18.8](@/assets/images/100_figure_18-8_page_521.png)
+![Figure 18.8](@/assets/images/cs-algorithm-100-figure-18-8-page-521.png)
 *Figure 18.8 · PDF p. 521 · leaf deletion과 internal key deletion에서 predecessor/merge가 일어나는 예시*
 
 Figure 18.8의 이어지는 부분은 내려갈 child가 최소 keys만 가진 경우, sibling에서 빌리거나 merge하는 과정을 보여 준다. 특히 merge 후 root가 empty가 되어 tree height가 줄어드는 상황도 포함한다.
 
-![Figure 18.8 continued](@/assets/images/101_figure_18-8_page_522.png)
+![Figure 18.8 continued](@/assets/images/cs-algorithm-101-figure-18-8-page-522.png)
 *Figure 18.8 · PDF p. 522 · child 보강, sibling borrow, merge, root 삭제로 height가 줄어드는 예시*
 
 #### Case 1: key가 leaf node에 있는 경우

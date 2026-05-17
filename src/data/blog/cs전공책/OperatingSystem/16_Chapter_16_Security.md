@@ -108,7 +108,7 @@ Security는 네 계층에서 함께 다뤄야 한다.
 | `operating system` | OS/services의 vulnerabilities, insecure defaults, misconfiguration, bugs, patching/hardening |
 | `application` | third-party applications의 privileges, malicious applications, benign applications의 security bugs |
 
-![Four-layered security model](@/assets/images/322_Figure_16.1_page_758.png)
+![Four-layered security model](@/assets/images/cs-operating-system-322-figure-16-1-page-758.png)
 <p align="center"><sub>Figure 16.1 · PDF p. 758 · physical, network, operating system, application 네 계층이 모두 약점 없이 맞물려야 하는 security model</sub></p>
 
 Figure 16.1의 의미는 chain model과 같다. 네 layer 중 어느 하나라도 취약하면 전체 system compromise로 이어질 수 있다. 그래서 security is only as strong as its weakest link라는 표현이 성립한다.
@@ -144,19 +144,19 @@ Malware가 잘 작동하는 환경은 `principle of least privilege`가 깨진 �
 
 가장 단순한 vector가 `buffer overflow`다. Bounds checking 없이 input을 fixed-size buffer에 copy하면 input length가 buffer size를 넘어 주변 memory를 덮을 수 있다.
 
-![Buffer overflow condition](@/assets/images/323_Figure_16.2_page_762.png)
+![Buffer overflow condition](@/assets/images/cs-operating-system-323-figure-16-2-page-762.png)
 <p align="center"><sub>Figure 16.2 · PDF p. 762 · buffer size를 고려하지 않는 copy가 overflow condition을 만드는 C program 예</sub></p>
 
 Figure 16.2의 핵심은 특정 함수 이름 암기가 아니라, memory buffer size를 확인하지 않는 unbounded copy가 undefined behavior와 memory corruption을 만들 수 있다는 점이다. Size-aware function을 사용하더라도 integer overflow나 잘못된 arithmetic이 결합되면 vulnerability가 남을 수 있다.
 
 Overflow outcome은 overflow length, contents, compiler-generated layout, padding, stack frame layout에 따라 달라진다.
 
-![Possible buffer overflow outcomes](@/assets/images/324_Figure_16.3_page_763.png)
+![Possible buffer overflow outcomes](@/assets/images/cs-operating-system-324-figure-16-3-page-763.png)
 <p align="center"><sub>Figure 16.3 · PDF p. 763 · padding, stack variables, return address까지 overflow 범위가 커질수록 피해가 커지는 구조</sub></p>
 
 작은 overflow는 padding 영역에 머물러 겉으로 드러나지 않을 수 있다. Padding을 넘으면 stack의 다른 automatic variable이 overwritten되어 logical condition이 subverted되거나 crash가 날 수 있다. 더 큰 overflow가 current function stack frame과 return address까지 덮으면, program control flow가 attacker-controlled memory region으로 redirect될 수 있다.
 
-![Trampoline to code execution](@/assets/images/325_Figure_16.4_page_764.png)
+![Trampoline to code execution](@/assets/images/cs-operating-system-325-figure-16-4-page-764.png)
 <p align="center"><sub>Figure 16.4 · PDF p. 764 · overwritten control-flow pointer가 attacker-supplied code로 execution을 이동시키는 개념적 흐름</sub></p>
 
 Figure 16.4는 code injection의 conceptual danger를 보여 준다. 공격의 상세 절차보다 중요한 것은, injected code가 attacked process의 effective ID로 실행될 수 있다는 점이다. 즉 compromised process의 privileges가 곧 attack impact를 결정한다. 그래서 least privilege, bounds checking, memory-safe languages, compiler/runtime mitigations, address-space protection, executable memory restrictions가 중요해진다.
@@ -184,7 +184,7 @@ Virus 감염 흐름은 보통 `virus dropper`가 system에 virus를 삽입하는
 | `multipartite` virus | boot sectors, memory, files 등 multiple parts를 infect |
 | `armored` virus | obfuscation/compression/hidden attributes로 analysis와 disinfection을 어렵게 함 |
 
-![Boot-sector virus](@/assets/images/326_Figure_16.5_page_767.png)
+![Boot-sector virus](@/assets/images/cs-operating-system-326-figure-16-5-page-767.png)
 <p align="center"><sub>Figure 16.5 · PDF p. 767 · boot sector를 대체하고 memory에 숨어 disk activity를 감시하는 boot virus 개념 흐름</sub></p>
 
 Figure 16.5는 boot virus가 OS load 이전에 control을 얻고, original boot sector를 다른 위치로 옮기며, memory에 숨어 disk I/O를 감시하는 개념을 보여 준다. 핵심은 boot path처럼 OS protection이 아직 충분히 활성화되지 않은 시점이 공격 표면이 될 수 있다는 점이다.
@@ -197,7 +197,7 @@ Network에 연결되면 program threats의 위험은 훨씬 커진다. Worldwide
 
 Attackers는 흔적을 숨기기 위해 `zombie systems`를 자주 사용한다. Zombie는 이미 compromise되었지만 owner에게는 계속 정상 service를 제공하는 system/device다. Attacker는 이를 DoS, spam relay, 다른 attacks의 launch point로 사용한다. 따라서 “중요한 data가 없는 system”도 방치하면 다른 공격의 base가 될 수 있다.
 
-![Standard security attacks](@/assets/images/327_Figure_16.6_page_769.png)
+![Standard security attacks](@/assets/images/cs-operating-system-327-figure-16-6-page-769.png)
 <p align="center"><sub>Figure 16.6 · PDF p. 769 · normal communication, masquerading, man-in-the-middle attack의 차이</sub></p>
 
 Figure 16.6은 network attack의 세 가지 기본 형태를 보여 준다. Passive attacker는 traffic을 `sniffing`하여 session type이나 contents를 얻고, active attacker는 `spoofing`으로 한 party인 척하거나, `man-in-the-middle`로 양쪽 communication을 중간에서 intercept/modify한다.
@@ -248,7 +248,7 @@ ciphertext c --D_k--> plaintext message m
 
 `symmetric encryption`은 같은 key `k`를 encrypt와 decrypt에 모두 사용한다. 따라서 key secrecy가 핵심이다.
 
-![Symmetric encryption over insecure channel](@/assets/images/328_Figure_16.7_page_774.png)
+![Symmetric encryption over insecure channel](@/assets/images/cs-operating-system-328-figure-16-7-page-774.png)
 <p align="center"><sub>Figure 16.7 · PDF p. 774 · insecure channel 위에서도 shared key를 가진 양쪽만 plaintext를 읽는 symmetric encryption 흐름</sub></p>
 
 DES는 과거 널리 쓰인 symmetric block cipher였지만 key length가 짧아 많은 용도에서 insecure하다. Triple DES는 DES를 세 번 적용해 key length를 늘린 변형이다. 현대 표준은 `AES(Advanced Encryption Standard)`이며 128/192/256-bit keys와 128-bit blocks를 사용한다.
@@ -259,7 +259,7 @@ Block cipher는 fixed-size block을 처리하므로 긴 message를 직접 다루
 
 `asymmetric encryption`은 encryption key와 decryption key가 다르다. Public key는 공개할 수 있고, private key는 비밀로 유지한다. Public key로 encrypt한 data는 corresponding private key로만 decrypt할 수 있다. 이 구조는 key distribution 문제를 크게 완화하지만, computational cost가 symmetric encryption보다 크다. 그래서 large data 일반 암호화에는 symmetric key를 쓰고, asymmetric cryptography는 small data, authentication, key distribution에 주로 사용된다.
 
-![RSA asymmetric cryptography](@/assets/images/329_Figure_16.8_page_776.png)
+![RSA asymmetric cryptography](@/assets/images/cs-operating-system-329-figure-16-8-page-776.png)
 <p align="center"><sub>Figure 16.8 · PDF p. 776 · RSA asymmetric cryptography에서 public/private key pair로 encryption/decryption을 수행하는 간단한 수치 예</sub></p>
 
 Figure 16.8은 RSA의 수치 예시지만, 정리에서 중요한 점은 “한 key로 encrypt하고 다른 paired key로 decrypt한다”는 구조다. 실제 cryptographic parameters는 교재 예시처럼 작은 숫자가 아니라 충분히 큰 값과 검증된 library를 사용해야 한다.
@@ -280,7 +280,7 @@ Symmetric encryption은 parties 모두가 같은 key를 가져야 하고, 그 ke
 
 Asymmetric cryptography는 public key를 공개할 수 있어 scale이 좋아진다. 하지만 public key가 정말 intended entity의 것인지 검증해야 한다. 그렇지 않으면 attacker가 자신의 public key를 끼워 넣는 `man-in-the-middle attack`이 가능하다.
 
-![Man-in-the-middle on asymmetric cryptography](@/assets/images/330_Figure_16.9_page_779.png)
+![Man-in-the-middle on asymmetric cryptography](@/assets/images/cs-operating-system-330-figure-16-9-page-779.png)
 <p align="center"><sub>Figure 16.9 · PDF p. 779 · attacker가 자신의 public key를 끼워 넣어 encrypted message를 가로채는 man-in-the-middle attack</sub></p>
 
 해결책은 `digital certificate`다. Certificate는 trusted party가 digitally sign한 public key다. `certificate authority(CA)`는 entity의 identity proof를 받고 public key가 그 entity에 속함을 certify한다. Browser나 certificate consumers는 CA public keys를 미리 포함하고 배포된다. CA가 다른 CA의 public key를 sign하는 식으로 `web of trust`가 만들어질 수 있다. Certificates는 표준 `X.509` format으로 배포될 수 있다.
@@ -428,7 +428,7 @@ Antivirus programs는 known virus instruction patterns를 찾아 제거하는 �
 
 `firewall`은 trusted systems와 untrusted network 사이에 위치해 access를 제한·감시·기록한다. Source/destination address, source/destination port, connection direction을 기준으로 허용/차단할 수 있다. 예를 들어 web server에는 외부에서 HTTP만 허용하고, finger 같은 위험한 protocols는 차단할 수 있다.
 
-![Domain separation via firewall](@/assets/images/331_Figure_16.10_page_794.png)
+![Domain separation via firewall](@/assets/images/cs-operating-system-331-figure-16-10-page-794.png)
 <p align="center"><sub>Figure 16.10 · PDF p. 794 · Internet, DMZ, company computers를 firewall로 분리해 trust domains를 나누는 구조</sub></p>
 
 Figure 16.10의 구조는 three-domain separation이다. Internet은 untrusted, `DMZ(demilitarized zone)`는 semitrusted/semisecure, company computers는 trusted domain이다. Internet은 DMZ web servers에 접근할 수 있지만 company computers에는 접근하지 못한다. DMZ system이 compromise되어도 내부 company computers로 바로 들어가지 못하게 containment를 제공한다.

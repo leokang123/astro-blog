@@ -62,7 +62,7 @@ Insertion sort는 적은 수의 element를 정렬할 때 효율적인 알고리�
 
 Figure 2.1은 이 card-sorting 비유를 보여준다. 핵심은 매 순간 왼손의 card들이 sorted 상태이고, 그 card들이 원래 table pile의 앞쪽 cards였다는 점이다.
 
-![Figure 2.1](@/assets/images/001_figure_2-1_page_38.png)
+![Figure 2.1](@/assets/images/cs-algorithm-001-figure-2-1-page-38.png)
 *Figure 2.1 · PDF p. 38 · 손에 든 카드에 새 카드를 끼워 넣는 insertion sort 직관*
 
 #### INSERTION-SORT pseudocode
@@ -85,7 +85,7 @@ INSERTION-SORT(A)
 
 Figure 2.2는 `A = <5, 2, 4, 6, 1, 3>`에 대해 `INSERTION-SORT`가 각 iteration에서 어떤 key를 집고, 어떤 값을 오른쪽으로 밀고, 어디에 key를 넣는지 보여준다. 이 그림은 line 5의 비교, line 6의 shift, line 8의 insertion을 한 번에 연결해서 볼 수 있게 해 준다.
 
-![Figure 2.2](@/assets/images/002_figure_2-2_page_39.png)
+![Figure 2.2](@/assets/images/cs-algorithm-002-figure-2-2-page-39.png)
 *Figure 2.2 · PDF p. 39 · 배열 `A = <5, 2, 4, 6, 1, 3>`에서 `INSERTION-SORT`가 key를 삽입하는 과정*
 
 #### Loop invariant로 correctness 증명하기
@@ -247,12 +247,12 @@ MERGE(A, p, q, r)
 
 Figure 2.3은 `MERGE(A, 9, 12, 16)`에서 `A[9..16] = <2, 4, 5, 7, 1, 2, 3, 6>`인 경우를 보여준다. `L = <2, 4, 5, 7, ∞>`, `R = <1, 2, 3, 6, ∞>`를 만들고, `i`, `j`, `k`가 어떤 값을 가리키는지에 따라 `A[9..16]`이 점점 sorted output으로 덮인다.
 
-![Figure 2.3](@/assets/images/003_figure_2-3_page_53.png)
+![Figure 2.3](@/assets/images/cs-algorithm-003-figure-2-3-page-53.png)
 *Figure 2.3 · PDF p. 53 · `MERGE(A, 9, 12, 16)`의 초기 반복들: `L`, `R`의 작은 값을 `A`로 복사*
 
 Figure 2.3의 이어지는 부분은 termination 시점까지 보여준다. 마지막에는 `A[9..16] = <1, 2, 2, 3, 4, 5, 6, 7>`이 되고, `L`과 `R`에 복사되지 않은 값은 두 sentinel뿐이다.
 
-![Figure 2.3 continued](@/assets/images/004_figure_2-3_page_54.png)
+![Figure 2.3 continued](@/assets/images/cs-algorithm-004-figure-2-3-page-54.png)
 *Figure 2.3 · PDF p. 54 · `MERGE` 종료 시점: 실제 원소는 모두 `A[p..r]`에 sorted order로 복사됨*
 
 #### MERGE의 loop invariant
@@ -288,7 +288,7 @@ MERGE-SORT(A, p, r)
 
 Figure 2.4는 `A = <5, 2, 4, 7, 1, 3, 2, 6>`에서 merge sort가 bottom-up으로 어떻게 보이는지 보여준다. 실제 procedure는 top-down recursion으로 divide하지만, 결과적으로는 길이 1 sequences를 길이 2로 merge하고, 길이 2 sequences를 길이 4로 merge하고, 마지막에 길이 4 두 개를 merge해 길이 8 sorted sequence를 만든다.
 
-![Figure 2.4](@/assets/images/005_figure_2-4_page_56.png)
+![Figure 2.4](@/assets/images/cs-algorithm-005-figure-2-4-page-56.png)
 *Figure 2.4 · PDF p. 56 · `A = <5, 2, 4, 7, 1, 3, 2, 6>`에 대한 merge sort의 merge 단계*
 
 #### Divide-and-conquer recurrence의 일반형
@@ -338,7 +338,7 @@ T(n) = 2T(n/2) + cn         if n > 1
 
 Figure 2.5는 이 recurrence를 recursion tree로 펼치는 방법을 보여준다. root에는 top-level work `cn`이 있고, 아래에는 `T(n/2)` 두 개가 생긴다. 각 `T(n/2)`는 다시 `cn/2` 비용과 `T(n/4)` 두 개로 펼쳐진다. 이 과정을 problem size가 1이 될 때까지 반복한다.
 
-![Figure 2.5](@/assets/images/006_figure_2-5_page_59.png)
+![Figure 2.5](@/assets/images/cs-algorithm-006-figure-2-5-page-59.png)
 *Figure 2.5 · PDF p. 59 · `T(n) = 2T(n/2) + cn`을 recursion tree로 펼쳐 각 level 비용을 합산하는 과정*
 
 각 level의 총 비용이 `cn`으로 같다는 점이 핵심이다.

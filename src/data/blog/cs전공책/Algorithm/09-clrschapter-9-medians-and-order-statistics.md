@@ -255,7 +255,7 @@ Step 2에서 group 크기가 최대 5이므로 각 group의 insertion sort는 `O
 
 Figure 9.1은 원소를 5개씩 column으로 묶고, 각 group median과 median-of-medians `x`를 표시한다. 이 그림의 목적은 `x`보다 확실히 큰 원소와 확실히 작은 원소가 얼마나 되는지 세는 것이다.
 
-![Figure 9.1](@/assets/images/031_figure_9-1_page_242.png)
+![Figure 9.1](@/assets/images/cs-algorithm-031-figure-9-1-page-242.png)
 *Figure 9.1 · PDF p. 242 · groups of 5에서 median-of-medians `x`가 보장하는 partition 품질*
 
 각 full group of 5에서 median보다 큰 원소는 최소 2개, median 자신을 포함해 median 이상인 원소는 3개다. 이제 group medians의 median이 `x`이므로, medians 중 적어도 절반은 `x` 이상이다.
