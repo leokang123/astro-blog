@@ -6,7 +6,11 @@ import Breadcrumb from "@/components/Breadcrumb.astro";
 import Layout from "./Layout.astro";
 import { SITE } from "@/config";
 
-type Props = MarkdownLayoutProps<{ title: string }>;
+type Props = MarkdownLayoutProps<{
+  title: string;
+  profileImage?: string;
+  profileImageAlt?: string;
+}>;
 
 const { frontmatter } = Astro.props;
 ---
@@ -17,8 +21,26 @@ const { frontmatter } = Astro.props;
   <main id="main-content" class="app-layout">
     <section id="about" class="app-prose mb-28 max-w-app prose-img:border-0">
       <h1 class="text-2xl tracking-wider sm:text-3xl">{frontmatter.title}</h1>
+      {
+        frontmatter.profileImage && (
+          <img
+            src={frontmatter.profileImage}
+            alt={frontmatter.profileImageAlt ?? ""}
+            width="180"
+            class="about-profile"
+          />
+        )
+      }
       <slot />
     </section>
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .about-profile {
+    width: 180px;
+    max-width: 45%;
+    border-radius: 9999px;
+  }
+</style>

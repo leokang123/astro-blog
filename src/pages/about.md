@@ -1,14 +1,9 @@
 ---
 layout: ../layouts/AboutLayout.astro
 title: "About"
+profileImage: "/about-profile.jpg"
+profileImageAlt: "강정훈 프로필 사진"
 ---
-
-<img
-  src="/about-profile.jpg"
-  alt="강정훈 프로필 사진"
-  width="180"
-  style="width: 180px; max-width: 45%; border-radius: 9999px;"
-/>
 
 강정훈입니다. 한양대학교 ERICA 컴퓨터학부를 졸업했고, 백엔드와 인프라, 데이터가 흐르는 과정을 공부하고 있습니다.
 
