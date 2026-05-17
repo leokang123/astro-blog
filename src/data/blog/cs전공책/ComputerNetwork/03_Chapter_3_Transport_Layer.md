@@ -1,19 +1,14 @@
 ---
 title: "Chapter 3. Transport Layer"
 order: 3
-pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
-description: "Chapter 3. Transport Layer 정리 노트입니다."
+pubDatetime: 2026-05-17T00:00:00+09:00
+modDatetime: 2026-05-17T00:00:00+09:00
+description: "Computer Networking Top-Down 정리: Chapter 3. Transport Layer"
 tags:
-  - "cs전공책"
   - "ComputerNetwork"
+  - "CS"
+  - "TopDown"
 ---
-# Chapter 3. Transport Layer
-
-- 과목: Computer Network
-- 기준 교재: Computer Networking: A Top-Down Approach 8th
-- 관련 페이지: PDF pp. 192-313
-- 우선순위: 필수
 
 ## 개요
 
@@ -29,8 +24,8 @@ Transport layer는 application layer와 network layer 사이에 있으며, 서�
 
 transport-layer protocol은 서로 다른 hosts에서 실행되는 application processes 사이에 logical communication을 제공한다. application 입장에서는 두 processes가 직접 연결된 것처럼 messages를 주고받지만, 실제로는 여러 routers, links, ISPs, access networks를 통과한다.
 
-![Logical transport-layer communication](@/assets/images/058_Figure_3.1_page_194.png)
-<p align="center"><sub>Figure 3.1 · PDF p. 194 · transport layer가 physical path가 아니라 end-system application processes 사이의 logical communication을 제공하는 위치</sub></p>
+![Logical transport-layer communication](@/assets/images/058_figure_3-1_page_194.png)
+*Figure 3.1 · PDF p. 194 · transport layer가 physical path가 아니라 end-system application processes 사이의 logical communication을 제공하는 위치*
 
 transport layer는 end systems에만 구현되고 routers에는 구현되지 않는다. sender side에서는 application-layer message를 필요하면 작은 chunks로 나누고 transport-layer header를 붙여 transport-layer segment를 만든다. 이 segment는 network layer로 내려가 IP datagram 안에 encapsulation된다. routers는 datagram의 network-layer fields를 보고 forwarding할 뿐, 내부의 transport-layer header를 해석하지 않는다. receiver side에서는 network layer가 datagram에서 segment를 꺼내 transport layer로 올리고, transport layer가 segment를 처리해 data를 receiving application process가 읽을 수 있게 한다.
 
@@ -70,13 +65,13 @@ transport layer는 network layer에서 올라온 segment를 process에 직접 �
 
 반대로 sender side에서는 여러 sockets에서 나온 application data chunks를 모으고, 나중에 receiver가 demultiplexing할 수 있도록 header information을 붙여 segments를 만든다. 이 작업이 multiplexing이다.
 
-![Transport-layer multiplexing and demultiplexing](@/assets/images/059_Figure_3.2_page_199.png)
-<p align="center"><sub>Figure 3.2 · PDF p. 199 · transport layer가 여러 sockets에서 나온 data를 multiplexing하고, 도착 segments를 올바른 socket으로 demultiplexing하는 구조</sub></p>
+![Transport-layer multiplexing and demultiplexing](@/assets/images/059_figure_3-2_page_199.png)
+*Figure 3.2 · PDF p. 199 · transport layer가 여러 sockets에서 나온 data를 multiplexing하고, 도착 segments를 올바른 socket으로 demultiplexing하는 구조*
 
 transport-layer multiplexing/demultiplexing이 가능하려면 두 조건이 필요하다. 첫째, sockets가 unique identifier를 가져야 한다. 둘째, 각 segment가 receiver socket을 식별하는 header fields를 가져야 한다. Internet transport에서는 source port number와 destination port number가 이 역할의 중심이다.
 
-![Port-number fields](@/assets/images/060_Figure_3.3_page_200.png)
-<p align="center"><sub>Figure 3.3 · PDF p. 200 · transport-layer segment header의 source port number와 destination port number fields</sub></p>
+![Port-number fields](@/assets/images/060_figure_3-3_page_200.png)
+*Figure 3.3 · PDF p. 200 · transport-layer segment header의 source port number와 destination port number fields*
 
 port number는 16-bit 값이므로 범위는 `0`부터 `65535`까지다. `0`부터 `1023`까지는 well-known port numbers로, HTTP `80`, FTP `21`, SMTP `25`, DNS `53`처럼 잘 알려진 protocols에 예약된다. 새 application을 만들 때는 well-known port와 충돌하지 않는 port를 골라야 한다.
 
@@ -98,8 +93,8 @@ clientSocket.bind(('', 19157))
 
 source port number는 return address의 일부다. A가 B로 UDP segment를 보낼 때 A의 source port가 `19157`, B의 destination port가 `46428`이면, B가 reply할 때 destination port는 `19157`이 된다. 완전한 return address는 source IP address와 source port number의 조합이다.
 
-![Inversion of port numbers](@/assets/images/061_Figure_3.4_page_202.png)
-<p align="center"><sub>Figure 3.4 · PDF p. 202 · UDP request와 reply에서 source/destination port numbers가 뒤바뀌는 방식</sub></p>
+![Inversion of port numbers](@/assets/images/061_figure_3-4_page_202.png)
+*Figure 3.4 · PDF p. 202 · UDP request와 reply에서 source/destination port numbers가 뒤바뀌는 방식*
 
 #### TCP connection-oriented multiplexing/demultiplexing
 
@@ -113,8 +108,8 @@ TCP segment가 host에 도착하면 transport layer는 네 값을 모두 사용�
 
 TCP server에는 두 종류의 socket이 등장한다. `welcoming socket`은 특정 server port에서 connection-establishment requests를 기다린다. client가 `connect()`로 접속하면 server는 `accept()`를 통해 client별 `connectionSocket`을 만든다. 이후 같은 4-tuple과 matching되는 segments는 이 connection socket으로 전달된다.
 
-![Two clients to the same Web server](@/assets/images/062_Figure_3.5_page_204.png)
-<p align="center"><sub>Figure 3.5 · PDF p. 204 · 같은 destination port 80을 쓰더라도 TCP 4-tuple로 여러 HTTP connections를 구분하는 방식</sub></p>
+![Two clients to the same Web server](@/assets/images/062_figure_3-5_page_204.png)
+*Figure 3.5 · PDF p. 204 · 같은 destination port 80을 쓰더라도 TCP 4-tuple로 여러 HTTP connections를 구분하는 방식*
 
 Web server는 port `80`에서 들어오는 모든 initial connection-establishment segments와 HTTP request-carrying segments를 받는다. busy Web server에서는 connection마다 process를 만들 수도 있고, 하나의 process 안에서 connection마다 thread와 connection socket을 만들 수도 있다. persistent HTTP에서는 같은 TCP connection/socket으로 여러 HTTP messages를 교환하지만, non-persistent HTTP에서는 request/response마다 새 TCP connection과 socket이 만들어지고 닫히므로 busy server의 성능에 부담이 될 수 있다.
 
@@ -151,8 +146,8 @@ UDP를 선택하는 이유는 TCP보다 “항상 좋다”가 아니라 “appl
 
 UDP segment는 header 8 bytes와 application data로 구성된다. header는 네 fields를 가지며 각 field는 2 bytes다.
 
-![UDP segment structure](@/assets/images/064_Figure_3.7_page_209.png)
-<p align="center"><sub>Figure 3.7 · PDF p. 209 · source/destination port, length, checksum으로 이루어진 UDP segment header</sub></p>
+![UDP segment structure](@/assets/images/064_figure_3-7_page_209.png)
+*Figure 3.7 · PDF p. 209 · source/destination port, length, checksum으로 이루어진 UDP segment header*
 
 | UDP field | 크기 | 역할 |
 |---|---:|---|
@@ -186,8 +181,8 @@ UDP checksum은 error를 발견할 뿐 recovery는 하지 않는다. 구현에 �
 
 reliable data transfer는 transport layer뿐 아니라 link layer, application layer에서도 반복해서 나타나는 네트워킹의 핵심 문제다. 목표는 unreliable channel 위에서 upper layer에게 reliable channel abstraction을 제공하는 것이다. reliable channel에서는 transferred data bits가 corrupted되지 않고, lost되지 않고, sent order 그대로 delivered된다. TCP가 Internet applications에게 제공하는 reliable byte-stream service가 이 모델의 대표 구현이다.
 
-![Reliable data transfer service model](@/assets/images/065_Figure_3.8_page_212.png)
-<p align="center"><sub>Figure 3.8 · PDF p. 212 · upper layer에는 reliable channel처럼 보이지만, 실제 구현은 unreliable channel 위의 sender/receiver protocol이 맡는 구조</sub></p>
+![Reliable data transfer service model](@/assets/images/065_figure_3-8_page_212.png)
+*Figure 3.8 · PDF p. 212 · upper layer에는 reliable channel처럼 보이지만, 실제 구현은 unreliable channel 위의 sender/receiver protocol이 맡는 구조*
 
 이 절의 추상 interface는 다음처럼 기억하면 된다.
 
@@ -216,8 +211,8 @@ reliable data transfer는 transport layer뿐 아니라 link layer, application l
 | `receiver feedback` | receiver가 ACK/NAK로 정상 수신 여부를 sender에게 알림 |
 | `retransmission` | corrupted packet을 sender가 다시 보냄 |
 
-![rdt2.0 with bit errors](@/assets/images/067_Figure_3.10_page_216.png)
-<p align="center"><sub>Figure 3.10 · PDF p. 216 · bit error가 있는 channel에서 ACK/NAK와 retransmission을 사용하는 rdt2.0 sender/receiver FSM</sub></p>
+![rdt2.0 with bit errors](@/assets/images/067_figure_3-10_page_216.png)
+*Figure 3.10 · PDF p. 216 · bit error가 있는 channel에서 ACK/NAK와 retransmission을 사용하는 rdt2.0 sender/receiver FSM*
 
 `rdt2.0` sender는 data packet을 보낸 뒤 ACK 또는 NAK를 기다린다. ACK가 오면 다음 data를 받을 수 있고, NAK가 오면 마지막 packet을 retransmit한다. 이 구조는 `stop-and-wait protocol`이다. sender는 현재 packet이 receiver에게 올바르게 도착했다는 확신을 얻기 전까지 upper layer에서 새 data를 받아 보내지 않는다.
 
@@ -243,8 +238,8 @@ rdt2.x 계열의 발전은 다음처럼 정리된다.
 
 sender는 packet을 보낼 때 countdown timer를 시작한다. timeout 전에 올바른 ACK가 오면 timer를 멈추고 다음 sequence number로 넘어간다. timeout이 발생하면 sender는 마지막 packet을 retransmit하고 timer를 다시 시작한다. timeout은 “정말 lost됐다”는 완전한 증거가 아니라 “lost됐을 가능성이 충분히 크다”는 판단이다. 그래서 long delay 때문에 duplicate retransmission이 생길 수 있지만, sequence number가 duplicate delivery를 막는다.
 
-![rdt3.0 sender](@/assets/images/072_Figure_3.15_page_222.png)
-<p align="center"><sub>Figure 3.15 · PDF p. 222 · lossy channel에서 timer와 retransmission을 추가한 rdt3.0 sender FSM</sub></p>
+![rdt3.0 sender](@/assets/images/072_figure_3-15_page_222.png)
+*Figure 3.15 · PDF p. 222 · lossy channel에서 timer와 retransmission을 추가한 rdt3.0 sender FSM*
 
 `rdt3.0`은 sequence numbers가 0과 1 사이를 번갈아 움직이므로 `alternating-bit protocol`이라고도 한다. 핵심 동작은 다음과 같다.
 
@@ -259,8 +254,8 @@ else if timeout:
     restart timer
 ```
 
-![Operation of rdt3.0](@/assets/images/073_Figure_3.16_page_223.png)
-<p align="center"><sub>Figure 3.16 · PDF p. 223 · no loss, lost data packet, lost ACK, premature timeout 상황에서 rdt3.0이 동작하는 방식</sub></p>
+![Operation of rdt3.0](@/assets/images/073_figure_3-16_page_223.png)
+*Figure 3.16 · PDF p. 223 · no loss, lost data packet, lost ACK, premature timeout 상황에서 rdt3.0이 동작하는 방식*
 
 이 지점까지 reliable data transfer의 핵심 부품이 모두 등장한다.
 
@@ -290,8 +285,8 @@ U_sender = (L/R) / (RTT + L/R)
 
 sender는 시간의 약 0.027%만 실제로 bits를 link에 밀어 넣는다. 1 Gbps link를 샀는데 effective throughput은 약 267 kbps에 그치는 식이다. 이는 hardware capacity가 커도 protocol design이 utilization을 제한할 수 있음을 보여 준다.
 
-![Stop-and-wait versus pipelined protocol](@/assets/images/074_Figure_3.17_page_224.png)
-<p align="center"><sub>Figure 3.17 · PDF p. 224 · stop-and-wait은 ACK를 기다리지만 pipelined protocol은 여러 packets를 in flight로 유지한다</sub></p>
+![Stop-and-wait versus pipelined protocol](@/assets/images/074_figure_3-17_page_224.png)
+*Figure 3.17 · PDF p. 224 · stop-and-wait은 ACK를 기다리지만 pipelined protocol은 여러 packets를 in flight로 유지한다*
 
 `pipelining`은 ACK를 기다리기 전에 여러 packets를 연속으로 보내 pipeline을 채우는 방식이다. pipelining을 쓰면 reliable data transfer protocol에 세 가지 변화가 필요하다.
 
@@ -305,8 +300,8 @@ sender는 시간의 약 0.027%만 실제로 bits를 link에 밀어 넣는다. 1 
 
 `Go-Back-N(GBN)`에서 sender는 ACK를 기다리지 않고 여러 packets를 보낼 수 있지만, outstanding unacknowledged packets 수가 window size `N`을 넘지 못한다. sender는 `base`와 `nextseqnum`으로 window 상태를 관리한다.
 
-![GBN sender sequence-number window](@/assets/images/076_Figure_3.19_page_227.png)
-<p align="center"><sub>Figure 3.19 · PDF p. 227 · GBN sender가 sequence number space에서 ACKed, sent-not-ACKed, usable, not-usable 영역을 보는 방식</sub></p>
+![GBN sender sequence-number window](@/assets/images/076_figure_3-19_page_227.png)
+*Figure 3.19 · PDF p. 227 · GBN sender가 sequence number space에서 ACKed, sent-not-ACKed, usable, not-usable 영역을 보는 방식*
 
 GBN sender sequence number space는 네 구간으로 나뉜다.
 
@@ -329,8 +324,8 @@ GBN sender는 세 events에 반응한다.
 
 GBN receiver는 매우 단순하다. expected sequence number를 가진 in-order packet이 오면 data를 upper layer에 deliver하고 ACK를 보낸다. out-of-order packet은 correctly received라도 discard하고, 가장 최근 in-order packet에 대한 ACK를 다시 보낸다. receiver buffering이 단순해지는 대신, sender가 timeout 때 이미 받았던 packets까지 다시 보낼 수 있다.
 
-![Go-Back-N in operation](@/assets/images/079_Figure_3.22_page_231.png)
-<p align="center"><sub>Figure 3.22 · PDF p. 231 · packet 2 loss 뒤 GBN receiver가 out-of-order packets 3, 4, 5를 discard하고 sender가 window 뒤쪽 packets까지 재전송하는 흐름</sub></p>
+![Go-Back-N in operation](@/assets/images/079_figure_3-22_page_231.png)
+*Figure 3.22 · PDF p. 231 · packet 2 loss 뒤 GBN receiver가 out-of-order packets 3, 4, 5를 discard하고 sender가 window 뒤쪽 packets까지 재전송하는 흐름*
 
 GBN은 `sequence numbers`, `cumulative acknowledgments`, `checksums`, `timeout/retransmit`을 모두 사용한다. 이들은 이후 TCP reliable transfer에서 다시 등장한다. 그러나 window size와 bandwidth-delay product가 크고 error probability가 높으면, 단일 packet error가 많은 unnecessary retransmissions를 일으킨다.
 
@@ -338,8 +333,8 @@ GBN은 `sequence numbers`, `cumulative acknowledgments`, `checksums`, `timeout/r
 
 `Selective Repeat(SR)`은 GBN의 낭비를 줄이기 위해 receiver가 correctly received packets를 개별적으로 ACK하고, sender는 lost/corrupted로 의심되는 packets만 retransmit한다. 이 때문에 receiver는 out-of-order packets를 discard하지 않고 buffer한다.
 
-![Selective Repeat sender and receiver windows](@/assets/images/080_Figure_3.23_page_232.png)
-<p align="center"><sub>Figure 3.23 · PDF p. 232 · SR에서 sender window와 receiver window가 서로 다를 수 있으며, receiver는 out-of-order buffered packets를 관리한다</sub></p>
+![Selective Repeat sender and receiver windows](@/assets/images/080_figure_3-23_page_232.png)
+*Figure 3.23 · PDF p. 232 · SR에서 sender window와 receiver window가 서로 다를 수 있으며, receiver는 out-of-order buffered packets를 관리한다*
 
 SR sender와 receiver 동작은 다음처럼 대비된다.
 
@@ -351,8 +346,8 @@ SR sender와 receiver 동작은 다음처럼 대비된다.
 | buffering | sent but unacknowledged packets 보관 | out-of-order packets buffer |
 | delivery | sender는 delivery 없음 | missing lower seq packets가 도착하면 buffered consecutive packets를 batch deliver |
 
-![Selective Repeat operation](@/assets/images/083_Figure_3.26_page_234.png)
-<p align="center"><sub>Figure 3.26 · PDF p. 234 · packet 2 loss 상황에서 SR receiver가 packets 3, 4, 5를 buffer하고, packet 2가 도착하자 함께 in-order deliver하는 흐름</sub></p>
+![Selective Repeat operation](@/assets/images/083_figure_3-26_page_234.png)
+*Figure 3.26 · PDF p. 234 · packet 2 loss 상황에서 SR receiver가 packets 3, 4, 5를 buffer하고, packet 2가 도착하자 함께 in-order deliver하는 흐름*
 
 SR receiver가 이미 받은 packet을 다시 ACK해야 하는 경우도 중요하다. sender의 ACK가 lost되면 sender는 packet을 retransmit할 수 있다. receiver가 “이미 받은 packet”이라고 무시하면 sender의 window가 영원히 움직이지 않을 수 있다. 그래서 receiver는 일정 범위의 previously received packets에 대해서도 ACK를 다시 보낸다.
 
@@ -360,8 +355,8 @@ SR receiver가 이미 받은 packet을 다시 ACK해야 하는 경우도 중요�
 
 SR은 sender와 receiver windows가 항상 일치하지 않는다. 이 때문에 finite sequence number space에서는 ambiguity가 생길 수 있다. window size가 너무 크면 receiver는 동일한 sequence number를 가진 packet이 old retransmission인지 new data인지 구분하지 못한다.
 
-![SR receiver dilemma](@/assets/images/084_Figure_3.27_page_236.png)
-<p align="center"><sub>Figure 3.27 · PDF p. 236 · SR에서 window가 너무 크면 sequence number 0이 old retransmission인지 new packet인지 receiver가 구분할 수 없는 문제</sub></p>
+![SR receiver dilemma](@/assets/images/084_figure_3-27_page_236.png)
+*Figure 3.27 · PDF p. 236 · SR에서 window가 너무 크면 sequence number 0이 old retransmission인지 new packet인지 receiver가 구분할 수 없는 문제*
 
 핵심 조건은 다음과 같다.
 
@@ -408,8 +403,8 @@ client application이 `clientSocket.connect((serverName, serverPort))`를 호출
 
 connection이 established되면 application은 socket으로 byte stream을 넘긴다. TCP는 이 data를 바로 network로 밀어 넣는 것이 아니라 connection의 send buffer에 둔다. TCP는 적절한 시점에 send buffer에서 chunks를 꺼내 TCP header를 붙여 segments를 만들고 IP로 넘긴다. receiver TCP는 segment data를 receive buffer에 넣고, receiving application은 socket을 통해 stream을 읽는다.
 
-![TCP send and receive buffers](@/assets/images/085_Figure_3.28_page_240.png)
-<p align="center"><sub>Figure 3.28 · PDF p. 240 · TCP connection 양끝의 send buffer와 receive buffer를 통해 byte stream이 이동하는 구조</sub></p>
+![TCP send and receive buffers](@/assets/images/085_figure_3-28_page_240.png)
+*Figure 3.28 · PDF p. 240 · TCP connection 양끝의 send buffer와 receive buffer를 통해 byte stream이 이동하는 구조*
 
 `MSS(maximum segment size)`는 TCP segment의 data field에 넣을 수 있는 application-layer data의 최대 크기다. confusing하지만 MSS는 TCP header까지 포함한 전체 segment size가 아니다. 보통 local host가 보낼 수 있는 largest link-layer frame size인 `MTU(maximum transmission unit)`를 기준으로, IP/TCP headers까지 한 link-layer frame에 들어가도록 MSS를 정한다. Ethernet/PPP MTU가 1500 bytes일 때 typical MSS는 1460 bytes다.
 
@@ -424,8 +419,8 @@ typical Ethernet case:
 
 TCP segment는 header fields와 data field로 구성된다. data field에는 application byte stream의 일부가 들어가고, MSS가 그 최대 크기를 제한한다. TCP header는 보통 20 bytes이며, UDP header 8 bytes보다 크다.
 
-![TCP segment structure](@/assets/images/086_Figure_3.29_page_242.png)
-<p align="center"><sub>Figure 3.29 · PDF p. 242 · TCP segment header의 port, sequence number, acknowledgment number, receive window, flags, checksum, options fields</sub></p>
+![TCP segment structure](@/assets/images/086_figure_3-29_page_242.png)
+*Figure 3.29 · PDF p. 242 · TCP segment header의 port, sequence number, acknowledgment number, receive window, flags, checksum, options fields*
 
 핵심 TCP header fields는 다음과 같다.
 
@@ -448,8 +443,8 @@ TCP segment는 header fields와 data field로 구성된다. data field에는 app
 
 TCP는 data를 unstructured but ordered byte stream으로 본다. 따라서 TCP sequence number는 packet/segment 번호가 아니라 byte stream 안의 byte 번호다. segment의 sequence number는 그 segment data field의 첫 번째 byte 번호다.
 
-![Dividing file data into TCP segments](@/assets/images/087_Figure_3.30_page_243.png)
-<p align="center"><sub>Figure 3.30 · PDF p. 243 · TCP가 file byte stream을 MSS 단위 segments로 나누고 first byte number를 sequence number로 사용하는 방식</sub></p>
+![Dividing file data into TCP segments](@/assets/images/087_figure_3-30_page_243.png)
+*Figure 3.30 · PDF p. 243 · TCP가 file byte stream을 MSS 단위 segments로 나누고 first byte number를 sequence number로 사용하는 방식*
 
 예를 들어 500,000 bytes file을 MSS 1,000 bytes로 보내고 first byte number가 0이라면, TCP는 500 segments를 만든다. 첫 segment의 sequence number는 0, 두 번째는 1000, 세 번째는 2000이다.
 
@@ -461,8 +456,8 @@ TCP RFCs는 out-of-order segments를 받았을 때 receiver가 반드시 어떻�
 
 TCP connection의 양방향 data flow는 서로 독립적인 sequence number space를 가진다. 또한 connection 시작 시 양쪽은 initial sequence number를 random하게 고른다. 이는 이전 connection의 old segment가 network 안에 남아 있다가 같은 host/port pair의 새 connection에서 valid segment로 오인되는 가능성을 줄이기 위해서다.
 
-![TCP sequence and acknowledgment numbers](@/assets/images/088_Figure_3.31_page_245.png)
-<p align="center"><sub>Figure 3.31 · PDF p. 245 · Telnet에서 한 글자 C가 오갈 때 sequence number와 acknowledgment number가 어떻게 증가하는지</sub></p>
+![TCP sequence and acknowledgment numbers](@/assets/images/088_figure_3-31_page_245.png)
+*Figure 3.31 · PDF p. 245 · Telnet에서 한 글자 C가 오갈 때 sequence number와 acknowledgment number가 어떻게 증가하는지*
 
 Telnet 예시는 piggybacking도 보여 준다. client가 `C` 한 byte를 seq 42로 보내면 server는 ACK 43을 보내며 동시에 echo data `C`를 seq 79로 보낼 수 있다. 이때 ACK가 data segment에 함께 실리므로 piggybacked acknowledgment라고 한다. client가 server의 echoed `C`를 받으면 ACK 80을 보내고, 이 segment는 data field가 비어 있어도 TCP header에는 sequence number가 존재한다.
 
@@ -483,8 +478,8 @@ EstimatedRTT = 0.875 * EstimatedRTT + 0.125 * SampleRTT
 
 최근 SampleRTT에 더 큰 의미를 주되, single sample fluctuation에 지나치게 흔들리지 않게 smoothing한다.
 
-![RTT samples and estimates](@/assets/images/089_Figure_3.32_page_249.png)
-<p align="center"><sub>Figure 3.32 · PDF p. 249 · SampleRTT fluctuations를 EWMA EstimatedRTT가 smoothing하는 모습</sub></p>
+![RTT samples and estimates](@/assets/images/089_figure_3-32_page_249.png)
+*Figure 3.32 · PDF p. 249 · SampleRTT fluctuations를 EWMA EstimatedRTT가 smoothing하는 모습*
 
 RTT variability는 `DevRTT`로 추정한다.
 
@@ -507,8 +502,8 @@ IP는 delivery, ordering, integrity를 보장하지 않는 best-effort service�
 
 이론적으로는 unacknowledged segment마다 timer를 둘 수 있지만, TCP recommended timer management는 여러 outstanding segments가 있어도 single retransmission timer를 사용한다. 이 timer는 oldest unacknowledged segment와 관련된 timer처럼 생각하면 된다.
 
-![Simplified TCP sender](@/assets/images/090_Figure_3.33_page_250.png)
-<p align="center"><sub>Figure 3.33 · PDF p. 250 · simplified TCP sender가 application data, timeout, ACK received events에 반응하는 방식</sub></p>
+![Simplified TCP sender](@/assets/images/090_figure_3-33_page_250.png)
+*Figure 3.33 · PDF p. 250 · simplified TCP sender가 application data, timeout, ACK received events에 반응하는 방식*
 
 simplified TCP sender의 핵심 state variables는 다음과 같다.
 
@@ -530,18 +525,18 @@ sender event별 동작은 다음처럼 정리된다.
 
 첫 번째 예시는 data segment는 도착했지만 ACK가 lost된 경우다. Host A가 seq 92, data 8 bytes를 보내면 Host B는 ACK 100을 보낸다. ACK가 lost되면 A의 timer가 expire되고 A는 같은 segment를 retransmit한다. B는 sequence number를 보고 이미 받은 bytes임을 알며 duplicate data를 discard한다.
 
-![Retransmission due to lost acknowledgment](@/assets/images/091_Figure_3.34_page_252.png)
-<p align="center"><sub>Figure 3.34 · PDF p. 252 · data는 도착했지만 ACK가 lost되어 timeout 후 같은 segment가 재전송되는 상황</sub></p>
+![Retransmission due to lost acknowledgment](@/assets/images/091_figure_3-34_page_252.png)
+*Figure 3.34 · PDF p. 252 · data는 도착했지만 ACK가 lost되어 timeout 후 같은 segment가 재전송되는 상황*
 
 두 번째 예시는 A가 seq 92/8 bytes와 seq 100/20 bytes 두 segments를 back-to-back으로 보냈고, 두 ACK가 timeout 전에 도착하지 않은 경우다. timeout이 나면 A는 oldest unacknowledged segment인 seq 92만 retransmit한다. 그 뒤 ACK 120이 새 timeout 전에 도착하면 seq 100 segment는 retransmit하지 않는다.
 
-![Segment 100 not retransmitted](@/assets/images/092_Figure_3.35_page_253.png)
-<p align="center"><sub>Figure 3.35 · PDF p. 253 · ACK들이 늦게 도착하더라도 cumulative ACK 120이 오면 segment 100 재전송을 피하는 상황</sub></p>
+![Segment 100 not retransmitted](@/assets/images/092_figure_3-35_page_253.png)
+*Figure 3.35 · PDF p. 253 · ACK들이 늦게 도착하더라도 cumulative ACK 120이 오면 segment 100 재전송을 피하는 상황*
 
 세 번째 예시는 첫 ACK 100은 lost되지만, ACK 120이 timeout 전에 도착하는 경우다. ACK 120은 “byte 119까지 모두 받았고 다음은 120을 기대한다”는 cumulative acknowledgment이므로 A는 seq 92와 seq 100 모두 재전송하지 않는다.
 
-![Cumulative ACK avoids retransmission](@/assets/images/093_Figure_3.36_page_254.png)
-<p align="center"><sub>Figure 3.36 · PDF p. 254 · cumulative ACK가 이전 segment의 lost ACK를 덮어 재전송을 피하는 방식</sub></p>
+![Cumulative ACK avoids retransmission](@/assets/images/093_figure_3-36_page_254.png)
+*Figure 3.36 · PDF p. 254 · cumulative ACK가 이전 segment의 lost ACK를 덮어 재전송을 피하는 방식*
 
 #### timeout doubling: 조심스럽게 재전송하기
 
@@ -566,8 +561,8 @@ TCP receiver ACK policy의 핵심은 다음과 같다.
 
 sender가 같은 data에 대한 `three duplicate ACKs`를 받으면, 그 ACKed byte 다음 segment가 lost됐다고 보고 timer expiration 전에 retransmit한다. 이것이 `fast retransmit`이다.
 
-![Fast retransmit](@/assets/images/094_Figure_3.37_page_256.png)
-<p align="center"><sub>Figure 3.37 · PDF p. 256 · segment loss 후 세 duplicate ACKs를 받은 sender가 timeout 전에 missing segment를 retransmit하는 흐름</sub></p>
+![Fast retransmit](@/assets/images/094_figure_3-37_page_256.png)
+*Figure 3.37 · PDF p. 256 · segment loss 후 세 duplicate ACKs를 받은 sender가 timeout 전에 missing segment를 retransmit하는 흐름*
 
 fast retransmit은 다음처럼 생각할 수 있다.
 
@@ -594,8 +589,8 @@ TCP connection 양끝에는 receive buffer가 있다. segment가 correct and in 
 
 TCP `flow control`은 sender가 receiver buffer를 넘치게 하지 않도록 sending rate를 receiving application의 reading rate에 맞추는 speed-matching service다. 이것은 congestion control과 다르다. flow control은 receiver buffer 보호이고, congestion control은 network 내부 routers/links의 congestion을 피하거나 줄이는 것이다.
 
-![Receive window and receive buffer](@/assets/images/095_Figure_3.38_page_259.png)
-<p align="center"><sub>Figure 3.38 · PDF p. 259 · RcvBuffer 안에서 TCP data가 차지한 영역과 spare room인 receive window(rwnd)</sub></p>
+![Receive window and receive buffer](@/assets/images/095_figure_3-38_page_259.png)
+*Figure 3.38 · PDF p. 259 · RcvBuffer 안에서 TCP data가 차지한 영역과 spare room인 receive window(rwnd)*
 
 Host B가 Host A로부터 file을 받을 때, B의 receive buffer 크기를 `RcvBuffer`라고 하자.
 
@@ -624,8 +619,8 @@ UDP는 flow control을 제공하지 않는다. UDP receiver 앞의 finite buffer
 
 TCP connection establishment는 perceived delay에도 영향을 주고, SYN flood 같은 attack surface도 만든다. client가 server process에 connection을 열고 싶으면 client TCP와 server TCP가 세 단계로 handshake한다.
 
-![TCP three-way handshake](@/assets/images/096_Figure_3.39_page_261.png)
-<p align="center"><sub>Figure 3.39 · PDF p. 261 · client SYN, server SYNACK, client ACK로 TCP connection을 여는 three-way handshake</sub></p>
+![TCP three-way handshake](@/assets/images/096_figure_3-39_page_261.png)
+*Figure 3.39 · PDF p. 261 · client SYN, server SYNACK, client ACK로 TCP connection을 여는 three-way handshake*
 
 three-way handshake의 message flow는 다음과 같다.
 
@@ -643,13 +638,13 @@ server가 third handshake step 전에 buffers와 variables를 allocate한다는 
 
 TCP connection은 양쪽 어느 process든 close할 수 있다. client가 close한다고 하면 client TCP는 `FIN=1` segment를 보내고, server는 ACK를 보낸다. server도 close 준비가 되면 자신의 `FIN=1` segment를 보내고, client가 이를 ACK한다. 그 뒤 resources가 deallocated된다.
 
-![Closing a TCP connection](@/assets/images/097_Figure_3.40_page_262.png)
-<p align="center"><sub>Figure 3.40 · PDF p. 262 · FIN/ACK exchange로 TCP connection 양방향을 닫는 흐름</sub></p>
+![Closing a TCP connection](@/assets/images/097_figure_3-40_page_262.png)
+*Figure 3.40 · PDF p. 262 · FIN/ACK exchange로 TCP connection 양방향을 닫는 흐름*
 
 client TCP의 typical state path는 다음과 같다.
 
-![Client TCP states](@/assets/images/098_Figure_3.41_page_263.png)
-<p align="center"><sub>Figure 3.41 · PDF p. 263 · client-side TCP가 CLOSED, SYN_SENT, ESTABLISHED, FIN_WAIT, TIME_WAIT를 거치는 전형적 상태 흐름</sub></p>
+![Client TCP states](@/assets/images/098_figure_3-41_page_263.png)
+*Figure 3.41 · PDF p. 263 · client-side TCP가 CLOSED, SYN_SENT, ESTABLISHED, FIN_WAIT, TIME_WAIT를 거치는 전형적 상태 흐름*
 
 ```text
 CLOSED
@@ -665,8 +660,8 @@ CLOSED
 
 server-side TCP의 typical state path는 다음과 같다.
 
-![Server TCP states](@/assets/images/099_Figure_3.42_page_264.png)
-<p align="center"><sub>Figure 3.42 · PDF p. 264 · server-side TCP가 LISTEN, SYN_RCVD, ESTABLISHED, CLOSE_WAIT, LAST_ACK를 거치는 전형적 상태 흐름</sub></p>
+![Server TCP states](@/assets/images/099_figure_3-42_page_264.png)
+*Figure 3.42 · PDF p. 264 · server-side TCP가 LISTEN, SYN_RCVD, ESTABLISHED, CLOSE_WAIT, LAST_ACK를 거치는 전형적 상태 흐름*
 
 ```text
 CLOSED
@@ -702,8 +697,8 @@ host가 자신이 가진 socket과 matching되지 않는 TCP segment를 받으�
 
 문제는 throughput 한계보다 delay다. `λ_in`이 `R/2`에 가까워질수록 queue가 길어지고 average delay가 급격히 커진다. 무한 buffer 가정에서는 packet drop은 없지만, `λ_in >= R/2`로 오래 동작하면 평균 queue length와 delay가 무한대로 발산한다. 첫 번째 congestion cost는 **link capacity에 가까워질수록 발생하는 large queuing delay**다.
 
-![Figure 3.44](@/assets/images/101_Figure_3.44_page_268.png)
-<p align="center"><sub>Figure 3.44 · PDF p. 268 · infinite buffer에서 sending rate가 link share에 접근할 때 throughput은 포화되고 delay는 폭증한다</sub></p>
+![Figure 3.44](@/assets/images/101_figure_3-44_page_268.png)
+*Figure 3.44 · PDF p. 268 · infinite buffer에서 sending rate가 link share에 접근할 때 throughput은 포화되고 delay는 폭증한다*
 
 **Scenario 2: Two Senders and a Router with Finite Buffers.** 현실적인 router buffer는 finite이므로 buffer가 꽉 찬 상태에서 도착한 packet은 dropped 된다. reliable transport는 drop된 segment를 retransmit하므로 rate를 두 가지로 구분해야 한다.
 
@@ -716,15 +711,15 @@ sender가 router buffer 여유를 완벽히 알고 loss 없이 보낸다면 `λ_
 
 더 나쁜 경우는 premature timeout이다. packet이 lost 된 것이 아니라 queue에서 오래 지연되고 있을 뿐인데 sender가 timeout으로 다시 보내면, original packet과 retransmitted packet이 모두 receiver에 도착할 수 있다. receiver는 duplicate를 버리므로 router가 duplicate copy를 전달하는 데 쓴 bandwidth는 낭비된다. 세 번째 congestion cost는 **unneeded retransmission이 link bandwidth를 불필요한 duplicate forwarding에 쓰게 만드는 것**이다.
 
-![Figure 3.46](@/assets/images/103_Figure_3.46_page_270.png)
-<p align="center"><sub>Figure 3.46 · PDF p. 270 · finite buffer에서 retransmission 방식에 따라 offered load 대비 useful throughput이 달라진다</sub></p>
+![Figure 3.46](@/assets/images/103_figure_3-46_page_270.png)
+*Figure 3.46 · PDF p. 270 · finite buffer에서 retransmission 방식에 따라 offered load 대비 useful throughput이 달라진다*
 
 **Scenario 3: Four Senders, Routers with Finite Buffers, and Multihop Paths.** multihop path에서는 packet이 중간 link들을 이미 지나온 뒤 downstream router에서 drop될 수 있다. 예를 들어 A-C traffic이 R1을 지나 R2에서 B-D traffic과 경쟁하다 drop되면, R1이 그 packet을 R2까지 전달하는 데 쓴 transmission capacity가 모두 wasted work가 된다.
 
 offered load가 작을 때는 `λ_in` 증가가 throughput 증가로 이어진다. 그러나 모든 connection의 `λ'_in`이 매우 커지면, bottleneck router의 buffer를 경쟁 traffic이 즉시 채우고 특정 end-to-end connection의 throughput은 오히려 감소할 수 있다. 극단적으로 heavy traffic에서는 useful throughput이 0에 가까워질 수도 있다. 네 번째 congestion cost는 **downstream drop이 upstream link capacity까지 낭비하게 만드는 것**이다.
 
-![Figure 3.48](@/assets/images/105_Figure_3.48_page_272.png)
-<p align="center"><sub>Figure 3.48 · PDF p. 272 · multihop congestion에서는 offered load가 너무 커지면 throughput이 오히려 감소할 수 있다</sub></p>
+![Figure 3.48](@/assets/images/105_figure_3-48_page_272.png)
+*Figure 3.48 · PDF p. 272 · multihop congestion에서는 offered load가 너무 커지면 throughput이 오히려 감소할 수 있다*
 
 congestion의 비용을 정리하면 다음과 같다.
 
@@ -746,8 +741,8 @@ congestion control 접근은 network layer가 transport layer에 explicit assist
 
 network-assisted 방식의 feedback path는 두 가지다. 첫째, router가 sender에게 직접 `choke packet` 같은 direct feedback을 보낼 수 있다. 둘째, router가 sender에서 receiver로 가는 packet header를 mark하고, receiver가 그 표시를 다시 sender에게 알려줄 수 있다. 후자는 receiver를 거치므로 congestion indication이 sender에게 돌아오는 데 한 full RTT가 걸린다.
 
-![Figure 3.49](@/assets/images/106_Figure_3.49_page_274.png)
-<p align="center"><sub>Figure 3.49 · PDF p. 274 · congestion indication은 router에서 sender로 직접 가거나 receiver를 거쳐 돌아갈 수 있다</sub></p>
+![Figure 3.49](@/assets/images/106_figure_3-49_page_274.png)
+*Figure 3.49 · PDF p. 274 · congestion indication은 router에서 sender로 직접 가거나 receiver를 거쳐 돌아갈 수 있다*
 
 ### 3.7 TCP Congestion Control
 
@@ -783,8 +778,8 @@ TCP의 rate 조절은 `bandwidth probing`이다. ACK가 오면 “아직 여유�
 
 TCP connection이 시작되면 `cwnd`는 보통 `1 MSS`로 초기화된다. 초기 sending rate는 `MSS/RTT` 정도라 작지만, slow start에서는 ACK 하나가 올 때마다 `cwnd`를 `1 MSS`씩 늘린다. 첫 RTT에 1 segment를 보내고 ACK를 받으면 다음에는 2 segments, 그다음에는 4 segments처럼 매 RTT마다 대략 두 배가 된다. 이름은 slow start지만 증가율은 exponential이다.
 
-![Figure 3.50](@/assets/images/107_Figure_3.50_page_277.png)
-<p align="center"><sub>Figure 3.50 · PDF p. 277 · slow start에서 ACK가 도착할 때마다 cwnd가 늘어 매 RTT 전송량이 두 배로 증가한다</sub></p>
+![Figure 3.50](@/assets/images/107_figure_3-50_page_277.png)
+*Figure 3.50 · PDF p. 277 · slow start에서 ACK가 도착할 때마다 cwnd가 늘어 매 RTT 전송량이 두 배로 증가한다*
 
 slow start가 끝나는 조건은 세 가지다.
 
@@ -810,13 +805,13 @@ cwnd = cwnd + MSS * (MSS / cwnd)
 
 fast recovery에서는 missing segment에 대한 duplicate ACK가 추가로 올 때마다 `cwnd`를 `1 MSS`씩 증가시킨다. missing segment에 대한 ACK가 도착하면 `cwnd`를 조정해 congestion avoidance로 돌아간다. timeout이 발생하면 더 강하게 반응해서 `cwnd = 1 MSS`로 줄이고 slow start로 돌아간다.
 
-![Figure 3.51](@/assets/images/108_Figure_3.51_page_279.png)
-<p align="center"><sub>Figure 3.51 · PDF p. 279 · slow start, congestion avoidance, fast recovery 사이의 TCP congestion-control FSM</sub></p>
+![Figure 3.51](@/assets/images/108_figure_3-51_page_279.png)
+*Figure 3.51 · PDF p. 279 · slow start, congestion avoidance, fast recovery 사이의 TCP congestion-control FSM*
 
 `TCP Tahoe`는 timeout이든 triple duplicate ACK든 loss event가 발생하면 무조건 `cwnd = 1 MSS`로 줄이고 slow start로 돌아갔다. `TCP Reno`는 triple duplicate ACK의 경우 fast recovery를 사용해 더 덜 급격하게 줄인다. 그래서 같은 loss event 이후 Reno는 Tahoe보다 빠르게 window를 회복한다.
 
-![Figure 3.52](@/assets/images/109_Figure_3.52_page_281.png)
-<p align="center"><sub>Figure 3.52 · PDF p. 281 · triple duplicate ACK 이후 Tahoe는 slow start로, Reno는 fast recovery로 진행한다</sub></p>
+![Figure 3.52](@/assets/images/109_figure_3-52_page_281.png)
+*Figure 3.52 · PDF p. 281 · triple duplicate ACK 이후 Tahoe는 slow start로, Reno는 fast recovery로 진행한다*
 
 #### AIMD와 TCP CUBIC
 
@@ -829,13 +824,13 @@ Loss by triple duplicate ACK: cwnd = cwnd / 2
 
 이 규칙은 sawtooth pattern을 만든다. TCP는 congestion window를 선형으로 올리며 available bandwidth를 probe하다가 loss event를 만나면 절반으로 줄이고, 다시 probe를 시작한다.
 
-![Figure 3.53](@/assets/images/110_Figure_3.53_page_282.png)
-<p align="center"><sub>Figure 3.53 · PDF p. 282 · AIMD는 additive increase와 multiplicative decrease로 sawtooth window 변화를 만든다</sub></p>
+![Figure 3.53](@/assets/images/110_figure_3-53_page_282.png)
+*Figure 3.53 · PDF p. 282 · AIMD는 additive increase와 multiplicative decrease로 sawtooth window 변화를 만든다*
 
 `TCP CUBIC`은 Reno의 congestion avoidance가 너무 조심스럽다는 문제의식에서 나왔다. loss 직전 window를 `Wmax`라 하고, 앞으로 다시 `Wmax`에 도달할 시간점을 `K`라고 할 때, CUBIC은 현재 시간 `t`와 `K` 사이 거리의 cubic function으로 `cwnd`를 증가시킨다. `t`가 `K`에서 멀면 빠르게 증가하고, `Wmax` 근처에서는 조심스럽게 증가한다. `t > K`가 되어도 loss가 없으면 다시 더 빠르게 증가해 새 operating point를 찾는다.
 
-![Figure 3.54](@/assets/images/111_Figure_3.54_page_283.png)
-<p align="center"><sub>Figure 3.54 · PDF p. 283 · CUBIC은 loss 전 window 근처까지 빠르게 회복한 뒤 조심스럽게 probing한다</sub></p>
+![Figure 3.54](@/assets/images/111_figure_3-54_page_283.png)
+*Figure 3.54 · PDF p. 283 · CUBIC은 loss 전 window 근처까지 빠르게 회복한 뒤 조심스럽게 probing한다*
 
 TCP Reno의 macroscopic throughput은 sawtooth를 평균낸 단순 모델로 볼 수 있다. loss 직전 window를 `W`라고 하면 rate는 대략 `W/(2*RTT)`에서 `W/RTT` 사이를 선형 증가하므로 평균 throughput은 다음처럼 근사된다.
 
@@ -857,8 +852,8 @@ ECN 흐름은 다음과 같다.
 4. sender TCP는 ECE가 set된 ACK를 받으면 fast retransmit 때처럼 congestion window를 절반으로 줄인다.
 5. sender는 다음 sender-to-receiver TCP segment에서 `CWR (Congestion Window Reduced)` bit를 set해 반응했음을 알린다.
 
-![Figure 3.55](@/assets/images/112_Figure_3.55_page_286.png)
-<p align="center"><sub>Figure 3.55 · PDF p. 286 · router가 IP datagram에 ECN을 mark하고 receiver가 TCP ACK의 ECE bit로 sender에게 알린다</sub></p>
+![Figure 3.55](@/assets/images/112_figure_3-55_page_286.png)
+*Figure 3.55 · PDF p. 286 · router가 IP datagram에 ECN을 mark하고 receiver가 TCP ACK의 ECE bit로 sender에게 알린다*
 
 `delay-based congestion control`은 packet loss가 생기기 전에 queueing delay 증가로 congestion onset을 감지하려는 방식이다. `TCP Vegas`는 ACKed packets의 RTT를 측정하고, 최소 RTT인 `RTTmin`을 uncongested path의 기준으로 둔다. 현재 `cwnd`에서 queue가 없다면 가능한 throughput은 `cwnd/RTTmin`이다. 실제 measured throughput이 이 값에 가깝다면 아직 path가 congested되지 않았다고 보고 rate를 늘릴 수 있다. 실제 throughput이 훨씬 작으면 queue가 쌓여 delay가 커졌다고 보고 sending rate를 줄인다.
 
@@ -868,13 +863,13 @@ Vegas의 직관은 “Keep the pipe just full, but no fuller”다. bottleneck l
 
 `fairness`는 bottleneck link rate가 `R`이고 `K`개의 TCP connections가 큰 file을 전송할 때 각 connection의 average transmission rate가 대략 `R/K`가 되는 성질이다. TCP AIMD는 이상화된 조건에서 fairness로 수렴하는 직관을 제공한다.
 
-![Figure 3.56](@/assets/images/113_Figure_3.56_page_288.png)
-<p align="center"><sub>Figure 3.56 · PDF p. 288 · 두 TCP connection이 하나의 bottleneck link capacity R을 공유하는 fairness 모델</sub></p>
+![Figure 3.56](@/assets/images/113_figure_3-56_page_288.png)
+*Figure 3.56 · PDF p. 288 · 두 TCP connection이 하나의 bottleneck link capacity R을 공유하는 fairness 모델*
 
 두 TCP connections가 같은 MSS와 RTT를 가지고 congestion avoidance mode에서만 동작한다고 하자. 둘 다 loss가 없으면 각자 `cwnd`를 `1 MSS per RTT`만큼 증가시키므로 throughput point는 equal-increase 방향으로 움직인다. 두 throughput의 합이 `R`을 넘으면 packet loss가 발생하고, 둘 다 multiplicative decrease로 window를 절반으로 줄인다. 이 additive increase와 multiplicative decrease를 반복하면 throughput point는 equal bandwidth share line 근처로 수렴한다.
 
-![Figure 3.57](@/assets/images/114_Figure_3.57_page_289.png)
-<p align="center"><sub>Figure 3.57 · PDF p. 289 · AIMD는 full utilization line과 equal bandwidth share line 근처로 throughput을 수렴시킨다</sub></p>
+![Figure 3.57](@/assets/images/114_figure_3-57_page_289.png)
+*Figure 3.57 · PDF p. 289 · AIMD는 full utilization line과 equal bandwidth share line 근처로 throughput을 수렴시킨다*
 
 다만 실제 Internet에서는 fairness가 깨질 수 있다.
 
@@ -896,8 +891,8 @@ TCP 쪽에서는 `TCP Tahoe`, `TCP Reno` 같은 classic TCP 이후 `TCP CUBIC`, 
 
 `QUIC (Quick UDP Internet Connections)`은 UDP 위에서 동작하는 application-layer protocol이다. QUIC은 secure HTTP의 transport 성능을 개선하기 위해 connection management, encryption, reliable data transfer, congestion control을 application layer에서 직접 제공한다. UDP를 아래에 두는 이유는 Internet middlebox와 OS kernel의 TCP 변경 속도에 덜 묶이고, application update timescale로 빠르게 protocol을 바꿀 수 있기 때문이다.
 
-![Figure 3.58](@/assets/images/115_Figure_3.58_page_292.png)
-<p align="center"><sub>Figure 3.58 · PDF p. 292 · traditional secure HTTP stack과 UDP 위 QUIC 기반 HTTP/3 stack 비교</sub></p>
+![Figure 3.58](@/assets/images/115_figure_3-58_page_292.png)
+*Figure 3.58 · PDF p. 292 · traditional secure HTTP stack과 UDP 위 QUIC 기반 HTTP/3 stack 비교*
 
 QUIC의 주요 특징은 다음과 같다.
 
@@ -914,8 +909,8 @@ HTTP/1.1 over TCP에서는 여러 HTTP requests가 하나의 TCP byte stream 위
 
 QUIC/HTTP/3에서는 여러 HTTP objects가 서로 다른 QUIC streams로 나뉜다. UDP segment 하나가 lost 되어 어떤 stream의 data가 빠지더라도, 그 segment에 포함되지 않은 다른 streams의 messages는 계속 receive/deliver될 수 있다. 즉 QUIC은 UDP의 unreliable datagram service 위에 stream 단위 reliability를 올려 HOL blocking 범위를 줄인다.
 
-![Figure 3.59](@/assets/images/116_Figure_3.59_page_293.png)
-<p align="center"><sub>Figure 3.59 · PDF p. 293 · HTTP/1.1은 TCP RDT/CC 위 단일 byte stream, HTTP/3은 QUIC per-stream RDT와 congestion control을 UDP 위에 둔다</sub></p>
+![Figure 3.59](@/assets/images/116_figure_3-59_page_293.png)
+*Figure 3.59 · PDF p. 293 · HTTP/1.1은 TCP RDT/CC 위 단일 byte stream, HTTP/3은 QUIC per-stream RDT와 congestion control을 UDP 위에 둔다*
 
 QUIC은 이 장의 많은 주제를 한 번에 묶는다. application-layer protocol이지만 내부적으로는 `ACK`, `retransmission`, `timer`, `sequence/packet number`, `congestion control`, `connection setup`, `encryption`을 다룬다. 따라서 transport 기능은 반드시 transport layer protocol 내부에만 있어야 하는 것이 아니라, 필요하면 application layer에서도 구현될 수 있다는 점을 보여준다.
 
