@@ -2,7 +2,7 @@
 title: "Chapter 1. Introduction"
 order: 1
 pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-17T00:58:44+09:00
+modDatetime: 2026-05-17T19:44:09+09:00
 description: "Chapter 1. Introduction 정리 노트입니다."
 featured: true
 tags:
@@ -28,7 +28,7 @@ tags:
 - 운영체제는 application programs가 하드웨어 자원을 올바르게 쓰도록 중재하는 intermediary다.
 - 사용자 관점(user view)에서는 ease of use, responsiveness, 편의성이 중요하고, 시스템 관점(system view)에서는 resource allocation, control, fairness, efficiency가 중요하다.
 - 운영체제의 핵심 실행 부분은 보통 kernel이라고 부르며, system programs와 middleware는 kernel 밖에 있지만 운영체제 경험을 구성하는 중요한 계층이다.
-- 현대 컴퓨터는 CPU, memory, device controllers, system bus, shared memory로 구성되며, I/O 완료나 오류 같은 비동기 사건은 iㄷnterrupt로 CPU에 알려진다.
+- 현대 컴퓨터는 CPU, memory, device controllers, system bus, shared memory로 구성되며, I/O 완료나 오류 같은 비동기 사건은 interrupt로 CPU에 알려진다.
 - interrupt는 interrupt vector, interrupt service routine, interrupt priority, maskable/nonmaskable interrupt 같은 장치로 빠르게 처리된다.
 
 ## 세부 정리
