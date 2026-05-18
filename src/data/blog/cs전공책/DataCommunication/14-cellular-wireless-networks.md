@@ -1,8 +1,8 @@
 ---
 title: "Chapter 14. Cellular Wireless Networks"
 order: 14
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:11:00+09:00
+modDatetime: 2026-05-18T00:11:00+09:00
 description: "Data and Computer Communications 정리: Chapter 14. Cellular Wireless Networks"
 tags:
   - "DataCommunication"

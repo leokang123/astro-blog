@@ -1,8 +1,8 @@
 ---
 title: "Chapter 9. Medians and Order Statistics"
 order: 9
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:13:00+09:00
+modDatetime: 2026-05-17T00:13:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 9. Medians and Order Statistics"
 tags:
   - "Algorithm"

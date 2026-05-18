@@ -1,8 +1,8 @@
 ---
 title: "Transport Protocols"
 order: 20
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:05:00+09:00
+modDatetime: 2026-05-18T00:05:00+09:00
 description: "Data and Computer Communications 정리: Transport Protocols"
 tags:
   - "DataCommunication"

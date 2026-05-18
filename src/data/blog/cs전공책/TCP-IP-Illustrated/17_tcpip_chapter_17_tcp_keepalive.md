@@ -1,8 +1,8 @@
 ---
 title: "Chapter 17. TCP Keepalive"
 order: 17
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-18T00:49:27+09:00
+pubDatetime: 2026-05-17T00:02:00+09:00
+modDatetime: 2026-05-17T00:02:00+09:00
 description: "TCP/IP Illustrated 정리: TCP Keepalive"
 tags:
   - ComputerNetwork

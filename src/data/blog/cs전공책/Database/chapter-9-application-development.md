@@ -1,8 +1,8 @@
 ---
 title: "Chapter 9. Application Development"
 order: 9
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:18:00+09:00
+modDatetime: 2026-05-18T00:18:00+09:00
 description: "Database System Concepts 정리: Chapter 9. Application Development"
 tags:
   - "Database"

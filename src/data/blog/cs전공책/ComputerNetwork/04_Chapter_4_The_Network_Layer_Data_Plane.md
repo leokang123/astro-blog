@@ -1,8 +1,8 @@
 ---
 title: "Chapter 4. The Network Layer: Data Plane"
 order: 4
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:05:00+09:00
+modDatetime: 2026-05-17T00:05:00+09:00
 description: "Computer Networking Top-Down 정리: Chapter 4. The Network Layer: Data Plane"
 tags:
   - "ComputerNetwork"

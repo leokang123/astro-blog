@@ -1,8 +1,8 @@
 ---
 title: "Chapter 15. Query Processing"
 order: 15
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:12:00+09:00
+modDatetime: 2026-05-18T00:12:00+09:00
 description: "Database System Concepts 정리: Chapter 15. Query Processing"
 tags:
   - "Database"

@@ -1,8 +1,8 @@
 ---
 title: "Chapter 15. Dynamic Programming"
 order: 15
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:07:00+09:00
+modDatetime: 2026-05-17T00:07:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 15. Dynamic Programming"
 tags:
   - "Algorithm"

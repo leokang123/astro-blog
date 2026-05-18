@@ -1,8 +1,8 @@
 ---
 title: "Chapter 1. Data Communications, Data Networking, and the Internet"
 order: 1
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:24:00+09:00
+modDatetime: 2026-05-18T00:24:00+09:00
 description: "Data and Computer Communications 정리: Chapter 1. Data Communications, Data Networking, and the Internet"
 tags:
   - "DataCommunication"

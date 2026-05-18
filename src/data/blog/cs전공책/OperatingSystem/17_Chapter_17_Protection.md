@@ -1,8 +1,8 @@
 ---
 title: "Chapter 17. Protection"
 order: 17
-pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T16:23:59+09:00
+pubDatetime: 2026-05-16T00:06:00+09:00
+modDatetime: 2026-05-16T00:06:00+09:00
 description: "Chapter 17. Protection 정리 노트입니다."
 tags:
   - CS

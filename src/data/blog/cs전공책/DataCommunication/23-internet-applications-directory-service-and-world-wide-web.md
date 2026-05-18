@@ -1,8 +1,8 @@
 ---
 title: "Internet Applications: Internet Directory Service and World Wide Web"
 order: 23
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:02:00+09:00
+modDatetime: 2026-05-18T00:02:00+09:00
 description: "Data and Computer Communications 정리: Internet Applications: Internet Directory Service and World Wide Web"
 tags:
   - "DataCommunication"

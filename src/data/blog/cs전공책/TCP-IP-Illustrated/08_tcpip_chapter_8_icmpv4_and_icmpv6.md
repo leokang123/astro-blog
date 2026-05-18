@@ -1,8 +1,8 @@
 ---
 title: "Chapter 8. ICMPv4 and ICMPv6: Internet Control Message Protocol"
 order: 8
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:11:00+09:00
+modDatetime: 2026-05-17T00:11:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 8. ICMPv4 and ICMPv6: Internet Control Message Protocol"
 tags:
   - "ComputerNetwork"

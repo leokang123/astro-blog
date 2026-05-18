@@ -1,8 +1,8 @@
 ---
 title: "Chapter 6. Heapsort"
 order: 6
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:16:00+09:00
+modDatetime: 2026-05-17T00:16:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 6. Heapsort"
 tags:
   - "Algorithm"

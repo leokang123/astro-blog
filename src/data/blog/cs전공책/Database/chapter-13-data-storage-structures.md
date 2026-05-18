@@ -1,8 +1,8 @@
 ---
 title: "Chapter 13. Data Storage Structures"
 order: 13
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:14:00+09:00
+modDatetime: 2026-05-18T00:14:00+09:00
 description: "Database System Concepts 정리: Chapter 13. Data Storage Structures"
 tags:
   - "Database"

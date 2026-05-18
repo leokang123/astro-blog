@@ -1,8 +1,8 @@
 ---
 title: "Chapter 8. Security in Computer Networks"
 order: 8
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:01:00+09:00
+modDatetime: 2026-05-17T00:01:00+09:00
 description: "Computer Networking Top-Down 정리: Chapter 8. Security in Computer Networks"
 tags:
   - "ComputerNetwork"

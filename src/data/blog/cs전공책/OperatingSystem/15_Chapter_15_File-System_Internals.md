@@ -1,8 +1,8 @@
 ---
 title: "Chapter 15. File-System Internals"
 order: 15
-pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-16T00:00:00+09:00
+pubDatetime: 2026-05-16T00:08:00+09:00
+modDatetime: 2026-05-16T00:08:00+09:00
 description: "Chapter 15. File-System Internals 정리 노트입니다."
 tags:
   - "CS"

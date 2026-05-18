@@ -1,8 +1,8 @@
 ---
 title: "Chapter 8. Complex Data Types"
 order: 8
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:19:00+09:00
+modDatetime: 2026-05-18T00:19:00+09:00
 description: "Database System Concepts 정리: Chapter 8. Complex Data Types"
 tags:
   - "Database"

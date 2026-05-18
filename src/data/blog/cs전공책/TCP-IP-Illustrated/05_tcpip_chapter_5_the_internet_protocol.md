@@ -1,8 +1,8 @@
 ---
 title: "Chapter 5. The Internet Protocol"
 order: 5
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:14:00+09:00
+modDatetime: 2026-05-17T00:14:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 5. The Internet Protocol"
 tags:
   - "ComputerNetwork"

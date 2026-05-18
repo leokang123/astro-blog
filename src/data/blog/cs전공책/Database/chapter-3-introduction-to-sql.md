@@ -1,8 +1,8 @@
 ---
 title: "Chapter 3. Introduction to SQL"
 order: 3
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:24:00+09:00
+modDatetime: 2026-05-18T00:24:00+09:00
 description: "Database System Concepts 정리: Chapter 3. Introduction to SQL"
 tags:
   - "Database"

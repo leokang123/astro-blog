@@ -1,8 +1,8 @@
 ---
 title: "Chapter 9. Broadcasting and Local Multicasting"
 order: 9
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-17T00:00:00+09:00
+pubDatetime: 2026-05-17T00:10:00+09:00
+modDatetime: 2026-05-17T00:10:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 9. Broadcasting and Local Multicasting"
 tags:
   - "ComputerNetwork"

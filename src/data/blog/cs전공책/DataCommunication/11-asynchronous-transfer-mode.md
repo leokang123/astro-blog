@@ -1,8 +1,8 @@
 ---
 title: "Chapter 11. Asynchronous Transfer Mode"
 order: 11
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:14:00+09:00
+modDatetime: 2026-05-18T00:14:00+09:00
 description: "Data and Computer Communications 정리: Chapter 11. Asynchronous Transfer Mode"
 tags:
   - "DataCommunication"

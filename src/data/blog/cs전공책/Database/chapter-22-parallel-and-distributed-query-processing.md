@@ -1,8 +1,8 @@
 ---
 title: "Chapter 22. Parallel and Distributed Query Processing"
 order: 22
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:05:00+09:00
+modDatetime: 2026-05-18T00:05:00+09:00
 description: "Database System Concepts 정리: Chapter 22. Parallel and Distributed Query Processing"
 tags:
   - "Database"

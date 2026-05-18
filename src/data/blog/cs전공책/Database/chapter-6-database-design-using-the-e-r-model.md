@@ -1,8 +1,8 @@
 ---
 title: "Chapter 6. Database Design Using the E-R Model"
 order: 6
-pubDatetime: 2026-05-18T00:00:00+09:00
-modDatetime: 2026-05-18T00:00:00+09:00
+pubDatetime: 2026-05-18T00:21:00+09:00
+modDatetime: 2026-05-18T00:21:00+09:00
 description: "Database System Concepts 정리: Chapter 6. Database Design Using the E-R Model"
 tags:
   - "Database"

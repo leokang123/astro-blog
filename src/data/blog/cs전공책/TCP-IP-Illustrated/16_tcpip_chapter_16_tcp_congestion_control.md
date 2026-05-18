@@ -1,8 +1,8 @@
 ---
 title: "Chapter 16. TCP Congestion Control"
 order: 16
-pubDatetime: 2026-05-17T00:00:00+09:00
-modDatetime: 2026-05-18T00:49:20+09:00
+pubDatetime: 2026-05-17T00:03:00+09:00
+modDatetime: 2026-05-17T00:03:00+09:00
 description: "TCP/IP Illustrated 정리: TCP Congestion Control"
 tags:
   - ComputerNetwork

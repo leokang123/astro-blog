@@ -1,8 +1,8 @@
 ---
 title: "Chapter 1. Introduction"
 order: 1
-pubDatetime: 2026-05-16T00:00:00+09:00
-modDatetime: 2026-05-18T02:48:46+09:00
+pubDatetime: 2026-05-16T00:22:00+09:00
+modDatetime: 2026-05-16T00:22:00+09:00
 description: "Chapter 1. Introduction 정리 노트입니다."
 featured: true
 tags:
