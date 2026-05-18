@@ -273,15 +273,16 @@ else if timeout:
 
 `rdt3.0`은 correct하지만 performance가 좋지 않다. 이유는 stop-and-wait이기 때문이다. sender는 packet 하나를 보내고 ACK를 받을 때까지 기다린다. high-speed link와 long RTT가 결합되면 실제 link capacity를 거의 사용하지 못한다.
 
-책의 예시는 `R = 1 Gbps`, `L = 1,000 bytes = 8,000 bits`, `RTT ≈ 30 ms`인 경우다.
+책의 예시는 $R = 1\text{ Gbps}$, $L = 1{,}000\text{ bytes} = 8{,}000\text{ bits}$, $RTT \approx 30\text{ ms}$인 경우다.
 
-```text
-d_trans = L/R = 8000 bits / 10^9 bits/sec = 8 microseconds
-
-U_sender = (L/R) / (RTT + L/R)
-         = 0.008 ms / 30.008 ms
-         ≈ 0.00027
-```
+$$
+\begin{aligned}
+d_{trans} &= \frac{L}{R} = \frac{8000\ \text{bits}}{10^9\ \text{bits/sec}} = 8\ \mu s \\
+U_{sender} &= \frac{L/R}{RTT + L/R} \\
+&= \frac{0.008\ \text{ms}}{30.008\ \text{ms}} \\
+&\approx 0.00027
+\end{aligned}
+$$
 
 sender는 시간의 약 0.027%만 실제로 bits를 link에 밀어 넣는다. 1 Gbps link를 샀는데 effective throughput은 약 267 kbps에 그치는 식이다. 이는 hardware capacity가 커도 protocol design이 utilization을 제한할 수 있음을 보여 준다.
 
@@ -298,7 +299,7 @@ sender는 시간의 약 0.027%만 실제로 bits를 link에 밀어 넣는다. 1 
 
 #### Go-Back-N (GBN): cumulative ACK와 receiver 단순화
 
-`Go-Back-N(GBN)`에서 sender는 ACK를 기다리지 않고 여러 packets를 보낼 수 있지만, outstanding unacknowledged packets 수가 window size `N`을 넘지 못한다. sender는 `base`와 `nextseqnum`으로 window 상태를 관리한다.
+`Go-Back-N(GBN)`에서 sender는 ACK를 기다리지 않고 여러 packets를 보낼 수 있지만, outstanding unacknowledged packets 수가 window size $N$을 넘지 못한다. sender는 `base`와 `nextseqnum`으로 window 상태를 관리한다.
 
 ![GBN sender sequence-number window](@/assets/images/cs-computer-network-076-figure-3-19-page-227.png)
 *Figure 3.19 · PDF p. 227 · GBN sender가 sequence number space에서 ACKed, sent-not-ACKed, usable, not-usable 영역을 보는 방식*
@@ -309,17 +310,17 @@ GBN sender sequence number space는 네 구간으로 나뉜다.
 |---|---|
 | `[0, base-1]` | already transmitted and acknowledged |
 | `[base, nextseqnum-1]` | sent but not yet acknowledged |
-| `[nextseqnum, base+N-1]` | window 안에 있어 즉시 보낼 수 있음 |
-| `>= base+N` | window 밖이라 아직 보낼 수 없음 |
+| $[nextseqnum, base + N - 1]$ | window 안에 있어 즉시 보낼 수 있음 |
+| $\ge base + N$ | window 밖이라 아직 보낼 수 없음 |
 
-GBN은 `sliding-window protocol`이다. ACK가 오면 window가 앞으로 slide한다. sequence number field가 `k` bits라면 sequence number space는 `[0, 2^k - 1]`이고, 연산은 modulo `2^k`로 이루어진다. TCP도 32-bit sequence number field를 쓰지만, TCP sequence number는 packets가 아니라 byte stream의 bytes를 센다.
+GBN은 `sliding-window protocol`이다. ACK가 오면 window가 앞으로 slide한다. sequence number field가 $k$ bits라면 sequence number space는 $[0, 2^k - 1]$이고, 연산은 modulo $2^k$로 이루어진다. TCP도 32-bit sequence number field를 쓰지만, TCP sequence number는 packets가 아니라 byte stream의 bytes를 센다.
 
 GBN sender는 세 events에 반응한다.
 
 | Event | sender action |
 |---|---|
 | `rdt_send(data)` | window가 full이 아니면 packetize/send, full이면 buffer하거나 upper layer에 나중에 재시도하게 함 |
-| `ACK n` received | cumulative ACK로 해석하고 `base = n + 1`로 이동 |
+| `ACK n` received | cumulative ACK로 해석하고 $base = n + 1$로 이동 |
 | `timeout` | oldest unacknowledged packet부터 `nextseqnum-1`까지 모두 retransmit |
 
 GBN receiver는 매우 단순하다. expected sequence number를 가진 in-order packet이 오면 data를 upper layer에 deliver하고 ACK를 보낸다. out-of-order packet은 correctly received라도 discard하고, 가장 최근 in-order packet에 대한 ACK를 다시 보낸다. receiver buffering이 단순해지는 대신, sender가 timeout 때 이미 받았던 packets까지 다시 보낼 수 있다.
@@ -360,10 +361,9 @@ SR은 sender와 receiver windows가 항상 일치하지 않는다. 이 때문에
 
 핵심 조건은 다음과 같다.
 
-```text
-For Selective Repeat:
-  window size <= (sequence number space size) / 2
-```
+$$
+\text{window size} \le \frac{\text{sequence number space size}}{2}
+$$
 
 이 조건은 reused sequence number가 아직 network 안에 남아 있는 old packet과 충돌하지 않게 하기 위한 것이다. 실제 network에서는 packet reordering도 가능하므로, protocol은 sequence number를 재사용하기 전에 이전 packet이 network에서 사라졌다고 볼 수 있는 maximum packet lifetime도 고려한다. TCP high-speed extensions에서는 packet lifetime을 대략 수분 단위로 가정하는 맥락이 나온다.
 
@@ -408,12 +408,13 @@ connection이 established되면 application은 socket으로 byte stream을 넘�
 
 `MSS(maximum segment size)`는 TCP segment의 data field에 넣을 수 있는 application-layer data의 최대 크기다. confusing하지만 MSS는 TCP header까지 포함한 전체 segment size가 아니다. 보통 local host가 보낼 수 있는 largest link-layer frame size인 `MTU(maximum transmission unit)`를 기준으로, IP/TCP headers까지 한 link-layer frame에 들어가도록 MSS를 정한다. Ethernet/PPP MTU가 1500 bytes일 때 typical MSS는 1460 bytes다.
 
-```text
-typical Ethernet case:
-  MTU = 1500 bytes
-  IP header + TCP header ≈ 40 bytes
-  MSS ≈ 1460 bytes
-```
+$$
+\begin{aligned}
+MTU &= 1500\ \text{bytes} \\
+\text{IP header} + \text{TCP header} &\approx 40\ \text{bytes} \\
+MSS &\approx 1460\ \text{bytes}
+\end{aligned}
+$$
 
 #### TCP segment structure
 
@@ -469,12 +470,13 @@ TCP는 lost segment recovery를 위해 timeout/retransmit mechanism을 쓴다. t
 
 TCP는 `EstimatedRTT`를 exponential weighted moving average(EWMA)로 갱신한다.
 
-```text
-EstimatedRTT = (1 - α) * EstimatedRTT + α * SampleRTT
-recommended α = 0.125
-
-EstimatedRTT = 0.875 * EstimatedRTT + 0.125 * SampleRTT
-```
+$$
+\begin{aligned}
+EstimatedRTT &= (1 - \alpha) \cdot EstimatedRTT + \alpha \cdot SampleRTT \\
+\alpha &= 0.125 \\
+EstimatedRTT &= 0.875 \cdot EstimatedRTT + 0.125 \cdot SampleRTT
+\end{aligned}
+$$
 
 최근 SampleRTT에 더 큰 의미를 주되, single sample fluctuation에 지나치게 흔들리지 않게 smoothing한다.
 
@@ -483,18 +485,20 @@ EstimatedRTT = 0.875 * EstimatedRTT + 0.125 * SampleRTT
 
 RTT variability는 `DevRTT`로 추정한다.
 
-```text
-DevRTT = (1 - β) * DevRTT + β * |SampleRTT - EstimatedRTT|
-recommended β = 0.25
-```
+$$
+\begin{aligned}
+DevRTT &= (1 - \beta) \cdot DevRTT + \beta \cdot |SampleRTT - EstimatedRTT| \\
+\beta &= 0.25
+\end{aligned}
+$$
 
 최종 retransmission timeout은 다음처럼 정한다.
 
-```text
-TimeoutInterval = EstimatedRTT + 4 * DevRTT
-```
+$$
+TimeoutInterval = EstimatedRTT + 4 \cdot DevRTT
+$$
 
-margin인 `4 * DevRTT`는 RTT fluctuation이 클 때 timeout을 더 넉넉하게 잡고, fluctuation이 작을 때 빠르게 loss recovery하도록 줄어든다. timeout이 발생하면 TCP는 premature timeout 연쇄를 피하기 위해 `TimeoutInterval`을 일시적으로 double한다. 이후 새 SampleRTT로 EstimatedRTT가 갱신되면 다시 위 공식으로 계산한다.
+margin인 $4 \cdot DevRTT$는 RTT fluctuation이 클 때 timeout을 더 넉넉하게 잡고, fluctuation이 작을 때 빠르게 loss recovery하도록 줄어든다. timeout이 발생하면 TCP는 premature timeout 연쇄를 피하기 위해 `TimeoutInterval`을 일시적으로 double한다. 이후 새 SampleRTT로 EstimatedRTT가 갱신되면 다시 위 공식으로 계산한다.
 
 #### TCP reliable data transfer: IP 위에 reliable byte stream 만들기
 
@@ -519,7 +523,7 @@ sender event별 동작은 다음처럼 정리된다.
 |---|---|
 | data received from application | segment 생성, sequence number=`NextSeqNum`, timer가 꺼져 있으면 start, IP로 전달, `NextSeqNum` 증가 |
 | timer timeout | smallest sequence number를 가진 not-yet-acknowledged segment retransmit, timer restart |
-| ACK with value `y` received | `y > SendBase`이면 cumulative ACK로 보고 `SendBase = y`, outstanding segment가 있으면 timer restart |
+| ACK with value `y` received | $y > SendBase$이면 cumulative ACK로 보고 $SendBase = y$, outstanding segment가 있으면 timer restart |
 
 #### lost ACK와 cumulative ACK examples
 
@@ -540,7 +544,7 @@ sender event별 동작은 다음처럼 정리된다.
 
 #### timeout doubling: 조심스럽게 재전송하기
 
-TCP는 timeout이 발생할 때마다 not-yet-acknowledged segment 중 smallest sequence number segment를 retransmit한다. 다만 다음 timeout interval은 기존 `EstimatedRTT + 4 * DevRTT`를 바로 쓰지 않고 이전 interval의 두 배로 늘린다. 예를 들어 0.75초 timeout 후 retransmit했다면 다음은 1.5초, 다시 timeout이면 3.0초로 증가한다.
+TCP는 timeout이 발생할 때마다 not-yet-acknowledged segment 중 smallest sequence number segment를 retransmit한다. 다만 다음 timeout interval은 기존 $EstimatedRTT + 4 \cdot DevRTT$를 바로 쓰지 않고 이전 interval의 두 배로 늘린다. 예를 들어 0.75초 timeout 후 retransmit했다면 다음은 1.5초, 다시 timeout이면 3.0초로 증가한다.
 
 이 exponential backoff는 limited congestion control 성격을 가진다. timeout은 network congestion 때문에 packet drop이나 long queuing delay가 생겼을 가능성이 높다. 그때 sender가 짧은 간격으로 계속 retransmit하면 congestion을 더 악화시킨다. TCP는 timeout 간격을 늘려 network에 더 예의 있게 동작한다.
 
@@ -594,24 +598,21 @@ TCP `flow control`은 sender가 receiver buffer를 넘치게 하지 않도록 se
 
 Host B가 Host A로부터 file을 받을 때, B의 receive buffer 크기를 `RcvBuffer`라고 하자.
 
-```text
-LastByteRead = application이 buffer에서 읽은 마지막 byte number
-LastByteRcvd = network에서 도착해 receive buffer에 들어간 마지막 byte number
+$$
+\begin{aligned}
+\text{buffered data} &= LastByteRcvd - LastByteRead \\
+LastByteRcvd - LastByteRead &\le RcvBuffer \\
+rwnd &= RcvBuffer - (LastByteRcvd - LastByteRead)
+\end{aligned}
+$$
 
-buffered data = LastByteRcvd - LastByteRead
-buffer overflow 방지 조건:
-  LastByteRcvd - LastByteRead <= RcvBuffer
+$rwnd$ (`receive window`)는 receiver buffer에 남은 spare room이다. Host B는 A로 보내는 모든 TCP segments의 receive window field에 현재 $rwnd$ 값을 넣어 광고한다. Host A는 outstanding unacknowledged data 양을 이 값 이하로 유지해야 한다.
 
-rwnd = RcvBuffer - (LastByteRcvd - LastByteRead)
-```
+$$
+LastByteSent - LastByteAcked \le rwnd
+$$
 
-`rwnd(receive window)`는 receiver buffer에 남은 spare room이다. Host B는 A로 보내는 모든 TCP segments의 receive window field에 현재 `rwnd` 값을 넣어 광고한다. Host A는 outstanding unacknowledged data 양을 이 값 이하로 유지해야 한다.
-
-```text
-LastByteSent - LastByteAcked <= rwnd
-```
-
-minor technical problem은 `rwnd = 0`일 때 생긴다. B가 receive buffer full을 알린 뒤 B가 A로 보낼 data나 ACK가 없으면, application이 buffer를 비워도 A에게 새 `rwnd` 값이 전달되지 않을 수 있다. 그래서 TCP는 receiver window가 0일 때도 sender가 1-byte data segment를 계속 보내도록 요구한다. 이 probe가 ACK되면서 eventually nonzero `rwnd`가 sender에게 전달된다.
+minor technical problem은 $rwnd = 0$일 때 생긴다. B가 receive buffer full을 알린 뒤 B가 A로 보낼 data나 ACK가 없으면, application이 buffer를 비워도 A에게 새 $rwnd$ 값이 전달되지 않을 수 있다. 그래서 TCP는 receiver window가 0일 때도 sender가 1-byte data segment를 계속 보내도록 요구한다. 이 probe가 ACK되면서 eventually nonzero $rwnd$가 sender에게 전달된다.
 
 UDP는 flow control을 제공하지 않는다. UDP receiver 앞의 finite buffer에서 application이 segments를 충분히 빨리 읽지 못하면 buffer overflow로 segments가 drop될 수 있다.
 
@@ -693,9 +694,9 @@ host가 자신이 가진 socket과 matching되지 않는 TCP segment를 받으�
 
 #### 3.6.1 The Causes and the Costs of Congestion
 
-**Scenario 1: Two Senders, a Router with Infinite Buffers.** 두 connection이 하나의 bottleneck link capacity `R`을 공유하고, router buffer가 무한하다고 하자. 각 sender가 application original data를 `λ_in` bytes/sec로 보낼 때, `λ_in < R/2`이면 receiver throughput `λ_out`은 거의 `λ_in`과 같다. 그러나 두 connection이 link를 나누므로 한 connection의 steady-state throughput은 `R/2`를 넘을 수 없다.
+**Scenario 1: Two Senders, a Router with Infinite Buffers.** 두 connection이 하나의 bottleneck link capacity $R$을 공유하고, router buffer가 무한하다고 하자. 각 sender가 application original data를 $\lambda_{in}$ bytes/sec로 보낼 때, $\lambda_{in} < R/2$이면 receiver throughput $\lambda_{out}$은 거의 $\lambda_{in}$과 같다. 그러나 두 connection이 link를 나누므로 한 connection의 steady-state throughput은 $R/2$를 넘을 수 없다.
 
-문제는 throughput 한계보다 delay다. `λ_in`이 `R/2`에 가까워질수록 queue가 길어지고 average delay가 급격히 커진다. 무한 buffer 가정에서는 packet drop은 없지만, `λ_in >= R/2`로 오래 동작하면 평균 queue length와 delay가 무한대로 발산한다. 첫 번째 congestion cost는 **link capacity에 가까워질수록 발생하는 large queuing delay**다.
+문제는 throughput 한계보다 delay다. $\lambda_{in}$이 $R/2$에 가까워질수록 queue가 길어지고 average delay가 급격히 커진다. 무한 buffer 가정에서는 packet drop은 없지만, $\lambda_{in} \ge R/2$로 오래 동작하면 평균 queue length와 delay가 무한대로 발산한다. 첫 번째 congestion cost는 **link capacity에 가까워질수록 발생하는 large queuing delay**다.
 
 ![Figure 3.44](@/assets/images/cs-computer-network-101-figure-3-44-page-268.png)
 *Figure 3.44 · PDF p. 268 · infinite buffer에서 sending rate가 link share에 접근할 때 throughput은 포화되고 delay는 폭증한다*
@@ -704,10 +705,10 @@ host가 자신이 가진 socket과 matching되지 않는 TCP segment를 받으�
 
 | 기호 | 의미 |
 |---|---|
-| `λ_in` | application이 socket에 넣는 original data rate |
-| `λ'_in` | transport layer가 network에 넣는 offered load: original data + retransmitted data |
+| $\lambda_{in}$ | application이 socket에 넣는 original data rate |
+| $\lambda'_{in}$ | transport layer가 network에 넣는 offered load: original data + retransmitted data |
 
-sender가 router buffer 여유를 완벽히 알고 loss 없이 보낸다면 `λ_in = λ'_in`이고 throughput도 `λ_in`이 된다. 하지만 실제로는 buffer overflow가 생기고, lost packet을 보상하려면 retransmission이 필요하다. 이때 같은 link capacity 중 일부가 original data가 아니라 retransmitted data를 운반하는 데 쓰인다. 두 번째 congestion cost는 **buffer overflow 때문에 retransmission traffic이 필요해지는 것**이다.
+sender가 router buffer 여유를 완벽히 알고 loss 없이 보낸다면 $\lambda_{in} = \lambda'_{in}$이고 throughput도 $\lambda_{in}$이 된다. 하지만 실제로는 buffer overflow가 생기고, lost packet을 보상하려면 retransmission이 필요하다. 이때 같은 link capacity 중 일부가 original data가 아니라 retransmitted data를 운반하는 데 쓰인다. 두 번째 congestion cost는 **buffer overflow 때문에 retransmission traffic이 필요해지는 것**이다.
 
 더 나쁜 경우는 premature timeout이다. packet이 lost 된 것이 아니라 queue에서 오래 지연되고 있을 뿐인데 sender가 timeout으로 다시 보내면, original packet과 retransmitted packet이 모두 receiver에 도착할 수 있다. receiver는 duplicate를 버리므로 router가 duplicate copy를 전달하는 데 쓴 bandwidth는 낭비된다. 세 번째 congestion cost는 **unneeded retransmission이 link bandwidth를 불필요한 duplicate forwarding에 쓰게 만드는 것**이다.
 
@@ -716,7 +717,7 @@ sender가 router buffer 여유를 완벽히 알고 loss 없이 보낸다면 `λ_
 
 **Scenario 3: Four Senders, Routers with Finite Buffers, and Multihop Paths.** multihop path에서는 packet이 중간 link들을 이미 지나온 뒤 downstream router에서 drop될 수 있다. 예를 들어 A-C traffic이 R1을 지나 R2에서 B-D traffic과 경쟁하다 drop되면, R1이 그 packet을 R2까지 전달하는 데 쓴 transmission capacity가 모두 wasted work가 된다.
 
-offered load가 작을 때는 `λ_in` 증가가 throughput 증가로 이어진다. 그러나 모든 connection의 `λ'_in`이 매우 커지면, bottleneck router의 buffer를 경쟁 traffic이 즉시 채우고 특정 end-to-end connection의 throughput은 오히려 감소할 수 있다. 극단적으로 heavy traffic에서는 useful throughput이 0에 가까워질 수도 있다. 네 번째 congestion cost는 **downstream drop이 upstream link capacity까지 낭비하게 만드는 것**이다.
+offered load가 작을 때는 $\lambda_{in}$ 증가가 throughput 증가로 이어진다. 그러나 모든 connection의 $\lambda'_{in}$이 매우 커지면, bottleneck router의 buffer를 경쟁 traffic이 즉시 채우고 특정 end-to-end connection의 throughput은 오히려 감소할 수 있다. 극단적으로 heavy traffic에서는 useful throughput이 0에 가까워질 수도 있다. 네 번째 congestion cost는 **downstream drop이 upstream link capacity까지 낭비하게 만드는 것**이다.
 
 ![Figure 3.48](@/assets/images/cs-computer-network-105-figure-3-48-page-272.png)
 *Figure 3.48 · PDF p. 272 · multihop congestion에서는 offered load가 너무 커지면 throughput이 오히려 감소할 수 있다*
@@ -758,25 +759,25 @@ TCP congestion control의 핵심 질문은 세 가지다.
 | congestion을 어떻게 감지하는가? | `loss event`: timeout 또는 three duplicate ACKs를 congestion indication으로 본다. |
 | rate를 어떻게 바꾸는가? | ACK가 오면 늘리고, loss event가 오면 줄이며, bandwidth probing을 반복한다. |
 
-TCP sender는 flow control의 `rwnd`와 congestion control의 `cwnd`를 함께 만족해야 한다.
+TCP sender는 flow control의 $rwnd$와 congestion control의 $cwnd$를 함께 만족해야 한다.
 
-```text
-LastByteSent - LastByteAcked <= min(cwnd, rwnd)
-```
+$$
+LastByteSent - LastByteAcked \le \min(cwnd, rwnd)
+$$
 
-congestion control만 보려면 receive buffer가 충분히 크다고 가정해 `rwnd` constraint를 무시한다. 그러면 sender는 대략 한 RTT 동안 `cwnd` bytes를 보내고 ACK를 받으므로 sending rate는 다음처럼 근사된다.
+congestion control만 보려면 receive buffer가 충분히 크다고 가정해 $rwnd$ constraint를 무시한다. 그러면 sender는 대략 한 RTT 동안 $cwnd$ bytes를 보내고 ACK를 받으므로 sending rate는 다음처럼 근사된다.
 
-```text
-TCP sending rate ≈ cwnd / RTT bytes/sec
-```
+$$
+\text{TCP sending rate} \approx \frac{cwnd}{RTT}\ \text{bytes/sec}
+$$
 
-`ACK`는 network가 segment를 destination까지 전달했다는 implicit positive signal이다. TCP는 ACK arrival을 이용해 `cwnd`를 키운다. 그래서 TCP는 ACK가 window 증가를 clocking한다는 의미에서 `self-clocking`이라고도 불린다. 반대로 timeout 또는 three duplicate ACKs는 path 어딘가의 router buffer overflow 가능성을 나타내는 implicit negative signal이다.
+`ACK`는 network가 segment를 destination까지 전달했다는 implicit positive signal이다. TCP는 ACK arrival을 이용해 $cwnd$를 키운다. 그래서 TCP는 ACK가 window 증가를 clocking한다는 의미에서 `self-clocking`이라고도 불린다. 반대로 timeout 또는 three duplicate ACKs는 path 어딘가의 router buffer overflow 가능성을 나타내는 implicit negative signal이다.
 
 TCP의 rate 조절은 `bandwidth probing`이다. ACK가 오면 “아직 여유가 있나?” 하고 rate를 조금씩 높이고, loss event가 오면 “방금 congestion onset을 넘었다”고 보고 뒤로 물러난다. network와 sender들이 중앙에서 조율되는 것이 아니라 각 TCP sender가 local information으로 asynchronous하게 동작한다.
 
 #### Slow Start
 
-TCP connection이 시작되면 `cwnd`는 보통 `1 MSS`로 초기화된다. 초기 sending rate는 `MSS/RTT` 정도라 작지만, slow start에서는 ACK 하나가 올 때마다 `cwnd`를 `1 MSS`씩 늘린다. 첫 RTT에 1 segment를 보내고 ACK를 받으면 다음에는 2 segments, 그다음에는 4 segments처럼 매 RTT마다 대략 두 배가 된다. 이름은 slow start지만 증가율은 exponential이다.
+TCP connection이 시작되면 $cwnd$는 보통 $1\ MSS$로 초기화된다. 초기 sending rate는 $MSS/RTT$ 정도라 작지만, slow start에서는 ACK 하나가 올 때마다 $cwnd$를 $1\ MSS$씩 늘린다. 첫 RTT에 1 segment를 보내고 ACK를 받으면 다음에는 2 segments, 그다음에는 4 segments처럼 매 RTT마다 대략 두 배가 된다. 이름은 slow start지만 증가율은 exponential이다.
 
 ![Figure 3.50](@/assets/images/cs-computer-network-107-figure-3-50-page-277.png)
 *Figure 3.50 · PDF p. 277 · slow start에서 ACK가 도착할 때마다 cwnd가 늘어 매 RTT 전송량이 두 배로 증가한다*
@@ -785,30 +786,30 @@ slow start가 끝나는 조건은 세 가지다.
 
 | 종료 조건 | 동작 |
 |---|---|
-| timeout | `ssthresh = cwnd/2`, `cwnd = 1 MSS`, slow start 재시작 |
-| `cwnd == ssthresh` | exponential growth를 멈추고 congestion avoidance로 전환 |
+| timeout | $ssthresh = cwnd/2$, $cwnd = 1\ MSS$, slow start 재시작 |
+| $cwnd = ssthresh$ | exponential growth를 멈추고 congestion avoidance로 전환 |
 | three duplicate ACKs | fast retransmit 후 fast recovery로 전환 |
 
-`ssthresh (slow start threshold)`는 마지막 congestion detection 시점의 window 절반이다. `cwnd`가 이 threshold에 도달했다면, 과거에 congestion이 발생한 크기에 가까워진 것이므로 더 이상 두 배씩 키우지 않고 조심스럽게 증가한다.
+`ssthresh (slow start threshold)`는 마지막 congestion detection 시점의 window 절반이다. $cwnd$가 이 threshold에 도달했다면, 과거에 congestion이 발생한 크기에 가까워진 것이므로 더 이상 두 배씩 키우지 않고 조심스럽게 증가한다.
 
 #### Congestion Avoidance
 
-congestion avoidance에 들어갈 때 `cwnd`는 마지막 congestion window의 절반 근처다. 이 상태에서는 congestion이 가까울 수 있으므로 `cwnd`를 매 RTT마다 `1 MSS` 정도만 증가시킨다. 일반적으로 ACK 하나가 도착할 때마다 다음처럼 조금씩 더한다.
+congestion avoidance에 들어갈 때 $cwnd$는 마지막 congestion window의 절반 근처다. 이 상태에서는 congestion이 가까울 수 있으므로 $cwnd$를 매 RTT마다 $1\ MSS$ 정도만 증가시킨다. 일반적으로 ACK 하나가 도착할 때마다 다음처럼 조금씩 더한다.
 
-```text
-cwnd = cwnd + MSS * (MSS / cwnd)
-```
+$$
+cwnd = cwnd + MSS \cdot \frac{MSS}{cwnd}
+$$
 
-예를 들어 `cwnd = 10 MSS`라면 한 RTT 동안 ACK가 약 10개 오고, 각 ACK가 `1/10 MSS`씩 더해 전체적으로 한 RTT에 `1 MSS`가 증가한다. timeout이 발생하면 slow start와 동일하게 `ssthresh = cwnd/2`, `cwnd = 1 MSS`로 줄인다. 그러나 three duplicate ACKs는 timeout보다 덜 심각한 신호로 본다. duplicate ACKs가 왔다는 것은 일부 segment는 receiver에 계속 도착하고 있다는 뜻이기 때문이다. 그래서 TCP Reno는 `cwnd`를 절반으로 줄인 뒤 fast recovery에 들어간다.
+예를 들어 $cwnd = 10\ MSS$라면 한 RTT 동안 ACK가 약 10개 오고, 각 ACK가 $1/10\ MSS$씩 더해 전체적으로 한 RTT에 $1\ MSS$가 증가한다. timeout이 발생하면 slow start와 동일하게 $ssthresh = cwnd/2$, $cwnd = 1\ MSS$로 줄인다. 그러나 three duplicate ACKs는 timeout보다 덜 심각한 신호로 본다. duplicate ACKs가 왔다는 것은 일부 segment는 receiver에 계속 도착하고 있다는 뜻이기 때문이다. 그래서 TCP Reno는 $cwnd$를 절반으로 줄인 뒤 fast recovery에 들어간다.
 
 #### Fast Recovery, Tahoe, Reno
 
-fast recovery에서는 missing segment에 대한 duplicate ACK가 추가로 올 때마다 `cwnd`를 `1 MSS`씩 증가시킨다. missing segment에 대한 ACK가 도착하면 `cwnd`를 조정해 congestion avoidance로 돌아간다. timeout이 발생하면 더 강하게 반응해서 `cwnd = 1 MSS`로 줄이고 slow start로 돌아간다.
+fast recovery에서는 missing segment에 대한 duplicate ACK가 추가로 올 때마다 $cwnd$를 $1\ MSS$씩 증가시킨다. missing segment에 대한 ACK가 도착하면 $cwnd$를 조정해 congestion avoidance로 돌아간다. timeout이 발생하면 더 강하게 반응해서 $cwnd = 1\ MSS$로 줄이고 slow start로 돌아간다.
 
 ![Figure 3.51](@/assets/images/cs-computer-network-108-figure-3-51-page-279.png)
 *Figure 3.51 · PDF p. 279 · slow start, congestion avoidance, fast recovery 사이의 TCP congestion-control FSM*
 
-`TCP Tahoe`는 timeout이든 triple duplicate ACK든 loss event가 발생하면 무조건 `cwnd = 1 MSS`로 줄이고 slow start로 돌아갔다. `TCP Reno`는 triple duplicate ACK의 경우 fast recovery를 사용해 더 덜 급격하게 줄인다. 그래서 같은 loss event 이후 Reno는 Tahoe보다 빠르게 window를 회복한다.
+`TCP Tahoe`는 timeout이든 triple duplicate ACK든 loss event가 발생하면 무조건 $cwnd = 1\ MSS$로 줄이고 slow start로 돌아갔다. `TCP Reno`는 triple duplicate ACK의 경우 fast recovery를 사용해 더 덜 급격하게 줄인다. 그래서 같은 loss event 이후 Reno는 Tahoe보다 빠르게 window를 회복한다.
 
 ![Figure 3.52](@/assets/images/cs-computer-network-109-figure-3-52-page-281.png)
 *Figure 3.52 · PDF p. 281 · triple duplicate ACK 이후 Tahoe는 slow start로, Reno는 fast recovery로 진행한다*
@@ -817,28 +818,30 @@ fast recovery에서는 missing segment에 대한 duplicate ACK가 추가로 올 
 
 초기 slow start를 제외하고, loss가 timeout이 아니라 triple duplicate ACK로 감지된다고 보면 TCP Reno의 핵심은 `AIMD (additive-increase, multiplicative-decrease)`다.
 
-```text
-No loss: cwnd += 1 MSS per RTT
-Loss by triple duplicate ACK: cwnd = cwnd / 2
-```
+$$
+\begin{aligned}
+\text{No loss:}\quad cwnd &\leftarrow cwnd + 1\ MSS\ \text{per RTT} \\
+\text{Triple duplicate ACK:}\quad cwnd &\leftarrow \frac{cwnd}{2}
+\end{aligned}
+$$
 
 이 규칙은 sawtooth pattern을 만든다. TCP는 congestion window를 선형으로 올리며 available bandwidth를 probe하다가 loss event를 만나면 절반으로 줄이고, 다시 probe를 시작한다.
 
 ![Figure 3.53](@/assets/images/cs-computer-network-110-figure-3-53-page-282.png)
 *Figure 3.53 · PDF p. 282 · AIMD는 additive increase와 multiplicative decrease로 sawtooth window 변화를 만든다*
 
-`TCP CUBIC`은 Reno의 congestion avoidance가 너무 조심스럽다는 문제의식에서 나왔다. loss 직전 window를 `Wmax`라 하고, 앞으로 다시 `Wmax`에 도달할 시간점을 `K`라고 할 때, CUBIC은 현재 시간 `t`와 `K` 사이 거리의 cubic function으로 `cwnd`를 증가시킨다. `t`가 `K`에서 멀면 빠르게 증가하고, `Wmax` 근처에서는 조심스럽게 증가한다. `t > K`가 되어도 loss가 없으면 다시 더 빠르게 증가해 새 operating point를 찾는다.
+`TCP CUBIC`은 Reno의 congestion avoidance가 너무 조심스럽다는 문제의식에서 나왔다. loss 직전 window를 $W_{max}$라 하고, 앞으로 다시 $W_{max}$에 도달할 시간점을 $K$라고 할 때, CUBIC은 현재 시간 $t$와 $K$ 사이 거리의 cubic function으로 $cwnd$를 증가시킨다. $t$가 $K$에서 멀면 빠르게 증가하고, $W_{max}$ 근처에서는 조심스럽게 증가한다. $t > K$가 되어도 loss가 없으면 다시 더 빠르게 증가해 새 operating point를 찾는다.
 
 ![Figure 3.54](@/assets/images/cs-computer-network-111-figure-3-54-page-283.png)
 *Figure 3.54 · PDF p. 283 · CUBIC은 loss 전 window 근처까지 빠르게 회복한 뒤 조심스럽게 probing한다*
 
-TCP Reno의 macroscopic throughput은 sawtooth를 평균낸 단순 모델로 볼 수 있다. loss 직전 window를 `W`라고 하면 rate는 대략 `W/(2*RTT)`에서 `W/RTT` 사이를 선형 증가하므로 평균 throughput은 다음처럼 근사된다.
+TCP Reno의 macroscopic throughput은 sawtooth를 평균낸 단순 모델로 볼 수 있다. loss 직전 window를 `W`라고 하면 rate는 대략 $W/(2\cdot RTT)$에서 $W/RTT$ 사이를 선형 증가하므로 평균 throughput은 다음처럼 근사된다.
 
-```text
-average throughput ≈ 0.75 * W / RTT
-```
+$$
+\text{average throughput} \approx 0.75 \cdot \frac{W}{RTT}
+$$
 
-이 식은 TCP throughput이 `cwnd`뿐 아니라 RTT에도 강하게 의존한다는 점을 보여준다. 같은 bottleneck을 공유해도 RTT가 짧은 connection은 ACK clock이 더 빠르게 돌아 window를 더 빨리 키울 수 있다.
+이 식은 TCP throughput이 $cwnd$뿐 아니라 RTT에도 강하게 의존한다는 점을 보여준다. 같은 bottleneck을 공유해도 RTT가 짧은 connection은 ACK clock이 더 빠르게 돌아 window를 더 빨리 키울 수 있다.
 
 #### 3.7.2 Network-Assisted Explicit Congestion Notification and Delay-Based Congestion Control
 
@@ -855,18 +858,18 @@ ECN 흐름은 다음과 같다.
 ![Figure 3.55](@/assets/images/cs-computer-network-112-figure-3-55-page-286.png)
 *Figure 3.55 · PDF p. 286 · router가 IP datagram에 ECN을 mark하고 receiver가 TCP ACK의 ECE bit로 sender에게 알린다*
 
-`delay-based congestion control`은 packet loss가 생기기 전에 queueing delay 증가로 congestion onset을 감지하려는 방식이다. `TCP Vegas`는 ACKed packets의 RTT를 측정하고, 최소 RTT인 `RTTmin`을 uncongested path의 기준으로 둔다. 현재 `cwnd`에서 queue가 없다면 가능한 throughput은 `cwnd/RTTmin`이다. 실제 measured throughput이 이 값에 가깝다면 아직 path가 congested되지 않았다고 보고 rate를 늘릴 수 있다. 실제 throughput이 훨씬 작으면 queue가 쌓여 delay가 커졌다고 보고 sending rate를 줄인다.
+`delay-based congestion control`은 packet loss가 생기기 전에 queueing delay 증가로 congestion onset을 감지하려는 방식이다. `TCP Vegas`는 ACKed packets의 RTT를 측정하고, 최소 RTT인 `RTTmin`을 uncongested path의 기준으로 둔다. 현재 $cwnd$에서 queue가 없다면 가능한 throughput은 $cwnd/RTT_{min}$이다. 실제 measured throughput이 이 값에 가깝다면 아직 path가 congested되지 않았다고 보고 rate를 늘릴 수 있다. 실제 throughput이 훨씬 작으면 queue가 쌓여 delay가 커졌다고 보고 sending rate를 줄인다.
 
 Vegas의 직관은 “Keep the pipe just full, but no fuller”다. bottleneck link가 놀지 않도록 pipe는 채우되, queue가 길어져 delay만 늘어날 정도로 더 채우지는 말자는 뜻이다. `BBR`은 Vegas 계열의 delay/rate 관찰 아이디어를 발전시킨 congestion control로, CUBIC 같은 non-BBR senders와의 fairness도 고려한다.
 
 #### 3.7.3 Fairness
 
-`fairness`는 bottleneck link rate가 `R`이고 `K`개의 TCP connections가 큰 file을 전송할 때 각 connection의 average transmission rate가 대략 `R/K`가 되는 성질이다. TCP AIMD는 이상화된 조건에서 fairness로 수렴하는 직관을 제공한다.
+`fairness`는 bottleneck link rate가 $R$이고 $K$개의 TCP connections가 큰 file을 전송할 때 각 connection의 average transmission rate가 대략 $R/K$가 되는 성질이다. TCP AIMD는 이상화된 조건에서 fairness로 수렴하는 직관을 제공한다.
 
 ![Figure 3.56](@/assets/images/cs-computer-network-113-figure-3-56-page-288.png)
 *Figure 3.56 · PDF p. 288 · 두 TCP connection이 하나의 bottleneck link capacity R을 공유하는 fairness 모델*
 
-두 TCP connections가 같은 MSS와 RTT를 가지고 congestion avoidance mode에서만 동작한다고 하자. 둘 다 loss가 없으면 각자 `cwnd`를 `1 MSS per RTT`만큼 증가시키므로 throughput point는 equal-increase 방향으로 움직인다. 두 throughput의 합이 `R`을 넘으면 packet loss가 발생하고, 둘 다 multiplicative decrease로 window를 절반으로 줄인다. 이 additive increase와 multiplicative decrease를 반복하면 throughput point는 equal bandwidth share line 근처로 수렴한다.
+두 TCP connections가 같은 MSS와 RTT를 가지고 congestion avoidance mode에서만 동작한다고 하자. 둘 다 loss가 없으면 각자 $cwnd$를 `1 MSS per RTT`만큼 증가시키므로 throughput point는 equal-increase 방향으로 움직인다. 두 throughput의 합이 $R$을 넘으면 packet loss가 발생하고, 둘 다 multiplicative decrease로 window를 절반으로 줄인다. 이 additive increase와 multiplicative decrease를 반복하면 throughput point는 equal bandwidth share line 근처로 수렴한다.
 
 ![Figure 3.57](@/assets/images/cs-computer-network-114-figure-3-57-page-289.png)
 *Figure 3.57 · PDF p. 289 · AIMD는 full utilization line과 equal bandwidth share line 근처로 throughput을 수렴시킨다*
@@ -920,9 +923,9 @@ transport layer는 network application이 직접 사용하는 end-to-end service
 
 reliable data transfer는 unreliable channel 위에서도 만들 수 있다. 핵심 재료는 `ACK`, `NAK`, `sequence number`, `timer`, `retransmission`, `checksum`, receiver buffering이다. rdt1.0에서 시작해 rdt2.x, rdt3.0, pipelining, Go-Back-N, Selective Repeat로 갈수록 loss/corruption/delay가 있는 현실적인 channel과 성능 요구를 더 잘 다룬다.
 
-TCP는 이 원리를 Internet transport protocol로 구현한다. byte-stream service를 segment로 나누고, sequence number와 acknowledgment number로 ordering과 recovery를 관리한다. `EstimatedRTT`, `DevRTT`, `TimeoutInterval`로 retransmission timeout을 조정하고, fast retransmit으로 timeout을 기다리지 않고 loss를 복구한다. `rwnd` 기반 flow control은 receiver buffer overflow를 막고, three-way handshake와 FIN/ACK state transition은 connection lifecycle을 관리한다.
+TCP는 이 원리를 Internet transport protocol로 구현한다. byte-stream service를 segment로 나누고, sequence number와 acknowledgment number로 ordering과 recovery를 관리한다. `EstimatedRTT`, `DevRTT`, `TimeoutInterval`로 retransmission timeout을 조정하고, fast retransmit으로 timeout을 기다리지 않고 loss를 복구한다. $rwnd$ 기반 flow control은 receiver buffer overflow를 막고, three-way handshake와 FIN/ACK state transition은 connection lifecycle을 관리한다.
 
-congestion control은 network 전체의 건강을 위한 mechanism이다. congestion을 방치하면 queueing delay, buffer overflow, redundant retransmission, upstream bandwidth waste가 누적되어 throughput collapse로 이어질 수 있다. Classic TCP는 end-to-end 방식으로 loss event를 congestion signal로 보고, `slow start`, `congestion avoidance`, `fast recovery`, `AIMD`로 `cwnd`를 조절한다. 이후 `ECN`, delay-based congestion control, `CUBIC`, `BBR` 같은 방식이 packet loss 이전의 congestion onset이나 high bandwidth/high RTT 환경을 더 잘 다루도록 발전했다.
+congestion control은 network 전체의 건강을 위한 mechanism이다. congestion을 방치하면 queueing delay, buffer overflow, redundant retransmission, upstream bandwidth waste가 누적되어 throughput collapse로 이어질 수 있다. Classic TCP는 end-to-end 방식으로 loss event를 congestion signal로 보고, `slow start`, `congestion avoidance`, `fast recovery`, `AIMD`로 $cwnd$를 조절한다. 이후 `ECN`, delay-based congestion control, `CUBIC`, `BBR` 같은 방식이 packet loss 이전의 congestion onset이나 high bandwidth/high RTT 환경을 더 잘 다루도록 발전했다.
 
 이 장은 network edge의 두 층, application layer와 transport layer를 마무리한다. 다음 network layer에서는 end systems 안의 process-to-process delivery를 넘어서, network core가 datagram을 source host에서 destination host까지 어떻게 forwarding/routing하는지를 다룬다.
 

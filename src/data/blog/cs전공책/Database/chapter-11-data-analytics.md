@@ -250,17 +250,17 @@ Figure 11.11은 `degree`와 `income`만 사용한 단순 classification tree다.
 
 Bayes’ theorem은 다음과 같다.
 
-```text
-p(c_j | d) = p(d | c_j) p(c_j) / p(d)
-```
+$$
+p(c_j \mid d) = \frac{p(d \mid c_j)p(c_j)}{p(d)}
+$$
 
 `p(d)`는 모든 class에 대해 같으므로 class 비교에서는 무시할 수 있다. `p(c_j)`는 training instance 중 class `c_j`의 fraction이고, `p(d | c_j)`는 class가 `c_j`일 때 instance `d`가 생성될 확률이다.
 
 Multiple attribute를 모두 조합해 `p(d | c_j)`를 정확히 계산하려면 attribute value combination 수가 너무 커진다. Limited training set에서는 대부분의 조합에 matching instance가 없을 수 있다. `naive Bayesian classifier`는 attribute들이 class가 주어졌을 때 independent distribution을 가진다고 가정해 다음처럼 근사한다.
 
-```text
-p(d | c_j) = p(d_1 | c_j) * p(d_2 | c_j) * ... * p(d_n | c_j)
-```
+$$
+p(d \mid c_j) = \prod_{i=1}^{n} p(d_i \mid c_j)
+$$
 
 각 `p(d_i | c_j)`는 class `c_j`에 속한 training instance에서 attribute i의 value distribution으로부터 계산하며, 보통 histogram으로 근사한다. 이 independence assumption은 현실을 단순화하지만 sparse high-dimensional combination 문제를 피하게 해 준다.
 
@@ -289,9 +289,9 @@ SVM의 기본 formulation은 binary classifier다. N개 class가 있으면 class
 
 `linear regression`은 다음과 같은 linear polynomial의 coefficient를 추정한다.
 
-```text
-Y = a0 + a1 * X1 + a2 * X2 + ... + an * Xn
-```
+$$
+Y = a_0 + a_1 X_1 + a_2 X_2 + \ldots + a_n X_n
+$$
 
 더 일반적으로 data에 맞는 polynomial이나 다른 formula의 curve를 찾는 과정을 `curve fitting`이라고 한다. Data noise나 실제 관계가 polynomial이 아닐 수 있기 때문에 완벽한 fit보다는 best possible fit을 주는 coefficient를 찾는 것이 목표다.
 

@@ -143,10 +143,12 @@ JSON과 XML은 둘 다 nested semi-structured data를 표현하지만, 오늘날
 
 RDF triple은 두 형태 중 하나다.
 
-```text
-(ID, attribute-name, value)
-(ID1, relationship-name, ID2)
-```
+$$
+\begin{aligned}
+(\text{ID}, \text{attribute-name}, \text{value}) \\
+(\text{ID}_1, \text{relationship-name}, \text{ID}_2)
+\end{aligned}
+$$
 
 Triple의 세 위치는 각각 `subject`, `predicate`, `object`라고 부른다.
 
@@ -442,9 +444,9 @@ Keyword를 포함하는 모든 document가 query에 똑같이 relevant한 것은
 
 원문은 `term frequency(TF)`의 한 형태를 다음처럼 제시한다.
 
-```text
-TF(d, t) = log(1 + n(d, t) / n(d))
-```
+$$
+\mathrm{TF}(d, t) = \log\left(1 + \frac{n(d, t)}{n(d)}\right)
+$$
 
 여기서 `n(d)`는 document `d`의 전체 term occurrence 수이고, `n(d, t)`는 document `d`에서 term `t`가 등장한 횟수다. 이 식은 document length를 고려하며, term occurrence가 많아질수록 relevance가 증가하지만 증가율은 logarithm 때문에 완만하다.
 
@@ -454,17 +456,17 @@ Query `Q`가 여러 keyword를 포함할 때는 각 term에 대한 relevance를 
 
 이를 보정하는 값이 `inverse document frequency(IDF)`다.
 
-```text
-IDF(t) = 1 / n(t)
-```
+$$
+\mathrm{IDF}(t) = \frac{1}{n(t)}
+$$
 
 `n(t)`는 indexed documents 중 term `t`를 포함하는 document 수다. Term이 흔할수록 `IDF(t)`가 작고, 드물수록 커진다.
 
 Document `d`가 query term set `Q`에 대해 갖는 relevance는 다음처럼 계산할 수 있다.
 
-```text
-r(d, Q) = Σ_{t ∈ Q} TF(d, t) * IDF(t)
-```
+$$
+r(d, Q) = \sum_{t \in Q} \mathrm{TF}(d, t) \cdot \mathrm{IDF}(t)
+$$
 
 사용자가 term별 weight `w(t)`를 지정할 수 있다면 `TF(d, t)`에 `w(t)`를 곱해 반영할 수 있다. 이런 방식이 `TF-IDF` ranking이다.
 
@@ -492,15 +494,15 @@ Web에서는 document 내부 text만 보는 것이 아니라 hyperlink graph도 
 
 Web pages에 integer identifier를 부여하고, `T[i, j]`를 page `i`에서 outgoing link를 따라 page `j`로 이동할 probability라고 하자. Page `i`의 outgoing link 수가 `Ni`이고 link를 균등하게 고른다면 다음과 같다.
 
-```text
-T[i, j] = 1 / Ni
-```
+$$
+T_{i,j} = \frac{1}{N_i}
+$$
 
 PageRank `P[j]`는 다음 linear equation으로 정의된다.
 
-```text
-P[j] = δ / N + (1 - δ) * Σ_{i=1..N} (T[i, j] * P[i])
-```
+$$
+P_j = \frac{\delta}{N} + (1 - \delta) \cdot \sum_{i=1}^{N} T_{i,j}P_i
+$$
 
 여기서 `N`은 page 수이고, `δ`는 보통 `0.15` 정도로 둔다. `δ / N`은 random jump를 나타낸다. 사용자가 link만 따라가지 않고 임의의 page로 이동할 가능성을 모델링해, graph sink나 disconnected component 문제를 완화한다.
 

@@ -104,7 +104,7 @@ network core는 Internet의 end systems를 서로 연결하는 packet switches�
 
 #### packet switching과 store-and-forward
 
-network application이 만든 message는 e-mail, image, audio file, control message처럼 어떤 데이터든 될 수 있다. source end system은 긴 message를 작은 packet으로 나누고, packet은 source에서 destination까지 communication links와 packet switches를 지난다. link의 transmission rate가 `R` bits/sec이고 packet 길이가 `L` bits이면, 해당 link 위에 packet 전체를 밀어 넣는 transmission delay는 `L / R` seconds다.
+network application이 만든 message는 e-mail, image, audio file, control message처럼 어떤 데이터든 될 수 있다. source end system은 긴 message를 작은 packet으로 나누고, packet은 source에서 destination까지 communication links와 packet switches를 지난다. link의 transmission rate가 $R$ bits/sec이고 packet 길이가 $L$ bits이면, 해당 link 위에 packet 전체를 밀어 넣는 transmission delay는 $L/R$ seconds다.
 
 대부분의 packet switch는 store-and-forward transmission을 사용한다. 즉 router는 packet의 첫 bit가 도착하자마자 바로 다음 link로 흘려보내지 않고, packet 전체를 먼저 받은 뒤 buffer에 저장하고 나서 outbound link로 forwarding한다. router가 header를 검사하고 error/queue 처리와 forwarding 결정을 하기 위해 packet 단위의 처리가 필요하기 때문이다.
 
@@ -139,7 +139,7 @@ FDM(frequency-division multiplexing)과 TDM(time-division multiplexing)은 circu
 ![FDM and TDM](@/assets/images/cs-computer-network-014-figure-1-14-page-40.png)
 *Figure 1.14 · PDF p. 40 · FDM은 주파수 일부를 계속 할당하고, TDM은 반복 frame의 특정 time slot을 할당한다*
 
-circuit switching의 계산 감각은 reservation rate를 먼저 구하는 것이다. 예를 들어 link rate가 1.536 Mbps이고 TDM이 24 slots를 쓰면 circuit 하나의 rate는 `1.536 Mbps / 24 = 64 kbps`다. 640,000 bits file은 전송에 10초가 걸리고, connection setup 0.5초를 더하면 총 10.5초가 된다. 여기서 전송 시간은 path의 link 수와 무관하게 circuit rate로 결정되고, 별도로 propagation delay가 더해진다.
+circuit switching의 계산 감각은 reservation rate를 먼저 구하는 것이다. 예를 들어 link rate가 1.536 Mbps이고 TDM이 24 slots를 쓰면 circuit 하나의 rate는 $1.536\text{ Mbps}/24 = 64\text{ kbps}$다. 640,000 bits file은 전송에 10초가 걸리고, connection setup 0.5초를 더하면 총 10.5초가 된다. 여기서 전송 시간은 path의 link 수와 무관하게 circuit rate로 결정되고, 별도로 propagation delay가 더해진다.
 
 #### packet switching vs circuit switching
 
@@ -177,13 +177,13 @@ packet은 source host에서 여러 router를 거쳐 destination host에 도착�
 ![Nodal delay at router A](@/assets/images/cs-computer-network-016-figure-1-16-page-47.png)
 *Figure 1.16 · PDF p. 47 · router A에서 processing, queueing, transmission, propagation delay가 생기는 위치*
 
-processing delay(`d_proc`)는 packet header를 검사하고 outbound link를 결정하며 bit-level error를 확인하는 시간이다. 고속 router에서는 보통 microseconds 이하이지만, router가 초당 처리할 수 있는 packet 수, 즉 maximum throughput에는 영향을 준다.
+processing delay($d_{proc}$)는 packet header를 검사하고 outbound link를 결정하며 bit-level error를 확인하는 시간이다. 고속 router에서는 보통 microseconds 이하이지만, router가 초당 처리할 수 있는 packet 수, 즉 maximum throughput에는 영향을 준다.
 
-queuing delay(`d_queue`)는 packet이 output link 앞 queue에서 전송 순서를 기다리는 시간이다. queue가 비어 있고 link도 놀고 있으면 0이지만, 앞서 도착한 packet이 많으면 길어진다. 가장 변동성이 큰 delay이고, traffic intensity와 burstiness에 강하게 좌우된다.
+queuing delay($d_{queue}$)는 packet이 output link 앞 queue에서 전송 순서를 기다리는 시간이다. queue가 비어 있고 link도 놀고 있으면 0이지만, 앞서 도착한 packet이 많으면 길어진다. 가장 변동성이 큰 delay이고, traffic intensity와 burstiness에 강하게 좌우된다.
 
-transmission delay(`d_trans`)는 packet의 모든 bit를 link로 밀어 넣는 시간이다. packet length가 `L` bits이고 link transmission rate가 `R` bits/sec이면 `d_trans = L / R`이다. 이 값은 packet 크기와 link rate의 함수이며, 두 router 사이 거리는 영향을 주지 않는다.
+transmission delay($d_{trans}$)는 packet의 모든 bit를 link로 밀어 넣는 시간이다. packet length가 $L$ bits이고 link transmission rate가 $R$ bits/sec이면 $d_{trans} = L/R$이다. 이 값은 packet 크기와 link rate의 함수이며, 두 router 사이 거리는 영향을 주지 않는다.
 
-propagation delay(`d_prop`)는 link에 올라간 bit가 다음 node까지 물리적으로 전파되는 시간이다. 두 node 사이 거리가 `d`, propagation speed가 `s`이면 `d_prop = d / s`다. 이 값은 거리와 매체의 전파 속도에 의해 결정되며, packet 크기나 link rate와는 별개다. 같은 캠퍼스 안 link에서는 작지만, geostationary satellite link에서는 수백 milliseconds가 되어 지배적 요소가 될 수 있다.
+propagation delay($d_{prop}$)는 link에 올라간 bit가 다음 node까지 물리적으로 전파되는 시간이다. 두 node 사이 거리가 `d`, propagation speed가 `s`이면 $d_{prop} = d/s$다. 이 값은 거리와 매체의 전파 속도에 의해 결정되며, packet 크기나 link rate와는 별개다. 같은 캠퍼스 안 link에서는 작지만, geostationary satellite link에서는 수백 milliseconds가 되어 지배적 요소가 될 수 있다.
 
 따라서 nodal delay는 다음처럼 표현된다.
 
@@ -195,18 +195,18 @@ transmission delay와 propagation delay는 특히 헷갈리기 쉽다. transmiss
 
 #### queuing delay와 traffic intensity
 
-queuing delay는 packet마다 다르므로 평균, 분산, 특정 값을 넘을 확률 같은 statistical measure로 다룬다. 평균 packet arrival rate를 `a` packets/sec, packet length를 `L` bits, link transmission rate를 `R` bits/sec라고 하면, queue로 들어오는 평균 bit rate는 `La` bits/sec다. 이때
+queuing delay는 packet마다 다르므로 평균, 분산, 특정 값을 넘을 확률 같은 statistical measure로 다룬다. 평균 packet arrival rate를 $a$ packets/sec, packet length를 $L$ bits, link transmission rate를 $R$ bits/sec라고 하면, queue로 들어오는 평균 bit rate는 $La$ bits/sec다. 이때
 
 $$
 \frac{La}{R}
 $$
 
-을 traffic intensity라고 한다. `La/R > 1`이면 평균 유입률이 link가 내보낼 수 있는 rate보다 커서 queue가 무한히 커지려 하고 delay는 폭발한다. 그래서 traffic engineering의 기본 규칙은 traffic intensity가 1을 넘지 않게 설계하는 것이다.
+을 traffic intensity라고 한다. $La/R > 1$이면 평균 유입률이 link가 내보낼 수 있는 rate보다 커서 queue가 무한히 커지려 하고 delay는 폭발한다. 그래서 traffic engineering의 기본 규칙은 traffic intensity가 1을 넘지 않게 설계하는 것이다.
 
 ![Queuing delay and traffic intensity](@/assets/images/cs-computer-network-018-figure-1-18-page-51.png)
 *Figure 1.18 · PDF p. 51 · traffic intensity가 1에 가까워질수록 average queuing delay가 급격히 증가하는 관계*
 
-`La/R <= 1`이어도 arrival pattern이 중요하다. packet이 정확히 `L/R` 간격으로 주기적으로 오면 queue가 거의 생기지 않을 수 있다. 반면 여러 packet이 burst로 몰려오면 같은 평균 rate에서도 뒤쪽 packet은 앞 packet들이 전송될 때까지 기다린다. 실제 Internet traffic은 random하고 bursty하므로 `La/R` 하나만으로 delay를 완전히 설명할 수는 없지만, intensity가 1에 가까워질수록 작은 traffic 증가가 큰 delay 증가로 이어진다는 직관은 매우 중요하다.
+$La/R \le 1$이어도 arrival pattern이 중요하다. packet이 정확히 $L/R$ 간격으로 주기적으로 오면 queue가 거의 생기지 않을 수 있다. 반면 여러 packet이 burst로 몰려오면 같은 평균 rate에서도 뒤쪽 packet은 앞 packet들이 전송될 때까지 기다린다. 실제 Internet traffic은 random하고 bursty하므로 $La/R$ 하나만으로 delay를 완전히 설명할 수는 없지만, intensity가 1에 가까워질수록 작은 traffic 증가가 큰 delay 증가로 이어진다는 직관은 매우 중요하다.
 
 #### packet loss
 
@@ -214,7 +214,7 @@ $$
 
 #### end-to-end delay와 Traceroute
 
-single router의 nodal delay가 path 전체에 누적되면 end-to-end delay가 된다. source와 destination 사이에 `N - 1` routers가 있고, queuing delay가 negligible하며 각 node의 processing delay가 `d_proc`, 각 link의 transmission delay가 `d_trans`, propagation delay가 `d_prop`로 같다고 단순화하면 다음처럼 쓸 수 있다.
+single router의 nodal delay가 path 전체에 누적되면 end-to-end delay가 된다. source와 destination 사이에 $N - 1$ routers가 있고, queuing delay가 negligible하며 각 node의 processing delay가 $d_{proc}$, 각 link의 transmission delay가 $d_{trans}$, propagation delay가 $d_{prop}$로 같다고 단순화하면 다음처럼 쓸 수 있다.
 
 $$
 d_{end-to-end} = N(d_{proc} + d_{trans} + d_{prop})
@@ -226,9 +226,9 @@ end system 자체의 delay도 있다. WiFi나 cable modem처럼 shared medium에
 
 #### throughput과 bottleneck link
 
-throughput은 receiver가 데이터를 받는 rate다. instantaneous throughput은 특정 순간의 수신 rate이고, `F` bits file을 `T` seconds에 받았다면 average throughput은 `F/T` bits/sec다. file transfer에서는 높은 throughput이 중요하고, Internet telephony/video처럼 실시간 application은 낮은 delay와 일정 threshold 이상의 instantaneous throughput이 중요하다.
+throughput은 receiver가 데이터를 받는 rate다. instantaneous throughput은 특정 순간의 수신 rate이고, $F$ bits file을 $T$ seconds에 받았다면 average throughput은 $F/T$ bits/sec다. file transfer에서는 높은 throughput이 중요하고, Internet telephony/video처럼 실시간 application은 낮은 delay와 일정 threshold 이상의 instantaneous throughput이 중요하다.
 
-경로에 다른 traffic이 없고 server-to-client path의 link rates가 `R_1, R_2, ..., R_N`이면 large file transfer의 throughput은 대략 다음과 같다.
+경로에 다른 traffic이 없고 server-to-client path의 link rates가 $R_1, R_2, \ldots, R_N$이면 large file transfer의 throughput은 대략 다음과 같다.
 
 $$
 throughput = \min\{R_1, R_2, ..., R_N\}
@@ -239,7 +239,7 @@ $$
 ![End-to-end throughput](@/assets/images/cs-computer-network-020-figure-1-20-page-57.png)
 *Figure 1.20 · PDF p. 57 · access link가 bottleneck인 경우와 여러 download가 core link를 공유해 bottleneck이 바뀌는 경우*
 
-현대 Internet core는 많은 경우 high-speed link로 over-provisioned되어 있어 단일 download의 bottleneck은 server/client access network가 되는 일이 많다. 그러나 여러 flows가 같은 core link를 공유하면 이야기가 달라진다. 예를 들어 10개의 downloads가 모두 rate `R = 5 Mbps`인 common core link를 지나고 그 link가 공평하게 나뉜다면 각 download는 500 kbps만 얻는다. 따라서 throughput은 path의 link rates뿐 아니라 intervening traffic, 즉 같은 link를 공유하는 다른 flow의 존재에도 의존한다.
+현대 Internet core는 많은 경우 high-speed link로 over-provisioned되어 있어 단일 download의 bottleneck은 server/client access network가 되는 일이 많다. 그러나 여러 flows가 같은 core link를 공유하면 이야기가 달라진다. 예를 들어 10개의 downloads가 모두 rate $R = 5\text{ Mbps}$인 common core link를 지나고 그 link가 공평하게 나뉜다면 각 download는 500 kbps만 얻는다. 따라서 throughput은 path의 link rates뿐 아니라 intervening traffic, 즉 같은 link를 공유하는 다른 flow의 존재에도 의존한다.
 
 ### 1.5 Protocol Layers and Their Service Models
 
@@ -379,10 +379,10 @@ Chapter 1의 summary와 review questions는 이 장을 “mini-course”처럼 �
 
 | 축 | 반드시 남길 식/용어 | 이후 연결 |
 |---|---|---|
-| store-and-forward | `L/R`, `N L/R` | transport pipelining, router forwarding |
-| nodal delay | `d_proc + d_queue + d_trans + d_prop` | performance analysis, Traceroute |
-| traffic intensity | `La/R` | congestion, queuing delay, packet loss |
-| throughput | `min{R_1, ..., R_N}` | bottleneck link, TCP throughput |
+| store-and-forward | $L/R$, $NL/R$ | transport pipelining, router forwarding |
+| nodal delay | $d_{proc} + d_{queue} + d_{trans} + d_{prop}$ | performance analysis, Traceroute |
+| traffic intensity | $La/R$ | congestion, queuing delay, packet loss |
+| throughput | $\min\{R_1, \ldots, R_N\}$ | bottleneck link, TCP throughput |
 | layering | message/segment/datagram/frame/bit | application, transport, network, link chapters |
 | security | malware, DDoS, sniffing, IP spoofing | cryptography, authentication, operational security |
 
@@ -411,7 +411,7 @@ performance 관점에서는 access network, core link, queue, packet size, traff
 
 - host와 end system은 이 장에서 같은 의미로 쓴다. server도 Web page나 video를 제공하는 end system이다.
 - router와 link-layer switch는 둘 다 packet switch지만 보는 주소와 구현 layer가 다르다. router는 IP/network layer까지, link-layer switch는 link layer까지 처리한다.
-- transmission delay와 propagation delay는 다르다. `L/R`은 packet을 link에 밀어 넣는 시간이고, `d/s`는 bit가 물리적으로 이동하는 시간이다.
+- transmission delay와 propagation delay는 다르다. $L/R$은 packet을 link에 밀어 넣는 시간이고, $d/s$는 bit가 물리적으로 이동하는 시간이다.
 - packet switching이 항상 circuit switching보다 delay가 작다는 뜻은 아니다. packet switching은 bursty traffic에서 capacity sharing이 효율적이지만, congestion이 생기면 queuing delay와 packet loss가 생긴다.
 - traffic intensity가 1보다 작아도 bursty arrivals에서는 queuing delay가 생길 수 있다. 평균만으로 순간 queue를 완전히 설명할 수 없다.
 - throughput은 단순히 내 access link rate와 같지 않다. path의 bottleneck link와 intervening traffic이 함께 결정한다.
@@ -423,9 +423,9 @@ performance 관점에서는 access network, core link, queue, packet size, traff
 1. Internet을 nuts-and-bolts 관점과 service 관점에서 각각 설명해 보라.
 2. protocol이 정의하는 세 가지 요소(message format, message order, action/event)를 Web request 예로 설명해 보라.
 3. access network와 network core의 차이를 설명하고, DSL, cable, FTTH, WiFi, cellular 중 두 가지를 비교해 보라.
-4. store-and-forward packet switching에서 `N`개 link, packet length `L`, rate `R`일 때 delay가 왜 `N L/R`로 잡히는가?
+4. store-and-forward packet switching에서 $N$개 link, packet length $L$, rate $R$일 때 delay가 왜 $NL/R$로 잡히는가?
 5. packet switching과 circuit switching의 resource allocation 방식과 traffic burstiness에 대한 효율 차이를 설명해 보라.
-6. queuing delay가 traffic intensity `La/R`에 따라 왜 급격히 증가하는지 설명해 보라.
+6. queuing delay가 traffic intensity $La/R$에 따라 왜 급격히 증가하는지 설명해 보라.
 7. transmission delay와 propagation delay를 식과 예시로 구분해 보라.
 8. bottleneck link가 throughput을 어떻게 결정하는지, 다른 traffic이 있을 때 왜 달라지는지 설명해 보라.
 9. Internet five-layer protocol stack의 각 layer와 PDU(message, segment, datagram, frame, bit)를 말해 보라.

@@ -97,14 +97,14 @@ Figure 1.1은 서비스마다 필요한 `throughput rate`가 다르다는 점을
 
 ### 1.3 Data Communications
 
-이 절의 `Data Communications`는 책 전체의 넓은 의미가 아니라 Part Two의 초점, 즉 신호를 신뢰성 있고 효율적으로 전송하는 기능을 가리킨다. 원문은 전자우편(electronic mail) 예시로 Figure 1.3의 흐름을 설명한다. 사용자가 keyboard로 메시지 `m`을 입력하면 PC 메모리에는 bit sequence `g`가 생기고, 이 데이터는 I/O 장치인 transmitter로 전달되면서 전압 변화 `g(t)`로 표현된다. Transmitter는 이를 전송 매체에 적합한 signal `s(t)`로 바꾼다.
+이 절의 `Data Communications`는 책 전체의 넓은 의미가 아니라 Part Two의 초점, 즉 신호를 신뢰성 있고 효율적으로 전송하는 기능을 가리킨다. 원문은 전자우편(electronic mail) 예시로 Figure 1.3의 흐름을 설명한다. 사용자가 keyboard로 메시지 $m$을 입력하면 PC 메모리에는 bit sequence $g$가 생기고, 이 데이터는 I/O 장치인 transmitter로 전달되면서 전압 변화 $g(t)$로 표현된다. Transmitter는 이를 전송 매체에 적합한 signal $s(t)$로 바꾼다.
 
 ![Figure 1.3](@/assets/images/cs-data-communication-004-figure-1-3-page-38.png)
 *Figure 1.3 · PDF p. 38 · input information이 signal을 거쳐 output information으로 복원되는 data communications model*
 
-전송된 signal `s(t)`는 medium을 지나면서 감쇠, 잡음, 왜곡 같은 `transmission impairments`의 영향을 받는다. 따라서 receiver가 실제로 받는 `r(t)`는 `s(t)`와 같지 않을 수 있다. Receiver는 medium에 대한 지식과 받은 signal을 바탕으로 원래의 signal을 추정하고, bit sequence `g'(t)`를 만들어 destination PC로 넘긴다. 데이터 통신 시스템은 여기서 오류가 생겼는지 확인하고, 필요하면 source와 협력해 완전하고 오류 없는 block of data를 얻으려 한다. 최종적으로 사용자가 보는 message `m'`는 보통 원래 message `m`과 정확히 같아야 한다.
+전송된 signal $s(t)$는 medium을 지나면서 감쇠, 잡음, 왜곡 같은 `transmission impairments`의 영향을 받는다. 따라서 receiver가 실제로 받는 $r(t)$는 $s(t)$와 같지 않을 수 있다. Receiver는 medium에 대한 지식과 받은 signal을 바탕으로 원래의 signal을 추정하고, bit sequence $g'(t)$를 만들어 destination PC로 넘긴다. 데이터 통신 시스템은 여기서 오류가 생겼는지 확인하고, 필요하면 source와 협력해 완전하고 오류 없는 block of data를 얻으려 한다. 최종적으로 사용자가 보는 message $m'$는 보통 원래 message $m$과 정확히 같아야 한다.
 
-전화 통화 예시는 데이터 통신과 음성 통신의 차이를 보여준다. 전화에서는 입력 메시지 `m`이 sound wave이고, 전화기는 이를 같은 주파수의 electrical signal로 바꾼다. 이 경우 `g(t)`와 `s(t)`는 사실상 동일하게 다뤄지고, medium을 지나며 왜곡된 `r(t)`를 다시 sound wave로 바꿀 뿐 오류 정정이나 품질 개선을 시도하지 않는다. 그래서 `m'`는 `m`의 정확한 복제는 아니지만 대화가 이해 가능하면 목적을 달성한다. 반면 파일 전송이나 전자우편 같은 데이터 처리에서는 정확성이 훨씬 엄격하다.
+전화 통화 예시는 데이터 통신과 음성 통신의 차이를 보여준다. 전화에서는 입력 메시지 $m$이 sound wave이고, 전화기는 이를 같은 주파수의 electrical signal로 바꾼다. 이 경우 $g(t)$와 $s(t)$는 사실상 동일하게 다뤄지고, medium을 지나며 왜곡된 $r(t)$를 다시 sound wave로 바꿀 뿐 오류 정정이나 품질 개선을 시도하지 않는다. 그래서 $m'$는 $m$의 정확한 복제는 아니지만 대화가 이해 가능하면 목적을 달성한다. 반면 파일 전송이나 전자우편 같은 데이터 처리에서는 정확성이 훨씬 엄격하다.
 
 #### The Transmission of Information
 

@@ -142,7 +142,7 @@ output port는 switching fabric에서 받은 packets를 output memory에 저장�
 
 router 안의 queue는 input port와 output port 둘 다에서 생길 수 있다. queue가 커지면 router memory가 고갈되고, 새로 도착한 packet을 저장할 공간이 없어져 packet loss가 발생한다. Chapter 3에서 “packet이 network 안에서 lost된다” 또는 “router에서 dropped된다”고 했던 실제 위치가 바로 이 input/output queues다.
 
-queue 발생 위치는 traffic load, switching fabric speed, line speed의 상대 관계에 따라 달라진다. input/output line speed가 모두 `Rline` packets/sec이고 N input ports, N output ports가 있다고 하자. switching fabric transfer rate `Rswitch`가 `N * Rline`이면, worst case로 N input ports의 packets가 모두 같은 output port를 향해도 한 packet time 안에 N packets를 fabric을 통해 output port로 밀어 넣을 수 있으므로 input queueing은 거의 생기지 않는다. 그러나 output port는 여전히 한 packet time에 하나만 outgoing link로 보낼 수 있으므로 output queueing은 생길 수 있다.
+queue 발생 위치는 traffic load, switching fabric speed, line speed의 상대 관계에 따라 달라진다. input/output line speed가 모두 `Rline` packets/sec이고 N input ports, N output ports가 있다고 하자. switching fabric transfer rate `Rswitch`가 $N \cdot R_{line}$이면, worst case로 N input ports의 packets가 모두 같은 output port를 향해도 한 packet time 안에 N packets를 fabric을 통해 output port로 밀어 넣을 수 있으므로 input queueing은 거의 생기지 않는다. 그러나 output port는 여전히 한 packet time에 하나만 outgoing link로 보낼 수 있으므로 output queueing은 생길 수 있다.
 
 **Input Queueing과 HOL blocking.** switching fabric이 충분히 빠르지 않거나, crossbar에서 여러 input packets가 같은 output port를 원하면 input port에서 packet이 기다린다. 이때 `HOL blocking (head-of-the-line blocking)`이 생길 수 있다. input queue의 맨 앞 packet이 busy output port를 기다리면, 그 뒤에 있는 packet은 자신의 output port가 free여도 앞 packet 때문에 fabric을 통과하지 못한다.
 
@@ -151,7 +151,7 @@ queue 발생 위치는 traffic load, switching fabric speed, line speed의 상�
 
 HOL blocking은 input-queued switch의 throughput을 크게 낮출 수 있다. 원문은 특정 가정하에서 input link arrival rate가 capacity의 약 58%에 도달해도 input queue가 unbounded하게 커질 수 있음을 언급한다. 요점은 “fabric이 parallelism을 제공해도 queue head의 output contention이 뒤 packet까지 묶는다”는 것이다.
 
-**Output Queueing.** switching fabric이 `N * Rline`만큼 빠르더라도, N input ports에서 같은 output port로 packets가 몰리면 output queue가 생긴다. output link는 한 packet time에 하나만 전송할 수 있는데, fabric은 그 사이 여러 packets를 output port로 가져올 수 있기 때문이다.
+**Output Queueing.** switching fabric이 $N \cdot R_{line}$만큼 빠르더라도, N input ports에서 같은 output port로 packets가 몰리면 output queue가 생긴다. output link는 한 packet time에 하나만 전송할 수 있는데, fabric은 그 사이 여러 packets를 output port로 가져올 수 있기 때문이다.
 
 ![Figure 4.9](@/assets/images/cs-computer-network-127-figure-4-9-page-333.png)
 *Figure 4.9 · PDF p. 333 · 여러 input ports의 packets가 하나의 output port로 몰릴 때 output queue가 형성되는 흐름*
@@ -160,15 +160,15 @@ output buffer가 부족하면 router는 packet을 drop하거나 이미 queued된
 
 **How Much Buffering Is Enough?** buffer는 short-term burst를 흡수해 loss를 줄이지만, 너무 크면 queueing delay가 커진다. 오래된 rule of thumb은 buffer size `B`를 average `RTT`와 link capacity `C`의 곱으로 잡는 것이었다.
 
-```text
-B = RTT * C
-```
+$$
+B = RTT \cdot C
+$$
 
 예를 들어 RTT가 250 ms이고 link capacity가 10 Gbps이면 약 2.5 Gbits buffer가 필요하다는 계산이 나온다. 하지만 많은 independent TCP flows N이 한 link를 공유하면 필요한 buffering은 더 작아질 수 있다.
 
-```text
-B = RTT * C / sqrt(N)
-```
+$$
+B = \frac{RTT \cdot C}{\sqrt{N}}
+$$
 
 중요한 trade-off는 buffer가 loss를 줄이는 동시에 delay를 늘린다는 점이다. interactive gaming, teleconferencing처럼 delay-sensitive application에서는 수십 ms도 중요하다. 더 큰 buffer는 packet loss를 줄일 수 있지만 end-to-end delay와 RTT를 늘려 TCP sender의 congestion response를 느리게 만들 수 있다.
 
@@ -197,10 +197,12 @@ priority scheduling은 QoS와 traffic management에 강력하지만, policy 문�
 
 `WFQ (Weighted Fair Queuing)`는 round robin을 일반화해 class마다 weight `wi`를 둔다. class i에 queued packets가 있는 동안, 그 class는 전체 active weights 대비 자신의 weight 비율만큼 service를 보장받는다.
 
-```text
-class i service share = wi / sum(wj for active queued classes)
-class i throughput >= R * wi / sum(wj)
-```
+$$
+\begin{aligned}
+\text{class } i\text{ service share} &= \frac{w_i}{\sum_{j \in A} w_j} \\
+\text{class } i\text{ throughput} &\ge R \cdot \frac{w_i}{\sum_{j \in A} w_j}
+\end{aligned}
+$$
 
 ![Figure 4.16](@/assets/images/cs-computer-network-134-figure-4-16-page-341.png)
 *Figure 4.16 · PDF p. 341 · WFQ가 class별 weight에 따라 outgoing link service share를 나누는 구조*

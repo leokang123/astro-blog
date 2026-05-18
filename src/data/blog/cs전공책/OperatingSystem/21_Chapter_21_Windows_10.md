@@ -722,7 +722,7 @@ Remote file open flow는 다음과 같다.
 
 #### 21.6.4 Domains
 
-Windows `domain`은 common security policy와 user database를 공유하는 Windows workstations/servers group이다. Windows는 trust/authentication에 `Kerberos`를 사용하므로, Windows domain은 Kerberos realm과 같다. Related domains 사이 trust는 DNS 기반 hierarchy로 구성되고 transitive trusts가 가능하다. 이 구조는 n개의 domains 간 trust relationships 수를 `n * (n - 1)`에서 `O(n)` 수준으로 줄인다.
+Windows `domain`은 common security policy와 user database를 공유하는 Windows workstations/servers group이다. Windows는 trust/authentication에 `Kerberos`를 사용하므로, Windows domain은 Kerberos realm과 같다. Related domains 사이 trust는 DNS 기반 hierarchy로 구성되고 transitive trusts가 가능하다. 이 구조는 $n$개의 domains 간 trust relationships 수를 $n(n - 1)$에서 $O(n)$ 수준으로 줄인다.
 
 Domain workstations는 domain controller가 users access rights를 올바르게 알려 준다고 trust한다. Centralized domain model은 large organizations에서 users, credentials, access policy를 한 곳에서 관리하게 한다.
 
@@ -893,4 +893,3 @@ UMS와 fibers는 둘 다 user-mode scheduling과 관련 있지만 같은 것이 
 17. Win32에서 process 간 kernel object sharing을 하는 세 가지 방법은 무엇인가?
 18. `critical section`, `SRW lock`, `thread pool`, `fiber`, `UMS`의 차이를 설명하라.
 19. `VirtualAlloc()`, `CreateFileMapping()`, heap, TLS, AWE는 각각 어떤 memory use case에 적합한가?
-

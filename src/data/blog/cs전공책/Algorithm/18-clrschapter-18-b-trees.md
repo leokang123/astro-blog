@@ -12,7 +12,7 @@ tags:
 
 ## 개요
 
-`B-tree`는 disk나 다른 direct-access secondary storage device에서 잘 동작하도록 설계된 balanced search tree다. `red-black tree`처럼 dynamic-set operations를 `O(lg n)` 높이 안에서 처리하지만, 한 node가 많은 keys와 children을 담기 때문에 branching factor가 훨씬 크다. 그 결과 같은 수의 keys를 저장해도 tree height가 작아지고, 특히 disk I/O 횟수를 크게 줄일 수 있다.
+`B-tree`는 disk나 다른 direct-access secondary storage device에서 잘 동작하도록 설계된 balanced search tree다. `red-black tree`처럼 dynamic-set operations를 $O(\lg n)$ 높이 안에서 처리하지만, 한 node가 많은 keys와 children을 담기 때문에 branching factor가 훨씬 크다. 그 결과 같은 수의 keys를 저장해도 tree height가 작아지고, 특히 disk I/O 횟수를 크게 줄일 수 있다.
 
 이 장의 핵심은 “CPU에서 한 비교가 얼마나 빠른가”보다 “몇 개의 disk pages를 읽고 쓰는가”가 dominant cost인 환경에서 검색 트리를 어떻게 설계하는가다. B-tree node는 보통 disk page 하나에 맞추어 구성되며, 한 번 `DISK-READ`로 많은 keys와 child pointers를 main memory로 가져와 여러 방향 중 하나를 결정한다.
 
@@ -58,12 +58,14 @@ CLRS는 B-tree 알고리즘의 running time을 두 성분으로 나누어 본다
 
 이 장의 pseudocode는 disk operation을 명시적으로 모델링한다.
 
-```text
-x = a pointer to some object
-DISK-READ(x)
-operations that access and/or modify attributes of x
-DISK-WRITE(x)    // omitted if no attributes changed
-```
+$$
+\begin{aligned}
+x &= a pointer to some object \\
+DISK-READ(x) \\
+operations that access and/or modify attributes of x \\
+DISK-WRITE(x) // omitted if no attributes changed
+\end{aligned}
+$$
 
 `DISK-READ(x)`는 object `x`가 이미 main memory에 있으면 no-op으로 본다. `DISK-WRITE(x)`는 변경된 attributes를 disk에 저장한다. 실제 시스템은 memory에 둘 수 있는 pages 수가 제한되어 있고 unused pages를 flush하지만, 이 장의 B-tree 알고리즘은 그런 buffer management 세부를 추상화한다.
 
@@ -79,7 +81,7 @@ B-tree는 보통 node 하나를 disk page 하나에 맞춘다. 그러면 `DISK-R
 |---|---|---|
 | node당 key 수 | 보통 1개 | 여러 개, 많으면 수천 개 |
 | branching | binary | multiway |
-| height | `O(lg n)` | `O(log_t n)` 형태로 훨씬 작을 수 있음 |
+| height | $O(\lg n)$ | $O(\log_{t} n)$ 형태로 훨씬 작을 수 있음 |
 | 최적화 대상 | pointer-based memory operations | disk page I/O |
 | 대표 사용처 | main memory dynamic set | database index, file system style external-memory index |
 
@@ -100,32 +102,32 @@ CLRS의 B-tree 정의는 “node가 여러 keys를 가지는 balanced multiway s
 | `x.leaf` | `x`가 leaf면 `TRUE`, internal node면 `FALSE` |
 | `x.c_1, ..., x.c_{x.n+1}` | internal node의 child pointers |
 
-Leaf node는 children이 없으므로 `c_i` attributes가 정의되지 않는다. Internal node는 keys가 `x.n`개이면 children은 반드시 `x.n + 1`개다.
+Leaf node는 children이 없으므로 $c_{i}$ attributes가 정의되지 않는다. Internal node는 keys가 `x.n`개이면 children은 반드시 `x.n + 1`개다.
 
 #### Search-tree property
 
-B-tree의 keys는 각 child subtree의 key range를 분리한다. 어떤 node `x`에서 `k_i`가 child `x.c_i`의 subtree에 들어 있는 key라면 다음 순서 관계가 성립한다.
+B-tree의 keys는 각 child subtree의 key range를 분리한다. 어떤 node $x$에서 $k_{i}$가 child $x.c_i$의 subtree에 들어 있는 key라면 다음 순서 관계가 성립한다.
 
-```text
-k_1 <= x.key_1 <= k_2 <= x.key_2 <= ... <= x.key_{x.n} <= k_{x.n+1}
-```
+$$
+k_{1} \le x.key_{1} \le k_{2} \le x.key_{2} \le \ldots \le x.key_{x.n} \le k_{x.n+1}
+$$
 
-즉 `x.key_i`는 `x.c_i`와 `x.c_{i+1}` 사이의 separator 역할을 한다. Search는 node 안의 sorted keys를 훑어 적절한 interval을 찾고, 그 interval에 대응하는 child로 내려간다.
+즉 $x.key_i$는 $x.c_i$와 $x.c_{i+1}$ 사이의 separator 역할을 한다. Search는 node 안의 sorted keys를 훑어 적절한 interval을 찾고, 그 interval에 대응하는 child로 내려간다.
 
 #### Height와 leaf depth invariant
 
-B-tree의 모든 leaves는 같은 depth를 가진다. 이 공통 depth가 tree height `h`다. 이 조건 때문에 B-tree는 balanced search tree이며, 삽입/삭제가 일어나도 split, borrow, merge 같은 구조 조정을 통해 leaves의 depth가 서로 달라지지 않게 유지한다.
+B-tree의 모든 leaves는 같은 depth를 가진다. 이 공통 depth가 tree height $h$다. 이 조건 때문에 B-tree는 balanced search tree이며, 삽입/삭제가 일어나도 split, borrow, merge 같은 구조 조정을 통해 leaves의 depth가 서로 달라지지 않게 유지한다.
 
 #### Minimum degree `t`
 
-B-tree의 key 수 제한은 fixed integer `t >= 2`, 즉 `minimum degree`로 표현한다.
+B-tree의 key 수 제한은 fixed integer $t \ge 2$, 즉 minimum degree로 표현한다.
 
 | Node 종류 | 최소 keys | 최대 keys | Children 수 |
 |---|---:|---:|---:|
-| root | nonempty이면 최소 1 | `2t - 1` | internal이면 `2`부터 `2t`까지 |
-| nonroot node | `t - 1` | `2t - 1` | internal이면 `t`부터 `2t`까지 |
+| root | nonempty이면 최소 1 | $2t - 1$ | internal이면 $2$부터 $2t$까지 |
+| nonroot node | $t - 1$ | $2t - 1$ | internal이면 $t$부터 $2t$까지 |
 
-`2t - 1`개의 keys를 가진 node를 `full`이라고 부른다. `t=2`이면 internal node가 2, 3, 4 children을 가질 수 있으므로 `2-3-4 tree`가 된다. 하지만 disk-oriented B-tree에서는 보통 `t`가 훨씬 크고, 이것이 height를 작게 만든다.
+$2t - 1$개의 keys를 가진 node를 `full`이라고 부른다. $t=2$이면 internal node가 2, 3, 4 children을 가질 수 있으므로 `2-3-4 tree`가 된다. 하지만 disk-oriented B-tree에서는 보통 $t$가 훨씬 크고, 이것이 height를 작게 만든다.
 
 #### 큰 branching factor의 힘
 
@@ -138,13 +140,13 @@ Figure 18.3은 height 2의 B-tree가 얼마나 많은 keys를 담을 수 있는�
 
 대부분의 B-tree operation에서 disk access 수는 height에 비례한다. 따라서 B-tree의 worst-case height bound가 중요하다.
 
-`n >= 1`개의 keys를 가진 minimum degree `t >= 2` B-tree `T`의 height `h`는 다음을 만족한다.
+$n \ge 1$개의 keys를 가진 minimum degree $t \ge 2$ B-tree $T$의 height $h$는 다음을 만족한다.
 
-```text
-h <= log_t((n + 1) / 2)
-```
+$$
+h \le \log_{t}((n + 1) / 2)
+$$
 
-증명 아이디어는 “height가 `h`인 B-tree가 최소 몇 keys를 가져야 하는가”를 세는 것이다. Root는 최소 1 key를 가지고, root가 leaf가 아니라면 depth 1에는 최소 2 nodes가 있다. Root가 아닌 모든 node는 최소 `t - 1` keys를 가지므로, depth가 내려갈 때마다 최소 node 수가 `t`배씩 증가한다.
+증명 아이디어는 “height가 $h$인 B-tree가 최소 몇 keys를 가져야 하는가”를 세는 것이다. Root는 최소 1 key를 가지고, root가 leaf가 아니라면 depth 1에는 최소 2 nodes가 있다. Root가 아닌 모든 node는 최소 $t - 1$ keys를 가지므로, depth가 내려갈 때마다 최소 node 수가 $t$배씩 증가한다.
 
 Figure 18.4는 height 3에서 key 수를 최소화한 B-tree의 모양을 보여 준다. Root에는 key 1개, 그 아래 nonroot nodes에는 모두 `t - 1`개 keys가 들어 있다.
 
@@ -153,24 +155,28 @@ Figure 18.4는 height 3에서 key 수를 최소화한 B-tree의 모양을 보여
 
 최소 key 수를 합치면:
 
-```text
-n >= 1 + (t - 1) * Σ_{i=1}^{h} 2t^{i-1}
-  = 1 + 2(t - 1) * (t^h - 1) / (t - 1)
-  = 2t^h - 1
-```
+$$
+\begin{aligned}
+n &\ge 1 + (t - 1) \cdot \sum_{i=1}^{h} 2t^{i-1} \\
+  &= 1 + 2(t - 1) \cdot (t^{h} - 1) / (t - 1) \\
+  &= 2t^{h} - 1
+\end{aligned}
+$$
 
 따라서:
 
-```text
-t^h <= (n + 1) / 2
-h <= log_t((n + 1) / 2)
-```
+$$
+\begin{aligned}
+t^{h} &\le (n + 1) / 2 \\
+h &\le \log_{t}((n + 1) / 2)
+\end{aligned}
+$$
 
-Red-black tree도 height가 `O(lg n)`이지만, B-tree는 logarithm base가 `t`가 된다. `t`가 수십에서 수천이면 `lg t`만큼의 factor를 disk access에서 절약한다. 이 차이가 main memory 자료구조와 external-memory 자료구조의 설계 방향을 가른다.
+Red-black tree도 height가 $O(\lg n)$이지만, B-tree는 logarithm base가 `t`가 된다. `t`가 수십에서 수천이면 `lg t`만큼의 factor를 disk access에서 절약한다. 이 차이가 main memory 자료구조와 external-memory 자료구조의 설계 방향을 가른다.
 
-#### `t = 1`을 허용하지 않는 이유
+#### $t = 1$을 허용하지 않는 이유
 
-Exercise 18.1-1이 묻는 것처럼 `minimum degree t`는 2 이상이어야 한다. `t=1`이면 nonroot node의 최소 keys가 `t-1=0`이 되어, internal node가 실제 separator 없이 child만 갖는 이상한 구조가 가능해진다. 그러면 height bound와 search-tree invariant를 유지하는 의미가 약해지고, split/merge 정책도 B-tree가 의도한 balanced multiway search tree가 되지 않는다.
+Exercise 18.1-1이 묻는 것처럼 `minimum degree t`는 2 이상이어야 한다. $t=1$이면 nonroot node의 최소 keys가 $t-1=0$이 되어, internal node가 실제 separator 없이 child만 갖는 이상한 구조가 가능해진다. 그러면 height bound와 search-tree invariant를 유지하는 의미가 약해지고, split/merge 정책도 B-tree가 의도한 balanced multiway search tree가 되지 않는다.
 
 ### 18.2 Basic operations on B-trees
 
@@ -200,9 +206,9 @@ B-TREE-SEARCH(x, k)
 9      return B-TREE-SEARCH(x.c_i, k)
 ```
 
-Line 1-3은 `k <= x.key_i`가 처음 성립하는 가장 작은 index `i`를 찾거나, 모든 keys보다 크면 `i = x.n + 1`로 둔다. Line 4-5에서 key를 찾으면 `(node, index)`를 반환한다. 찾지 못했고 `x`가 leaf면 실패이므로 `NIL`을 반환한다. Internal node라면 적절한 child page를 `DISK-READ`한 뒤 재귀적으로 내려간다.
+Line 1-3은 $k \le x.key_{i}$가 처음 성립하는 가장 작은 index $i$를 찾거나, 모든 keys보다 크면 $i = x.n + 1$로 둔다. Line 4-5에서 key를 찾으면 `(node, index)`를 반환한다. 찾지 못했고 $x$가 leaf면 실패이므로 `NIL`을 반환한다. Internal node라면 적절한 child page를 `DISK-READ`한 뒤 재귀적으로 내려간다.
 
-Search path는 root에서 leaf로 내려가는 simple path다. 따라서 height가 `h`인 B-tree에서 disk page access는 `O(h) = O(log_t n)`개다. Node 하나 안에는 최대 `2t - 1` keys가 있으므로 linear search를 쓰면 각 node의 CPU time은 `O(t)`, 전체 CPU time은 `O(th) = O(t log_t n)`이다. 실제 구현에서는 node 내부 search에 binary search나 SIMD-friendly scan을 쓰는 변형이 가능하지만, 이 장의 핵심 disk I/O bound는 height에 의해 결정된다.
+Search path는 root에서 leaf로 내려가는 simple path다. 따라서 height가 $h$인 B-tree에서 disk page access는 $O(h) = O(\log_{t} n)$개다. Node 하나 안에는 최대 $2t - 1$ keys가 있으므로 linear search를 쓰면 각 node의 CPU time은 $O(t)$, 전체 CPU time은 $O(th) = O(t \log_{t} n)$이다. 실제 구현에서는 node 내부 search에 binary search나 SIMD-friendly scan을 쓰는 변형이 가능하지만, 이 장의 핵심 disk I/O bound는 height에 의해 결정된다.
 
 #### Creating an empty B-tree: `B-TREE-CREATE`
 
@@ -217,7 +223,7 @@ B-TREE-CREATE(T)
 5  T.root = x
 ```
 
-`B-TREE-CREATE`의 disk operations와 CPU time은 모두 `O(1)`이다.
+`B-TREE-CREATE`의 disk operations와 CPU time은 모두 $O(1)$이다.
 
 #### Inserting a key: leaf에 그냥 새 node를 붙이지 않는다
 
@@ -235,9 +241,9 @@ Insertion은 root에서 내려가는 동안 full child를 만나면 먼저 split
 
 #### Splitting a node: `B-TREE-SPLIT-CHILD`
 
-`B-TREE-SPLIT-CHILD(x, i)`는 nonfull internal node `x`와 그 full child `y = x.c_i`를 입력으로 받는다. `y`를 둘로 나누고, median key를 `x`로 올리며, `x`의 child 수를 하나 늘린다. Full root를 split할 때는 먼저 empty new root를 만들고 old root를 그 child로 둔 뒤 이 procedure를 적용한다.
+`B-TREE-SPLIT-CHILD(x, i)`는 nonfull internal node `x`와 그 full child $y = x.c_{i}$를 입력으로 받는다. `y`를 둘로 나누고, median key를 `x`로 올리며, `x`의 child 수를 하나 늘린다. Full root를 split할 때는 먼저 empty new root를 만들고 old root를 그 child로 둔 뒤 이 procedure를 적용한다.
 
-Figure 18.5는 `t=4`에서 full child `y`를 split하는 과정을 보여 준다. Median key `S`가 parent로 올라가고, `S`보다 큰 keys와 corresponding children은 새 node `z`로 이동한다.
+Figure 18.5는 $t=4$에서 full child `y`를 split하는 과정을 보여 준다. Median key `S`가 parent로 올라가고, `S`보다 큰 keys와 corresponding children은 새 node `z`로 이동한다.
 
 ![Figure 18.5](@/assets/images/cs-algorithm-097-figure-18-5-page-515.png)
 *Figure 18.5 · PDF p. 515 · full child를 median key 기준으로 split하고 parent에 separator를 올리는 과정*
@@ -262,7 +268,7 @@ B-TREE-SPLIT-CHILD(x, i)
 16 DISK-WRITE(y), DISK-WRITE(z), DISK-WRITE(x)
 ```
 
-이 procedure는 key/child arrays를 잘라 붙이는 작업이다. `z`는 `y`의 오른쪽 절반을 받고, `y`는 왼쪽 절반만 남긴다. Parent `x`는 median key를 받아 두 children 사이의 separator로 둔다. CPU time은 loops 때문에 `Θ(t)`이고, 수정된 pages `x`, `y`, `z`를 write하므로 disk operations는 `O(1)`이다.
+이 procedure는 key/child arrays를 잘라 붙이는 작업이다. `z`는 `y`의 오른쪽 절반을 받고, `y`는 왼쪽 절반만 남긴다. Parent `x`는 median key를 받아 두 children 사이의 separator로 둔다. CPU time은 loops 때문에 $\Theta(t)$이고, 수정된 pages `x`, `y`, `z`를 write하므로 disk operations는 $O(1)$이다.
 
 #### Root split과 height 증가
 
@@ -315,7 +321,7 @@ Leaf라면 sorted order를 유지하도록 keys를 오른쪽으로 shift하고 `
 
 Line 13-15의 효과는 “절대 full node로 recurse하지 않는다”는 것이다. 이 덕분에 insertion이 leaf에 도달했을 때는 leaf가 반드시 nonfull이고, 추가 split 없이 key를 넣을 수 있다.
 
-Figure 18.7은 `t=3`인 B-tree에 여러 keys를 삽입하는 예시다. 단순 leaf insertion, leaf split, root split, split 후 어느 절반으로 내려갈지 선택하는 경우가 한 그림 안에 모두 들어 있다.
+Figure 18.7은 $t=3$인 B-tree에 여러 keys를 삽입하는 예시다. 단순 leaf insertion, leaf split, root split, split 후 어느 절반으로 내려갈지 선택하는 경우가 한 그림 안에 모두 들어 있다.
 
 ![Figure 18.7](@/assets/images/cs-algorithm-099-figure-18-7-page-519.png)
 *Figure 18.7 · PDF p. 519 · B-tree insertion에서 leaf insertion, child split, root split이 나타나는 예시*
@@ -324,12 +330,12 @@ Figure 18.7은 `t=3`인 B-tree에 여러 keys를 삽입하는 예시다. 단순 
 
 | Operation | Disk accesses | CPU time | 핵심 이유 |
 |---|---:|---:|---|
-| `B-TREE-SEARCH` | `O(h) = O(log_t n)` | `O(th)` | path 하나를 따라 내려가며 node 내부에서 최대 `2t-1` keys scan |
-| `B-TREE-CREATE` | `O(1)` | `O(1)` | empty root page 하나 생성 |
-| `B-TREE-SPLIT-CHILD` | `O(1)` | `Θ(t)` | 세 pages 정도를 수정하고 key/child arrays 일부 이동 |
-| `B-TREE-INSERT` | `O(h)` | `O(th) = O(t log_t n)` | root-to-leaf one-pass, 각 level에서 constant I/O와 `O(t)` CPU |
+| `B-TREE-SEARCH` | $O(h) = O(\log_{t} n)$ | $O(th)$ | path 하나를 따라 내려가며 node 내부에서 최대 $2t-1$ keys scan |
+| `B-TREE-CREATE` | $O(1)$ | $O(1)$ | empty root page 하나 생성 |
+| `B-TREE-SPLIT-CHILD` | $O(1)$ | $\Theta(t)$ | 세 pages 정도를 수정하고 key/child arrays 일부 이동 |
+| `B-TREE-INSERT` | $O(h)$ | $O(th) = O(t \log_{t} n)$ | root-to-leaf one-pass, 각 level에서 constant I/O와 $O(t)$ CPU |
 
-`B-TREE-INSERT-NONFULL`은 tail-recursive이므로 while loop로 바꿀 수 있다. 이 관찰은 B-tree insertion이 한 번에 `O(h)`개의 nodes를 모두 memory에 들고 있어야 하는 것이 아니라, root-to-leaf path를 따라가며 constant number of pages만 유지해도 된다는 점을 보여 준다.
+`B-TREE-INSERT-NONFULL`은 tail-recursive이므로 while loop로 바꿀 수 있다. 이 관찰은 B-tree insertion이 한 번에 $O(h)$개의 nodes를 모두 memory에 들고 있어야 하는 것이 아니라, root-to-leaf path를 따라가며 constant number of pages만 유지해도 된다는 점을 보여 준다.
 
 #### Redundant disk operations
 
@@ -348,7 +354,7 @@ Root는 예외적으로 `t - 1`보다 적은 keys를 가질 수 있다. 만약 d
 
 #### Figure 18.8의 deletion 예시
 
-Figure 18.8은 `t=3`인 B-tree에서 여러 deletion cases를 보여 준다. Nonroot node는 최소 `t-1=2` keys를 가져야 하며, 수정되는 nodes가 음영으로 표시되어 있다.
+Figure 18.8은 $t=3$인 B-tree에서 여러 deletion cases를 보여 준다. Nonroot node는 최소 $t-1=2$ keys를 가져야 하며, 수정되는 nodes가 음영으로 표시되어 있다.
 
 ![Figure 18.8](@/assets/images/cs-algorithm-100-figure-18-8-page-521.png)
 *Figure 18.8 · PDF p. 521 · leaf deletion과 internal key deletion에서 predecessor/merge가 일어나는 예시*
@@ -377,7 +383,7 @@ Figure 18.8(b)의 `F` 삭제가 이 경우다. Leaf에 충분한 keys가 있고,
 |---|---|---|
 | 2a | `k` 앞 child `y`가 at least `t` keys | `k`의 predecessor `k'`를 찾아 `x`의 `k`를 `k'`로 교체하고, `y`에서 `k'`를 삭제 |
 | 2b | 앞 child는 부족하지만 뒤 child `z`가 at least `t` keys | `k`의 successor `k'`를 찾아 `x`의 `k`를 `k'`로 교체하고, `z`에서 `k'`를 삭제 |
-| 2c | 양쪽 children `y`, `z`가 모두 `t-1` keys | `k`와 `z` 전체를 `y`로 merge해 `2t-1` keys node를 만들고, 그 안에서 `k` 삭제 |
+| 2c | 양쪽 children `y`, `z`가 모두 $t-1$ keys | `k`와 `z` 전체를 `y`로 merge해 $2t-1$ keys node를 만들고, 그 안에서 `k` 삭제 |
 
 Case 2a와 2b에서는 predecessor/successor를 찾기 위해 아래로 내려갔다가, internal node의 key 자리를 교체해야 하므로 “완전히 back up이 없는” 형태는 아니다. CLRS가 말한 예외가 바로 이 부분이다. 그래도 disk operations 수는 height에 비례한다.
 
@@ -385,16 +391,16 @@ Figure 18.8(c)는 `M`을 predecessor `L`로 교체하는 case 2a를 보여 준�
 
 #### Case 3: key가 현재 internal node에 없는 경우
 
-`k`가 internal node `x`에 없으면, search-tree property에 따라 `k`가 있을 수 있는 child `x.c_i`를 결정한다. 문제는 `x.c_i`가 `t-1` keys만 가진 minimum-size node일 수 있다는 점이다. 그대로 내려가서 key를 삭제하면 underflow가 생길 수 있으므로, 내려가기 전에 `x.c_i`가 at least `t` keys를 갖도록 만든다.
+$k$가 internal node $x$에 없으면, search-tree property에 따라 $k$가 있을 수 있는 child $x.c_i$를 결정한다. 문제는 $x.c_i$가 $t-1$ keys만 가진 minimum-size node일 수 있다는 점이다. 그대로 내려가서 key를 삭제하면 underflow가 생길 수 있으므로, 내려가기 전에 $x.c_i$가 at least $t$ keys를 갖도록 만든다.
 
 | Case | 조건 | 동작 |
 |---|---|---|
-| 3a | `x.c_i`는 `t-1` keys지만 immediate sibling 중 하나가 at least `t` keys | parent key 하나를 `x.c_i`로 내리고, sibling key 하나를 parent로 올리며, 필요한 child pointer도 이동 |
-| 3b | `x.c_i`와 immediate siblings가 모두 `t-1` keys | parent key 하나를 내려 `x.c_i`와 sibling을 merge하고, merged node로 recursion |
+| 3a | $x.c_i$는 $t-1$ keys지만 immediate sibling 중 하나가 at least $t$ keys | parent key 하나를 $x.c_i$로 내리고, sibling key 하나를 parent로 올리며, 필요한 child pointer도 이동 |
+| 3b | $x.c_i$와 immediate siblings가 모두 $t-1$ keys | parent key 하나를 내려 $x.c_i$와 sibling을 merge하고, merged node로 recursion |
 
 Case 3a는 sibling에서 key를 “borrow/rotate”하는 방식이다. Parent의 separator가 child로 내려가고, sibling의 경계 key가 parent로 올라온다. Internal nodes라면 child pointer도 함께 이동해야 subtree ranges가 유지된다.
 
-Case 3b는 borrow할 여유가 없을 때 merge한다. Child `x.c_i`, sibling, 그리고 parent에서 내려온 separator key 하나를 합치면 `2t - 1` keys를 가진 full node가 된다. Parent는 key 하나와 child pointer 하나를 잃는다. 만약 parent가 root이고 이로 인해 key가 0개가 되면 root를 제거하고 merged child를 새 root로 삼아 height를 줄인다.
+Case 3b는 borrow할 여유가 없을 때 merge한다. Child $x.c_i$, sibling, 그리고 parent에서 내려온 separator key 하나를 합치면 $2t - 1$ keys를 가진 full node가 된다. Parent는 key 하나와 child pointer 하나를 잃는다. 만약 parent가 root이고 이로 인해 key가 0개가 되면 root를 제거하고 merged child를 새 root로 삼아 height를 줄인다.
 
 #### Deletion의 핵심 invariant
 
@@ -405,16 +411,16 @@ Recursive call이 nonroot node로 내려갈 때,
 그 node는 적어도 t개의 keys를 가지고 있어야 한다.
 ```
 
-이 invariant는 일반 B-tree invariant보다 한 key 더 강하다. 그래서 leaf에서 key 하나를 삭제해도 `t-1` keys가 남아 underflow가 발생하지 않는다. Internal key 삭제에서도 predecessor/successor를 가져올 subtree가 충분한 keys를 갖도록 보장하거나, 부족하면 merge로 충분히 큰 node를 만든 뒤 내려간다.
+이 invariant는 일반 B-tree invariant보다 한 key 더 강하다. 그래서 leaf에서 key 하나를 삭제해도 $t-1$ keys가 남아 underflow가 발생하지 않는다. Internal key 삭제에서도 predecessor/successor를 가져올 subtree가 충분한 keys를 갖도록 보장하거나, 부족하면 merge로 충분히 큰 node를 만든 뒤 내려간다.
 
 #### Deletion의 복잡도
 
-B-tree deletion은 복잡해 보이지만, 각 recursive descent 사이에서 수행하는 `DISK-READ`와 `DISK-WRITE`는 `O(1)`개다. Height가 `h`라면:
+B-tree deletion은 복잡해 보이지만, 각 recursive descent 사이에서 수행하는 `DISK-READ`와 `DISK-WRITE`는 $O(1)$개다. Height가 `h`라면:
 
 | 비용 | Bound |
 |---|---:|
-| Disk operations | `O(h) = O(log_t n)` |
-| CPU time | `O(th) = O(t log_t n)` |
+| Disk operations | $O(h) = O(\log_{t} n)$ |
+| CPU time | $O(th) = O(t \log_{t} n)$ |
 
 Most keys in a B-tree are in leaves이므로 실제 workload에서는 leaf deletion이 자주 나타난다. Leaf deletion은 one downward pass로 매우 직접적이다. Internal node deletion은 predecessor/successor replacement 때문에 잠깐 되돌아와 key를 바꾸는 예외가 있지만, asymptotic I/O bound는 변하지 않는다.
 
@@ -426,8 +432,8 @@ Chapter 18 problems는 B-tree가 단지 “큰 node의 search tree”가 아니�
 |---|---|
 | `18-1 Stacks on secondary storage` | stack도 page 단위 buffer를 잘 쓰면 disk accesses를 amortized하게 줄일 수 있음 |
 | `18-2 Joining and splitting 2-3-4 trees` | `2-3-4 tree`에서 height attribute를 유지하고 `join`, `split`을 logarithmic하게 처리 |
-| `18.2-6` | node 내부 linear search 대신 binary search를 쓰면 CPU time을 `O(lg n)`으로 만들 수 있음 |
-| `18.2-7` | disk page size와 `t` 선택은 `a + bt` page-read cost와 height 감소 사이의 trade-off |
+| $18.2-6$ | node 내부 linear search 대신 binary search를 쓰면 CPU time을 $O(\lg n)$으로 만들 수 있음 |
+| $18.2-7$ | disk page size와 `t` 선택은 `a + bt` page-read cost와 height 감소 사이의 trade-off |
 
 Chapter notes는 B-tree와 balanced-tree 계열의 역사적 연결을 짧게 언급한다. `2-3 tree`는 B-tree와 `2-3-4 tree`의 선행 구조이고, `2-3-4 tree`는 red-black tree와 깊은 대응 관계를 가진다. 또한 `cache-oblivious algorithms`는 명시적으로 data transfer size를 알지 못해도 memory hierarchy에서 잘 동작하도록 B-tree적 사고를 더 일반화한 방향이다.
 
@@ -450,13 +456,13 @@ Chapter notes는 B-tree와 balanced-tree 계열의 역사적 연결을 짧게 �
 | 모든 node가 정확히 같은 수의 keys를 가져야 한다 | 아니다. root/nonroot와 `t`에 따른 최소/최대 범위만 지키면 된다 |
 | Insertion은 leaf에서 split을 시작해 위로 올라간다 | CLRS 알고리즘은 내려가며 full child를 미리 split하는 one-pass insertion이다 |
 | Deletion은 단순히 key를 지우면 된다 | internal key 삭제와 underflow 방지를 위해 predecessor/successor, borrow, merge가 필요하다 |
-| Root도 항상 `t-1` keys 이상이어야 한다 | root는 예외다. Empty tree가 아니면 최소 1 key이고, deletion 중 empty internal root는 제거된다 |
+| Root도 항상 $t-1$ keys 이상이어야 한다 | root는 예외다. Empty tree가 아니면 최소 1 key이고, deletion 중 empty internal root는 제거된다 |
 
 ## 면접 질문
 
 1. B-tree가 red-black tree보다 disk-based storage에 유리한 이유를 `branching factor`와 `disk page` 관점에서 설명하라.
 2. B-tree의 `minimum degree t`가 node의 최소/최대 key 수와 children 수를 어떻게 결정하는가?
-3. Theorem 18.1의 height bound `h <= log_t((n+1)/2)`가 왜 성립하는지 설명하라.
+3. Theorem 18.1의 height bound $h \le \log_{t}((n+1)/2)$가 왜 성립하는지 설명하라.
 4. `B-TREE-SEARCH`의 disk accesses와 CPU time이 각각 어떻게 계산되는가?
 5. `B-TREE-SPLIT-CHILD`에서 median key를 parent로 올리는 이유는 무엇인가?
 6. B-tree insertion에서 full child를 내려가기 전에 split하는 이유는 무엇인가?

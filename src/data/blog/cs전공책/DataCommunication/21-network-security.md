@@ -225,14 +225,17 @@ Symmetric encryption만으로도 authentication을 어느 정도 제공할 수 �
 
 #### Message Authentication Code(MAC)
 
-`MAC(Message Authentication Code)`는 shared secret key로 message에서 작은 authentication tag를 생성해 message에 붙이는 방식이다. A와 B가 secret key `K_AB`를 공유한다고 하자. A가 message `M`을 B에게 보낼 때 다음 값을 계산한다.
+`MAC(Message Authentication Code)`는 shared secret key로 message에서 작은 authentication tag를 생성해 message에 붙이는 방식이다. A와 B가 secret key $K_{AB}$를 공유한다고 하자. A가 message $M$을 B에게 보낼 때 다음 값을 계산한다.
 
-```text
-MAC = F(K_AB, M)
-Transmit: M || MAC
-```
+$$
+MAC = F(K_{AB}, M)
+$$
 
-B는 받은 `M`과 같은 `K_AB`로 MAC을 다시 계산해 received MAC과 비교한다.
+$$
+\text{Transmit: } M \parallel MAC
+$$
+
+B는 받은 $M$과 같은 $K_{AB}$로 MAC을 다시 계산해 received MAC과 비교한다.
 
 ![Figure 21.6](@/assets/images/data-communication-284-figure-21-6-page-734.png)
 *Figure 21.6 · PDF p. 734 · sender와 receiver가 shared key K로 MAC을 계산/비교하는 message authentication 흐름*
@@ -247,7 +250,7 @@ MAC은 encryption과 비슷하지만, authentication algorithm은 decryption을 
 
 #### One-Way Hash Function
 
-`One-way hash function`은 variable-size message `M`을 fixed-size `message digest H(M)`로 바꾸는 함수다. MAC과 달리 hash function 자체는 secret key를 입력으로 받지 않는다. 따라서 message를 authenticate하려면 digest 자체가 authentic하게 전달되어야 한다.
+`One-way hash function`은 variable-size message $M$을 fixed-size message digest $H(M)$로 바꾸는 함수다. MAC과 달리 hash function 자체는 secret key를 입력으로 받지 않는다. 따라서 message를 authenticate하려면 digest 자체가 authentic하게 전달되어야 한다.
 
 ![Figure 21.7](@/assets/images/data-communication-285-figure-21-7-page-736.png)
 *Figure 21.7 · PDF p. 736 · one-way hash function을 conventional encryption, public-key encryption, shared secret value와 결합하는 세 가지 인증 방식*
@@ -258,9 +261,9 @@ Figure 21.7은 hash 기반 authentication의 세 방식을 보여준다.
 |---|---|---|
 | Hash + symmetric encryption | digest를 shared key로 encrypt한다. | sender/receiver만 key를 공유하면 authenticity 보장 |
 | Hash + public-key encryption | digest를 sender private key로 encrypt한다. | message authentication과 digital signature를 함께 제공 |
-| Hash + shared secret value | `MDM = H(S_AB || M)`를 계산하고 `M || MDM` 전송 | encryption 없이 secret value 기반 authentication 제공 |
+| Hash + shared secret value | $MDM=H(S_{AB}\parallel M)$를 계산하고 $M\parallel MDM$ 전송 | encryption 없이 secret value 기반 authentication 제공 |
 
-세 번째 방식은 encryption 없이 authentication을 제공한다. A와 B가 shared secret value `S_AB`를 가지고, A는 `H(S_AB || M)`을 보낸다. Secret value 자체는 전송되지 않으므로, attacker가 intercepted message를 수정해도 새 digest를 만들 수 없다. 이 방식은 IP security와 SNMPv3에서도 사용되는 사고방식이다.
+세 번째 방식은 encryption 없이 authentication을 제공한다. A와 B가 shared secret value $S_{AB}$를 가지고, A는 $H(S_{AB}\parallel M)$을 보낸다. Secret value 자체는 전송되지 않으므로, attacker가 intercepted message를 수정해도 새 digest를 만들 수 없다. 이 방식은 IP security와 SNMPv3에서도 사용되는 사고방식이다.
 
 #### Secure Hash Function Requirements
 
@@ -271,11 +274,11 @@ Secure hash function은 message, file, data block의 fingerprint를 만드는 �
 | Arbitrary input | 임의 크기 data block에 적용 가능 |
 | Fixed output | 고정 길이 hash code 생성 |
 | Efficient computation | hardware/software에서 쉽게 계산 가능 |
-| `One-way property` | 주어진 hash `h`에 대해 `H(x)=h`인 x를 찾기 computationally infeasible |
-| `Weak collision resistance` | 주어진 x에 대해 `H(y)=H(x)`이고 `y != x`인 y를 찾기 infeasible |
-| `Strong collision resistance` | 임의의 서로 다른 pair `(x, y)`에 대해 `H(x)=H(y)`를 찾기 infeasible |
+| `One-way property` | 주어진 hash `h`에 대해 $H(x)=h$인 x를 찾기 computationally infeasible |
+| `Weak collision resistance` | 주어진 x에 대해 $H(y)=H(x)$이고 $y\ne x$인 y를 찾기 infeasible |
+| `Strong collision resistance` | 임의의 서로 다른 pair $(x, y)$에 대해 $H(x)=H(y)$를 찾기 infeasible |
 
-첫 세 성질은 practical use를 위한 조건이다. 네 번째 one-way property는 shared secret value 방식에서 중요하다. Attacker가 `M`과 `H(S_AB || M)`을 보고 hash를 invert할 수 있으면 secret value를 복구할 수 있다. 다섯 번째 성질은 encrypted digest 방식에서 forgery를 막는다. 여섯 번째 성질까지 만족하면 `strong hash function`이라고 하며, birthday attack 계열의 공격을 어렵게 한다.
+첫 세 성질은 practical use를 위한 조건이다. 네 번째 one-way property는 shared secret value 방식에서 중요하다. Attacker가 $M$과 $H(S_{AB}\parallel M)$을 보고 hash를 invert할 수 있으면 secret value를 복구할 수 있다. 다섯 번째 성질은 encrypted digest 방식에서 forgery를 막는다. 여섯 번째 성질까지 만족하면 `strong hash function`이라고 하며, birthday attack 계열의 공격을 어렵게 한다.
 
 Message digest는 authentication 외에도 data integrity를 제공한다. Transit 중 bit가 우연히 바뀌면 digest가 달라지므로 frame check sequence처럼 오류를 드러낸다. 단 security 맥락에서는 우연한 오류뿐 아니라 deliberate modification까지 고려한다.
 
@@ -283,7 +286,7 @@ Message digest는 authentication 외에도 data integrity를 제공한다. Trans
 
 `SHA(Secure Hash Algorithm)` 계열은 NIST가 표준화한 secure hash function이다. SHA-1은 160-bit hash를 만들지만, collision attack 결과가 알려지면서 더 긴 SHA-256, SHA-384, SHA-512로 이동하는 흐름이 생겼다. 원문은 SHA-512를 설명한다.
 
-SHA-512는 최대 `2^128` bits 미만의 message를 입력으로 받아 512-bit message digest를 출력한다. Input은 1024-bit block 단위로 처리된다.
+SHA-512는 최대 $2^{128}$ bits 미만의 message를 입력으로 받아 512-bit message digest를 출력한다. Input은 1024-bit block 단위로 처리된다.
 
 ![Figure 21.8](@/assets/images/data-communication-286-figure-21-8-page-738.png)
 *Figure 21.8 · PDF p. 738 · SHA-512에서 padding, length append, 1024-bit block processing으로 512-bit digest를 생성하는 흐름*
@@ -292,13 +295,13 @@ SHA-512 processing은 다음 단계다.
 
 | 단계 | 설명 |
 |---|---|
-| Step 1: Append padding bits | message length가 `896 mod 1024`가 되도록 padding한다. Padding은 항상 추가되며, `1` bit 뒤에 필요한 수의 `0` bit가 온다. |
+| Step 1: Append padding bits | message length가 $896\bmod 1024$가 되도록 padding한다. Padding은 항상 추가되며, `1` bit 뒤에 필요한 수의 $0$ bit가 온다. |
 | Step 2: Append length | original message length를 나타내는 128-bit unsigned integer를 붙인다. Length field는 padding attack을 어렵게 한다. |
 | Step 3: Initialize MD buffer | intermediate/final result를 담을 512-bit buffer를 초기화한다. |
-| Step 4: Process message blocks | 1024-bit block `M1...MN`을 순서대로 처리한다. 핵심 module은 80 rounds로 구성된다. |
+| Step 4: Process message blocks | 1024-bit block $M_1,\ldots,M_N$을 순서대로 처리한다. 핵심 module은 80 rounds로 구성된다. |
 | Step 5: Output | 마지막 stage output이 512-bit message digest가 된다. |
 
-SHA-512의 중요한 성질은 hash code의 모든 bit가 input의 모든 bit에 의존하도록 설계되었다는 점이다. 반복되는 function `F`와 modular addition이 message bits를 잘 섞기 때문에, 임의로 고른 두 message가 같은 digest를 가질 가능성은 극히 작다. 원문은 collision을 찾는 어려움을 대략 `2^256` operations, 특정 digest를 가진 message를 찾는 어려움을 `2^512` operations 수준으로 설명한다.
+SHA-512의 중요한 성질은 hash code의 모든 bit가 input의 모든 bit에 의존하도록 설계되었다는 점이다. 반복되는 function $F$와 modular addition이 message bits를 잘 섞기 때문에, 임의로 고른 두 message가 같은 digest를 가질 가능성은 극히 작다. 원문은 collision을 찾는 어려움을 대략 $2^{256}$ operations, 특정 digest를 가진 message를 찾는 어려움을 $2^{512}$ operations 수준으로 설명한다.
 
 ### 21.4 Public-Key Encryption and Digital Signatures
 
@@ -324,27 +327,27 @@ Public-key encryption scheme의 구성요소는 plaintext, encryption algorithm,
 1. Algorithm과 public key를 알아도 private key를 계산하는 것은 computationally infeasible해야 한다.
 2. 대부분의 public-key scheme에서는 pair 중 어느 key로 encrypt하든 다른 key로 decrypt할 수 있다.
 
-Confidentiality 용도에서는 Bob이 Alice에게 private message를 보낼 때 Alice의 public key `PU_A`로 encrypt한다. Alice만 private key `PR_A`를 가지고 있으므로 decrypt할 수 있다.
+Confidentiality 용도에서는 Bob이 Alice에게 private message를 보낼 때 Alice의 public key $PU_A$로 encrypt한다. Alice만 private key $PR_A$를 가지고 있으므로 decrypt할 수 있다.
 
-```text
-Bob -> Alice:
-  C = E(PU_A, M)
-Alice:
-  M = D(PR_A, C)
-```
+$$
+\begin{aligned}
+\text{Bob} \to \text{Alice:}\quad C &= E(PU_A, M) \\
+\text{Alice:}\quad M &= D(PR_A, C)
+\end{aligned}
+$$
 
 이 방식의 장점은 Alice의 private key가 배포될 필요가 없다는 점이다. Alice는 public key만 공개하고 private key를 local에서 보호하면 된다.
 
 #### Digital Signature
 
-Public-key encryption은 authentication에도 쓸 수 있다. Bob이 message를 confidential하게 숨길 필요는 없지만, Alice가 "이 message는 Bob이 보냈고 중간에 바뀌지 않았다"는 것을 확인해야 한다고 하자. Bob은 자신의 private key `PR_B`로 message 또는 message digest를 encrypt하고, Alice는 Bob의 public key `PU_B`로 decrypt/verify한다.
+Public-key encryption은 authentication에도 쓸 수 있다. Bob이 message를 confidential하게 숨길 필요는 없지만, Alice가 "이 message는 Bob이 보냈고 중간에 바뀌지 않았다"는 것을 확인해야 한다고 하자. Bob은 자신의 private key $PR_B$로 message 또는 message digest를 encrypt하고, Alice는 Bob의 public key $PU_B$로 decrypt/verify한다.
 
-```text
-Bob signs:
-  S = E(PR_B, H(M))
-Alice verifies:
-  H(M) ?= D(PU_B, S)
-```
+$$
+\begin{aligned}
+\text{Bob signs:}\quad S &= E(PR_B, H(M)) \\
+\text{Alice verifies:}\quad H(M) &\stackrel{?}{=} D(PU_B, S)
+\end{aligned}
+$$
 
 전체 message를 private key로 encrypt할 수도 있지만 비효율적이다. 실제로는 message의 hash code, 즉 authenticator를 private key로 encrypt하는 방식이 더 효율적이다. Secure hash code가 document의 content에 민감하게 반응하므로, document가 바뀌면 hash도 바뀐다. Private key로 암호화된 hash는 origin, content, sequencing을 검증하는 `digital signature` 역할을 한다.
 
@@ -352,24 +355,25 @@ Digital signature가 confidentiality를 제공하지 않는다는 점이 중요�
 
 #### RSA Algorithm
 
-`RSA`는 가장 널리 알려진 public-key encryption algorithm이다. RSA는 block cipher처럼 plaintext와 ciphertext를 integer block으로 다루며, 어떤 modulus `n`에 대해 `0`부터 `n - 1` 사이의 값을 사용한다.
+`RSA`는 가장 널리 알려진 public-key encryption algorithm이다. RSA는 block cipher처럼 plaintext와 ciphertext를 integer block으로 다루며, 어떤 modulus $n$에 대해 $0$부터 $n-1$ 사이의 값을 사용한다.
 
 기본 형태는 다음과 같다.
 
-```text
-Encryption: C = M^e mod n
-Decryption: M = C^d mod n = (M^e)^d mod n = M^(ed) mod n
-
-Public key:  PU = {e, n}
-Private key: PR = {d, n}
-```
+$$
+\begin{aligned}
+\text{Encryption:}\quad C &= M^e \bmod n \\
+\text{Decryption:}\quad M &= C^d \bmod n = (M^e)^d \bmod n = M^{ed} \bmod n \\
+\text{Public key:}\quad PU &= \{e,n\} \\
+\text{Private key:}\quad PR &= \{d,n\}
+\end{aligned}
+$$
 
 RSA가 public-key algorithm으로 성립하려면 다음 요구사항이 필요하다.
 
 | 요구사항 | 의미 |
 |---|---|
-| Correctness | 모든 `M < n`에 대해 `M^(ed) mod n = M`이 되도록 e, d, n을 고를 수 있어야 한다. |
-| Efficiency | 모든 `M < n`에 대해 `M^e`, `C^d` 계산이 상대적으로 쉬워야 한다. |
+| Correctness | 모든 $M<n$에 대해 $M^{ed}\bmod n=M$이 되도록 e, d, n을 고를 수 있어야 한다. |
+| Efficiency | 모든 $M<n$에 대해 $M^e$, $C^d$ 계산이 상대적으로 쉬워야 한다. |
 | One-way trapdoor | e와 n을 알아도 d를 구하는 것이 infeasible해야 한다. |
 
 ![Figure 21.10](@/assets/images/data-communication-288-figure-21-10-page-743.png)
@@ -377,24 +381,26 @@ RSA가 public-key algorithm으로 성립하려면 다음 요구사항이 필요�
 
 RSA key generation은 다음 순서다.
 
-1. 두 prime number `p`, `q`를 선택한다.
-2. `n = p * q`를 계산한다.
+1. 두 prime number $p$, $q$를 선택한다.
+2. $n=pq$를 계산한다.
 3. Euler totient `φ(n) = (p - 1)(q - 1)`을 계산한다.
 4. `gcd(φ(n), e) = 1`이고 `1 < e < φ(n)`인 e를 선택한다.
-5. `d * e mod φ(n) = 1`이 되는 d를 계산한다.
-6. Public key는 `{e, n}`, private key는 `{d, n}`이다.
+5. $d \cdot e \bmod \phi(n) = 1$이 되는 $d$를 계산한다.
+6. Public key는 $\{e,n\}$, private key는 $\{d,n\}$이다.
 
 ![Figure 21.11](@/assets/images/data-communication-289-figure-21-11-page-744.png)
 *Figure 21.11 · PDF p. 744 · 작은 수 p=17, q=11을 사용한 RSA encryption/decryption 예*
 
-Figure 21.11의 작은 예에서는 `p = 17`, `q = 11`, `n = 187`, `φ(n) = 160`, `e = 7`, `d = 23`이다. Public key는 `{7, 187}`, private key는 `{23, 187}`이다. Plaintext `M = 88`은 다음처럼 암호화/복호화된다.
+Figure 21.11의 작은 예에서는 $p=17$, $q=11$, $n=187$, $\phi(n)=160$, $e=7$, $d=23$이다. Public key는 $\{7,187\}$, private key는 $\{23,187\}$이다. Plaintext $M=88$은 다음처럼 암호화/복호화된다.
 
-```text
-C = 88^7 mod 187 = 11
-M = 11^23 mod 187 = 88
-```
+$$
+\begin{aligned}
+C &= 88^7 \bmod 187 = 11 \\
+M &= 11^{23} \bmod 187 = 88
+\end{aligned}
+$$
 
-실제 RSA security는 큰 `n`을 factoring하기 어렵다는 점에 의존한다. Public key `{e, n}`에서 private exponent `d`를 알아내려면 보통 `n`을 prime factors `p`, `q`로 분해해야 한다. Key size가 커질수록 security는 올라가지만 key generation과 encryption/decryption 계산은 느려진다. 원문 시점에서는 1024-bit key가 대부분 application에 충분히 강한 것으로 설명된다.
+실제 RSA security는 큰 $n$을 factoring하기 어렵다는 점에 의존한다. Public key $\{e,n\}$에서 private exponent $d$를 알아내려면 보통 $n$을 prime factors $p$, $q$로 분해해야 한다. Key size가 커질수록 security는 올라가지만 key generation과 encryption/decryption 계산은 느려진다. 원문 시점에서는 1024-bit key가 대부분 application에 충분히 강한 것으로 설명된다.
 
 #### Public-Key 기반 Key Management와 Certificate
 
@@ -467,7 +473,7 @@ SSL은 `session`과 `connection`을 구분한다.
 
 Record Protocol의 송신 처리는 다음 순서다.
 
-1. Upper-layer message를 `2^14 bytes = 16,384 bytes` 이하 block으로 fragment한다.
+1. Upper-layer message를 $2^{14}\ \text{bytes}=16{,}384\ \text{bytes}$ 이하 block으로 fragment한다.
 2. Optional compression을 적용한다.
 3. Compressed data에 대해 MAC을 계산해 붙인다.
 4. Compressed message + MAC을 symmetric encryption한다.

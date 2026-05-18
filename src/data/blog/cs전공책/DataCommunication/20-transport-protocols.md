@@ -421,15 +421,15 @@ Static retransmission timer는 network 상태가 바뀌면 너무 길거나 너�
 
 가장 단순한 방식은 observed `RTT(Round-Trip Time)`의 평균을 내는 것이다.
 
-```text
-ARTT(K + 1) = (1 / (K + 1)) * Σ RTT(i), i = 1..K+1
-```
+$$
+ARTT(K+1) = \frac{1}{K+1}\sum_{i=1}^{K+1} RTT(i)
+$$
 
 이 식은 전체 합을 매번 다시 계산하지 않도록 다음 형태로 갱신할 수 있다.
 
-```text
-ARTT(K + 1) = (K / (K + 1)) * ARTT(K) + (1 / (K + 1)) * RTT(K + 1)
-```
+$$
+ARTT(K+1) = \frac{K}{K+1}ARTT(K) + \frac{1}{K+1}RTT(K+1)
+$$
 
 단순 평균의 문제는 모든 past observation이 같은 weight를 받는다는 점이다. Network는 상태가 변하므로 최근 observation이 미래 RTT를 더 잘 예측하는 경우가 많다.
 
@@ -437,31 +437,31 @@ ARTT(K + 1) = (K / (K + 1)) * ARTT(K) + (1 / (K + 1)) * RTT(K + 1)
 
 RFC 793은 `exponential averaging`을 사용해 `SRTT(Smoothed Round-Trip Time)`를 계산한다.
 
-```text
-SRTT(K + 1) = a * SRTT(K) + (1 - a) * RTT(K + 1)
-```
+$$
+SRTT(K+1) = a\,SRTT(K) + (1-a)\,RTT(K+1)
+$$
 
-여기서 `0 < a < 1`이다. 이 식을 전개하면 최근 RTT가 `(1 - a)`, 이전 RTT가 `a(1 - a)`, 그 이전 RTT가 `a^2(1 - a)`처럼 점점 작아지는 weight를 받는다. 즉 오래된 observation은 완전히 버리지는 않지만 영향력이 빠르게 줄어든다.
+여기서 $0<a<1$이다. 이 식을 전개하면 최근 RTT가 $(1-a)$, 이전 RTT가 $a(1-a)$, 그 이전 RTT가 $a^2(1-a)$처럼 점점 작아지는 weight를 받는다. 즉 오래된 observation은 완전히 버리지는 않지만 영향력이 빠르게 줄어든다.
 
-`a` 값의 trade-off는 명확하다.
+$a$ 값의 trade-off는 명확하다.
 
 | a 값 | 반응성 | 안정성 |
 |---|---|---|
-| 작음, 예: `a = 0.5` | 최근 RTT 변화에 빠르게 반응 | 짧은 surge에도 평균이 흔들려 jerky해질 수 있음 |
-| 큼, 예: `a = 0.875` | 변화 반영이 느림 | 더 smooth하고 순간 변동에 덜 민감 |
+| 작음, 예: $a=0.5$ | 최근 RTT 변화에 빠르게 반응 | 짧은 surge에도 평균이 흔들려 jerky해질 수 있음 |
+| 큼, 예: $a=0.875$ | 변화 반영이 느림 | 더 smooth하고 순간 변동에 덜 민감 |
 
 ![Figure 20.11](@/assets/images/data-communication-275-figure-20-11-page-704.png)
 *Figure 20.11 · PDF p. 704 · 단순 평균과 exponential averaging이 RTT 증가/감소를 추적하는 차이*
 
-Figure 20.11은 exponential averaging이 simple average보다 RTT 변화를 빠르게 따라가며, `a`가 작을수록 더 빠르게 반응한다는 점을 보여준다. Congestion control 관점에서 이는 중요하다. RTO가 실제 RTT보다 지나치게 작으면 불필요한 retransmission을 만들고, 지나치게 크면 real loss 대응이 느려진다.
+Figure 20.11은 exponential averaging이 simple average보다 RTT 변화를 빠르게 따라가며, $a$가 작을수록 더 빠르게 반응한다는 점을 보여준다. Congestion control 관점에서 이는 중요하다. RTO가 실제 RTT보다 지나치게 작으면 불필요한 retransmission을 만들고, 지나치게 크면 real loss 대응이 느려진다.
 
 RFC 793은 RTO를 SRTT에 비례하게 설정한다.
 
-```text
-RTO(K + 1) = MIN(UBOUND, MAX(LBOUND, b * SRTT(K + 1)))
-```
+$$
+RTO(K+1) = \min\{\text{UBOUND}, \max\{\text{LBOUND}, b\,SRTT(K+1)\}\}
+$$
 
-`UBOUND`와 `LBOUND`는 timer의 upper/lower bound이고, `b`는 SRTT에 곱하는 상수다. 원문은 example value로 `a = 0.8..0.9`, `b = 1.3..2.0`을 언급한다. 하지만 단순히 SRTT에 상수를 곱하는 방식은 RTT variance가 큰 환경에서 잘 맞지 않는다. 안정적인 환경에서는 RTO가 불필요하게 크고, 불안정한 환경에서는 `b = 2`조차 unnecessary retransmission을 막기에 부족할 수 있다.
+`UBOUND`와 `LBOUND`는 timer의 upper/lower bound이고, $b$는 SRTT에 곱하는 상수다. 원문은 example value로 $a=0.8..0.9$, $b=1.3..2.0$을 언급한다. 하지만 단순히 SRTT에 상수를 곱하는 방식은 RTT variance가 큰 환경에서 잘 맞지 않는다. 안정적인 환경에서는 RTO가 불필요하게 크고, 불안정한 환경에서는 $b=2$조차 unnecessary retransmission을 막기에 부족할 수 있다.
 
 #### Jacobson's Algorithm: RTT Variance Estimation
 
@@ -475,22 +475,24 @@ RTT variance가 큰 이유는 여러 가지다.
 
 Jacobson's algorithm은 RTT 평균뿐 아니라 RTT variability, 즉 mean deviation까지 추정해 RTO에 반영한다. 원문은 다음 형태로 제시한다.
 
-```text
-SRTT(K + 1) = (1 - g) * SRTT(K) + g * RTT(K + 1)
-SERR(K + 1) = RTT(K + 1) - SRTT(K)
-SDEV(K + 1) = (1 - h) * SDEV(K) + h * |SERR(K + 1)|
-RTO(K + 1)  = SRTT(K + 1) + f * SDEV(K + 1)
-```
+$$
+\begin{aligned}
+SRTT(K+1) &= (1-g)SRTT(K) + g\,RTT(K+1) \\
+SERR(K+1) &= RTT(K+1) - SRTT(K) \\
+SDEV(K+1) &= (1-h)SDEV(K) + h\,|SERR(K+1)| \\
+RTO(K+1) &= SRTT(K+1) + f\,SDEV(K+1)
+\end{aligned}
+$$
 
-처음 RFC 793 방식은 `b * SRTT`처럼 평균에 상수를 곱했다. Jacobson 방식은 평균에다가 estimated mean deviation의 배수를 더한다. 즉 "평균 RTT가 얼마인가"뿐 아니라 "RTT가 얼마나 흔들리는가"를 반영한다.
+처음 RFC 793 방식은 $b\,SRTT$처럼 평균에 상수를 곱했다. Jacobson 방식은 평균에다가 estimated mean deviation의 배수를 더한다. 즉 "평균 RTT가 얼마인가"뿐 아니라 "RTT가 얼마나 흔들리는가"를 반영한다.
 
 원문이 제시한 constant는 다음과 같다.
 
 | Constant | 값 | 의미 |
 |---|---:|---|
-| `g` | `1/8 = 0.125` | SRTT에 새 RTT sample을 반영하는 비율 |
-| `h` | `1/4 = 0.25` | SDEV에 새 error magnitude를 반영하는 비율 |
-| `f` | 원 논문 `2`, 이후 구현 `4` | RTT variation에 대한 safety margin |
+| $g$ | $1/8=0.125$ | SRTT에 새 RTT sample을 반영하는 비율 |
+| $h$ | $1/4=0.25$ | SDEV에 새 error magnitude를 반영하는 비율 |
+| $f$ | 원 논문 `2`, 이후 구현 `4` | RTT variation에 대한 safety margin |
 
 ![Figure 20.12](@/assets/images/data-communication-276-figure-20-12-page-707.png)
 *Figure 20.12 · PDF p. 707 · Jacobson 방식에서 SDEV와 RTO가 RTT 변화 구간에서는 보수적으로 커지고 안정화되면 수렴하는 모습*
@@ -503,11 +505,11 @@ Timeout은 보통 packet drop 또는 long delay, 즉 congestion의 신호일 가
 
 그래서 TCP sender는 segment를 retransmit할 때마다 RTO를 증가시키는 `backoff process`를 사용한다.
 
-```text
-RTO = q * RTO
-```
+$$
+RTO = q \cdot RTO
+$$
 
-가장 흔한 값은 `q = 2`이며, 이를 `binary exponential backoff`라고 한다. 첫 retransmission 뒤 더 오래 기다리고, 두 번째 retransmission이 필요하면 더 길게 기다리므로 Internet이 congestion을 해소할 시간을 얻는다. 이 기법은 Ethernet CSMA/CD의 backoff와 같은 사고방식이다.
+가장 흔한 값은 $q=2$이며, 이를 `binary exponential backoff`라고 한다. 첫 retransmission 뒤 더 오래 기다리고, 두 번째 retransmission이 필요하면 더 길게 기다리므로 Internet이 congestion을 해소할 시간을 얻는다. 이 기법은 Ethernet CSMA/CD의 backoff와 같은 사고방식이다.
 
 #### Karn's Algorithm의 문제 배경
 
@@ -536,9 +538,9 @@ Retransmission timer가 "언제 다시 보낼 것인가"를 다룬다면, window
 
 TCP가 실제로 보낼 수 있는 allowed window는 receiver가 준 credit과 sender의 congestion window 중 작은 값이다.
 
-```text
-awnd = MIN[credit, cwnd]
-```
+$$
+awnd = \min(\text{credit}, \text{cwnd})
+$$
 
 | 변수 | 의미 |
 |---|---|

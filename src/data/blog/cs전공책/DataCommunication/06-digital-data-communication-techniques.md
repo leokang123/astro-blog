@@ -45,7 +45,7 @@ Synchronous transmission에서는 bit timing뿐 아니라 block boundary synchro
 
 일반적인 synchronous frame은 8-bit flag로 시작하고 같은 flag로 끝난다. receiver는 flag pattern을 찾아 frame start를 인식한다. flag 사이에는 control fields, variable-length data field, 추가 control fields가 들어간다. exact frame format은 Chapter 7의 data link control protocol에 따라 달라진다.
 
-큰 data block을 보낼 때 synchronous transmission은 asynchronous transmission보다 훨씬 효율적이다. 원문 예시는 HDLC frame에서 control, preamble, postamble overhead가 48 bits이고, 1000-character payload가 8000 bits라면 overhead가 \(48/8048 \times 100 \approx 0.6\%\)에 불과하다고 계산한다. 같은 payload를 character별 asynchronous로 보내는 것과 비교하면 overhead 차이가 매우 크다.
+큰 data block을 보낼 때 synchronous transmission은 asynchronous transmission보다 훨씬 효율적이다. 원문 예시는 HDLC frame에서 control, preamble, postamble overhead가 48 bits이고, 1000-character payload가 8000 bits라면 overhead가 $48/8048 \times 100 \approx 0.6\%$에 불과하다고 계산한다. 같은 payload를 character별 asynchronous로 보내는 것과 비교하면 overhead 차이가 매우 크다.
 
 ## 6.2 Types of Errors
 
@@ -53,9 +53,9 @@ Digital transmission에서 error는 transmitted bit와 received bit가 달라지
 
 Single-bit error는 하나의 bit만 바뀌고 주변 bit는 영향을 받지 않는 isolated error다. white noise 때문에 순간적으로 SNR이 악화되어 receiver decision이 한 bit에서만 틀릴 때 생길 수 있다.
 
-Burst error는 contiguous sequence 안에서 여러 bit error가 cluster로 발생하는 경우다. burst length \(B\)는 first erroneous bit부터 last erroneous bit까지의 길이를 뜻한다. 이 범위 안의 모든 bit가 틀려야 하는 것은 아니다. 중요한 점은 error가 한 지점에 고립되지 않고 묶여 나타난다는 것이다. impulse noise나 mobile wireless fading이 대표 원인이다.
+Burst error는 contiguous sequence 안에서 여러 bit error가 cluster로 발생하는 경우다. burst length $B$는 first erroneous bit부터 last erroneous bit까지의 길이를 뜻한다. 이 범위 안의 모든 bit가 틀려야 하는 것은 아니다. 중요한 점은 error가 한 지점에 고립되지 않고 묶여 나타난다는 것이다. impulse noise나 mobile wireless fading이 대표 원인이다.
 
-Burst error는 single-bit error보다 흔하고 다루기 어렵다. 특히 data rate가 높을수록 같은 시간 길이의 noise event가 더 많은 bit를 덮는다. duration이 \(\tau\) seconds인 impulse noise 또는 fading event가 있으면 대략 \(R\tau\) bits가 영향을 받는다. 원문 Example 6.3의 취지는 10 Mbps에서는 10-bit burst, 100 Mbps에서는 100-bit burst처럼, 같은 impairment duration이라도 data rate가 10배가 되면 affected bits도 10배가 된다는 점이다.
+Burst error는 single-bit error보다 흔하고 다루기 어렵다. 특히 data rate가 높을수록 같은 시간 길이의 noise event가 더 많은 bit를 덮는다. duration이 $\tau$ seconds인 impulse noise 또는 fading event가 있으면 대략 $R\tau$ bits가 영향을 받는다. 원문 Example 6.3의 취지는 10 Mbps에서는 10-bit burst, 100 Mbps에서는 100-bit burst처럼, 같은 impairment duration이라도 data rate가 10배가 되면 affected bits도 10배가 된다는 점이다.
 
 ## 6.3 Error Detection
 
@@ -63,18 +63,18 @@ Frame 단위 digital transmission에서는 어떤 frame이 error 없이 도착�
 
 | 기호 | 의미 |
 |---|---|
-| \(P_b\) | bit가 error로 수신될 확률, 즉 BER(Bit Error Rate) |
-| \(P_1\) | frame이 bit error 없이 도착할 확률 |
-| \(P_2\) | error-detecting algorithm을 쓰는데도 frame에 undetected error가 있을 확률 |
-| \(P_3\) | frame에 detected bit error는 있지만 undetected error는 없을 확률 |
+| $P_b$ | bit가 error로 수신될 확률, 즉 BER(Bit Error Rate) |
+| $P_1$ | frame이 bit error 없이 도착할 확률 |
+| $P_2$ | error-detecting algorithm을 쓰는데도 frame에 undetected error가 있을 확률 |
+| $P_3$ | frame에 detected bit error는 있지만 undetected error는 없을 확률 |
 
-error detection이 없다면 \(P_3=0\)이다. bit error가 독립이고 각 bit의 error probability가 \(P_b\), frame length가 \(F\) bits라면 error 없는 frame의 확률은 다음과 같다.
+error detection이 없다면 $P_3=0$이다. bit error가 독립이고 각 bit의 error probability가 $P_b$, frame length가 $F$ bits라면 error 없는 frame의 확률은 다음과 같다.
 
-\[
+$$
 P_1=(1-P_b)^F
-\]
+$$
 
-error detection이 없는 상황에서 frame에 하나 이상의 error가 있을 확률은 \(P_2=1-P_1\)이다. 이 식은 frame이 길수록 error-free frame probability가 빠르게 낮아진다는 점을 보여준다. 작은 BER도 긴 frame과 지속적 전송에서는 충분히 문제가 된다.
+error detection이 없는 상황에서 frame에 하나 이상의 error가 있을 확률은 $P_2=1-P_1$이다. 이 식은 frame이 길수록 error-free frame probability가 빠르게 낮아진다는 점을 보여준다. 작은 BER도 긴 frame과 지속적 전송에서는 충분히 문제가 된다.
 
 ### Error Detection Process
 
@@ -83,9 +83,9 @@ Error detection의 공통 원리는 transmitter가 data bits의 function으로 c
 ![Figure 6.3](@/assets/images/cs-data-communication-081-figure-6-3-page-207.png)
 *Figure 6.3 · PDF p. 207 · transmitter와 receiver가 같은 error-detecting code function을 계산해 비교하는 과정*
 
-data block이 \(k\) bits이고 error-detecting code가 \(n-k\) bits라면, transmitter는 \(k\)-bit data 뒤에 \(n-k\)-bit code를 append해 \(n\)-bit frame을 만든다. receiver는 incoming frame을 data part와 check part로 나누고, data part에 대해 같은 function \(f(data')\)를 계산한다. 계산 결과와 수신된 code가 다르면 detected error다.
+data block이 $k$ bits이고 error-detecting code가 $n-k$ bits라면, transmitter는 $k$-bit data 뒤에 $n-k$-bit code를 append해 $n$-bit frame을 만든다. receiver는 incoming frame을 data part와 check part로 나누고, data part에 대해 같은 function $f(data')$를 계산한다. 계산 결과와 수신된 code가 다르면 detected error다.
 
-여기서 중요한 한계는 error detection이 error의 존재를 알려줄 뿐, 어떤 bit가 틀렸는지 또는 어떻게 고칠지는 알려주지 않을 수 있다는 점이다. \(P_2\)는 residual error rate, 즉 error-detecting scheme을 쓰고도 error가 undetected로 남는 확률이다.
+여기서 중요한 한계는 error detection이 error의 존재를 알려줄 뿐, 어떤 bit가 틀렸는지 또는 어떻게 고칠지는 알려주지 않을 수 있다는 점이다. $P_2$는 residual error rate, 즉 error-detecting scheme을 쓰고도 error가 undetected로 남는 확률이다.
 
 ### Parity Check
 
@@ -95,54 +95,54 @@ Parity check는 single-bit error나 odd number of bit errors를 검출할 수 �
 
 ### Cyclic Redundancy Check (CRC)
 
-CRC(Cyclic Redundancy Check)는 가장 널리 쓰이고 강력한 error-detecting code 중 하나다. \(k\)-bit message \(D\)에 대해 transmitter는 \(n-k\)-bit FCS(Frame Check Sequence) \(F\)를 만들어 붙인다. resulting frame \(T\)가 미리 정한 divisor pattern \(P\)로 정확히 나누어떨어지도록 \(F\)를 고른다. receiver는 incoming frame을 같은 \(P\)로 나누고, remainder가 0이면 error가 없다고 가정한다.
+CRC(Cyclic Redundancy Check)는 가장 널리 쓰이고 강력한 error-detecting code 중 하나다. $k$-bit message $D$에 대해 transmitter는 $n-k$-bit FCS(Frame Check Sequence) $F$를 만들어 붙인다. resulting frame $T$가 미리 정한 divisor pattern $P$로 정확히 나누어떨어지도록 $F$를 고른다. receiver는 incoming frame을 같은 $P$로 나누고, remainder가 0이면 error가 없다고 가정한다.
 
 CRC의 계산은 modulo 2 arithmetic으로 수행된다. modulo 2 addition/subtraction은 carry 없는 binary 연산이고, 실제로는 XOR(exclusive-OR)이다. CRC에서 사용하는 값은 다음과 같다.
 
 | 기호 | 의미 |
 |---|---|
-| \(T\) | 전송할 \(n\)-bit frame |
-| \(D\) | \(k\)-bit data block/message, \(T\)의 앞 \(k\) bits |
-| \(F\) | \(n-k\)-bit FCS, \(T\)의 뒤 \(n-k\) bits |
-| \(P\) | \(n-k+1\)-bit predetermined divisor pattern |
+| $T$ | 전송할 $n$-bit frame |
+| $D$ | $k$-bit data block/message, $T$의 앞 $k$ bits |
+| $F$ | $n-k$-bit FCS, $T$의 뒤 $n-k$ bits |
+| $P$ | $n-k+1$-bit predetermined divisor pattern |
 
-목표는 \(T/P\)의 remainder가 0이 되게 하는 것이다. \(D\) 뒤에 \(n-k\)개의 0을 붙인 값은 \(2^{n-k}D\)다. 이를 \(P\)로 나누면 quotient \(Q\)와 remainder \(R\)이 생긴다.
+목표는 $T/P$의 remainder가 0이 되게 하는 것이다. $D$ 뒤에 $n-k$개의 0을 붙인 값은 $2^{n-k}D$다. 이를 $P$로 나누면 quotient $Q$와 remainder $R$이 생긴다.
 
-\[
+$$
 \frac{2^{n-k}D}{P}=Q+\frac{R}{P}
-\]
+$$
 
-CRC는 이 remainder \(R\)을 FCS로 사용한다.
+CRC는 이 remainder $R$을 FCS로 사용한다.
 
-\[
+$$
 T=2^{n-k}D+R
-\]
+$$
 
-그러면 \(T/P\)는 다음처럼 remainder가 사라진다. modulo 2에서는 \(R+R=0\)이기 때문이다.
+그러면 $T/P$는 다음처럼 remainder가 사라진다. modulo 2에서는 $R+R=0$이기 때문이다.
 
-\[
+$$
 \frac{T}{P}=\frac{2^{n-k}D+R}{P}=Q+\frac{R}{P}+\frac{R}{P}=Q
-\]
+$$
 
 따라서 transmitter는 `D 뒤에 0 채우기 → P로 modulo 2 division → remainder R을 FCS로 붙이기`를 수행하고, receiver는 `received frame T를 P로 나누어 remainder 확인`을 수행한다.
 
-CRC는 polynomial view로도 표현된다. bit string은 binary coefficient를 가진 polynomial로 본다. 예를 들어 \(D=110011\)이면 \(D(X)=X^5+X^4+X+1\), \(P=11001\)이면 \(P(X)=X^4+X^3+1\)이다. CRC의 핵심 식은 동일하다.
+CRC는 polynomial view로도 표현된다. bit string은 binary coefficient를 가진 polynomial로 본다. 예를 들어 $D=110011$이면 $D(X)=X^5+X^4+X+1$, $P=11001$이면 $P(X)=X^4+X^3+1$이다. CRC의 핵심 식은 동일하다.
 
-\[
+$$
 \frac{X^{n-k}D(X)}{P(X)}=Q(X)+\frac{R(X)}{P(X)}
-\]
+$$
 
-\[
+$$
 T(X)=X^{n-k}D(X)+R(X)
-\]
+$$
 
-전송 중 error pattern을 \(E\)라고 하면 received frame은 \(T_r=T \oplus E\)다. receiver가 error를 놓치는 경우는 \(T_r\)도 \(P\)로 나누어떨어지는 경우이고, 이는 결국 \(E\)가 \(P\)로 나누어떨어지는 경우다. 좋은 generator polynomial \(P(X)\)를 선택하는 이유가 바로 여기에 있다.
+전송 중 error pattern을 $E$라고 하면 received frame은 $T_r=T \oplus E$다. receiver가 error를 놓치는 경우는 $T_r$도 $P$로 나누어떨어지는 경우이고, 이는 결국 $E$가 $P$로 나누어떨어지는 경우다. 좋은 generator polynomial $P(X)$를 선택하는 이유가 바로 여기에 있다.
 
 CRC generator polynomial을 잘 고르면 다음 유형의 error를 검출할 수 있다.
 
-- \(P(X)\)가 둘 이상의 nonzero term을 가지면 all single-bit errors를 검출한다.
+- $P(X)$가 둘 이상의 nonzero term을 가지면 all single-bit errors를 검출한다.
 - 적절한 primitive polynomial을 쓰고 frame length 조건을 만족하면 all double-bit errors를 검출할 수 있다.
-- \(P(X)\)가 \((X+1)\) factor를 포함하면 odd number of errors를 검출한다.
+- $P(X)$가 $(X+1)$ factor를 포함하면 odd number of errors를 검출한다.
 - FCS length 이하의 burst error는 모두 검출한다.
 - 더 긴 burst error도 매우 높은 확률로 검출한다.
 
@@ -150,18 +150,18 @@ CRC generator polynomial을 잘 고르면 다음 유형의 error를 검출할 �
 
 ### CRC Digital Logic
 
-CRC는 수학적 나눗셈으로만 구현되는 것이 아니라 XOR gates와 shift register로 직접 구현할 수 있다. shift register는 1-bit storage device들의 줄이며, 각 clock time마다 전체 register가 동시에 shift된다. CRC circuit의 구조는 divisor polynomial \(P(X)\)에 의해 결정된다.
+CRC는 수학적 나눗셈으로만 구현되는 것이 아니라 XOR gates와 shift register로 직접 구현할 수 있다. shift register는 1-bit storage device들의 줄이며, 각 clock time마다 전체 register가 동시에 shift된다. CRC circuit의 구조는 divisor polynomial $P(X)$에 의해 결정된다.
 
 구현 규칙은 간단하다.
 
-- shift register는 FCS length와 같은 \(n-k\) bits를 가진다.
-- XOR gate는 최대 \(n-k\)개까지 필요하다.
-- \(P(X)\)의 중간 term 존재 여부가 XOR gate의 존재 여부를 결정한다. 단, 양 끝 term인 \(1\)과 \(X^{n-k}\)는 제외하고 본다.
+- shift register는 FCS length와 같은 $n-k$ bits를 가진다.
+- XOR gate는 최대 $n-k$개까지 필요하다.
+- $P(X)$의 중간 term 존재 여부가 XOR gate의 존재 여부를 결정한다. 단, 양 끝 term인 $1$과 $X^{n-k}$는 제외하고 본다.
 
 ![Figure 6.5](@/assets/images/cs-data-communication-082-figure-6-5-page-214.png)
 *Figure 6.5 · PDF p. 214 · polynomial division을 XOR gate와 shift register로 구현한 CRC 회로 예*
 
-Figure 6.5는 앞의 CRC 예시 \(D=1010001101\), \(P=110101\), 즉 \(P(X)=X^5+X^4+X^2+1\)을 shift-register circuit으로 계산하는 과정을 보여준다. register는 처음에 all zeros로 clear된다. message bit는 most significant bit부터 하나씩 들어간다. 각 clock step에서 register 값과 XOR output이 다음 register state를 만든다.
+Figure 6.5는 앞의 CRC 예시 $D=1010001101$, $P=110101$, 즉 $P(X)=X^5+X^4+X^2+1$을 shift-register circuit으로 계산하는 과정을 보여준다. register는 처음에 all zeros로 clear된다. message bit는 most significant bit부터 하나씩 들어간다. 각 clock step에서 register 값과 XOR output이 다음 register state를 만든다.
 
 송신 측 동작은 다음처럼 이해하면 된다.
 
@@ -173,15 +173,15 @@ Figure 6.5는 앞의 CRC 예시 \(D=1010001101\), \(P=110101\), 즉 \(P(X)=X^5+X
 5. XOR gates를 pass-through처럼 만들고 shift를 계속하여 FCS bits를 output
 ```
 
-수신 측에서는 같은 logic을 사용한다. received message bits가 먼저 들어오면, error가 없을 경우 message 끝에서 shift register에는 송신자가 계산했던 \(R\) pattern이 들어 있다. 이어서 transmitted FCS bits가 들어오면 이 값들이 register를 zero out한다. 최종 register가 all zeros이면 no detected error로 본다. 최종 register에 nonzero value가 남으면 error detected다.
+수신 측에서는 같은 logic을 사용한다. received message bits가 먼저 들어오면, error가 없을 경우 message 끝에서 shift register에는 송신자가 계산했던 $R$ pattern이 들어 있다. 이어서 transmitted FCS bits가 들어오면 이 값들이 register를 zero out한다. 최종 register가 all zeros이면 no detected error로 본다. 최종 register에 nonzero value가 남으면 error detected다.
 
 Figure 6.6은 manifest에는 추출되어 있지 않지만, 원문은 이를 일반화된 CRC architecture로 제시한다. 일반 divisor가
 
-\[
+$$
 P(X)=\sum_{i=0}^{n-k}A_iX^i,\quad A_0=A_{n-k}=1
-\]
+$$
 
-일 때 각 \(A_i\)가 1이면 해당 위치에 feedback XOR connection을 두고, 0이면 두지 않는다. 즉 CRC 회로는 generator polynomial을 그대로 hardware feedback topology로 옮긴 것이다.
+일 때 각 $A_i$가 1이면 해당 위치에 feedback XOR connection을 두고, 0이면 두지 않는다. 즉 CRC 회로는 generator polynomial을 그대로 hardware feedback topology로 옮긴 것이다.
 
 ## 6.4 Error Correction
 
@@ -194,7 +194,7 @@ Error detection은 HDLC 같은 data link control protocol이나 TCP 같은 trans
 ![Figure 6.7](@/assets/images/cs-data-communication-083-figure-6-7-page-215.png)
 *Figure 6.7 · PDF p. 215 · k-bit data를 n-bit codeword로 바꾸고 receiver가 FEC decoder로 correction하는 흐름*
 
-FEC에서는 transmitter가 \(k\)-bit data block을 \(n\)-bit codeword로 mapping한다. \(n>k\)이므로 redundancy가 추가된다. receiver의 FEC decoder는 incoming \(n\)-bit block을 보고 네 가지 결과 중 하나를 낸다.
+FEC에서는 transmitter가 $k$-bit data block을 $n$-bit codeword로 mapping한다. $n>k$이므로 redundancy가 추가된다. receiver의 FEC decoder는 incoming $n$-bit block을 보고 네 가지 결과 중 하나를 낸다.
 
 1. no bit errors: original codeword 그대로 들어와 original data block을 출력한다.
 2. correctable error: incoming block이 codeword와 다르지만 decoder가 original data block으로 mapping할 수 있다.
@@ -205,11 +205,11 @@ Error correction은 redundancy를 추가해 receiver가 어느 original message�
 
 ### Block Code와 Hamming Distance
 
-Hamming distance \(d(v_1,v_2)\)는 두 \(n\)-bit binary sequence가 서로 다른 bit position의 개수다. 예를 들어 \(v_1=011011\), \(v_2=110001\)이면 서로 다른 위치가 3개이므로 \(d(v_1,v_2)=3\)이다.
+Hamming distance $d(v_1,v_2)$는 두 $n$-bit binary sequence가 서로 다른 bit position의 개수다. 예를 들어 $v_1=011011$, $v_2=110001$이면 서로 다른 위치가 3개이므로 $d(v_1,v_2)=3$이다.
 
-\((n,k)\) block code는 \(k\)-bit data block을 \(n\)-bit codeword로 바꾼다. 가능한 \(2^n\)개의 \(n\)-bit sequence 중 valid codeword는 \(2^k\)개뿐이다. 나머지는 invalid codeword다. receiver가 invalid codeword를 받으면, 가장 가까운 valid codeword를 선택하는 minimum-distance rule로 correction을 시도할 수 있다.
+$(n,k)$ block code는 $k$-bit data block을 $n$-bit codeword로 바꾼다. 가능한 $2^n$개의 $n$-bit sequence 중 valid codeword는 $2^k$개뿐이다. 나머지는 invalid codeword다. receiver가 invalid codeword를 받으면, 가장 가까운 valid codeword를 선택하는 minimum-distance rule로 correction을 시도할 수 있다.
 
-원문 예시는 \(k=2, n=5\)인 code를 사용한다.
+원문 예시는 $k=2, n=5$인 code를 사용한다.
 
 | Data block | Codeword |
 |---|---|
@@ -222,44 +222,44 @@ Hamming distance \(d(v_1,v_2)\)는 두 \(n\)-bit binary sequence가 서로 다�
 
 하지만 모든 invalid codeword에서 closest valid codeword가 유일한 것은 아니다. 어떤 invalid codeword는 두 valid codeword에서 같은 minimum distance를 가질 수 있다. 이 경우 error는 detected되지만 correctable하지 않다. 위 예시 code는 모든 single-bit error를 correct할 수 있지만, double-bit error는 항상 correct할 수 없다.
 
-### \(d_{min}\), Code Rate, Redundancy
+### $d_{min}$, Code Rate, Redundancy
 
-Code의 minimum distance \(d_{min}\)은 valid codeword들 사이의 pairwise Hamming distance 중 최솟값이다.
+Code의 minimum distance $d_{min}$은 valid codeword들 사이의 pairwise Hamming distance 중 최솟값이다.
 
-\[
+$$
 d_{min}=\min_{i\ne j} d(w_i,w_j)
-\]
+$$
 
-\((n,k)\) block code에서 redundancy는 \((n-k)/k\), code rate는 \(k/n\)이다. code rate는 같은 input data rate를 유지하기 위해 추가로 필요한 transmission capacity를 나타낸다. 예를 들어 code rate \(1/2\)는 uncoded system과 같은 data rate를 유지하려면 channel bit rate가 두 배 필요하다는 뜻이다. 원문 예시 \((5,2)\) code는 code rate가 \(2/5\)라서 1 Mbps input data를 따라가려면 encoder output은 2.5 Mbps가 되어야 한다.
+$(n,k)$ block code에서 redundancy는 $(n-k)/k$, code rate는 $k/n$이다. code rate는 같은 input data rate를 유지하기 위해 추가로 필요한 transmission capacity를 나타낸다. 예를 들어 code rate $1/2$는 uncoded system과 같은 data rate를 유지하려면 channel bit rate가 두 배 필요하다는 뜻이다. 원문 예시 $(5,2)$ code는 code rate가 $2/5$라서 1 Mbps input data를 따라가려면 encoder output은 2.5 Mbps가 되어야 한다.
 
-\(d_{min}\)과 correction/detection 능력의 관계는 다음과 같다.
+$d_{min}$과 correction/detection 능력의 관계는 다음과 같다.
 
 | 목적 | 필요한 minimum distance |
 |---|---|
-| 모든 \(t\)-bit errors까지 correct | \(d_{min} \ge 2t+1\) |
-| 모든 \(t-1\)-bit errors correct + 모든 \(t\)-bit errors detect | \(d_{min} \ge 2t\) |
-| correction 없이 detection만 할 때 \(t\)-bit errors detect | \(t=d_{min}-1\) |
+| 모든 $t$-bit errors까지 correct | $d_{min} \ge 2t+1$ |
+| 모든 $t-1$-bit errors correct + 모든 $t$-bit errors detect | $d_{min} \ge 2t$ |
+| correction 없이 detection만 할 때 $t$-bit errors detect | $t=d_{min}-1$ |
 
 보장 가능한 correctable error 수는 다음과 같다.
 
-\[
+$$
 t=\left\lfloor\frac{d_{min}-1}{2}\right\rfloor
-\]
+$$
 
-직관은 간단하다. \(d_{min}\)개 이상의 bit가 바뀌면 한 valid codeword가 다른 valid codeword로 변할 수 있다. \(d_{min}\)보다 적게 바뀌면 다른 valid codeword에 정확히 도달할 수 없으므로 적어도 error detection은 가능하다. correction은 더 엄격해서, error로 생긴 received word가 original codeword에 가장 가까운 유일한 valid codeword여야 한다.
+직관은 간단하다. $d_{min}$개 이상의 bit가 바뀌면 한 valid codeword가 다른 valid codeword로 변할 수 있다. $d_{min}$보다 적게 바뀌면 다른 valid codeword에 정확히 도달할 수 없으므로 적어도 error detection은 가능하다. correction은 더 엄격해서, error로 생긴 received word가 original codeword에 가장 가까운 유일한 valid codeword여야 한다.
 
-Block code 설계에는 상충 목표가 있다. 같은 \(n,k\)에서 \(d_{min}\)은 크게 하고 싶고, encoding/decoding은 쉬워야 하며, bandwidth 절약을 위해 extra bits \(n-k\)는 작게 하고 싶다. 하지만 error rate를 낮추려면 extra bits를 크게 하고 싶다. 즉 bandwidth overhead와 error performance 사이의 trade-off가 본질이다.
+Block code 설계에는 상충 목표가 있다. 같은 $n,k$에서 $d_{min}$은 크게 하고 싶고, encoding/decoding은 쉬워야 하며, bandwidth 절약을 위해 extra bits $n-k$는 작게 하고 싶다. 하지만 error rate를 낮추려면 extra bits를 크게 하고 싶다. 즉 bandwidth overhead와 error performance 사이의 trade-off가 본질이다.
 
 ### Coding Gain
 
 ![Figure 6.8](@/assets/images/cs-data-communication-084-figure-6-8-page-220.png)
 *Figure 6.8 · PDF p. 220 · rate 1/2 coding이 uncoded system 대비 required Eb/N0를 낮추는 효과*
 
-Figure 6.8은 error-correcting code가 system performance를 어떻게 개선하는지 보여준다. uncoded modulation system의 BER curve와 rate 1/2 coding system의 curve를 비교하면, 특정 BER을 달성하는 데 필요한 \(E_b/N_0\)가 줄어드는 영역이 있다. 이 required \(E_b/N_0\) 감소량을 coding gain이라고 한다.
+Figure 6.8은 error-correcting code가 system performance를 어떻게 개선하는지 보여준다. uncoded modulation system의 BER curve와 rate 1/2 coding system의 curve를 비교하면, 특정 BER을 달성하는 데 필요한 $E_b/N_0$가 줄어드는 영역이 있다. 이 required $E_b/N_0$ 감소량을 coding gain이라고 한다.
 
-원문 예시에서는 BER \(10^{-6}\)에서 coding을 쓰면 required \(E_b/N_0\)가 2.77 dB 감소한다. 단, rate 1/2 code에서는 data bit 하나당 channel bit 두 개가 전송되므로 coded bit당 energy는 data bit energy의 절반, 즉 3 dB 낮아진다. Figure 6.8의 second curve에서 BER은 uncorrected errors rate이고, \(E_b\)는 data bit당 energy를 뜻한다는 점을 헷갈리면 안 된다.
+원문 예시에서는 BER $10^{-6}$에서 coding을 쓰면 required $E_b/N_0$가 2.77 dB 감소한다. 단, rate 1/2 code에서는 data bit 하나당 channel bit 두 개가 전송되므로 coded bit당 energy는 data bit energy의 절반, 즉 3 dB 낮아진다. Figure 6.8의 second curve에서 BER은 uncorrected errors rate이고, $E_b$는 data bit당 energy를 뜻한다는 점을 헷갈리면 안 된다.
 
-또 하나 중요한 점은 coding이 항상 이득을 주지는 않는다는 것이다. \(E_b/N_0\)가 어떤 threshold보다 낮으면 extra check bits가 overhead로 작용해 성능을 악화시킬 수 있다. threshold 위에서는 code의 error-correcting power가 reduced energy per coded bit의 손실을 보상하고도 남아 coding gain이 생긴다.
+또 하나 중요한 점은 coding이 항상 이득을 주지는 않는다는 것이다. $E_b/N_0$가 어떤 threshold보다 낮으면 extra check bits가 overhead로 작용해 성능을 악화시킬 수 있다. threshold 위에서는 code의 error-correcting power가 reduced energy per coded bit의 손실을 보상하고도 남아 coding gain이 생긴다.
 
 ## 6.5 Line Configurations
 
@@ -294,7 +294,7 @@ Asynchronous/synchronous transmission은 Chapter 5의 encoding과 직접 연결�
 
 Error detection과 error correction은 “error가 생긴 뒤 무엇을 할 것인가”의 두 전략이다. Error detection은 CRC나 parity로 error를 발견한 뒤 retransmission을 요구한다. Error correction은 FEC redundancy로 receiver가 일부 error를 직접 고친다. 따라서 propagation delay가 길거나 retransmission 비용이 큰 wireless/satellite 환경에서는 FEC가 더 매력적이다.
 
-CRC와 ECC는 둘 다 redundancy를 사용하지만 목적이 다르다. CRC의 목표는 residual error rate를 낮추는 detection이고, ECC의 목표는 codeword space를 넓게 배치해 nearest valid codeword를 찾을 수 있게 하는 correction이다. CRC에서는 generator polynomial이 detection capability를 결정하고, block code에서는 \(d_{min}\), code rate, redundancy가 correction/detection trade-off를 결정한다.
+CRC와 ECC는 둘 다 redundancy를 사용하지만 목적이 다르다. CRC의 목표는 residual error rate를 낮추는 detection이고, ECC의 목표는 codeword space를 넓게 배치해 nearest valid codeword를 찾을 수 있게 하는 correction이다. CRC에서는 generator polynomial이 detection capability를 결정하고, block code에서는 $d_{min}$, code rate, redundancy가 correction/detection trade-off를 결정한다.
 
 ## 오해하기 쉬운 내용
 
@@ -304,7 +304,7 @@ CRC와 ECC는 둘 다 redundancy를 사용하지만 목적이 다르다. CRC의 
 - CRC는 error를 고치는 code가 아니라 detection code다. receiver가 remainder nonzero를 보고 error를 알 수 있지만, 어느 bit가 틀렸는지는 일반적으로 알지 못한다.
 - CRC에서 modulo 2 arithmetic은 ordinary binary arithmetic이 아니다. carry 없는 XOR 연산이다.
 - FEC는 bandwidth를 공짜로 얻는 방법이 아니다. redundancy 때문에 code rate가 낮아지고 channel bit rate 또는 bandwidth 요구가 증가한다.
-- \(d_{min}\)이 크면 correction 능력은 좋아지지만, 같은 \(n,k\) 조건에서 code 설계와 decoding complexity, redundancy trade-off가 생긴다.
+- $d_{min}$이 크면 correction 능력은 좋아지지만, 같은 $n,k$ 조건에서 code 설계와 decoding complexity, redundancy trade-off가 생긴다.
 - full duplex는 단순히 양방향 통신 가능이라는 뜻이 아니라 simultaneous two-way transmission을 뜻한다. half duplex도 양방향은 가능하지만 alternate 방식이다.
 
 ## 면접 질문
@@ -313,9 +313,9 @@ CRC와 ECC는 둘 다 redundancy를 사용하지만 목적이 다르다. CRC의 
 2. Synchronous frame에서 flag, control fields, data field가 왜 필요한지 설명하라.
 3. Single-bit error와 burst error의 차이를 설명하고, data rate가 높을수록 burst error가 더 부담스러운 이유를 말하라.
 4. Parity check가 검출할 수 있는 error와 놓치는 error를 예로 설명하라.
-5. CRC에서 \(D\), \(P\), \(R\), FCS가 무엇이며, receiver가 remainder 0을 확인하는 이유를 설명하라.
+5. CRC에서 $D$, $P$, $R$, FCS가 무엇이며, receiver가 remainder 0을 확인하는 이유를 설명하라.
 6. CRC가 parity bit보다 강력한 이유를 generator polynomial과 burst error 관점에서 설명하라.
 7. Shift register와 XOR gate로 CRC를 구현할 수 있는 이유를 polynomial division과 연결해 설명하라.
 8. FEC와 retransmission 기반 error recovery의 trade-off를 wireless/satellite link 관점에서 설명하라.
-9. Hamming distance와 \(d_{min}\)이 block error-correcting code의 correction 능력을 어떻게 결정하는지 설명하라.
+9. Hamming distance와 $d_{min}$이 block error-correcting code의 correction 능력을 어떻게 결정하는지 설명하라.
 10. Point-to-point와 multipoint, half duplex와 full duplex를 각각 비교하라.

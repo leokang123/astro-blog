@@ -51,10 +51,12 @@ from instructor
 where salary < 75000;
 ```
 
-```text
-sigma_salary<75000 (pi_salary (instructor))
-pi_salary (sigma_salary<75000 (instructor))
-```
+$$
+\begin{aligned}
+\sigma_{salary < 75000}(\pi_{salary}(instructor)) \\
+\pi_{salary}(\sigma_{salary < 75000}(instructor))
+\end{aligned}
+$$
 
 두 expression은 같은 결과를 낼 수 있지만 실행 비용은 다를 수 있다. Selection을 구현할 때도 relation 전체를 scan할지, `salary` 위의 `B+ tree index`를 사용할지, clustering 여부를 고려할지에 따라 비용이 달라진다.
 
@@ -80,9 +82,9 @@ Relational-algebra expression만으로는 "무엇을 계산하는가"만 일부 
 
 이 장의 기본 I/O cost model은 다음과 같다.
 
-```text
-cost = b * tT + S * tS
-```
+$$
+cost = b \cdot t_T + S \cdot t_S
+$$
 
 | 기호 | 의미 |
 |---|---|
@@ -204,21 +206,21 @@ Merge stage에서 runs 수 `N`이 `M`보다 작으면 각 run에 input buffer 1�
 
 Merge pass에서 seek 수를 줄이기 위해 각 input run과 output에 한 block씩이 아니라 `bb` buffer blocks씩 할당할 수 있다. 그러면 한 pass에서 merge할 수 있는 run 수는 `floor(M / bb) - 1`이다. 필요한 merge pass 수는 다음과 같다.
 
-```text
-ceil(log_{floor(M / bb) - 1}(br / M))
-```
+$$
+\left\lceil \log_{\lfloor M / b_b \rfloor - 1}(b_r / M) \right\rceil
+$$
 
 Final pass의 output은 바로 query pipeline으로 넘기거나 최종 결과로 사용할 수 있으므로, final sorted result를 disk에 다시 쓰는 비용은 보통 제외한다. 이때 external sort의 block transfer 수는 원문 단순화 기준으로 다음과 같다.
 
-```text
-br * (2 * ceil(log_{floor(M / bb) - 1}(br / M)) + 1)
-```
+$$
+b_r \cdot \left(2 \cdot \left\lceil \log_{\lfloor M / b_b \rfloor - 1}(b_r / M) \right\rceil + 1\right)
+$$
 
 Seek cost도 별도로 고려한다. Run generation은 각 run을 읽고 쓰기 위한 seeks가 필요하고, 각 merge pass는 input runs를 읽기 위한 seeks와 output write seeks가 필요하다. 원문이 Figure 15.4 예시에 적용한 seek 수 식은 다음과 같다.
 
-```text
-2 * ceil(br / M) + ceil(br / bb) * (2 * ceil(log_{floor(M / bb) - 1}(br / M)) - 1)
-```
+$$
+2 \cdot \left\lceil b_r / M \right\rceil + \left\lceil b_r / b_b \right\rceil \cdot \left(2 \cdot \left\lceil \log_{\lfloor M / b_b \rfloor - 1}(b_r / M) \right\rceil - 1\right)
+$$
 
 정리하면 external sort-merge의 cost를 좌우하는 것은 relation size `br`, available memory `M`, per-run buffer size `bb`다. `M`이 클수록 initial runs가 줄고 merge fan-in이 커져 passes가 줄어든다. `bb`를 크게 잡으면 sequential I/O 묶음이 커져 seek가 줄지만, 동시에 merge할 수 있는 runs 수가 줄어 pass 수가 늘 수 있다.
 
@@ -261,10 +263,12 @@ Block nested-loop join은 basic nested-loop join보다 훨씬 낫다. Inner rela
 
 Memory가 `M` blocks 있으면 outer relation을 한 block씩이 아니라 `M - 2` blocks씩 읽을 수 있다. Inner block buffer와 output buffer를 하나씩 남겨 두기 때문이다. 이 경우 inner relation scan 횟수는 `br`이 아니라 `ceil(br / (M - 2))`가 된다.
 
-```text
-block transfers = ceil(br / (M - 2)) * bs + br
-seeks = 2 * ceil(br / (M - 2))
-```
+$$
+\begin{aligned}
+block\ transfers &= \left\lceil b_r / (M - 2) \right\rceil \cdot b_s + b_r \\
+seeks &= 2 \cdot \left\lceil b_r / (M - 2) \right\rceil
+\end{aligned}
+$$
 
 추가 최적화도 있다. Natural/equi-join에서 inner join attribute가 key이면 첫 match를 찾은 뒤 inner scan을 멈출 수 있다. Inner loop를 forward/backward로 번갈아 scan하면 이전 scan에서 buffer에 남은 block을 재사용할 가능성이 커진다. Inner relation의 join attribute에 index가 있으면 다음 indexed nested-loop join으로 넘어갈 수 있다.
 
@@ -274,9 +278,9 @@ seeks = 2 * ceil(br / (M - 2))
 
 Cost는 outer relation을 읽는 비용과 outer tuple마다 inner index lookup을 수행하는 비용의 합으로 본다.
 
-```text
-cost = br * (tT + tS) + nr * c
-```
+$$
+cost = b_r \cdot (t_T + t_S) + n_r \cdot c
+$$
 
 | 기호 | 의미 |
 |---|---|
@@ -360,29 +364,29 @@ Recursive partitioning을 피하려면 memory가 충분히 커야 한다. 원문
 
 Overflow가 없고 recursive partitioning이 필요 없는 hash join의 block transfer cost는 다음과 같이 근사된다.
 
-```text
-3 * (br + bs) + 4 * nh
-```
+$$
+3 \cdot (b_r + b_s) + 4 \cdot n_h
+$$
 
 Partitioning에서 두 relation을 읽고 다시 쓰므로 `2(br + bs)`가 들고, build/probe phase에서 partitions를 한 번 더 읽으므로 `br + bs`가 추가된다. `4nh`는 partially filled blocks overhead이며 보통 작아 무시할 수 있다.
 
 Seek cost는 input/output buffer 크기 `bb`를 고려해 다음과 같이 근사된다.
 
-```text
-2 * (ceil(br / bb) + ceil(bs / bb)) + 2 * nh
-```
+$$
+2 \cdot \left(\left\lceil b_r / b_b \right\rceil + \left\lceil b_s / b_b \right\rceil\right) + 2 \cdot n_h
+$$
 
 Recursive partitioning이 필요하면 pass 수만큼 partitioning read/write가 반복된다. Build input `s`의 partitioning pass 수는 다음과 같다.
 
-```text
-ceil(log_{floor(M / bb) - 1}(bs / M))
-```
+$$
+\left\lceil \log_{\lfloor M / b_b \rfloor - 1}(b_s / M) \right\rceil
+$$
 
 이때 block transfer는 다음처럼 커진다.
 
-```text
-2 * (br + bs) * ceil(log_{floor(M / bb) - 1}(bs / M)) + br + bs
-```
+$$
+2 \cdot (b_r + b_s) \cdot \left\lceil \log_{\lfloor M / b_b \rfloor - 1}(b_s / M) \right\rceil + b_r + b_s
+$$
 
 Hash join은 build input 전체가 memory에 들어가면 가장 좋아진다. 이 경우 `nh = 0`으로 두고 temporary partitions를 만들 필요 없이 build input을 memory hash table로 만들고 probe input을 한 번 scan하면 되므로 `br + bs` block transfers와 two seeks 수준까지 내려간다.
 

@@ -23,9 +23,9 @@ Chapter 5의 핵심은 data와 signal을 분리해서 보는 것이다. data는 
 ![Figure 5.1](@/assets/images/cs-data-communication-052-figure-5-1-page-159.png)
 *Figure 5.1 · PDF p. 159 · digital signal로의 encoding과 analog carrier로의 modulation 비교*
 
-Figure 5.1의 위쪽은 digital signaling이다. source data \(g(t)\)는 digital일 수도 analog일 수도 있고, encoder를 거쳐 digital signal \(x(t)\)가 된다. \(x(t)\)의 실제 모양은 encoding technique에 따라 달라지며, bandwidth를 줄이거나 error를 줄이거나 synchronization을 돕도록 선택된다.
+Figure 5.1의 위쪽은 digital signaling이다. source data $g(t)$는 digital일 수도 analog일 수도 있고, encoder를 거쳐 digital signal $x(t)$가 된다. $x(t)$의 실제 모양은 encoding technique에 따라 달라지며, bandwidth를 줄이거나 error를 줄이거나 synchronization을 돕도록 선택된다.
 
-Figure 5.1의 아래쪽은 analog signaling이다. analog signaling의 기반은 carrier signal이다. carrier signal은 일정한 frequency \(f_c\)를 가진 연속 신호이며, data는 modulation을 통해 carrier의 amplitude, frequency, phase 중 하나 이상을 변화시키는 방식으로 실린다. 입력 data \(m(t)\)는 modulating signal 또는 baseband signal이라 부르고, modulation 결과는 modulated signal \(s(t)\)라 부른다. \(s(t)\)는 보통 carrier frequency \(f_c\) 주변에 bandwidth가 위치하는 bandpass signal이다.
+Figure 5.1의 아래쪽은 analog signaling이다. analog signaling의 기반은 carrier signal이다. carrier signal은 일정한 frequency $f_c$를 가진 연속 신호이며, data는 modulation을 통해 carrier의 amplitude, frequency, phase 중 하나 이상을 변화시키는 방식으로 실린다. 입력 data $m(t)$는 modulating signal 또는 baseband signal이라 부르고, modulation 결과는 modulated signal $s(t)$라 부른다. $s(t)$는 보통 carrier frequency $f_c$ 주변에 bandwidth가 위치하는 bandpass signal이다.
 
 네 조합을 선택하는 대표 이유는 다음과 같다.
 
@@ -47,9 +47,9 @@ Digital signal은 discrete하고 discontinuous한 voltage pulse들의 sequence�
 | 용어 | 단위 | 의미 |
 |---|---:|---|
 | data element | bit | binary 1 또는 0 하나 |
-| data rate \(R\) | bps | data element가 전송되는 속도 |
+| data rate $R$ | bps | data element가 전송되는 속도 |
 | signal element | digital에서는 voltage pulse | signaling code에서 가장 짧은 구간을 차지하는 신호 단위 |
-| signaling rate / modulation rate \(D\) | baud | signal element가 전송되는 속도 |
+| signaling rate / modulation rate $D$ | baud | signal element가 전송되는 속도 |
 | mark / space | - | 역사적 용어로 mark는 1, space는 0 |
 
 receiver가 digital signal을 해석하려면 두 가지를 알아야 한다. 첫째, 각 bit interval이 언제 시작하고 끝나는지 알아야 한다. 둘째, 해당 interval의 signal level이 어떤 binary value를 의미하는지 판단해야 한다. noise, distortion, clock drift가 있으면 sampling 시점이나 threshold 판정이 틀어져 BER(Bit Error Rate)가 증가한다.
@@ -69,7 +69,7 @@ encoding scheme을 평가할 때는 다음 기준을 함께 본다.
 
 NRZ(Nonreturn to Zero)는 bit interval 동안 voltage level이 일정하게 유지되고 zero level로 돌아가지 않는 방식이다. 가장 쉬운 형태는 binary 0과 1에 서로 다른 voltage level을 배정하는 것이다.
 
-NRZ-L(Nonreturn to Zero-Level)은 level 자체가 bit value를 의미한다. 원문 기준에서는 0이 high level, 1이 low level이다. 이 정의는 다른 교재와 반대일 수 있지만, data communications interface와 관련 standards의 관례에 맞춘 것이다. NRZ-L은 terminal이나 device가 digital data를 생성/해석할 때 흔히 쓰이는 기본형이며, 다른 transmission code를 쓸 때도 NRZ-L이 입력 \(g(t)\) 역할을 할 수 있다.
+NRZ-L(Nonreturn to Zero-Level)은 level 자체가 bit value를 의미한다. 원문 기준에서는 0이 high level, 1이 low level이다. 이 정의는 다른 교재와 반대일 수 있지만, data communications interface와 관련 standards의 관례에 맞춘 것이다. NRZ-L은 terminal이나 device가 digital data를 생성/해석할 때 흔히 쓰이는 기본형이며, 다른 transmission code를 쓸 때도 NRZ-L이 입력 $g(t)$ 역할을 할 수 있다.
 
 NRZI(Nonreturn to Zero Inverted)는 bit value를 level 자체가 아니라 transition 유무로 표현한다. bit time의 시작에서 transition이 있으면 1, transition이 없으면 0이다. NRZI는 differential encoding의 예다. differential encoding은 현재 signal element의 절대값이 아니라 이전 signal element와의 변화(change)를 정보로 쓴다. 이 방식은 noise 환경에서 threshold level 자체를 판정하는 것보다 transition을 검출하는 편이 더 신뢰할 수 있고, twisted-pair lead가 뒤바뀌어 polarity가 반전되는 상황에도 강하다.
 
@@ -86,12 +86,12 @@ Bipolar-AMI에서는 binary 0을 no line signal로 표현하고, binary 1을 pos
 
 Pseudoternary는 반대로 binary 1을 no line signal로, binary 0을 alternating positive/negative pulse로 표현한다. 원리는 AMI와 비슷하며 어느 쪽이 절대적으로 우월하다기보다 application별 관례가 다르다.
 
-하지만 AMI는 긴 0 sequence에서, pseudoternary는 긴 1 sequence에서 transition이 없어 synchronization 문제가 남는다. 또한 multilevel binary는 receiver가 \(+A, 0, -A\) 세 level을 구분해야 하므로 two-level signal보다 noise margin이 작다. 원문은 같은 bit error probability를 얻기 위해 multilevel binary가 two-valued signal보다 약 3 dB 더 많은 signal power를 요구한다고 설명한다.
+하지만 AMI는 긴 0 sequence에서, pseudoternary는 긴 1 sequence에서 transition이 없어 synchronization 문제가 남는다. 또한 multilevel binary는 receiver가 $+A, 0, -A$ 세 level을 구분해야 하므로 two-level signal보다 noise margin이 작다. 원문은 같은 bit error probability를 얻기 위해 multilevel binary가 two-valued signal보다 약 3 dB 더 많은 signal power를 요구한다고 설명한다.
 
 ![Figure 5.4](@/assets/images/cs-data-communication-055-figure-5-4-page-166.png)
 *Figure 5.4 · PDF p. 166 · NRZ/biphase와 AMI/pseudoternary의 theoretical BER 비교*
 
-Figure 5.4는 같은 \(E_b/N_0\) 조건에서 NRZ/biphase 계열과 AMI/pseudoternary 계열의 BER 차이를 보여준다. line code 선택은 단순히 waveform이 예쁜지를 고르는 문제가 아니라, bandwidth, synchronization, dc component, required power, BER 사이의 trade-off다.
+Figure 5.4는 같은 $E_b/N_0$ 조건에서 NRZ/biphase 계열과 AMI/pseudoternary 계열의 BER 차이를 보여준다. line code 선택은 단순히 waveform이 예쁜지를 고르는 문제가 아니라, bandwidth, synchronization, dc component, required power, BER 사이의 trade-off다.
 
 ### Biphase
 
@@ -104,13 +104,13 @@ Biphase의 장점은 분명하다. 매 bit time마다 예측 가능한 transitio
 ![Figure 5.5](@/assets/images/cs-data-communication-056-figure-5-5-page-167.png)
 *Figure 5.5 · PDF p. 167 · 1 Mbps binary ones stream에서 NRZI와 Manchester의 signaling rate 차이*
 
-data rate와 modulation rate는 반드시 구분해야 한다. data rate는 bit per second이고, modulation rate는 signal elements per second, 즉 baud다. Manchester encoding에서는 bit interval 절반짜리 pulse가 최소 signal element가 될 수 있으므로, all 0s 또는 all 1s에서는 maximum modulation rate가 \(2/T_b\)까지 올라간다.
+data rate와 modulation rate는 반드시 구분해야 한다. data rate는 bit per second이고, modulation rate는 signal elements per second, 즉 baud다. Manchester encoding에서는 bit interval 절반짜리 pulse가 최소 signal element가 될 수 있으므로, all 0s 또는 all 1s에서는 maximum modulation rate가 $2/T_b$까지 올라간다.
 
-\[
+$$
 D = \frac{R}{L} = \frac{R}{\log_2 M}
-\]
+$$
 
-여기서 \(D\)는 modulation rate, \(R\)은 data rate, \(M\)은 서로 다른 signal element 수, \(L\)은 signal element당 bit 수다. 같은 bps라도 encoding 방식에 따라 필요한 baud와 bandwidth가 달라진다는 점이 이 절의 핵심이다.
+여기서 $D$는 modulation rate, $R$은 data rate, $M$은 서로 다른 signal element 수, $L$은 signal element당 bit 수다. 같은 bps라도 encoding 방식에 따라 필요한 baud와 bandwidth가 달라진다는 점이 이 절의 핵심이다.
 
 ### Scrambling Techniques
 
@@ -140,29 +140,29 @@ digital data를 analog signal로 변환하는 기본 방식은 carrier signal의
 
 ASK에서는 두 binary value를 carrier의 서로 다른 amplitude로 표현한다. 흔한 형태는 carrier가 존재하면 1, carrier가 없으면 0으로 보는 것이다.
 
-\[
+$$
 s(t) =
 \begin{cases}
 A\cos(2\pi f_c t), & \text{binary 1}\\
 0, & \text{binary 0}
 \end{cases}
-\]
+$$
 
 ASK는 sudden gain change에 취약하고 modulation 효율도 좋지 않다. voice-grade line에서는 보통 1200 bps 이하 정도에 쓰인다. 다만 optical fiber에서는 digital data를 빛의 pulse 유무 또는 lightwave amplitude 차이로 표현하는 방식이 ASK와 같은 구조를 가진다. LED transmitter에서는 light pulse와 no light가 signal element를 구분하고, laser transmitter에서는 낮은 bias light level과 더 높은 light level이 서로 다른 signal element를 나타낼 수 있다.
 
 ### Frequency Shift Keying (FSK)
 
-FSK에서는 binary value를 서로 다른 frequency로 표현한다. 가장 흔한 형태는 BFSK(Binary FSK)로, carrier frequency \(f_c\) 근처의 두 frequency \(f_1, f_2\)가 1과 0을 나타낸다.
+FSK에서는 binary value를 서로 다른 frequency로 표현한다. 가장 흔한 형태는 BFSK(Binary FSK)로, carrier frequency $f_c$ 근처의 두 frequency $f_1, f_2$가 1과 0을 나타낸다.
 
-\[
+$$
 s(t) =
 \begin{cases}
 A\cos(2\pi f_1 t), & \text{binary 1}\\
 A\cos(2\pi f_2 t), & \text{binary 0}
 \end{cases}
-\]
+$$
 
-보통 \(f_1\)과 \(f_2\)는 \(f_c\)를 중심으로 같은 크기만큼 반대 방향으로 offset된다. BFSK는 ASK보다 error에 덜 취약하며, voice-grade line에서는 보통 1200 bps 이하, high-frequency radio transmission이나 coaxial cable 기반 LAN에서도 쓰일 수 있다.
+보통 $f_1$과 $f_2$는 $f_c$를 중심으로 같은 크기만큼 반대 방향으로 offset된다. BFSK는 ASK보다 error에 덜 취약하며, voice-grade line에서는 보통 1200 bps 이하, high-frequency radio transmission이나 coaxial cable 기반 LAN에서도 쓰일 수 있다.
 
 ![Figure 5.8](@/assets/images/cs-data-communication-059-figure-5-8-page-172.png)
 *Figure 5.8 · PDF p. 172 · voice-grade line에서 BFSK full-duplex를 위해 frequency band를 나누는 예*
@@ -171,17 +171,17 @@ Figure 5.8은 voice-grade line의 300-3400 Hz bandwidth 안에서 full-duplex BF
 
 ### Multiple FSK (MFSK)
 
-MFSK(Multiple FSK)는 두 개보다 많은 frequency를 사용한다. 각 signaling element가 \(L\) bits를 표현하므로 \(M = 2^L\)개의 서로 다른 frequency가 필요하다.
+MFSK(Multiple FSK)는 두 개보다 많은 frequency를 사용한다. 각 signaling element가 $L$ bits를 표현하므로 $M = 2^L$개의 서로 다른 frequency가 필요하다.
 
-\[
+$$
 s_i(t) = A\cos(2\pi f_i t), \quad 1 \le i \le M
-\]
+$$
 
-\[
+$$
 f_i = f_c + (2i - 1 - M)f_d
-\]
+$$
 
-각 output signal element는 \(T_s = LT\) 동안 유지된다. 여기서 \(T\)는 input bit period다. 한 signal element가 \(L\) bits를 묶어 표현하므로 symbol duration은 길어지지만, 필요한 frequency tone 수와 bandwidth는 증가한다. 원문은 total bandwidth를 \(2Mf_d\), minimum frequency separation 조건을 \(2f_d = 1/T_s\), 따라서 \(W_d = M/T_s\)로 설명한다.
+각 output signal element는 $T_s = LT$ 동안 유지된다. 여기서 $T$는 input bit period다. 한 signal element가 $L$ bits를 묶어 표현하므로 symbol duration은 길어지지만, 필요한 frequency tone 수와 bandwidth는 증가한다. 원문은 total bandwidth를 $2Mf_d$, minimum frequency separation 조건을 $2f_d = 1/T_s$, 따라서 $W_d = M/T_s$로 설명한다.
 
 MFSK는 bandwidth efficiency 측면에서는 불리할 수 있지만, frequency 간 구분을 이용해 robustness를 얻는 방향의 설계다. 즉 더 많은 frequency slot을 쓰는 대신 하나의 symbol이 여러 bit를 담고, tone 구분으로 data를 표현한다.
 
@@ -189,23 +189,23 @@ MFSK는 bandwidth efficiency 측면에서는 불리할 수 있지만, frequency 
 
 PSK에서는 carrier의 phase를 바꾸어 data를 표현한다. 가장 단순한 방식은 BPSK(Binary PSK)로, 두 phase가 binary 1과 0을 나타낸다. 180도 phase shift는 sine wave를 뒤집는 것과 같으므로 다음처럼 표현할 수 있다.
 
-\[
+$$
 s(t) =
 \begin{cases}
 A\cos(2\pi f_c t), & \text{binary 1}\\
 A\cos(2\pi f_c t + \pi) = -A\cos(2\pi f_c t), & \text{binary 0}
 \end{cases}
-\]
+$$
 
 BPSK는 ASK/FSK보다 같은 조건에서 error performance가 좋은 축에 속하며, 이후 QPSK, MPSK, QAM으로 확장된다.
 
 ### Differential PSK (DPSK)
 
-BPSK는 bit value를 fixed reference phase와 비교해 표현한다. 이를 편리하게 쓰면 bit가 1일 때 \(d(t)=+1\), 0일 때 \(d(t)=-1\)인 discrete function으로 두고 다음처럼 표현할 수 있다.
+BPSK는 bit value를 fixed reference phase와 비교해 표현한다. 이를 편리하게 쓰면 bit가 1일 때 $d(t)=+1$, 0일 때 $d(t)=-1$인 discrete function으로 두고 다음처럼 표현할 수 있다.
 
-\[
+$$
 s_d(t)=A d(t)\cos(2\pi f_c t)
-\]
+$$
 
 DPSK(Differential PSK)는 phase를 절대 기준이 아니라 이전 symbol에 대한 변화로 표현한다. binary 0은 이전 signal burst와 같은 phase, binary 1은 이전 signal burst와 반대 phase를 보낸다. receiver가 transmitter와 정확히 phase가 일치하는 local oscillator를 유지하지 않아도 되고, 직전 phase가 올바르게 수신되었다면 그것을 기준으로 다음 symbol을 판단할 수 있다.
 
@@ -214,40 +214,40 @@ DPSK(Differential PSK)는 phase를 절대 기준이 아니라 이전 symbol에 �
 
 ### Four-Level PSK: QPSK와 OQPSK
 
-Bandwidth를 더 효율적으로 쓰려면 signal element 하나가 bit 하나보다 많은 정보를 담아야 한다. QPSK(Quadrature Phase Shift Keying)는 \(90^\circ\), 즉 \(\pi/2\) 간격의 네 phase를 사용해 symbol 하나가 2 bits를 표현하게 한다. 예를 들어 \(11, 01, 00, 10\) 네 bit pair를 각각 서로 다른 phase에 배정한다.
+Bandwidth를 더 효율적으로 쓰려면 signal element 하나가 bit 하나보다 많은 정보를 담아야 한다. QPSK(Quadrature Phase Shift Keying)는 $90^\circ$, 즉 $\pi/2$ 간격의 네 phase를 사용해 symbol 하나가 2 bits를 표현하게 한다. 예를 들어 $11, 01, 00, 10$ 네 bit pair를 각각 서로 다른 phase에 배정한다.
 
 ![Figure 5.11](@/assets/images/cs-data-communication-061-figure-5-11-page-175.png)
 *Figure 5.11 · PDF p. 175 · input bit stream을 I/Q 두 stream으로 나누어 QPSK/OQPSK를 만드는 modulator*
 
-QPSK modulator는 input bit stream을 alternate bits로 나누어 두 개의 \(R/2\) bps stream으로 만든다. 하나는 I(in-phase) stream, 다른 하나는 Q(quadrature phase) stream이다. I stream은 \(\cos(2\pi f_c t)\) carrier에, Q stream은 90도 shift된 \(\sin(2\pi f_c t)\) carrier에 실리고 두 결과가 더해져 전송된다.
+QPSK modulator는 input bit stream을 alternate bits로 나누어 두 개의 $R/2$ bps stream으로 만든다. 하나는 I(in-phase) stream, 다른 하나는 Q(quadrature phase) stream이다. I stream은 $\cos(2\pi f_c t)$ carrier에, Q stream은 90도 shift된 $\sin(2\pi f_c t)$ carrier에 실리고 두 결과가 더해져 전송된다.
 
-\[
+$$
 s(t)=\frac{1}{\sqrt{2}}I(t)\cos(2\pi f_c t)-\frac{1}{\sqrt{2}}Q(t)\sin(2\pi f_c t)
-\]
+$$
 
 각 I/Q stream은 원래 bit rate의 절반이므로 combined signal의 symbol rate는 input bit rate의 절반이다. 즉 QPSK는 같은 symbol rate로 BPSK보다 두 배의 data rate를 낼 수 있다.
 
 ![Figure 5.12](@/assets/images/cs-data-communication-062-figure-5-12-page-176.png)
 *Figure 5.12 · PDF p. 176 · QPSK와 OQPSK waveform에서 phase 변화 폭이 달라지는 모습*
 
-OQPSK(Offset QPSK, Orthogonal QPSK)는 Q stream에 one bit time delay를 넣은 QPSK 변형이다. spectral characteristics와 bit error performance는 QPSK와 같지만, 한 symbol time에서 I/Q 중 하나만 sign이 바뀌도록 만들어 combined phase change가 \(90^\circ\)를 넘지 않게 한다. phase modulator가 큰 phase shift를 빠르게 수행하기 어렵거나, transmitter/receiver/channel에 nonlinear component가 있어 bandwidth spreading과 adjacent channel interference가 걱정되는 경우 OQPSK가 유리하다.
+OQPSK(Offset QPSK, Orthogonal QPSK)는 Q stream에 one bit time delay를 넣은 QPSK 변형이다. spectral characteristics와 bit error performance는 QPSK와 같지만, 한 symbol time에서 I/Q 중 하나만 sign이 바뀌도록 만들어 combined phase change가 $90^\circ$를 넘지 않게 한다. phase modulator가 큰 phase shift를 빠르게 수행하기 어렵거나, transmitter/receiver/channel에 nonlinear component가 있어 bandwidth spreading과 adjacent channel interference가 걱정되는 경우 OQPSK가 유리하다.
 
 ### Multilevel PSK와 Bandwidth Efficiency
 
-Multilevel PSK(MPSK)는 2 bits뿐 아니라 3 bits 이상을 하나의 signal element에 담도록 phase level 수를 늘린다. 예를 들어 \(M=16\)개의 signal element를 쓰면 \(L=\log_2 16=4\) bits가 symbol 하나에 담긴다. 그러면 data rate가 9600 bps라도 line signaling speed는 2400 baud가 될 수 있다. 이것이 voice-grade line에서 더 높은 bit rate를 얻기 위해 complex modulation을 쓰는 이유다.
+Multilevel PSK(MPSK)는 2 bits뿐 아니라 3 bits 이상을 하나의 signal element에 담도록 phase level 수를 늘린다. 예를 들어 $M=16$개의 signal element를 쓰면 $L=\log_2 16=4$ bits가 symbol 하나에 담긴다. 그러면 data rate가 9600 bps라도 line signaling speed는 2400 baud가 될 수 있다. 이것이 voice-grade line에서 더 높은 bit rate를 얻기 위해 complex modulation을 쓰는 이유다.
 
-Bandwidth efficiency는 \(R/B_T\), 즉 transmission bandwidth당 data rate다. 원문이 제시한 기본 관계는 다음과 같다.
+Bandwidth efficiency는 $R/B_T$, 즉 transmission bandwidth당 data rate다. 원문이 제시한 기본 관계는 다음과 같다.
 
-| 방식 | transmission bandwidth \(B_T\)의 경향 | \(M\) 증가 효과 |
+| 방식 | transmission bandwidth $B_T$의 경향 | $M$ 증가 효과 |
 |---|---|---|
-| ASK/PSK | \(B_T=(1+r)R\) | 기본 2-level에서는 bit rate와 직접 비례 |
-| MPSK | \(B_T=\frac{1+r}{\log_2 M}R\) | \(M\)이 커질수록 bandwidth efficiency 증가 |
-| MFSK | \(B_T=\frac{(1+r)M}{\log_2 M}R\) | \(M\)이 커질수록 bandwidth efficiency 감소 |
+| ASK/PSK | $B_T=(1+r)R$ | 기본 2-level에서는 bit rate와 직접 비례 |
+| MPSK | $B_T=\frac{1+r}{\log_2 M}R$ | $M$이 커질수록 bandwidth efficiency 증가 |
+| MFSK | $B_T=\frac{(1+r)M}{\log_2 M}R$ | $M$이 커질수록 bandwidth efficiency 감소 |
 
 ![Figure 5.13](@/assets/images/cs-data-communication-063-figure-5-13-page-178.png)
 *Figure 5.13 · PDF p. 178 · MFSK와 MPSK에서 level 수 M에 따른 BER trade-off*
 
-Figure 5.13의 중요한 메시지는 MFSK와 MPSK가 정반대 방향의 trade-off를 가진다는 점이다. MFSK는 \(M\)이 증가하면 같은 \(E_b/N_0\)에서 error probability가 낮아지지만 bandwidth efficiency가 나빠진다. MPSK는 \(M\)이 증가하면 bandwidth efficiency가 좋아지지만 phase 간 간격이 좁아져 error probability가 높아진다. 결국 multilevel signaling은 “더 많은 bit를 symbol 하나에 넣는 대신 noise margin을 줄이는가” 또는 “더 넓은 bandwidth를 쓰고 더 robust하게 가는가”의 선택이다.
+Figure 5.13의 중요한 메시지는 MFSK와 MPSK가 정반대 방향의 trade-off를 가진다는 점이다. MFSK는 $M$이 증가하면 같은 $E_b/N_0$에서 error probability가 낮아지지만 bandwidth efficiency가 나빠진다. MPSK는 $M$이 증가하면 bandwidth efficiency가 좋아지지만 phase 간 간격이 좁아져 error probability가 높아진다. 결국 multilevel signaling은 “더 많은 bit를 symbol 하나에 넣는 대신 noise margin을 줄이는가” 또는 “더 넓은 bandwidth를 쓰고 더 robust하게 가는가”의 선택이다.
 
 ### Quadrature Amplitude Modulation (QAM)
 
@@ -256,13 +256,13 @@ QAM(Quadrature Amplitude Modulation)은 ASK와 PSK를 결합한 analog signaling
 ![Figure 5.14](@/assets/images/cs-data-communication-064-figure-5-14-page-180.png)
 *Figure 5.14 · PDF p. 180 · input bit stream을 두 stream으로 나누어 I/Q ASK modulation으로 결합하는 QAM modulator*
 
-QAM modulator는 input stream \(d(t)\)를 \(R/2\) bps의 두 stream \(d_1(t), d_2(t)\)로 나눈다. \(d_1(t)\)는 \(\cos(2\pi f_c t)\), \(d_2(t)\)는 \(\sin(2\pi f_c t)\) carrier에 실리고 두 신호가 더해진다.
+QAM modulator는 input stream $d(t)$를 $R/2$ bps의 두 stream $d_1(t), d_2(t)$로 나눈다. $d_1(t)$는 $\cos(2\pi f_c t)$, $d_2(t)$는 $\sin(2\pi f_c t)$ carrier에 실리고 두 신호가 더해진다.
 
-\[
+$$
 s(t)=d_1(t)\cos(2\pi f_c t)+d_2(t)\sin(2\pi f_c t)
-\]
+$$
 
-두 stream이 각각 two-level ASK라면 combined signal은 \(2 \times 2=4\) states를 가지며 이는 본질적으로 QPSK와 유사하다. four-level ASK를 쓰면 \(4 \times 4=16\) states가 되고, 64-state, 256-state QAM도 가능하다. state 수가 많을수록 같은 bandwidth에서 더 높은 data rate를 낼 수 있지만, noise와 attenuation에 의해 symbol decision error가 증가할 수 있다.
+두 stream이 각각 two-level ASK라면 combined signal은 $2 \times 2=4$ states를 가지며 이는 본질적으로 QPSK와 유사하다. four-level ASK를 쓰면 $4 \times 4=16$ states가 되고, 64-state, 256-state QAM도 가능하다. state 수가 많을수록 같은 bandwidth에서 더 높은 data rate를 낼 수 있지만, noise와 attenuation에 의해 symbol decision error가 증가할 수 있다.
 
 ## 5.3 Analog Data, Digital Signals
 
@@ -279,14 +279,14 @@ analog data를 digital form으로 변환하고, 수신 측에서 다시 analog d
 
 PCM은 sampling theorem에 기반한다.
 
-> signal \(f(t)\)를 regular interval로 sample하고, sampling rate가 highest signal frequency의 두 배보다 크면, sample들은 original signal의 모든 정보를 포함한다. 이 sample들로 lowpass filter를 통해 \(f(t)\)를 재구성할 수 있다.
+> signal $f(t)$를 regular interval로 sample하고, sampling rate가 highest signal frequency의 두 배보다 크면, sample들은 original signal의 모든 정보를 포함한다. 이 sample들로 lowpass filter를 통해 $f(t)$를 재구성할 수 있다.
 
 예를 들어 voice data를 4000 Hz 이하로 제한하면, 8000 samples/second가 voice signal을 표현하기에 충분하다. 이때 얻는 sample은 아직 analog amplitude를 가진 PAM(Pulse Amplitude Modulation) sample이다. digital data로 만들려면 각 sample을 quantizing level 중 하나에 배정하고 binary code를 붙여야 한다.
 
 ![Figure 5.16](@/assets/images/cs-data-communication-066-figure-5-16-page-182.png)
 *Figure 5.16 · PDF p. 182 · analog waveform을 PAM sample로 잡고 quantized code number와 PCM code로 바꾸는 예*
 
-Figure 5.16은 bandwidth \(B\)인 analog signal을 \(2B\) rate로 sampling하고, sample amplitude를 16개 quantizing level 중 하나로 근사한 뒤 4-bit PCM code로 표현하는 과정을 보여준다. 일반 voice 품질에서는 8-bit sample, 즉 256 quantizing levels가 널리 쓰이며, 8000 samples/second와 결합하면 single voice signal에 \(8000 \times 8 = 64\) kbps가 필요하다.
+Figure 5.16은 bandwidth $B$인 analog signal을 $2B$ rate로 sampling하고, sample amplitude를 16개 quantizing level 중 하나로 근사한 뒤 4-bit PCM code로 표현하는 과정을 보여준다. 일반 voice 품질에서는 8-bit sample, 즉 256 quantizing levels가 널리 쓰이며, 8000 samples/second와 결합하면 single voice signal에 $8000 \times 8 = 64$ kbps가 필요하다.
 
 ![Figure 5.17](@/assets/images/cs-data-communication-067-figure-5-17-page-183.png)
 *Figure 5.17 · PDF p. 183 · PAM sampler, quantizer, encoder로 이어지는 PCM block diagram*
@@ -295,9 +295,9 @@ PCM block은 analog input을 PAM sampler로 discrete-time continuous-amplitude s
 
 quantizing noise에 대한 SNR은 다음처럼 근사된다.
 
-\[
+$$
 SNR_{dB}=20\log(2^n)+1.76=6.02n+1.76\text{ dB}
-\]
+$$
 
 따라서 quantizing bit를 1 bit 늘릴 때마다 SNR은 약 6 dB 증가한다. 6 dB는 power ratio로 약 4배에 해당한다.
 
@@ -317,7 +317,7 @@ Companding의 input side에서는 큰 sample value가 상대적으로 눌리므�
 
 ### Delta Modulation (DM)
 
-DM(Delta Modulation)은 PCM보다 단순한 대안이다. analog input을 staircase function으로 근사하고, 각 sampling interval \(T_s\)마다 staircase가 step size \(\delta\)만큼 올라갈지 내려갈지만 결정한다. 즉 sample 하나당 amplitude 값을 여러 bit로 보내는 것이 아니라, “다음 interval에 up인가 down인가”를 1 bit로 보낸다.
+DM(Delta Modulation)은 PCM보다 단순한 대안이다. analog input을 staircase function으로 근사하고, 각 sampling interval $T_s$마다 staircase가 step size $\delta$만큼 올라갈지 내려갈지만 결정한다. 즉 sample 하나당 amplitude 값을 여러 bit로 보내는 것이 아니라, “다음 interval에 up인가 down인가”를 1 bit로 보낸다.
 
 ![Figure 5.20](@/assets/images/cs-data-communication-070-figure-5-20-page-185.png)
 *Figure 5.20 · PDF p. 185 · delta modulation의 staircase approximation, quantizing noise, slope overload noise*
@@ -327,13 +327,13 @@ DM은 analog signal의 amplitude 자체보다 derivative를 근사하는 방식�
 ![Figure 5.21](@/assets/images/cs-data-communication-071-figure-5-21-page-186.png)
 *Figure 5.21 · PDF p. 186 · delta modulation의 송신 feedback loop와 수신 재구성 구조*
 
-DM의 핵심 parameter는 step size \(\delta\)와 sampling rate다. \(\delta\)가 너무 크면 waveform이 천천히 변할 때 staircase가 세밀하게 따라가지 못해 quantizing noise가 커진다. \(\delta\)가 너무 작으면 waveform이 빠르게 변할 때 staircase가 기울기를 따라가지 못해 slope overload noise가 커진다. sampling rate를 높이면 정확도는 좋아지지만 output data rate가 증가한다.
+DM의 핵심 parameter는 step size $\delta$와 sampling rate다. $\delta$가 너무 크면 waveform이 천천히 변할 때 staircase가 세밀하게 따라가지 못해 quantizing noise가 커진다. $\delta$가 너무 작으면 waveform이 빠르게 변할 때 staircase가 기울기를 따라가지 못해 slope overload noise가 커진다. sampling rate를 높이면 정확도는 좋아지지만 output data rate가 증가한다.
 
 PCM과 비교하면 DM의 장점은 implementation simplicity다. 같은 data rate에서는 일반적으로 PCM이 더 좋은 SNR characteristic을 보인다.
 
 ### Analog-to-Digital 성능 관점
 
-voice를 PCM으로 재현하려면 7-bit coding, 즉 128 quantization levels 정도로도 좋은 품질을 얻을 수 있다. voice bandwidth를 4 kHz로 보면 sampling theorem에 따라 8000 samples/second가 필요하므로 data rate는 \(8000 \times 7 = 56\) kbps가 된다. 반면 original analog voice signal은 4 kHz bandwidth만 차지한다. PCM으로 digital signal을 만들면 Nyquist criterion상 대략 28 kHz 정도의 bandwidth가 필요할 수 있다.
+voice를 PCM으로 재현하려면 7-bit coding, 즉 128 quantization levels 정도로도 좋은 품질을 얻을 수 있다. voice bandwidth를 4 kHz로 보면 sampling theorem에 따라 8000 samples/second가 필요하므로 data rate는 $8000 \times 7 = 56$ kbps가 된다. 반면 original analog voice signal은 4 kHz bandwidth만 차지한다. PCM으로 digital signal을 만들면 Nyquist criterion상 대략 28 kHz 정도의 bandwidth가 필요할 수 있다.
 
 그럼에도 analog data를 digital signal로 바꾸는 방식이 널리 쓰이는 이유는 다음과 같다.
 
@@ -356,51 +356,51 @@ Analog data의 주요 analog modulation 방식은 AM(Amplitude Modulation), FM(F
 
 AM은 carrier의 amplitude를 input analog signal에 따라 변화시키는 가장 단순한 modulation이다. 원문은 AM을 다음처럼 표현한다.
 
-\[
+$$
 s(t)=[1+n_a x(t)]\cos(2\pi f_c t)
-\]
+$$
 
-여기서 \(x(t)\)는 unity amplitude로 normalized된 input signal, \(n_a\)는 modulation index, \(\cos(2\pi f_c t)\)는 carrier다. \(n_a\)는 input signal amplitude와 carrier amplitude의 비율이다. 식의 1은 dc component로, envelope가 원래 signal 정보를 잃지 않도록 해준다. 이 방식은 DSBTC(Double Sideband Transmitted Carrier)라고도 한다.
+여기서 $x(t)$는 unity amplitude로 normalized된 input signal, $n_a$는 modulation index, $\cos(2\pi f_c t)$는 carrier다. $n_a$는 input signal amplitude와 carrier amplitude의 비율이다. 식의 1은 dc component로, envelope가 원래 signal 정보를 잃지 않도록 해준다. 이 방식은 DSBTC(Double Sideband Transmitted Carrier)라고도 한다.
 
 ![Figure 5.22](@/assets/images/cs-data-communication-072-figure-5-22-page-189.png)
 *Figure 5.22 · PDF p. 189 · sinusoidal modulating wave가 AM signal envelope로 나타나는 모습*
 
-AM에서 envelope는 \([1+n_a x(t)]\)다. \(n_a \le 1\)이면 envelope가 original signal을 정확히 나타내지만, \(n_a > 1\)이면 envelope가 time axis를 cross하면서 information이 손실된다. 따라서 modulation index는 크게 하고 싶지만 1을 넘기면 안 된다.
+AM에서 envelope는 $[1+n_a x(t)]$다. $n_a \le 1$이면 envelope가 original signal을 정확히 나타내지만, $n_a > 1$이면 envelope가 time axis를 cross하면서 information이 손실된다. 따라서 modulation index는 크게 하고 싶지만 1을 넘기면 안 된다.
 
 ![Figure 5.23](@/assets/images/cs-data-communication-073-figure-5-23-page-189.png)
 *Figure 5.23 · PDF p. 189 · AM signal의 carrier, lower sideband, upper sideband spectrum*
 
-AM spectrum은 original carrier와 input signal spectrum이 carrier frequency 주변으로 이동한 sideband들로 구성된다. \(f_c\)보다 높은 쪽은 upper sideband, 낮은 쪽은 lower sideband다. 두 sideband는 모두 original spectrum \(M(f)\)의 replica이고, lower sideband는 frequency-reversed 형태다. 예를 들어 300-3000 Hz voice signal을 60 kHz carrier에 modulation하면 upper sideband는 60.3-63 kHz, lower sideband는 57-59.7 kHz, carrier는 60 kHz에 생긴다.
+AM spectrum은 original carrier와 input signal spectrum이 carrier frequency 주변으로 이동한 sideband들로 구성된다. $f_c$보다 높은 쪽은 upper sideband, 낮은 쪽은 lower sideband다. 두 sideband는 모두 original spectrum $M(f)$의 replica이고, lower sideband는 frequency-reversed 형태다. 예를 들어 300-3000 Hz voice signal을 60 kHz carrier에 modulation하면 upper sideband는 60.3-63 kHz, lower sideband는 57-59.7 kHz, carrier는 60 kHz에 생긴다.
 
 AM total transmitted power는 다음 관계로 설명된다.
 
-\[
+$$
 P_t=P_c\left(1+\frac{n_a^2}{2}\right)
-\]
+$$
 
-여기서 \(P_c\)는 carrier power다. 정보 전달에 더 많은 power를 쓰려면 \(n_a\)를 크게 하고 싶지만, \(n_a\)는 1보다 작아야 한다.
+여기서 $P_c$는 carrier power다. 정보 전달에 더 많은 power를 쓰려면 $n_a$를 크게 하고 싶지만, $n_a$는 1보다 작아야 한다.
 
-AM signal에는 중복이 많다. 각 sideband가 \(m(t)\)의 complete spectrum을 담고 있기 때문이다. SSB(Single Sideband)는 한 sideband만 보내고 다른 sideband와 carrier를 제거한다. 장점은 bandwidth가 \(B_T=B\)로 줄어 DSBTC의 \(B_T=2B\)보다 절반이고, carrier와 다른 sideband에 power를 쓰지 않아 전력도 줄어든다는 점이다. DSBSC(Double Sideband Suppressed Carrier)는 carrier만 제거하고 두 sideband를 보내므로 power는 아끼지만 bandwidth는 DSBTC와 같다. VSB(Vestigial Sideband)는 한 sideband와 reduced-power carrier를 사용하는 compromise다. carrier를 억제하면 synchronization 단서가 줄어들 수 있기 때문이다.
+AM signal에는 중복이 많다. 각 sideband가 $m(t)$의 complete spectrum을 담고 있기 때문이다. SSB(Single Sideband)는 한 sideband만 보내고 다른 sideband와 carrier를 제거한다. 장점은 bandwidth가 $B_T=B$로 줄어 DSBTC의 $B_T=2B$보다 절반이고, carrier와 다른 sideband에 power를 쓰지 않아 전력도 줄어든다는 점이다. DSBSC(Double Sideband Suppressed Carrier)는 carrier만 제거하고 두 sideband를 보내므로 power는 아끼지만 bandwidth는 DSBTC와 같다. VSB(Vestigial Sideband)는 한 sideband와 reduced-power carrier를 사용하는 compromise다. carrier를 억제하면 synchronization 단서가 줄어들 수 있기 때문이다.
 
 ### Angle Modulation: FM과 PM
 
 FM과 PM은 모두 angle modulation의 special case다.
 
-\[
+$$
 s(t)=A_c\cos[2\pi f_c t+\phi(t)]
-\]
+$$
 
-PM(Phase Modulation)에서는 instantaneous phase deviation \(\phi(t)\)가 modulating signal \(m(t)\)에 비례한다.
+PM(Phase Modulation)에서는 instantaneous phase deviation $\phi(t)$가 modulating signal $m(t)$에 비례한다.
 
-\[
+$$
 \phi(t)=n_p m(t)
-\]
+$$
 
-FM(Frequency Modulation)에서는 phase의 derivative, 즉 instantaneous frequency deviation이 \(m(t)\)에 비례한다.
+FM(Frequency Modulation)에서는 phase의 derivative, 즉 instantaneous frequency deviation이 $m(t)$에 비례한다.
 
-\[
+$$
 \phi'(t)=n_f m(t)
-\]
+$$
 
 frequency는 phase의 변화율이므로, FM은 “phase 자체”가 아니라 “phase가 얼마나 빨리 변하는가”를 data에 맞춰 바꾸는 방식으로 이해할 수 있다.
 
@@ -409,23 +409,23 @@ frequency는 phase의 변화율이므로, FM은 “phase 자체”가 아니라 
 
 Figure 5.24에서 AM은 amplitude envelope가 변하고, PM과 FM은 amplitude는 일정하지만 zero crossing 간격과 phase progression이 변한다. FM과 PM waveform은 모양만 보고는 구분하기 어려우며, 어떤 modulation function을 사용했는지 알아야 한다.
 
-AM과 angle modulation의 차이는 bandwidth와 power에서 드러난다. AM은 linear process라 carrier와 modulating signal의 sum/difference frequency를 만들며, bandwidth는 \(B_T=2B\)다. 반면 angle modulation은 nonlinear term을 포함하므로 \(f_c \pm f_m\), \(f_c \pm 2f_m\) 등 더 넓은 frequency component를 만든다. 이론적으로는 infinite bandwidth가 필요하지만, 실무적으로는 Carson’s rule을 쓴다.
+AM과 angle modulation의 차이는 bandwidth와 power에서 드러난다. AM은 linear process라 carrier와 modulating signal의 sum/difference frequency를 만들며, bandwidth는 $B_T=2B$다. 반면 angle modulation은 nonlinear term을 포함하므로 $f_c \pm f_m$, $f_c \pm 2f_m$ 등 더 넓은 frequency component를 만든다. 이론적으로는 infinite bandwidth가 필요하지만, 실무적으로는 Carson’s rule을 쓴다.
 
-\[
+$$
 B_T=2(\beta+1)B
-\]
+$$
 
 FM에서는 다음처럼도 쓸 수 있다.
 
-\[
+$$
 B_T=2\Delta F+2B
-\]
+$$
 
-여기서 \(\Delta F\)는 peak frequency deviation이다. 따라서 FM과 PM은 일반적으로 AM보다 더 큰 bandwidth를 요구한다. 대신 FM에서 modulation magnitude가 커져 \(\Delta F\)가 증가해도 average power level은 \(A_c^2/2\)로 유지된다. 이는 modulation level이 AM signal power에 영향을 주지만 bandwidth에는 직접 영향을 주지 않는 AM과 대비된다.
+여기서 $\Delta F$는 peak frequency deviation이다. 따라서 FM과 PM은 일반적으로 AM보다 더 큰 bandwidth를 요구한다. 대신 FM에서 modulation magnitude가 커져 $\Delta F$가 증가해도 average power level은 $A_c^2/2$로 유지된다. 이는 modulation level이 AM signal power에 영향을 주지만 bandwidth에는 직접 영향을 주지 않는 AM과 대비된다.
 
 ## 연결 관계
 
-이 장의 네 조합은 physical layer에서 “data representation”과 “signal propagation”을 연결한다. Chapter 3의 bandwidth, noise, BER, \(E_b/N_0\), Nyquist criterion은 여기서 line code와 modulation scheme의 성능 비교 기준으로 다시 등장한다. Chapter 4의 transmission media 관점에서는 guided media든 unguided media든 매체가 허용하는 frequency range와 propagation 특성에 맞춰 signal form을 골라야 한다.
+이 장의 네 조합은 physical layer에서 “data representation”과 “signal propagation”을 연결한다. Chapter 3의 bandwidth, noise, BER, $E_b/N_0$, Nyquist criterion은 여기서 line code와 modulation scheme의 성능 비교 기준으로 다시 등장한다. Chapter 4의 transmission media 관점에서는 guided media든 unguided media든 매체가 허용하는 frequency range와 propagation 특성에 맞춰 signal form을 골라야 한다.
 
 Digital-to-digital encoding은 주로 baseband digital transmission 문제다. NRZ는 단순하고 bandwidth 효율적이지만 synchronization과 dc component가 문제다. Manchester와 Differential Manchester는 self-clocking을 얻는 대신 higher signaling rate를 요구한다. AMI, B8ZS, HDB3는 dc component를 줄이고 synchronization을 유지하면서 long-distance/high data rate transmission에 맞춘 compromise다.
 
@@ -437,13 +437,13 @@ Analog-to-analog modulation은 baseband analog signal을 higher frequency band�
 
 ## 오해하기 쉬운 내용
 
-- bit rate와 baud는 같지 않다. bit rate \(R\)은 data element 속도이고, baud \(D\)는 signal element 속도다. QPSK나 QAM처럼 symbol 하나가 여러 bit를 담으면 \(R\)은 \(D\)보다 클 수 있다.
+- bit rate와 baud는 같지 않다. bit rate $R$은 data element 속도이고, baud $D$는 signal element 속도다. QPSK나 QAM처럼 symbol 하나가 여러 bit를 담으면 $R$은 $D$보다 클 수 있다.
 - differential encoding은 “현재 level”이 아니라 “이전 symbol과의 변화”를 정보로 쓴다. NRZI, Differential Manchester, DPSK가 이 계열이다.
 - Manchester는 synchronization이 뛰어나지만 공짜가 아니다. transition이 많아져 bandwidth requirement가 증가한다.
 - multilevel signaling은 bandwidth efficiency를 높일 수 있지만 receiver가 더 많은 state를 구분해야 하므로 noise와 attenuation에 더 민감해질 수 있다.
 - sampling theorem은 sample rate만 충분하면 analog sample에 정보가 들어 있다는 뜻이지, quantization 후에도 original signal을 완벽히 복원한다는 뜻은 아니다. quantizing noise는 별도로 생긴다.
-- AM에서 modulation index를 크게 하면 정보 전달 power를 늘릴 수 있지만, \(n_a>1\)이면 envelope가 왜곡되어 information loss가 생긴다.
-- FM과 PM은 waveform만 보고 쉽게 구분되지 않는다. PM은 phase deviation이 \(m(t)\)에 비례하고, FM은 frequency deviation, 즉 phase derivative가 \(m(t)\)에 비례한다.
+- AM에서 modulation index를 크게 하면 정보 전달 power를 늘릴 수 있지만, $n_a>1$이면 envelope가 왜곡되어 information loss가 생긴다.
+- FM과 PM은 waveform만 보고 쉽게 구분되지 않는다. PM은 phase deviation이 $m(t)$에 비례하고, FM은 frequency deviation, 즉 phase derivative가 $m(t)$에 비례한다.
 
 ## 면접 질문
 
@@ -451,9 +451,9 @@ Analog-to-analog modulation은 baseband analog signal을 higher frequency band�
 2. Manchester encoding이 self-clocking code인 이유와 그 대가로 필요한 bandwidth 증가를 설명하라.
 3. Bipolar-AMI에서 긴 zero sequence가 문제인 이유와 B8ZS/HDB3가 이를 어떻게 해결하는지 설명하라.
 4. bit rate와 baud rate의 차이를 QPSK 또는 16-QAM 예로 설명하라.
-5. MFSK와 MPSK에서 \(M\) 증가가 bandwidth efficiency와 BER에 서로 반대로 작용하는 이유를 설명하라.
+5. MFSK와 MPSK에서 $M$ 증가가 bandwidth efficiency와 BER에 서로 반대로 작용하는 이유를 설명하라.
 6. PCM에서 sampling theorem, quantization, quantizing noise의 관계를 설명하라.
 7. companding이 low-amplitude voice signal에 유리한 이유를 설명하라.
-8. Delta Modulation에서 step size \(\delta\)를 크게/작게 잡을 때 각각 어떤 noise가 커지는지 설명하라.
+8. Delta Modulation에서 step size $\delta$를 크게/작게 잡을 때 각각 어떤 noise가 커지는지 설명하라.
 9. AM의 upper sideband/lower sideband와 SSB의 bandwidth 절감 원리를 설명하라.
 10. FM과 PM이 모두 angle modulation인 이유와 Carson’s rule이 필요한 이유를 설명하라.

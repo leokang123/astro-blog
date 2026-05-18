@@ -67,7 +67,7 @@ Virtual memory의 장점은 단순히 “program이 physical memory보다 커질
 | `locality` | program execution 중 함께 active하게 사용되는 pages set. |
 | `working set` | 최근 Δ page references 안에 등장한 pages set. current locality의 approximation. |
 | `working-set window Δ` | working set을 정의하기 위해 보는 최근 memory references 범위. |
-| `WSS_i` | process i의 working-set size. process i가 현재 active하게 필요로 하는 frame 수로 볼 수 있다. |
+| $WSS_i$ | process $i$의 working-set size. process $i$가 현재 active하게 필요로 하는 frame 수로 볼 수 있다. |
 | `PFF` | Page-Fault Frequency. page-fault rate upper/lower bounds로 frames를 조절하는 thrashing control strategy. |
 | `memory compression` | modified frames를 swap space로 내보내는 대신 여러 frames를 압축해 하나의 frame에 저장하는 memory-saving technique. |
 | `compression ratio` | compression으로 원래 크기 대비 얼마나 줄였는지 나타내는 비율. 보통 speed와 trade-off가 있다. |
@@ -76,7 +76,7 @@ Virtual memory의 장점은 단순히 “program이 physical memory보다 커질
 | `slab allocation` | kernel data structure별 cache와 slab을 두고 preallocated objects를 빠르게 할당/회수하는 kernel memory allocation scheme. |
 | `slab`, `cache`, `object` | slab은 contiguous pages 묶음, cache는 특정 kernel object type의 slabs 집합, object는 cache 안의 실제 할당 단위. |
 | `prepaging` | page faults를 줄이기 위해 곧 필요할 pages 일부 또는 전체를 미리 memory에 가져오는 기법. |
-| `TLB reach` | TLB entries가 직접 cover할 수 있는 memory 양. `entries × page size`. |
+| `TLB reach` | TLB entries가 직접 cover할 수 있는 memory 양. $\text{entries} \times \text{page size}$. |
 | `huge pages` | TLB reach를 늘리기 위해 일반 page보다 큰 page size를 쓰는 기능. Linux의 예가 대표적이다. |
 | `I/O interlock` | I/O 중인 user buffer page가 replacement되지 않도록 보장해야 하는 문제. |
 | `page locking`, `pinning` | 특정 pages/frames를 memory에 고정해 replacement 대상에서 제외하는 기법. |
@@ -189,9 +189,9 @@ System startup 때 available memory는 free-frame list에 들어간다. Demand p
 
 Demand paging의 성능은 `page-fault rate`에 극도로 민감하다. Memory access time을 `ma`, page fault probability를 `p`라고 하면 effective access time은 다음과 같다.
 
-```text
-effective access time = (1 - p) * ma + p * page_fault_time
-```
+$$
+\text{effective access time} = (1 - p) \cdot ma + p \cdot page\_fault\_time
+$$
 
 Page fault service에는 trap, process state save, fault 원인 확인, reference legality 검사, page location 확인, storage read, 다른 process 실행 가능성, I/O completion interrupt, page table update, process 재스케줄링, state restore가 포함될 수 있다. 핵심 구성은 세 가지다.
 
@@ -201,11 +201,12 @@ Page fault service에는 trap, process state save, fault 원인 확인, referenc
 
 HDD를 paging device로 쓰는 예에서 average page-fault service time을 8 ms, memory access time을 200 ns라고 하자.
 
-```text
-effective access time
-  = (1 - p) * 200 + p * 8,000,000
-  = 200 + 7,999,800p ns
-```
+$$
+\begin{aligned}
+\text{effective access time} &= (1 - p) \cdot 200 + p \cdot 8{,}000{,}000 \\
+&= 200 + 7{,}999{,}800p\text{ ns}
+\end{aligned}
+$$
 
 1,000번 중 1번만 page fault가 나도 effective access time은 약 8.2 us가 되어 40배 느려진다. Performance degradation을 10% 미만으로 유지하려면 대략 `p < 0.0000025`, 즉 399,990 memory accesses당 page fault가 1번보다 적어야 한다. 따라서 demand-paging system에서 low page-fault rate는 성능의 생명줄이다.
 
@@ -421,24 +422,26 @@ Architecture가 더 복잡하면 minimum frames도 늘어난다. Instruction its
 
 ### 10.5.2 Allocation Algorithms
 
-`equal allocation`은 가장 단순한 frame allocation이다. `m` frames와 `n` processes가 있으면 각 process에 `m/n` frames를 준다. 예를 들어 93 frames와 5 processes가 있으면 각 process에 18 frames를 주고, 남는 3 frames는 free-frame buffer pool로 둘 수 있다.
+`equal allocation`은 가장 단순한 frame allocation이다. $m$ frames와 $n$ processes가 있으면 각 process에 $m/n$ frames를 준다. 예를 들어 93 frames와 5 processes가 있으면 각 process에 18 frames를 주고, 남는 3 frames는 free-frame buffer pool로 둘 수 있다.
 
 하지만 process sizes가 다르면 equal allocation은 낭비를 만들 수 있다. 1-KB frame system에서 10-KB student process와 127-KB database process가 62 free frames를 나눠 가진다고 하자. 각자 31 frames를 주면 student process는 10 frames 이상을 쓰지 못해 21 frames가 사실상 낭비된다.
 
-`proportional allocation`은 process size에 비례해 frames를 준다. Process `p_i`의 virtual memory size를 `s_i`, total size를 `S = Σs_i`, total available frames를 `m`이라고 하면 process `p_i`의 allocation `a_i`는 다음과 같다.
+`proportional allocation`은 process size에 비례해 frames를 준다. Process $p_i$의 virtual memory size를 $s_i$, total size를 $S = \sum_i s_i$, total available frames를 $m$이라고 하면 process $p_i$의 allocation $a_i$는 다음과 같다.
 
-```text
-a_i = (s_i / S) * m
-```
+$$
+a_i = \frac{s_i}{S} \cdot m
+$$
 
 10-page process와 127-page process가 62 frames를 나누면 다음처럼 계산된다.
 
-```text
-10 / 137 * 62  ≈ 4 frames
-127 / 137 * 62 ≈ 57 frames
-```
+$$
+\begin{aligned}
+\frac{10}{137} \cdot 62 &\approx 4\text{ frames} \\
+\frac{127}{137} \cdot 62 &\approx 57\text{ frames}
+\end{aligned}
+$$
 
-실제로는 각 `a_i`를 integer로 조정하고, instruction set이 요구하는 minimum frames 이상이어야 하며, 총합은 `m`을 넘지 않아야 한다.
+실제로는 각 $a_i$를 integer로 조정하고, instruction set이 요구하는 minimum frames 이상이어야 하며, 총합은 $m$을 넘지 않아야 한다.
 
 Equal/proportional allocation 모두 multiprogramming level이 바뀌면 allocation도 변한다. New process가 들어오면 기존 processes가 frames를 잃고, process가 떠나면 그 frames가 남은 processes에 분배될 수 있다. 또한 process size만이 아니라 priority를 반영할 수 있다. High-priority process에 더 많은 frames를 주어 execution을 빠르게 하고, low-priority process가 그 비용을 부담하게 할 수 있다.
 
@@ -479,9 +482,9 @@ Threads가 추가되면 더 복잡하다. Many threads가 여러 system boards�
 
 Process가 current working set을 담을 만큼 충분한 frames를 받지 못하면 빠르게 page fault를 낸다. Replacement를 해도 victim page 역시 active use 중인 page라 곧 다시 필요해진다. 그러면 process는 page를 내보내고 다시 가져오기를 반복한다. 이 high paging activity가 `thrashing`이다.
 
-```text
-thrashing = process spends more time paging than executing
-```
+$$
+\text{thrashing} = \text{process spends more time paging than executing}
+$$
 
 Thrashing은 severe performance problem이다. CPU가 일을 하지 않는 것이 아니라, processes가 계속 paging device를 기다리며 effective progress를 못 하기 때문이다.
 
@@ -527,13 +530,13 @@ Page가 active use 중이면 working set 안에 있다. 더 이상 사용되지 
 | 너무 큼 | 여러 localities가 겹쳐 working set이 과대해진다. |
 | 무한대 | process execution 중 한 번이라도 touched된 모든 pages가 working set이 된다. |
 
-Process `i`의 working-set size를 `WSS_i`라고 하자. System의 total demand for frames는 다음과 같다.
+Process $i$의 working-set size를 $WSS_i$라고 하자. System의 total demand for frames는 다음과 같다.
 
-```text
-D = Σ WSS_i
-```
+$$
+D = \sum_i WSS_i
+$$
 
-Available frames가 `m`일 때 `D > m`이면 어떤 processes는 current working set을 담을 만큼 frames를 받지 못하므로 thrashing이 발생한다. OS는 각 process의 working set을 monitor하고 `WSS_i`만큼 frames를 준다. Extra frames가 있으면 새 process를 시작할 수 있다. Working-set sizes sum이 available frames를 넘으면 process 하나를 suspend하고 pages를 swapped out하여 frames를 다른 processes에 재분배한다.
+Available frames가 $m$일 때 $D > m$이면 어떤 processes는 current working set을 담을 만큼 frames를 받지 못하므로 thrashing이 발생한다. OS는 각 process의 working set을 monitor하고 $WSS_i$만큼 frames를 준다. Extra frames가 있으면 새 process를 시작할 수 있다. Working-set sizes sum이 available frames를 넘으면 process 하나를 suspend하고 pages를 swapped out하여 frames를 다른 processes에 재분배한다.
 
 Working-set strategy는 thrashing을 막으면서 multiprogramming degree를 가능한 높게 유지하려는 전략이다. 어려움은 moving window를 추적하는 cost다. 모든 memory reference마다 window를 정확히 유지하기 어렵기 때문에 timer interrupt와 reference bits로 approximation한다. 예를 들어 Δ가 10,000 references이고 timer interrupt가 5,000 references마다 발생하면, current reference bit와 두 history bits를 보고 최근 10,000-15,000 references 안에 쓰였는지 추정할 수 있다. 더 많은 history bits와 더 잦은 interrupts는 정확도를 높이지만 overhead도 높인다.
 
@@ -628,13 +631,13 @@ Pure demand paging은 process start 시 initial locality를 가져오느라 page
 
 Working-set model을 쓰는 system에서는 suspend된 process의 working set pages를 기억해 두었다가 process를 resume하기 전에 working set 전체를 memory로 가져올 수 있다. Prepaging이 이득인지 여부는 미리 가져온 pages 중 실제로 사용되는 비율에 달려 있다.
 
-```text
-s pages prepaged
-α = actually used fraction
-
-benefit: saved faults for s * α pages
-waste: unnecessary prepaging for s * (1 - α) pages
-```
+$$
+\begin{aligned}
+\alpha &= \text{actually used fraction} \\
+\text{benefit} &= s \cdot \alpha\text{ saved faults} \\
+\text{waste} &= s(1 - \alpha)\text{ unnecessary prepaged pages}
+\end{aligned}
+$$
 
 `α`가 0에 가까우면 prepaging은 손해고, 1에 가까우면 이득이다. Executable program은 어떤 pages가 필요할지 예측하기 어려울 수 있지만, file은 sequential access가 흔해 prefetch가 더 잘 맞는다. Linux의 `readahead()` system call은 file contents를 미리 memory로 가져와 subsequent file access가 main memory에서 일어나게 한다.
 
@@ -658,9 +661,9 @@ I/O 관점에서는 큰 page가 유리할 수 있다. HDD에서는 seek와 laten
 
 `TLB reach`는 TLB가 직접 cover할 수 있는 memory 양이다.
 
-```text
-TLB reach = number of TLB entries * page size
-```
+$$
+\text{TLB reach} = \text{number of TLB entries} \cdot \text{page size}
+$$
 
 Ideal하게는 process working set이 TLB 안에 들어가야 한다. 그렇지 않으면 process는 TLB 대신 page table에서 translations를 자주 resolve해야 한다. TLB entries를 늘리면 reach가 늘지만 associative memory는 expensive and power hungry하다.
 

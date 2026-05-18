@@ -185,12 +185,12 @@ Secondary storage는 direct access가 가능하므로 files를 구현하는 방�
 
 #### 14.4.1 Contiguous Allocation
 
-`contiguous allocation`은 file이 device의 contiguous blocks 집합을 차지하게 한다. File이 block `b`에서 시작하고 길이가 `n` blocks라면, file은 `b, b+1, ..., b+n-1`을 차지한다. Directory entry에는 starting block address와 length가 들어간다.
+`contiguous allocation`은 file이 device의 contiguous blocks 집합을 차지하게 한다. File이 block $b$에서 시작하고 길이가 $n$ blocks라면, file은 $b, b+1, \ldots, b+n-1$을 차지한다. Directory entry에는 starting block address와 length가 들어간다.
 
 ![Contiguous allocation](@/assets/images/cs-operating-system-304-figure-14-4-page-702.png)
 <p align="center"><sub>Figure 14.4 · PDF p. 702 · directory entry가 start와 length를 저장하고 file blocks가 연속 배치되는 contiguous allocation</sub></p>
 
-Contiguous allocation은 sequential access와 direct access 모두 빠르다. Sequential access에서는 last referenced block 다음 block을 읽으면 되고, direct access에서는 file block `i`를 `b+i`로 즉시 계산할 수 있다. HDD에서는 contiguous access가 seeks를 최소화한다. Logical addresses가 physical proximity와 어느 정도 대응된다는 가정에서 특히 효과가 크다.
+Contiguous allocation은 sequential access와 direct access 모두 빠르다. Sequential access에서는 last referenced block 다음 block을 읽으면 되고, direct access에서는 file block $i$를 $b+i$로 즉시 계산할 수 있다. HDD에서는 contiguous access가 seeks를 최소화한다. Logical addresses가 physical proximity와 어느 정도 대응된다는 가정에서 특히 효과가 크다.
 
 하지만 contiguous allocation은 몇 가지 근본 문제가 있다.
 
@@ -292,11 +292,9 @@ Storage space는 한정되어 있으므로 deleted files의 space를 new files�
 
 Bit vector의 장점은 단순성과 contiguous free blocks 탐색 효율이다. Hardware bit-manipulation instructions를 활용해 nonzero word를 찾고, 그 word 안의 first 1 bit를 찾으면 first free block을 계산할 수 있다.
 
-```text
-block number =
-  (number of bits per word) * (number of 0-value words)
-  + offset of first 1 bit
-```
+$$
+\text{block number} = (\text{number of bits per word}) \cdot (\text{number of 0-value words}) + \text{offset of first 1 bit}
+$$
 
 단점은 bitmap 전체를 main memory에 유지하지 않으면 비효율적이라는 점이다. 큰 storage에서는 bitmap도 커진다. 1TB disk에 4KB blocks를 쓰면 free-space bitmap은 약 32MB 규모가 된다. Disk capacity가 커질수록 bit vector memory footprint도 계속 증가한다.
 

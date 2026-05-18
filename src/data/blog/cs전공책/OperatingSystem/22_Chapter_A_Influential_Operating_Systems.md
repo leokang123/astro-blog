@@ -80,7 +80,7 @@ compiler도 등장했다. 예를 들어 FORTRAN program을 실행하려면 compi
 Resident monitor가 무엇을 실행할지 알기 위해 `control cards`가 사용되었다. 예를 들어 `$FTN`은 FORTRAN compiler 실행, `$ASM`은 assembler 실행, `$RUN`은 user program 실행을 뜻한다. `$JOB`, `$END`는 job boundary를 나타내며 account number, job name, resource accounting 같은 정보를 담을 수 있다. IBM의 `JCL(Job Control Language)`은 `//`로 control card를 구분했다.
 
 ![Figure A.3](@/assets/images/cs-operating-system-393-figure-a-3-page-1048.png)
-<p align="center"><sub>Figure A.3 · PDF p. 1048 · batch job card deck에서 $JOB, $FTN, $LOAD, $RUN, data, $END가 순서대로 배치되는 예</sub></p>
+<p align="center"><sub>Figure A.3 · PDF p. 1048 · batch job card deck에서 \$JOB, \$FTN, \$LOAD, \$RUN, data, \$END가 순서대로 배치되는 예</sub></p>
 
 Resident monitor의 구성요소는 다음처럼 볼 수 있다.
 
@@ -120,12 +120,12 @@ Atlas는 drum을 main memory처럼 사용하고, 작은 core memory를 drum cach
 
 Atlas의 address는 24-bit decimal encoding으로 1 million words를 표현했다. Physical memory는 98K-word drum과 16K words core였고, 512-word pages를 사용해 core에는 32 frames가 있었다. 32-register associative memory가 virtual-to-physical mapping을 구현했다. 현대의 TLB와 유사한 발상으로 볼 수 있다.
 
-Atlas page replacement는 program이 loops를 돈다는 가정을 사용했다. 각 frame의 reference bit history를 1,024 instructions마다 읽고 최근 32 values를 유지했다. `t1`은 가장 최근 reference 이후 시간, `t2`는 마지막 두 reference 사이 간격이다.
+Atlas page replacement는 program이 loops를 돈다는 가정을 사용했다. 각 frame의 reference bit history를 1,024 instructions마다 읽고 최근 32 values를 유지했다. $t_1$은 가장 최근 reference 이후 시간, $t_2$는 마지막 두 reference 사이 간격이다.
 
 | 조건 | replacement 판단 |
 |---|---|
-| `t1 > t2 + 1` | 예상 주기보다 오래 reference가 없으므로 더 이상 쓰지 않는 page로 보고 교체 |
-| 모든 page에서 `t1 <= t2` | 아직 사용 중이라 보고, 예상 next reference가 가장 늦은 `max(t2 - t1)` page 교체 |
+| $t_1 > t_2 + 1$ | 예상 주기보다 오래 reference가 없으므로 더 이상 쓰지 않는 page로 보고 교체 |
+| 모든 page에서 $t_1 \le t_2$ | 아직 사용 중이라 보고, 예상 next reference가 가장 늦은 $\max(t_2 - t_1)$ page 교체 |
 
 이 알고리즘은 오늘날 관점에서 optimal하지는 않지만, locality와 reference prediction을 OS가 활용하려는 초기 시도라는 점이 중요하다. 특히 page fault가 나면 즉시 drum transfer를 시작할 수 있도록 항상 empty frame 하나를 유지했다는 점도 I/O latency를 줄이려는 설계다.
 

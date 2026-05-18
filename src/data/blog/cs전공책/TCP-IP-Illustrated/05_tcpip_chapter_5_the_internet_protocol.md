@@ -285,7 +285,7 @@ IPv6 fragmentation은 original packet을 두 부분으로 본다.
 ![Figure 5-12](@/assets/images/cs-tcp-ip-illustrated-067-figure-5-12-page-243.png)
 *Figure 5-12 · PDF p. 243 · 3960-byte IPv6 payload가 세 fragment로 나뉘는 예*
 
-Figure 5-12의 예에서는 3960-byte payload를 Ethernet MTU 1500 bytes에 맞추기 위해 세 fragment로 나눈다. Fragment header가 8 bytes 추가되므로 각 fragment data는 1448 bytes 이하가 되며, offset은 8-byte 단위로 표현된다. 두 번째 fragment의 offset 181은 실제 byte offset `181 * 8 = 1448`을 뜻하고, 마지막 fragment의 offset 362는 `362 * 8 = 2896`을 뜻한다.
+Figure 5-12의 예에서는 3960-byte payload를 Ethernet MTU 1500 bytes에 맞추기 위해 세 fragment로 나눈다. Fragment header가 8 bytes 추가되므로 각 fragment data는 1448 bytes 이하가 되며, offset은 8-byte 단위로 표현된다. 두 번째 fragment의 offset 181은 실제 byte offset $181 \times 8 = 1448$을 뜻하고, 마지막 fragment의 offset 362는 $362 \times 8 = 2896$을 뜻한다.
 
 fragmentation은 기능적으로 유용하지만 비용이 있다. 예시에서 하나의 큰 IPv6 packet을 세 개로 나누면 IPv6 header가 두 개 더 생기고, Fragment header가 각 fragment에 추가된다. link-layer frame overhead까지 합치면 실제 네트워크가 운반해야 하는 byte가 늘어난다. 또한 fragment 중 하나만 손실되어도 original datagram 전체를 reassembly할 수 없으므로, 가능하면 transport/application이 path MTU에 맞는 크기로 보내는 쪽이 유리하다.
 

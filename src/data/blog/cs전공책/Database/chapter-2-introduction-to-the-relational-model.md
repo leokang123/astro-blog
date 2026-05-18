@@ -143,9 +143,9 @@ Formal relational algebra에서는 relation이 set이므로 duplicate tuple이 �
 
 Select operation(σ)은 주어진 predicate를 만족하는 tuple만 고른다. Predicate는 σ의 subscript로 쓰고, argument relation은 괄호 안에 쓴다.
 
-```text
-σ_dept_name = "Physics"(instructor)
-```
+$$
+\sigma_{\text{dept\_name} = \text{"Physics"}}(instructor)
+$$
 
 이 expression은 `instructor` relation에서 `dept_name`이 Physics인 tuple만 남긴다.
 
@@ -154,9 +154,9 @@ Select operation(σ)은 주어진 predicate를 만족하는 tuple만 고른다. 
 
 Selection predicate에는 `=`, `≠`, `<`, `≤`, `>`, `≥` 비교를 사용할 수 있고, `and(∧)`, `or(∨)`, `not(¬)`으로 결합할 수 있다. 예를 들어 Physics department 소속이면서 salary가 90,000보다 큰 instructor는 다음처럼 표현한다.
 
-```text
-σ_dept_name = "Physics" ∧ salary > 90000(instructor)
-```
+$$
+\sigma_{\text{dept\_name} = \text{"Physics"} \land salary > 90000}(instructor)
+$$
 
 Predicate는 attribute와 상수를 비교할 수도 있고, 두 attribute를 비교할 수도 있다. 예를 들어 `department`에서 department name과 building name이 같은 tuple을 찾는다면 `σ_dept_name = building(department)`처럼 쓴다.
 
@@ -164,9 +164,9 @@ Predicate는 attribute와 상수를 비교할 수도 있고, 두 attribute를 �
 
 Project operation(Π)은 relation에서 특정 attribute만 남기고 나머지를 버린다. 결과 relation은 set이므로 projection 후 duplicate row가 생기면 제거된다.
 
-```text
-Π_ID, name, salary(instructor)
-```
+$$
+\Pi_{ID, name, salary}(instructor)
+$$
 
 이 expression은 instructor의 `ID`, `name`, `salary`만 남긴 relation을 만든다.
 
@@ -179,9 +179,9 @@ Project operation(Π)은 relation에서 특정 attribute만 남기고 나머지�
 
 Relational operation의 결과는 다시 relation이다. 그래서 operation을 중첩해 더 복잡한 질의를 만들 수 있다.
 
-```text
-Π_name(σ_dept_name = "Physics"(instructor))
-```
+$$
+\Pi_{name}(\sigma_{\text{dept\_name} = \text{"Physics"}}(instructor))
+$$
 
 이 expression은 먼저 Physics department의 instructor tuple만 선택하고, 그 결과 relation에서 `name` attribute만 projection한다. Arithmetic expression에서 `+`, `-`, `*`, `/`를 합성하듯 relational algebra에서도 select, project, join 등을 합성한다.
 
@@ -197,9 +197,9 @@ Cartesian product 자체는 대개 너무 많은 무의미한 조합을 만든�
 
 Join operation(⋈)은 Cartesian product와 selection을 결합한 operation이다. `instructor` 정보와 그 instructor가 가르친 course id를 함께 보고 싶다면, 먼저 `instructor × teaches`를 만들고, 그중 `instructor.ID = teaches.ID`인 tuple만 골라야 한다.
 
-```text
-σ_instructor.ID = teaches.ID(instructor × teaches)
-```
+$$
+\sigma_{instructor.ID = teaches.ID}(instructor \times teaches)
+$$
 
 Figure 2.13은 이 selection 결과다. Gold, Califieri, Singh은 `teaches` relation에 teaching record가 없으므로 결과에 나타나지 않는다.
 
@@ -208,15 +208,15 @@ Figure 2.13은 이 selection 결과다. Gold, Califieri, Singh은 `teaches` rela
 
 일반적으로 relation `r(R)`와 `s(S)`, 그리고 `R ∪ S`의 attribute에 대한 predicate `θ`가 있을 때 join은 다음처럼 정의된다.
 
-```text
-r ⋈_θ s = σ_θ(r × s)
-```
+$$
+r \bowtie_\theta s = \sigma_\theta(r \times s)
+$$
 
 따라서 위 expression은 다음처럼 쓸 수 있다.
 
-```text
-instructor ⋈_instructor.ID = teaches.ID teaches
-```
+$$
+instructor \bowtie_{instructor.ID = teaches.ID} teaches
+$$
 
 Join 결과에는 양쪽의 matching attribute가 중복으로 남을 수 있다. 예를 들어 Figure 2.13에는 `instructor.ID`와 `teaches.ID`가 모두 있다. 필요한 경우 projection을 추가해 중복 column을 제거한다. 이 지점이 SQL의 `join ... on ...`과 `select` clause를 함께 이해하는 기반이다.
 
@@ -224,18 +224,22 @@ Join 결과에는 양쪽의 matching attribute가 중복으로 남을 수 있다
 
 Set operation은 relation을 tuple set으로 보는 성질을 직접 사용한다. 대표 operation은 union(∪), intersection(∩), set difference(-)다. 예를 들어 Fall 2017에 열린 course와 Spring 2018에 열린 course를 각각 다음 relation으로 만들 수 있다.
 
-```text
-Π_course_id(σ_semester = "Fall" ∧ year = 2017(section))
-Π_course_id(σ_semester = "Spring" ∧ year = 2018(section))
-```
+$$
+\begin{aligned}
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Fall"} \land year = 2017}(section)) \\
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Spring"} \land year = 2018}(section))
+\end{aligned}
+$$
 
 두 semester 중 하나 이상에 열린 course를 찾으려면 union을 사용한다.
 
-```text
-Π_course_id(σ_semester = "Fall" ∧ year = 2017(section))
-∪
-Π_course_id(σ_semester = "Spring" ∧ year = 2018(section))
-```
+$$
+\begin{aligned}
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Fall"} \land year = 2017}(section)) \\
+\cup \\
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Spring"} \land year = 2018}(section))
+\end{aligned}
+$$
 
 ![Figure 2.14](@/assets/images/cs-database-018-figure-2-14-page-83.png)
 *Figure 2.14 · PDF p. 83 · Fall 2017 또는 Spring 2018에 열린 course_id의 union 결과*
@@ -246,22 +250,26 @@ Union이 의미 있으려면 두 input relation이 compatible relations이어야
 
 Intersection(∩)은 두 input relation에 모두 있는 tuple만 남긴다. Fall 2017과 Spring 2018에 모두 열린 course는 다음처럼 표현한다.
 
-```text
-Π_course_id(σ_semester = "Fall" ∧ year = 2017(section))
-∩
-Π_course_id(σ_semester = "Spring" ∧ year = 2018(section))
-```
+$$
+\begin{aligned}
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Fall"} \land year = 2017}(section)) \\
+\cap \\
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Spring"} \land year = 2018}(section))
+\end{aligned}
+$$
 
 ![Figure 2.15](@/assets/images/cs-database-019-figure-2-15-page-84.png)
 *Figure 2.15 · PDF p. 84 · Fall 2017과 Spring 2018 양쪽에 모두 열린 course_id의 intersection 결과*
 
 Set difference(-)는 왼쪽 relation에는 있지만 오른쪽 relation에는 없는 tuple을 남긴다. Fall 2017에는 열렸지만 Spring 2018에는 열리지 않은 course는 다음처럼 표현한다.
 
-```text
-Π_course_id(σ_semester = "Fall" ∧ year = 2017(section))
--
-Π_course_id(σ_semester = "Spring" ∧ year = 2018(section))
-```
+$$
+\begin{aligned}
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Fall"} \land year = 2017}(section)) \\
+- \\
+\Pi_{\text{course\_id}}(\sigma_{semester = \text{"Spring"} \land year = 2018}(section))
+\end{aligned}
+$$
 
 ![Figure 2.16](@/assets/images/cs-database-020-figure-2-16-page-84.png)
 *Figure 2.16 · PDF p. 84 · Fall 2017에는 있지만 Spring 2018에는 없는 course_id의 difference 결과*
@@ -272,11 +280,13 @@ Union, intersection, difference는 모두 compatible relation 사이에서 수�
 
 Assignment operation(←)은 relational-algebra expression의 중간 결과를 temporary relation variable에 붙이는 편의 기능이다. 예를 들어 두 semester course 집합을 먼저 이름 붙여 놓고 intersection을 계산할 수 있다.
 
-```text
-courses_fall_2017 ← Π_course_id(σ_semester = "Fall" ∧ year = 2017(section))
-courses_spring_2018 ← Π_course_id(σ_semester = "Spring" ∧ year = 2018(section))
-courses_fall_2017 ∩ courses_spring_2018
-```
+$$
+\begin{aligned}
+courses_{\text{fall\_2017}} &\leftarrow \Pi_{\text{course\_id}}(\sigma_{semester = \text{"Fall"} \land year = 2017}(section)) \\
+courses_{\text{spring\_2018}} &\leftarrow \Pi_{\text{course\_id}}(\sigma_{semester = \text{"Spring"} \land year = 2018}(section)) \\
+courses_{\text{fall\_2017}} \cap courses_{\text{spring\_2018}}
+\end{aligned}
+$$
 
 Assignment 자체는 사용자에게 relation을 display하지 않는다. 오른쪽 expression의 결과를 왼쪽 temporary relation variable에 저장하고, 이후 expression에서 재사용할 수 있게 한다. Relational algebra에서 assignment는 표현을 읽기 쉽게 만들 뿐, algebra의 expressive power를 늘리지는 않는다. Permanent relation에 assignment하는 것은 database modification이므로, 여기서 말하는 assignment는 temporary relation variable에 한정된다.
 
@@ -284,25 +294,27 @@ Assignment 자체는 사용자에게 relation을 display하지 않는다. 오른
 
 Rename operation(ρ)은 relation-algebra expression의 결과에 이름을 붙이거나 attribute 이름을 바꾼다. Expression `E`에 대해 다음은 `E`의 결과를 이름 `x`로 반환한다.
 
-```text
-ρ_x(E)
-```
+$$
+\rho_{x}(E)
+$$
 
 두 번째 형태는 relation 이름과 attribute 이름을 동시에 바꾼다. `E`의 arity가 n일 때 다음 expression은 결과 relation 이름을 `x`, attribute 이름을 `A1, A2, ..., An`으로 바꾼다.
 
-```text
-ρ_x(A1, A2, ..., An)(E)
-```
+$$
+\rho_{x}(A_1, A_2, \ldots, A_n)(E)
+$$
 
 Rename이 특히 필요한 경우는 같은 relation을 한 query에서 두 번 참조할 때다. “ID가 12121인 instructor보다 salary가 높은 instructor의 ID와 name을 찾으라”는 질의에서는 `instructor`를 두 역할로 사용한다. 하나는 answer candidate를 scan하는 `i`, 다른 하나는 Wu(ID 12121)의 salary를 얻는 `w`다.
 
-```text
-Π_i.ID, i.name(
-  σ_i.salary > w.salary(
-    ρ_i(instructor) × σ_w.ID = 12121(ρ_w(instructor))
-  )
+$$
+\begin{aligned}
+\Pi_{i.ID, i.name}( \\
+\sigma_{i.salary > w.salary}( \\
+\rho_{i}(instructor) \times \sigma_{w.ID = 12121}(\rho_{w}(instructor)) \\
+) \\
 )
-```
+\end{aligned}
+$$
 
 Positional notation `$1`, `$2`처럼 attribute 위치로 참조하는 방식도 가능하지만, 사람에게는 attribute name이 훨씬 읽기 쉽다. 그래서 교재는 positional notation을 사용하지 않는다.
 
@@ -322,13 +334,13 @@ Natural join은 표기상 편하지만 schema 변화에 취약하다. 공통 att
 
 Relational algebra query는 같은 결과를 여러 expression으로 쓸 수 있다. 예를 들어 Physics department instructor가 가르친 course 정보를 찾는 질의는 selection을 join 뒤에 적용할 수도 있고, `instructor`에 먼저 적용한 뒤 join할 수도 있다.
 
-```text
-σ_dept_name = "Physics"(instructor ⋈_instructor.ID = teaches.ID teaches)
-```
+$$
+\sigma_{\text{dept\_name} = \text{"Physics"}}(instructor \bowtie_{instructor.ID = teaches.ID} teaches)
+$$
 
-```text
-(σ_dept_name = "Physics"(instructor)) ⋈_instructor.ID = teaches.ID teaches
-```
+$$
+(\sigma_{\text{dept\_name} = \text{"Physics"}}(instructor)) \bowtie_{instructor.ID = teaches.ID} teaches
+$$
 
 두 expression은 exact sequence는 다르지만 모든 database instance에서 같은 결과를 낸다면 equivalent queries다. Query optimizer는 사용자가 쓴 순서를 기계적으로 따르기보다, expression이 계산하는 결과를 보고 더 효율적인 equivalent expression을 찾는다. 이 algebraic equivalence가 Chapter 16 query optimization의 핵심 토대다. 일반적으로 selection을 가능한 한 일찍 적용하면 join에 들어가는 tuple 수가 줄어들 수 있어 더 효율적일 수 있다.
 

@@ -45,7 +45,7 @@ CLRS가 여기서 강조하는 점은 algorithm을 독립된 코드가 아니라
 | instance | 문제 제약을 만족하는 구체 입력은 무엇인가? | `<31, 41, 59, 26, 41, 58>` |
 | output | 해당 instance에 대한 해는 무엇인가? | `<26, 31, 41, 41, 58, 59>` |
 
-정렬(sorting)의 formal definition은 다음과 같다. 입력은 n개의 숫자 sequence `<a1, a2, ..., an>`이고, 출력은 입력의 재배열(permutation) `<a1', a2', ..., an'>` 중 `a1' <= a2' <= ... <= an'`을 만족하는 것이다. 여기서 `<31, 41, 59, 26, 41, 58>` 같은 구체 입력이 sorting problem의 instance다.
+정렬(sorting)의 formal definition은 다음과 같다. 입력은 $n$개의 숫자 sequence $\langle a_1, a_2, \ldots, a_n\rangle$이고, 출력은 입력의 재배열(permutation) $\langle a'_1, a'_2, \ldots, a'_n\rangle$ 중 $a'_1 \le a'_2 \le \cdots \le a'_n$을 만족하는 것이다. 여기서 $\langle 31, 41, 59, 26, 41, 58\rangle$ 같은 구체 입력이 sorting problem의 instance다.
 
 #### Sorting이 기본 예제가 되는 이유
 
@@ -74,15 +74,15 @@ CLRS가 여기서 강조하는 점은 algorithm을 독립된 코드가 아니라
 
 여기서 중요한 메시지는 “문제를 컴퓨터가 풀 수 있는 형태로 model하고, 그 모델 위에서 효율적 algorithm을 설계한다”는 것이다. 예를 들어 도로 지도는 graph로 model되고, 교차로는 vertex, 인접 도로 거리는 edge weight가 되어 shortest path problem으로 바뀐다. 이런 모델링 덕분에 실제 도로 위의 모든 경로를 무식하게 세는 대신 Chapter 24의 graph algorithms로 효율적인 해를 찾을 수 있다.
 
-PDF p. 28의 후반부에서는 longest common subsequence(LCS) 예시가 시작된다. 두 sequence `X = <x1, x2, ..., xm>`, `Y = <y1, y2, ..., yn>`에서 공통으로 나타나는 가장 긴 subsequence를 찾는 문제이며, DNA base pair similarity 같은 맥락으로 설명된다. 이 예시는 “brute force가 왜 곤란하고 dynamic programming으로 어떻게 이어지는가”를 보여주는 역할을 한다.
+PDF p. 28의 후반부에서는 longest common subsequence(LCS) 예시가 시작된다. 두 sequence $X = \langle x_1, x_2, \ldots, x_m\rangle$, $Y = \langle y_1, y_2, \ldots, y_n\rangle$에서 공통으로 나타나는 가장 긴 subsequence를 찾는 문제이며, DNA base pair similarity 같은 맥락으로 설명된다. 이 예시는 “brute force가 왜 곤란하고 dynamic programming으로 어떻게 이어지는가”를 보여주는 역할을 한다.
 
 #### 후보 해 공간(candidate solution space)이 커지는 문제들
 
-1.1의 후반부는 알고리즘 문제가 왜 어려워지는지를 “가능한 후보가 너무 많다”는 관점에서 보여준다. longest common subsequence(LCS)는 `X`와 `Y`의 모든 subsequence를 골라 서로 맞춰 보는 방식으로는 `m`, `n`이 조금만 커져도 감당하기 어렵다. `X`의 subsequence는 최대 `2^m`개, `Y`의 subsequence는 최대 `2^n`개가 될 수 있기 때문이다. CLRS는 Chapter 15에서 dynamic programming을 이용해 이 문제를 훨씬 효율적으로 푸는 방법을 제시한다고 예고한다.
+1.1의 후반부는 알고리즘 문제가 왜 어려워지는지를 “가능한 후보가 너무 많다”는 관점에서 보여준다. longest common subsequence(LCS)는 $X$와 $Y$의 모든 subsequence를 골라 서로 맞춰 보는 방식으로는 $m$, $n$이 조금만 커져도 감당하기 어렵다. $X$의 subsequence는 최대 $2^{m}$개, $Y$의 subsequence는 최대 $2^{n}$개가 될 수 있기 때문이다. CLRS는 Chapter 15에서 dynamic programming을 이용해 이 문제를 훨씬 효율적으로 푸는 방법을 제시한다고 예고한다.
 
-비슷한 패턴은 topological sorting에서도 나타난다. 어떤 mechanical design이 parts의 library로 주어지고, 어떤 part가 다른 part를 포함할 수 있다고 하자. 이때 각 part가 그것을 사용하는 part보다 먼저 오도록 순서를 나열해야 한다. n개의 part가 있으면 가능한 순서는 `n!`개이고, factorial function은 exponential function보다도 빠르게 커진다. 따라서 모든 순서를 생성한 뒤 조건을 확인하는 brute force는 작은 n에서만 가능하다. 이 문제는 Chapter 22의 graph algorithms에서 topological sorting으로 효율적으로 해결된다.
+비슷한 패턴은 topological sorting에서도 나타난다. 어떤 mechanical design이 parts의 library로 주어지고, 어떤 part가 다른 part를 포함할 수 있다고 하자. 이때 각 part가 그것을 사용하는 part보다 먼저 오도록 순서를 나열해야 한다. $n$개의 part가 있으면 가능한 순서는 $n!$개이고, factorial function은 exponential function보다도 빠르게 커진다. 따라서 모든 순서를 생성한 뒤 조건을 확인하는 brute force는 작은 $n$에서만 가능하다. 이 문제는 Chapter 22의 graph algorithms에서 topological sorting으로 효율적으로 해결된다.
 
-convex hull 문제도 후보가 많다. 평면 위 n개 points가 주어졌을 때, 이 점들을 모두 포함하는 가장 작은 convex polygon을 찾는 문제다. 원문은 board 위에 못(nail)을 박고 rubber band를 둘러 팽팽하게 만든 모습을 직관으로 제시한다. rubber band가 방향을 바꾸는 nail들이 convex hull의 vertices다. 가능한 point subset만 해도 `2^n`개이며, 어떤 점들이 vertex인지 아는 것만으로는 충분하지 않고 그 점들이 나타나는 order도 필요하다. CLRS는 이 예시를 Chapter 33의 computational geometry로 연결하며, 원문은 Figure 33.6을 예시 그림으로 참조한다.
+convex hull 문제도 후보가 많다. 평면 위 n개 points가 주어졌을 때, 이 점들을 모두 포함하는 가장 작은 convex polygon을 찾는 문제다. 원문은 board 위에 못(nail)을 박고 rubber band를 둘러 팽팽하게 만든 모습을 직관으로 제시한다. rubber band가 방향을 바꾸는 nail들이 convex hull의 vertices다. 가능한 point subset만 해도 $2^{n}$개이며, 어떤 점들이 vertex인지 아는 것만으로는 충분하지 않고 그 점들이 나타나는 order도 필요하다. CLRS는 이 예시를 Chapter 33의 computational geometry로 연결하며, 원문은 Figure 33.6을 예시 그림으로 참조한다.
 
 이 예시들의 공통점은 두 가지다.
 
@@ -133,9 +133,9 @@ NP-complete problems가 중요한 이유는 세 가지다. 첫째, 어떤 NP-com
 
 #### Efficiency: insertion sort vs. merge sort
 
-같은 sorting problem을 푸는 알고리즘이라도 efficiency는 극적으로 다를 수 있다. Chapter 2에서 다룰 insertion sort는 대략 `c1 n^2` 시간, merge sort는 대략 `c2 n lg n` 시간이 걸린다. 여기서 `lg n`은 `log2 n`이고, `c1`, `c2`는 n에 의존하지 않는 constant다. insertion sort는 보통 constant factor가 작아 `c1 < c2`일 수 있지만, 입력 크기 n이 커지면 constant factor보다 growth rate가 훨씬 중요해진다.
+같은 sorting problem을 푸는 알고리즘이라도 efficiency는 극적으로 다를 수 있다. Chapter 2에서 다룰 insertion sort는 대략 $c_1 n^2$ 시간, merge sort는 대략 $c_2 n \lg n$ 시간이 걸린다. 여기서 $\lg n$은 $\log_2 n$이고, $c_1$, $c_2$는 $n$에 의존하지 않는 constant다. insertion sort는 보통 constant factor가 작아 $c_1 < c_2$일 수 있지만, 입력 크기 $n$이 커지면 constant factor보다 growth rate가 훨씬 중요해진다.
 
-핵심 비교는 `n` 대 `lg n`이다. insertion sort의 running time은 `c1 n * n`처럼 볼 수 있고, merge sort는 `c2 n * lg n`처럼 볼 수 있다. n이 1000일 때 `lg n`은 약 10, n이 1,000,000일 때도 `lg n`은 약 20에 불과하다. 그래서 작은 input size에서는 insertion sort가 더 빠를 수 있지만, 충분히 큰 n 이후에는 merge sort가 constant factor의 불리함을 이긴다. 이 지점을 crossover point라고 볼 수 있다.
+핵심 비교는 $n$ 대 $\lg n$이다. insertion sort의 running time은 $c_1 n^2$처럼 볼 수 있고, merge sort는 $c_2 n \lg n$처럼 볼 수 있다. $n = 1000$일 때 $\lg n$은 약 10, $n = 1{,}000{,}000$일 때도 $\lg n$은 약 20에 불과하다. 그래서 작은 input size에서는 insertion sort가 더 빠를 수 있지만, 충분히 큰 $n$ 이후에는 merge sort가 constant factor의 불리함을 이긴다. 이 지점을 crossover point라고 볼 수 있다.
 
 원문의 concrete example은 알고리즘 선택의 힘을 숫자로 보여준다.
 
@@ -143,11 +143,11 @@ NP-complete problems가 중요한 이유는 세 가지다. 첫째, 어떤 NP-com
 | --- | --- | --- |
 | raw speed | 10 billion instructions/second | 10 million instructions/second |
 | 상대 속도 | B보다 1000배 빠름 | A보다 1000배 느림 |
-| 구현 가정 | machine language, `2n^2` instructions | high-level language, inefficient compiler, `50n lg n` instructions |
-| n = 10,000,000 | 20,000 seconds, 5.5 hours 초과 | 약 1163 seconds, 20 minutes 미만 |
+| 구현 가정 | machine language, $2n^{2}$ instructions | high-level language, inefficient compiler, $50n \lg n$ instructions |
+| $n = 10,000,000$ | 20,000 seconds, 5.5 hours 초과 | 약 1163 seconds, 20 minutes 미만 |
 | 결론 | 빠른 하드웨어와 장인급 구현에도 느림 | 느린 하드웨어와 비효율 구현에도 17배 이상 빠름 |
 
-이 예시는 “하드웨어가 빠르면 알고리즘은 덜 중요하다”는 직관을 뒤집는다. n이 더 커져 100 million numbers가 되면 insertion sort는 23 days 이상 걸리는 반면, merge sort는 4 hours 미만으로 끝난다. problem size가 커질수록 asymptotic growth의 차이가 시스템 성능의 지배 요인이 된다.
+이 예시는 “하드웨어가 빠르면 알고리즘은 덜 중요하다”는 직관을 뒤집는다. $n$이 더 커져 100 million numbers가 되면 insertion sort는 23 days 이상 걸리는 반면, merge sort는 4 hours 미만으로 끝난다. problem size가 커질수록 asymptotic growth의 차이가 시스템 성능의 지배 요인이 된다.
 
 #### Algorithms and other technologies
 
@@ -171,12 +171,12 @@ Chapter 1에서 아직 asymptotic notation을 본격적으로 정의하지는 �
 
 | running time 형태 | 직관 | Chapter 1에서의 역할 |
 | --- | --- | --- |
-| `c1 n^2` | 입력이 10배 커지면 대략 100배 커지는 quadratic growth | insertion sort의 대표적 성장 형태 |
-| `c2 n lg n` | linear보다 조금 더 크지만 `n^2`보다 훨씬 느리게 성장 | merge sort의 대표적 성장 형태 |
-| `2^n` | subset을 모두 고려할 때 자주 등장하는 exponential growth | LCS, convex hull 후보 폭발 설명 |
-| `n!` | 가능한 순열(order)을 모두 고려할 때 등장하는 factorial growth | topological sorting brute force의 비현실성 설명 |
+| $c_1 n^2$ | 입력이 10배 커지면 대략 100배 커지는 quadratic growth | insertion sort의 대표적 성장 형태 |
+| $c_2 n \lg n$ | linear보다 조금 더 크지만 $n^{2}$보다 훨씬 느리게 성장 | merge sort의 대표적 성장 형태 |
+| $2^{n}$ | subset을 모두 고려할 때 자주 등장하는 exponential growth | LCS, convex hull 후보 폭발 설명 |
+| $n!$ | 가능한 순열(order)을 모두 고려할 때 등장하는 factorial growth | topological sorting brute force의 비현실성 설명 |
 
-이 표의 핵심은 constant factor가 중요하지 않다는 뜻이 아니다. 작은 n에서는 constant factor와 구현 세부가 실제 실행시간을 지배할 수 있다. 다만 n이 충분히 커지면 `n^2`와 `n lg n`, `2^n`, `n!`처럼 input size에 대한 의존성이 결정적 차이를 만든다.
+이 표의 핵심은 constant factor가 중요하지 않다는 뜻이 아니다. 작은 $n$에서는 constant factor와 구현 세부가 실제 실행시간을 지배할 수 있다. 다만 $n$이 충분히 커지면 $n^{2}$와 $n \lg n$, $2^{n}$, $n!$처럼 input size에 대한 의존성이 결정적 차이를 만든다.
 
 ## 연결 관계
 
@@ -199,7 +199,7 @@ Chapter 1은 이후 장들의 지도 역할을 한다. sorting은 Chapter 2의 i
 
 1. algorithm, computational problem, instance의 차이를 sorting problem 예시로 설명하라.
 2. 어떤 algorithm이 correct하다는 말은 무엇이며, “halt” 조건이 왜 포함되는가?
-3. insertion sort의 `c1 n^2`와 merge sort의 `c2 n lg n`에서 constant factor보다 growth rate가 더 중요해지는 이유를 설명하라.
+3. insertion sort의 $c_1 n^2$와 merge sort의 $c_2 n \lg n$에서 constant factor보다 growth rate가 더 중요해지는 이유를 설명하라.
 4. fastest hardware에서 나쁜 알고리즘을 돌리는 것보다 느린 hardware에서 좋은 알고리즘을 돌리는 것이 더 빠를 수 있는 이유를 CLRS의 예시와 함께 설명하라.
 5. LCS, topological sorting, convex hull 예시가 공통적으로 보여주는 candidate solution explosion은 무엇인가?
 6. NP-complete problem임을 아는 것이 실무적으로 왜 유용한가?

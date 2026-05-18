@@ -21,7 +21,7 @@ Chapter 10은 `dynamic sets`를 표현하는 기본 자료구조를 다룬다. �
 - `pointers and objects` 구현: 언어에 pointer/object가 없어도 arrays로 흉내 내는 방식
 - `rooted trees`: parent/child/sibling 관계를 pointer로 표현하는 방식
 
-핵심 관점은 “자료구조가 어떤 abstract operation을 빠르게 지원하도록 내부 표현을 선택하는가”다. 같은 dynamic set이라도 `PUSH/POP`, `ENQUEUE/DEQUEUE`, `LIST-SEARCH`, `ALLOCATE-OBJECT`, tree traversal처럼 필요한 연산이 다르면 표현이 달라진다.
+핵심 관점은 “자료구조가 어떤 abstract operation을 빠르게 지원하도록 내부 표현을 선택하는가”다. 같은 dynamic set이라도 $PUSH/POP$, $ENQUEUE/DEQUEUE$, `LIST-SEARCH`, `ALLOCATE-OBJECT`, tree traversal처럼 필요한 연산이 다르면 표현이 달라진다.
 
 ## 핵심 개념
 
@@ -49,19 +49,21 @@ Chapter 10은 `dynamic sets`를 표현하는 기본 자료구조를 다룬다. �
 
 #### Array로 stack 구현
 
-최대 `n`개 원소를 담는 stack은 array `S[1..n]`과 attribute `S.top`으로 구현할 수 있다. `S.top`은 가장 최근에 삽입된 원소, 즉 top element의 index를 가리킨다.
+최대 `n`개 원소를 담는 stack은 array $S[1..n]$과 attribute `S.top`으로 구현할 수 있다. `S.top`은 가장 최근에 삽입된 원소, 즉 top element의 index를 가리킨다.
 
-```text
-S[1]          : bottom of stack
-S[S.top]      : top of stack
-S[1..S.top]   : 현재 stack에 들어 있는 elements
-S.top = 0     : empty stack
-```
+$$
+\begin{aligned}
+\text{S[1]          : bottom of stack} \\
+\text{S[S.top]      : top of stack} \\
+\text{S[1..S.top]   : 현재 stack에 들어 있는 elements} \\
+S.top &= 0 : empty stack
+\end{aligned}
+$$
 
 ![Figure 10.1](@/assets/images/cs-algorithm-033-figure-10-1-page-254.png)
 *Figure 10.1 · PDF p. 254 · array `S`와 `S.top`으로 구현한 stack의 PUSH/POP 변화*
 
-Figure 10.1에서 `POP(S)` 후에도 값 `3`은 array 위치에 남아 있다. 하지만 `S.top`이 줄어들었기 때문에 그 위치는 더 이상 stack의 일부가 아니다. 자료구조의 논리적 내용은 memory에 남은 bit pattern이 아니라 representation invariant로 결정된다.
+Figure 10.1에서 $POP(S)$ 후에도 값 `3`은 array 위치에 남아 있다. 하지만 `S.top`이 줄어들었기 때문에 그 위치는 더 이상 stack의 일부가 아니다. 자료구조의 논리적 내용은 memory에 남은 bit pattern이 아니라 representation invariant로 결정된다.
 
 #### Stack operations
 
@@ -82,7 +84,7 @@ POP(S)
 4      return S[S.top + 1]
 ```
 
-각 연산은 `O(1)` time이다. `POP`은 empty stack에서 호출되면 `underflow` 오류를 낸다. 고정 크기 array 구현에서는 `S.top > n`이 되는 `overflow`도 가능하지만, 본문 pseudocode에서는 stack overflow check를 생략한다.
+각 연산은 $O(1)$ time이다. `POP`은 empty stack에서 호출되면 `underflow` 오류를 낸다. 고정 크기 array 구현에서는 `S.top > n`이 되는 `overflow`도 가능하지만, 본문 pseudocode에서는 stack overflow check를 생략한다.
 
 #### Queue: FIFO dynamic set
 
@@ -92,7 +94,7 @@ Queue의 insert operation은 `ENQUEUE`, delete operation은 `DEQUEUE`다. 줄 �
 
 #### Circular array로 queue 구현
 
-CLRS는 최대 `n-1`개 원소를 담는 queue를 array `Q[1..n]`으로 구현한다. 여기서 `Q.head`는 삭제될 원소의 위치를 가리키고, `Q.tail`은 다음 삽입 위치를 가리킨다.
+CLRS는 최대 $n-1$개 원소를 담는 queue를 array $Q[1..n]$으로 구현한다. 여기서 `Q.head`는 삭제될 원소의 위치를 가리키고, `Q.tail`은 다음 삽입 위치를 가리킨다.
 
 ```text
 Q.head : current head element
@@ -123,15 +125,17 @@ DEQUEUE(Q)
 5  return x
 ```
 
-각 연산은 `O(1)` time이다. Pseudocode는 underflow/overflow check를 생략하지만, 원문은 조건을 명확히 설명한다.
+각 연산은 $O(1)$ time이다. Pseudocode는 underflow/overflow check를 생략하지만, 원문은 조건을 명확히 설명한다.
 
-```text
-empty: Q.head == Q.tail
-full : Q.head == Q.tail + 1
-       or (Q.head == 1 and Q.tail == Q.length)
-```
+$$
+\begin{aligned}
+\text{empty:} Q.head &== Q.tail \\
+\text{full :} Q.head &== Q.tail + 1 \\
+       or (Q.head &== 1 and Q.tail == Q.length)
+\end{aligned}
+$$
 
-이 구현이 최대 `n`개가 아니라 `n-1`개만 저장하는 이유는 empty와 full을 구분하기 위해 한 칸을 비워 두기 때문이다. `Q.head == Q.tail`을 empty로 쓰면, 모든 칸이 꽉 찬 상태도 head와 tail이 다시 같아질 수 있다. 그래서 한 칸을 희생해 상태 표현을 단순하게 만든다.
+이 구현이 최대 `n`개가 아니라 $n-1$개만 저장하는 이유는 empty와 full을 구분하기 위해 한 칸을 비워 두기 때문이다. `Q.head == Q.tail`을 empty로 쓰면, 모든 칸이 꽉 찬 상태도 head와 tail이 다시 같아질 수 있다. 그래서 한 칸을 희생해 상태 표현을 단순하게 만든다.
 
 #### 10.1 Exercises가 묻는 구현 감각
 
@@ -155,7 +159,7 @@ x.next  : successor를 가리키는 pointer
 x.prev  : predecessor를 가리키는 pointer
 ```
 
-List object `L`은 `L.head`를 통해 첫 element를 가리킨다. `L.head = NIL`이면 empty list다.
+List object `L`은 `L.head`를 통해 첫 element를 가리킨다. $L.head = NIL$이면 empty list다.
 
 ![Figure 10.3](@/assets/images/cs-algorithm-035-figure-10-3-page-258.png)
 *Figure 10.3 · PDF p. 258 · doubly linked list에서 `next`/`prev` pointer로 search, insert, delete를 수행하는 구조*
@@ -186,7 +190,7 @@ LIST-SEARCH(L, k)
 4  return x
 ```
 
-찾으면 해당 object에 대한 pointer를 반환하고, 없으면 `NIL`을 반환한다. Worst case에서는 전체 `n`개 object를 모두 볼 수 있으므로 running time은 `Θ(n)`이다.
+찾으면 해당 object에 대한 pointer를 반환하고, 없으면 `NIL`을 반환한다. Worst case에서는 전체 `n`개 object를 모두 볼 수 있으므로 running time은 $\Theta(n)$이다.
 
 #### LIST-INSERT
 
@@ -201,7 +205,7 @@ LIST-INSERT(L, x)
 5  x.prev = NIL
 ```
 
-이 연산은 기존 원소 수와 관계없이 pointer 몇 개만 바꾸므로 `O(1)`이다. Unsorted list에서 head insertion을 쓰는 이유는 key 순서를 맞출 필요가 없기 때문이다.
+이 연산은 기존 원소 수와 관계없이 pointer 몇 개만 바꾸므로 $O(1)$이다. Unsorted list에서 head insertion을 쓰는 이유는 key 순서를 맞출 필요가 없기 때문이다.
 
 #### LIST-DELETE
 
@@ -216,14 +220,14 @@ LIST-DELETE(L, x)
 5      x.next.prev = x.prev
 ```
 
-Pointer `x`가 이미 있으면 deletion 자체는 `O(1)`이다. 하지만 “key가 `k`인 원소를 삭제하라”처럼 key만 주어지면 먼저 `LIST-SEARCH`로 pointer를 찾아야 하므로 worst case `Θ(n)`이 필요하다.
+Pointer `x`가 이미 있으면 deletion 자체는 $O(1)$이다. 하지만 “key가 `k`인 원소를 삭제하라”처럼 key만 주어지면 먼저 `LIST-SEARCH`로 pointer를 찾아야 하므로 worst case $\Theta(n)$이 필요하다.
 
 이 차이는 linked list에서 자주 나오는 함정이다.
 
 | 작업 | 시간 | 이유 |
 | --- | --- | --- |
-| 주어진 pointer `x` 삭제 | `O(1)` | 주변 pointer만 갱신 |
-| key `k`를 가진 원소 삭제 | `Θ(n)` worst case | 먼저 search 필요 |
+| 주어진 pointer `x` 삭제 | $O(1)$ | 주변 pointer만 갱신 |
+| key `k`를 가진 원소 삭제 | $\Theta(n)$ worst case | 먼저 search 필요 |
 
 #### Sentinel: boundary condition 줄이기
 
@@ -231,11 +235,13 @@ Pointer `x`가 이미 있으면 deletion 자체는 `O(1)`이다. 하지만 “ke
 
 CLRS는 list `L`에 sentinel object `L.nil`을 둔다. `NIL` 대신 `L.nil`을 사용하고, list를 circular doubly linked list로 만든다.
 
-```text
-L.nil.next : head
-L.nil.prev : tail
-empty list: L.nil.next == L.nil and L.nil.prev == L.nil
-```
+$$
+\begin{aligned}
+\text{L.nil.next : head} \\
+\text{L.nil.prev : tail} \\
+\text{empty list:} L.nil.next &== L.nil and L.nil.prev == L.nil
+\end{aligned}
+$$
 
 ![Figure 10.4](@/assets/images/cs-algorithm-036-figure-10-4-page-260.png)
 *Figure 10.4 · PDF p. 260 · sentinel `L.nil`을 둔 circular doubly linked list의 empty/insert/delete 상태*
@@ -272,16 +278,16 @@ LIST-INSERT'(L, x)
 4  x.prev = L.nil
 ```
 
-Sentinel은 asymptotic running time을 거의 바꾸지 않는다. `LIST-INSERT`와 `LIST-DELETE`는 원래도 `O(1)`이고 sentinel version도 `O(1)`이다. 다만 boundary case가 줄어 코드가 단순해지고, loop 내부 test 수를 줄일 수 있어 constant factor와 clarity가 좋아질 수 있다.
+Sentinel은 asymptotic running time을 거의 바꾸지 않는다. `LIST-INSERT`와 `LIST-DELETE`는 원래도 $O(1)$이고 sentinel version도 $O(1)$이다. 다만 boundary case가 줄어 코드가 단순해지고, loop 내부 test 수를 줄일 수 있어 constant factor와 clarity가 좋아질 수 있다.
 
 그러나 sentinel은 dummy object 하나를 추가로 저장한다. 작은 list가 아주 많으면 sentinel의 extra storage가 낭비가 될 수 있다. 따라서 CLRS는 sentinel을 “코드를 정말 단순하게 만들 때” 신중하게 사용하라고 강조한다.
 
 #### 10.2 Exercises가 묻는 구현 감각
 
-- Singly linked list에서 `INSERT`는 head insertion으로 `O(1)`에 가능하지만, 일반적인 `DELETE`는 predecessor를 알아야 하므로 까다롭다.
-- Stack은 singly linked list의 head를 top으로 보면 `PUSH`/`POP` 모두 `O(1)`에 구현할 수 있다.
-- Queue를 singly linked list로 구현하려면 head뿐 아니라 tail pointer도 유지해야 `ENQUEUE`와 `DEQUEUE`를 둘 다 `O(1)`로 만들 수 있다.
-- Sentinel search에서 `L.nil.key = k`처럼 sentinel에 찾는 key를 잠깐 넣으면 loop마다 `x != L.nil` test를 줄이는 trick이 가능하다.
+- Singly linked list에서 `INSERT`는 head insertion으로 $O(1)$에 가능하지만, 일반적인 `DELETE`는 predecessor를 알아야 하므로 까다롭다.
+- Stack은 singly linked list의 head를 top으로 보면 `PUSH`/`POP` 모두 $O(1)$에 구현할 수 있다.
+- Queue를 singly linked list로 구현하려면 head뿐 아니라 tail pointer도 유지해야 `ENQUEUE`와 `DEQUEUE`를 둘 다 $O(1)$로 만들 수 있다.
+- Sentinel search에서 $L.nil.key = k$처럼 sentinel에 찾는 key를 잠깐 넣으면 loop마다 `x != L.nil` test를 줄이는 trick이 가능하다.
 
 ### 10.3 Implementing pointers and objects
 
@@ -312,17 +318,19 @@ next[i]  : object i의 successor index
 prev[i]  : object i의 predecessor index
 ```
 
-이때 pointer `i`는 `key[i]`, `next[i]`, `prev[i]`를 함께 가리키는 common index다. List head를 나타내는 variable `L`도 object index를 저장한다.
+이때 pointer `i`는 $key[i]$, $next[i]$, $prev[i]$를 함께 가리키는 common index다. List head를 나타내는 variable `L`도 object index를 저장한다.
 
 ![Figure 10.5](@/assets/images/cs-algorithm-037-figure-10-5-page-263.png)
 *Figure 10.5 · PDF p. 263 · `key`, `next`, `prev` arrays의 같은 index를 하나의 linked-list object로 해석하는 multiple-array representation*
 
 Figure 10.5에서 key `16`이 index `5`에 있고 key `4`가 index `2`에 있다면, list에서 `16 -> 4` 관계는
 
-```text
-next[5] = 2
-prev[2] = 5
-```
+$$
+\begin{aligned}
+next[5] &= 2 \\
+prev[2] &= 5
+\end{aligned}
+$$
 
 로 저장된다. 즉 pointer field에는 object의 위치가 아니라 “그 object를 나타내는 index”가 들어간다.
 
@@ -332,12 +340,14 @@ prev[2] = 5
 
 Single-array representation은 이 생각을 하나의 array `A`로 흉내 낸다. 예를 들어 object 하나가 `key`, `next`, `prev` 세 attribute를 가지면 length 3짜리 contiguous block을 object 하나로 본다.
 
-```text
-object pointer i
-A[i + 0] : key
-A[i + 1] : next
-A[i + 2] : prev
-```
+$$
+\begin{aligned}
+\text{object pointer i} \\
+\text{A[i + 0] :} key \\
+\text{A[i + 1] :} next \\
+\text{A[i + 2] :} prev
+\end{aligned}
+$$
 
 ![Figure 10.6](@/assets/images/cs-algorithm-038-figure-10-6-page-264.png)
 *Figure 10.6 · PDF p. 264 · 하나의 array `A`에서 offset 0/1/2를 `key`/`next`/`prev`로 해석하는 single-array representation*
@@ -378,7 +388,7 @@ FREE-OBJECT(x)
 2  free = x
 ```
 
-`ALLOCATE-OBJECT`는 free list의 head를 pop해서 object index를 반환한다. `FREE-OBJECT`는 object `x`를 free list head에 push한다. 둘 다 pointer 하나만 갱신하므로 `O(1)` time이다.
+`ALLOCATE-OBJECT`는 free list의 head를 pop해서 object index를 반환한다. `FREE-OBJECT`는 object `x`를 free list head에 push한다. 둘 다 pointer 하나만 갱신하므로 $O(1)$ time이다.
 
 여기서 `prev` attribute를 reset하지 않는 이유는 free list가 singly linked list로 관리되기 때문이다. Free object를 다시 allocate한 뒤 실제 linked list에 insert할 때 필요한 fields를 다시 설정하면 된다.
 
@@ -386,7 +396,7 @@ FREE-OBJECT(x)
 
 하나의 free list는 여러 linked lists를 service할 수 있다. `Figure 10.8`은 `L1`, `L2`, free list가 같은 `key`, `next`, `prev` arrays 안에서 서로 얽혀 존재하는 예시다. 핵심은 각 slot이 “어느 list에 속하는지”가 물리적 array 위치가 아니라 pointer/index 연결로 결정된다는 점이다.
 
-이 관점은 메모리 관리의 기본 원리와 연결된다. Free storage는 별도 공간에 예쁘게 모여 있지 않아도 된다. 현재 사용 중인 objects와 free objects가 array 안에 섞여 있어도, free list head와 `next` links만 올바르면 allocator는 `O(1)`에 다음 free slot을 찾을 수 있다.
+이 관점은 메모리 관리의 기본 원리와 연결된다. Free storage는 별도 공간에 예쁘게 모여 있지 않아도 된다. 현재 사용 중인 objects와 free objects가 array 안에 섞여 있어도, free list head와 `next` links만 올바르면 allocator는 $O(1)$에 다음 free slot을 찾을 수 있다.
 
 #### Compact representation과 virtual memory 맥락
 
@@ -418,7 +428,7 @@ x.left  : left child
 x.right : right child
 ```
 
-Root는 parent가 없으므로 `x.p = NIL`이다. 어떤 child가 없으면 해당 field가 `NIL`이다. 전체 tree object `T`는 root를 `T.root`로 가리킨다. `T.root = NIL`이면 empty tree다.
+Root는 parent가 없으므로 $x.p = NIL$이다. 어떤 child가 없으면 해당 field가 `NIL`이다. 전체 tree object `T`는 root를 `T.root`로 가리킨다. $T.root = NIL$이면 empty tree다.
 
 ![Figure 10.9](@/assets/images/cs-algorithm-041-figure-10-9-page-268.png)
 *Figure 10.9 · PDF p. 268 · binary tree node를 `p`, `left`, `right` pointers로 표현하는 방식*
@@ -444,29 +454,33 @@ x.child_1, x.child_2, ..., x.child_k
 
 각 node `x`는 parent pointer 외에 두 pointer만 가진다.
 
-```text
-x.p             : parent
-x.left-child    : x의 가장 왼쪽 child
-x.right-sibling : x 바로 오른쪽 sibling
-```
+$$
+\begin{aligned}
+\text{x.p             : parent} \\
+\text{x.left-child    :} x의 가장 왼쪽 child \\
+\text{x.right-sibling :} x 바로 오른쪽 sibling
+\end{aligned}
+$$
 
-Child가 없으면 `x.left-child = NIL`이고, parent의 가장 오른쪽 child이면 `x.right-sibling = NIL`이다.
+Child가 없으면 $x.left-child = NIL$이고, parent의 가장 오른쪽 child이면 $x.right-sibling = NIL$이다.
 
 ![Figure 10.10](@/assets/images/cs-algorithm-042-figure-10-10-page-268.png)
 *Figure 10.10 · PDF p. 268 · arbitrary rooted tree를 `left-child`와 `right-sibling` 두 pointer로 표현하는 방식*
 
-이 표현은 arbitrary number of children을 `O(n)` space로 표현한다. 각 node마다 children 수만큼 pointer field를 두는 대신, children을 sibling linked list처럼 연결하고 parent는 그 list의 head, 즉 leftmost child만 가리킨다.
+이 표현은 arbitrary number of children을 $O(n)$ space로 표현한다. 각 node마다 children 수만큼 pointer field를 두는 대신, children을 sibling linked list처럼 연결하고 parent는 그 list의 head, 즉 leftmost child만 가리킨다.
 
 구조적으로 보면 다음과 같다.
 
-```text
-parent x
-  |
-  v
-leftmost child -> right sibling -> right sibling -> ...
-```
+$$
+\begin{aligned}
+\text{parent x} \\
+  \text{|} \\
+  \text{v} \\
+leftmost child \to right sibling \to right sibling \to \ldots
+\end{aligned}
+$$
 
-모든 children을 순회하려면 `x.left-child`에서 시작해 `right-sibling` pointers를 따라가면 된다. 첫 child 접근은 `O(1)`이고, 모든 children 열거는 children 수에 linear하다.
+모든 children을 순회하려면 $x.left-child$에서 시작해 `right-sibling` pointers를 따라가면 된다. 첫 child 접근은 $O(1)$이고, 모든 children 열거는 children 수에 linear하다.
 
 #### Other tree representations
 
@@ -476,13 +490,13 @@ Tree representation은 application이 어떤 방향으로 tree를 탐색하고 �
 | --- | --- | --- |
 | heap, Chapter 6 | single array + last node index | complete binary tree라 parent/child index 계산 가능 |
 | disjoint-set forest, Chapter 21 | parent pointers only | 주로 root 방향으로만 traversal |
-| arbitrary rooted tree | left-child, right-sibling | unbounded branching을 `O(n)` space로 표현 |
+| arbitrary rooted tree | left-child, right-sibling | unbounded branching을 $O(n)$ space로 표현 |
 
 즉 “tree니까 항상 node에 모든 child pointers를 둔다”가 아니다. 필요한 traversal과 update operation에 맞춰 pointer fields를 고른다.
 
 #### 10.4 Exercises가 묻는 구현 감각
 
-- Binary tree traversal은 recursive하게 `left`, `right`를 방문하면 `O(n)`이다.
+- Binary tree traversal은 recursive하게 `left`, `right`를 방문하면 $O(n)$이다.
 - Nonrecursive traversal은 stack을 auxiliary data structure로 사용해 call stack을 명시적으로 흉내 낼 수 있다.
 - Left-child, right-sibling representation에서 arbitrary rooted tree를 출력하려면 child list를 따라가며 각 child의 subtree를 방문한다.
 - Parent pointer를 없애거나 줄이려면 constant-time parent access를 포기하거나, boolean flag와 pointer 해석 규칙을 추가해 trade-off를 만든다.
@@ -495,9 +509,9 @@ List variants의 operation cost를 비교하는 문제다. 핵심은 sorted/unso
 
 | list 형태 | 유리한 점 | 불리한 점 |
 | --- | --- | --- |
-| unsorted singly linked | head insertion이 `O(1)`, pointer 적음 | predecessor가 없어 delete/successor류가 까다로움 |
+| unsorted singly linked | head insertion이 $O(1)$, pointer 적음 | predecessor가 없어 delete/successor류가 까다로움 |
 | sorted singly linked | minimum은 head로 빠름 | insert/search가 순서 유지 때문에 scan 필요 |
-| unsorted doubly linked | pointer가 주어진 delete는 `O(1)` | search/min/max는 scan 필요 |
+| unsorted doubly linked | pointer가 주어진 delete는 $O(1)$ | search/min/max는 scan 필요 |
 | sorted doubly linked | predecessor/successor와 ordered traversal에 유리 | insert 위치 찾기 비용 발생 |
 
 이 문제는 자료구조 선택이 “모든 연산을 다 빠르게”가 아니라, workload에서 중요한 operations에 맞추는 일임을 보여 준다.
@@ -514,13 +528,13 @@ Chapter 6의 heap과 연결해서 보면, linked list 기반 mergeable heap은 �
 
 #### Problem 10-3: Searching a sorted compact list
 
-`COMPACT-LIST-SEARCH`는 sorted compact linked list에서 random jumps를 섞어 search를 빠르게 하려는 문제다. List가 compact하므로 random index `j = RANDOM(1,n)`을 고르면 free slot이 아니라 실제 list object를 가리킨다는 점을 이용한다.
+`COMPACT-LIST-SEARCH`는 sorted compact linked list에서 random jumps를 섞어 search를 빠르게 하려는 문제다. List가 compact하므로 random index $j = RANDOM(1,n)$을 고르면 free slot이 아니라 실제 list object를 가리킨다는 점을 이용한다.
 
-일반 sorted linked list search는 `next`를 따라 한 칸씩 이동하므로 worst case `Θ(n)`이다. Compact list에서는 array index로 무작위 probe를 할 수 있고, `key[i] < key[j] <= k`이면 search 위치를 `j`로 jump할 수 있다. 문제는 이를 분석해 expected
+일반 sorted linked list search는 `next`를 따라 한 칸씩 이동하므로 worst case $\Theta(n)$이다. Compact list에서는 array index로 무작위 probe를 할 수 있고, $key[i] < key[j] \le k$이면 search 위치를 `j`로 jump할 수 있다. 문제는 이를 분석해 expected
 
-```text
-O(sqrt(n))
-```
+$$
+O(\sqrt{n})
+$$
 
 search time을 보이는 것이다.
 
@@ -530,16 +544,16 @@ search time을 보이는 것이다.
 
 | 구조/연산 | 시간 | 조건/주의 |
 | --- | --- | --- |
-| `STACK-EMPTY`, `PUSH`, `POP` | `O(1)` | array stack, overflow check는 생략 가능 |
-| `ENQUEUE`, `DEQUEUE` | `O(1)` | circular array queue |
-| `LIST-SEARCH` | `Θ(n)` worst case | unsorted linked list |
-| `LIST-INSERT` | `O(1)` | head insertion |
-| `LIST-DELETE` with pointer | `O(1)` | 삭제할 object pointer가 이미 주어짐 |
-| delete by key in linked list | `Θ(n)` worst case | search 후 delete |
-| `ALLOCATE-OBJECT`, `FREE-OBJECT` | `O(1)` | free list를 stack처럼 사용 |
-| binary tree traversal | `O(n)` | 모든 node 방문 |
-| arbitrary rooted tree traversal | `O(n)` | left-child, right-sibling representation |
-| compact sorted list randomized search | expected `O(sqrt(n))` | Problem 10-3, compact array representation |
+| `STACK-EMPTY`, `PUSH`, `POP` | $O(1)$ | array stack, overflow check는 생략 가능 |
+| `ENQUEUE`, `DEQUEUE` | $O(1)$ | circular array queue |
+| `LIST-SEARCH` | $\Theta(n)$ worst case | unsorted linked list |
+| `LIST-INSERT` | $O(1)$ | head insertion |
+| `LIST-DELETE` with pointer | $O(1)$ | 삭제할 object pointer가 이미 주어짐 |
+| delete by key in linked list | $\Theta(n)$ worst case | search 후 delete |
+| `ALLOCATE-OBJECT`, `FREE-OBJECT` | $O(1)$ | free list를 stack처럼 사용 |
+| binary tree traversal | $O(n)$ | 모든 node 방문 |
+| arbitrary rooted tree traversal | $O(n)$ | left-child, right-sibling representation |
+| compact sorted list randomized search | expected $O(\sqrt{n})$ | Problem 10-3, compact array representation |
 
 ## 연결 관계
 
@@ -554,8 +568,8 @@ search time을 보이는 것이다.
 
 - Array 안에 값이 남아 있어도 stack/queue의 논리적 원소가 아닐 수 있다. `S.top`, `Q.head`, `Q.tail` 같은 attributes가 representation을 정의한다.
 - Queue에서 `Q.tail`은 마지막 원소 위치가 아니라 다음 삽입 위치다.
-- Circular queue가 `n`칸 array에 `n-1`개만 담는 것은 empty/full 구분을 단순하게 하려는 설계다.
-- Linked list deletion이 항상 `O(1)`인 것은 아니다. 삭제할 pointer가 이미 있을 때만 `O(1)`이고, key로 찾아 삭제하면 search 비용이 든다.
+- Circular queue가 `n`칸 array에 $n-1$개만 담는 것은 empty/full 구분을 단순하게 하려는 설계다.
+- Linked list deletion이 항상 $O(1)$인 것은 아니다. 삭제할 pointer가 이미 있을 때만 $O(1)$이고, key로 찾아 삭제하면 search 비용이 든다.
 - Sentinel은 asymptotic bound를 거의 바꾸지 않지만 boundary code를 줄인다. 작은 list가 많으면 storage overhead가 문제될 수 있다.
 - Pointer는 반드시 실제 memory address일 필요가 없다. Array index도 pointer 역할을 할 수 있다.
 - Free list의 원소는 물리적으로 모여 있을 필요가 없다. `next` links가 free slots를 정의한다.
@@ -563,13 +577,13 @@ search time을 보이는 것이다.
 
 ## 면접 질문
 
-1. Stack의 `LIFO`와 queue의 `FIFO` 정책을 `PUSH/POP`, `ENQUEUE/DEQUEUE` 관점에서 설명하라.
+1. Stack의 `LIFO`와 queue의 `FIFO` 정책을 $PUSH/POP$, $ENQUEUE/DEQUEUE$ 관점에서 설명하라.
 2. Circular array queue에서 왜 `Q.tail`을 “다음 삽입 위치”로 두는가?
 3. Array queue에서 한 칸을 비워 두는 이유는 무엇인가?
-4. Doubly linked list에서 pointer가 주어진 node 삭제는 왜 `O(1)`인가?
-5. Key만 주어진 linked-list deletion은 왜 worst case `Θ(n)`인가?
+4. Doubly linked list에서 pointer가 주어진 node 삭제는 왜 $O(1)$인가?
+5. Key만 주어진 linked-list deletion은 왜 worst case $\Theta(n)$인가?
 6. Sentinel `L.nil`은 linked list code를 어떻게 단순화하는가?
 7. Multiple-array representation에서 pointer가 array index라는 말은 무슨 뜻인가?
 8. `ALLOCATE-OBJECT`와 `FREE-OBJECT`가 free list를 stack처럼 사용한다는 것을 설명하라.
 9. Binary tree node의 `p`, `left`, `right` fields는 각각 무엇을 가리키는가?
-10. `left-child, right-sibling representation`이 arbitrary rooted tree를 `O(n)` space로 표현하는 이유는 무엇인가?
+10. `left-child, right-sibling representation`이 arbitrary rooted tree를 $O(n)$ space로 표현하는 이유는 무엇인가?

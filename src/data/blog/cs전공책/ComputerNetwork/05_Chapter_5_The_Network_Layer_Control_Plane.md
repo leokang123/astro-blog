@@ -49,14 +49,14 @@ Chapter 5의 질문은 “이 table들이 어떻게 계산되고, 유지되고, 
 
 control plane이 per-router 방식이든 SDN 방식이든, packet이 실제로 따라갈 well-defined sequence of routers는 필요하다. 따라서 routing algorithm은 forwarding table을 채우기 전의 근본 계산 문제다.
 
-routing 문제는 graph `G = (N, E)`로 모델링한다. `N`은 nodes의 집합, `E`는 edges의 집합이다. network-layer routing에서는 보통 node가 router이고, edge가 routers 사이의 physical link다. BGP 같은 inter-domain routing에서는 node가 network/AS를 뜻하고, edge는 networks 사이의 direct connectivity 또는 `peering`을 뜻할 수 있다.
+routing 문제는 graph $G = (N, E)$로 모델링한다. `N`은 nodes의 집합, `E`는 edges의 집합이다. network-layer routing에서는 보통 node가 router이고, edge가 routers 사이의 physical link다. BGP 같은 inter-domain routing에서는 node가 network/AS를 뜻하고, edge는 networks 사이의 direct connectivity 또는 `peering`을 뜻할 수 있다.
 
 ![Figure 5.3](@/assets/images/cs-computer-network-152-figure-5-3-page-392.png)
 *Figure 5.3 · PDF p. 392 · routers와 links를 nodes/edges로 추상화한 routing graph*
 
-edge cost `c(x, y)`는 link 길이, link speed, monetary cost 등으로 정할 수 있다. `(x, y)`가 edge가 아니면 `c(x, y) = infinity`로 본다. 이 장의 기본 설명은 undirected graph를 가정하지만, 알고리즘은 방향별 cost가 다른 directed links에도 확장할 수 있다. node `y`가 node `x`에 직접 연결되어 있으면 `y`는 `x`의 neighbor다.
+edge cost $c(x, y)$는 link 길이, link speed, monetary cost 등으로 정할 수 있다. $(x, y)$가 edge가 아니면 $c(x, y) = \infty$로 본다. 이 장의 기본 설명은 undirected graph를 가정하지만, 알고리즘은 방향별 cost가 다른 directed links에도 확장할 수 있다. node `y`가 node `x`에 직접 연결되어 있으면 `y`는 `x`의 neighbor다.
 
-path `(x1, x2, ..., xp)`의 cost는 경로 위 edge costs의 합이다. least-cost path는 가능한 paths 중 cost가 최소인 path다. 모든 edge cost가 같다면 least-cost path는 hop 수가 가장 작은 `shortest path`와 같다. 하지만 cost가 bandwidth, delay, policy weight 등을 반영하면 shortest path와 least-cost path는 달라진다.
+path $(x_1, x_2, \ldots, x_p)$의 cost는 경로 위 edge costs의 합이다. least-cost path는 가능한 paths 중 cost가 최소인 path다. 모든 edge cost가 같다면 least-cost path는 hop 수가 가장 작은 `shortest path`와 같다. 하지만 cost가 bandwidth, delay, policy weight 등을 반영하면 shortest path와 least-cost path는 달라진다.
 
 routing algorithms는 세 축으로 분류할 수 있다.
 
@@ -80,16 +80,16 @@ routing algorithms는 세 축으로 분류할 수 있다.
 
 | 기호 | 의미 |
 |---|---|
-| `D(v)` | 현재 iteration 기준 source `u`에서 destination `v`까지 알려진 least-cost estimate |
-| `p(v)` | 현재 least-cost path에서 `v` 바로 앞에 오는 predecessor node |
+| $D(v)$ | 현재 iteration 기준 source `u`에서 destination `v`까지 알려진 least-cost estimate |
+| $p(v)$ | 현재 least-cost path에서 `v` 바로 앞에 오는 predecessor node |
 | `N'` | source에서 least-cost path가 확정된 nodes의 집합 |
 
-Dijkstra의 핵심 루프는 “아직 확정되지 않은 node 중 `D(w)`가 최소인 `w`를 골라 `N'`에 넣고, `w`의 neighbors에 대해 `D(v) = min(D(v), D(w) + c(w, v))`로 갱신”하는 것이다. k번째 iteration이 끝나면 k개의 destination nodes에 대한 least-cost paths가 확정된다. 종료 후 각 destination의 predecessor chain을 거꾸로 따라가면 full path를 복원할 수 있고, source router의 forwarding table에는 각 destination으로 가는 `next-hop`만 저장하면 된다.
+Dijkstra의 핵심 루프는 “아직 확정되지 않은 node 중 $D(w)$가 최소인 `w`를 골라 `N'`에 넣고, `w`의 neighbors에 대해 $D(v) = \min(D(v), D(w) + c(w, v))$로 갱신”하는 것이다. k번째 iteration이 끝나면 k개의 destination nodes에 대한 least-cost paths가 확정된다. 종료 후 각 destination의 predecessor chain을 거꾸로 따라가면 full path를 복원할 수 있고, source router의 forwarding table에는 각 destination으로 가는 `next-hop`만 저장하면 된다.
 
 ![Figure 5.4](@/assets/images/cs-computer-network-153-figure-5-4-page-397.png)
 *Figure 5.4 · PDF p. 397 · node u 기준 least-cost paths와 forwarding table의 next-hop 관계*
 
-단순 구현에서 Dijkstra는 매 iteration마다 아직 확정되지 않은 nodes 중 minimum `D(w)`를 찾아야 하므로 worst-case complexity가 `O(n^2)`다. heap 같은 자료구조를 사용하면 minimum search를 logarithmic time으로 줄일 수 있다. routing protocol 설명에서 중요한 포인트는 복잡도 자체보다 “global state를 수집한 뒤 각 router가 shortest-path tree를 계산한다”는 구조다.
+단순 구현에서 Dijkstra는 매 iteration마다 아직 확정되지 않은 nodes 중 minimum $D(w)$를 찾아야 하므로 worst-case complexity가 $O(n^2)$다. heap 같은 자료구조를 사용하면 minimum search를 logarithmic time으로 줄일 수 있다. routing protocol 설명에서 중요한 포인트는 복잡도 자체보다 “global state를 수집한 뒤 각 router가 shortest-path tree를 계산한다”는 구조다.
 
 LS algorithm의 주의점은 `load-sensitive` metric을 쓸 때 `route oscillation`이 생길 수 있다는 점이다. link cost가 그 link의 현재 traffic load나 delay를 반영하면, routers가 동시에 “혼잡한 곳을 피하자”고 판단하면서 traffic을 반대편으로 몰고, 다음 계산 때 다시 되돌리는 진동이 발생할 수 있다.
 
@@ -104,21 +104,21 @@ oscillation을 줄이는 방법 중 하나는 모든 routers가 LS algorithm을 
 
 DV의 수학적 기반은 `Bellman-Ford equation`이다.
 
-```text
-dx(y) = min over v { c(x, v) + dv(y) }
-```
+$$
+d_x(y) = \min_{v} \{ c(x, v) + d_v(y) \}
+$$
 
-여기서 `dx(y)`는 node `x`에서 destination `y`까지의 true least-cost path cost이고, `v`는 `x`의 neighbor다. 의미는 직관적이다. x에서 y로 가려면 첫 hop으로 어떤 neighbor v를 선택해야 하고, 그 뒤에는 v에서 y까지의 least-cost path를 따르면 된다. 따라서 x는 모든 neighbors v에 대해 `c(x, v) + dv(y)`를 비교하고, 그중 최소를 선택한다.
+여기서 $d_x(y)$는 node `x`에서 destination `y`까지의 true least-cost path cost이고, `v`는 `x`의 neighbor다. 의미는 직관적이다. x에서 y로 가려면 첫 hop으로 어떤 neighbor v를 선택해야 하고, 그 뒤에는 v에서 y까지의 least-cost path를 따르면 된다. 따라서 x는 모든 neighbors v에 대해 $c(x, v) + d_v(y)$를 비교하고, 그중 최소를 선택한다.
 
-이 식은 forwarding table에도 바로 연결된다. minimum을 만드는 neighbor `v*`가 destination `y`로 가는 next-hop이다. DV에서 각 node `x`는 `Dx = [Dx(y): y in N]`, 즉 모든 destinations까지의 cost estimates vector를 유지한다. 또한 각 neighbor `v`로부터 받은 distance vector `Dv`를 저장한다.
+이 식은 forwarding table에도 바로 연결된다. minimum을 만드는 neighbor $v^*$가 destination `y`로 가는 next-hop이다. DV에서 각 node `x`는 $D_x = [D_x(y): y \in N]$, 즉 모든 destinations까지의 cost estimates vector를 유지한다. 또한 각 neighbor `v`로부터 받은 distance vector `Dv`를 저장한다.
 
 DV update의 핵심은 다음과 같다.
 
-```text
-Dx(y) = min over v { c(x, v) + Dv(y) }  for each destination y
-```
+$$
+D_x(y) = \min_{v} \{ c(x, v) + D_v(y) \}\quad \text{for each destination } y
+$$
 
-node x는 직접 link cost가 바뀌거나 neighbor로부터 distance vector update를 받으면 위 식으로 자기 vector를 갱신한다. 자기 vector가 바뀌면 그 새 vector를 neighbors에게 보낸다. 충분히 update가 교환되면 각 `Dx(y)`는 실제 least-cost `dx(y)`로 수렴한다.
+node x는 직접 link cost가 바뀌거나 neighbor로부터 distance vector update를 받으면 위 식으로 자기 vector를 갱신한다. 자기 vector가 바뀌면 그 새 vector를 neighbors에게 보낸다. 충분히 update가 교환되면 각 $D_x(y)$는 실제 least-cost $d_x(y)$로 수렴한다.
 
 ![Figure 5.6](@/assets/images/cs-computer-network-155-figure-5-6-page-402.png)
 *Figure 5.6 · PDF p. 402 · DV algorithm에서 neighbors의 vectors를 받아 distance table을 갱신하는 흐름*
@@ -558,8 +558,8 @@ Chapter 4와 Chapter 5는 network layer를 data plane과 control plane으로 나
 1. `data plane`과 `control plane`의 차이를 forwarding table/flow table 관점에서 설명해 보라.
 2. `per-router control`과 `logically centralized control`의 차이를 OSPF/BGP와 SDN 예로 설명해 보라.
 3. `Link-State (LS)` routing과 `Distance-Vector (DV)` routing의 필요한 정보, message exchange, convergence 문제를 비교해 보라.
-4. Dijkstra's algorithm에서 `D(v)`, `p(v)`, `N'`가 각각 무엇이고, forwarding table의 next-hop은 어떻게 얻는가?
-5. Bellman-Ford equation `Dx(y) = min{c(x,v) + Dv(y)}`가 DV update와 forwarding table entry에 어떻게 연결되는가?
+4. Dijkstra's algorithm에서 $D(v)$, $p(v)$, `N'`가 각각 무엇이고, forwarding table의 next-hop은 어떻게 얻는가?
+5. Bellman-Ford equation $D_x(y) = \min\{c(x,v) + D_v(y)\}$가 DV update와 forwarding table entry에 어떻게 연결되는가?
 6. `count-to-infinity problem`은 왜 link cost 감소보다 증가/실패에서 문제가 되는가? `poisoned reverse`는 어디까지 해결하는가?
 7. Internet에서 왜 `intra-AS routing`과 `inter-AS routing` protocol을 다르게 사용하는가?
 8. OSPF가 link-state protocol이라는 말은 message 범위와 algorithm 측면에서 무엇을 뜻하는가?

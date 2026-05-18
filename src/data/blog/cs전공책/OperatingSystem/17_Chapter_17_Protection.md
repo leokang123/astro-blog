@@ -165,21 +165,21 @@ Android는 여기에 kernel modification을 더해 특정 operations를 특정 G
 
 ### 17.5 Access Matrix
 
-Protection의 general model은 `access matrix`로 추상화할 수 있다. Matrix rows는 protection domains, columns는 objects를 나타내고, 각 entry는 access rights set이다. `access(i, j)`는 domain `D_i`에서 실행 중인 process가 object `O_j`에 수행할 수 있는 operations를 정의한다.
+Protection의 general model은 `access matrix`로 추상화할 수 있다. Matrix rows는 protection domains, columns는 objects를 나타내고, 각 entry는 access rights set이다. $\text{access}(i, j)$는 domain $D_i$에서 실행 중인 process가 object $O_j$에 수행할 수 있는 operations를 정의한다.
 
 ![Access matrix](@/assets/images/cs-operating-system-336-figure-17-5-page-812.png)
 <p align="center"><sub>Figure 17.5 · PDF p. 812 · domains와 objects 사이 allowed operations를 matrix entries로 표현하는 access matrix</sub></p>
 
 Figure 17.5에서 D1은 F1과 F3를 read할 수 있고, D4는 F1/F3를 read/write할 수 있다. Printer는 D2에서만 print할 수 있다. Access matrix는 “어떤 policy를 구현할지”를 표현하는 mechanism이며, OS는 process가 row i에 명시된 objects를 해당 entry의 operations로만 접근하게 enforce해야 한다.
 
-Users는 보통 자신이 만든 object의 access-matrix column contents를 결정한다. Object `O_j`가 만들어지면 column `O_j`가 matrix에 추가되고, creator가 필요한 domains에 필요한 rights를 넣는다. Process가 어떤 domain에서 실행될지는 보통 OS policy가 결정한다.
+Users는 보통 자신이 만든 object의 access-matrix column contents를 결정한다. Object $O_j$가 만들어지면 column $O_j$가 matrix에 추가되고, creator가 필요한 domains에 필요한 rights를 넣는다. Process가 어떤 domain에서 실행될지는 보통 OS policy가 결정한다.
 
 Access matrix는 static/dynamic domain association을 모두 표현할 수 있다. Domain switching도 object operation으로 볼 수 있으므로 domains 자체를 matrix의 objects로 넣을 수 있다.
 
 ![Access matrix with domains as objects](@/assets/images/cs-operating-system-337-figure-17-6-page-813.png)
 <p align="center"><sub>Figure 17.6 · PDF p. 813 · domains도 objects로 포함해 `switch` right로 domain switching을 통제하는 access matrix</sub></p>
 
-`D_i`에서 `D_j`로 switch하려면 `switch ∈ access(i, j)`여야 한다. Figure 17.6에서는 D2에서 D3 또는 D4로 switch할 수 있고, D4에서 D1로, D1에서 D2로 switch할 수 있다.
+$D_i$에서 $D_j$로 switch하려면 $\text{switch} \in \text{access}(i, j)$여야 한다. Figure 17.6에서는 $D_2$에서 $D_3$ 또는 $D_4$로 switch할 수 있고, $D_4$에서 $D_1$로, $D_1$에서 $D_2$로 switch할 수 있다.
 
 Access matrix entries 자체를 바꾸는 권한도 control되어야 한다. 이를 위해 `copy`, `owner`, `control` rights가 사용된다.
 
@@ -204,7 +204,7 @@ Figure 17.7은 `read*` right가 같은 object column 안에서 다른 domain ent
 ![Modified access matrix](@/assets/images/cs-operating-system-340-figure-17-9-page-815.png)
 <p align="center"><sub>Figure 17.9 · PDF p. 815 · `control` right로 특정 domain row의 access rights를 제거할 수 있는 access matrix 수정 예</sub></p>
 
-`control` right는 domain objects에만 적용된다. `access(i, j)`에 control이 있으면 domain `D_i`에서 실행 중인 process가 row `j`의 access rights를 remove할 수 있다. 즉 column-based right propagation과 달리 row-based domain rights를 조정하는 권한이다.
+`control` right는 domain objects에만 적용된다. $\text{access}(i, j)$에 control이 있으면 domain $D_i$에서 실행 중인 process가 row $j$의 access rights를 remove할 수 있다. 즉 column-based right propagation과 달리 row-based domain rights를 조정하는 권한이다.
 
 Access matrix는 dynamic protection requirements를 표현하는 강력한 모델이다. New objects/domains를 runtime에 만들고 matrix에 추가할 수 있다. 다만 matrix mechanism 자체가 policy를 결정하지는 않는다. 어떤 domain이 어떤 object에 어떤 방식으로 접근할지는 system designers/users가 정해야 한다.
 
@@ -216,19 +216,19 @@ Access matrix는 보통 sparse하다. 대부분 entries가 empty이므로 2차�
 
 #### 17.6.1 Global Table
 
-가장 단순한 구현은 `<domain, object, rights-set>` triples의 `global table`이다. Domain `D_i`에서 object `O_j`에 operation `M`을 수행하려면 table에서 `<D_i, O_j, R_k>`를 찾고 `M ∈ R_k`인지 확인한다. 찾으면 허용하고, 없으면 exception/error를 발생시킨다.
+가장 단순한 구현은 $\langle \text{domain}, \text{object}, \text{rights-set}\rangle$ triples의 `global table`이다. Domain $D_i$에서 object $O_j$에 operation $M$을 수행하려면 table에서 $\langle D_i, O_j, R_k\rangle$를 찾고 $M \in R_k$인지 확인한다. 찾으면 허용하고, 없으면 exception/error를 발생시킨다.
 
 단점은 table이 매우 커서 main memory에 유지하기 어렵고, additional I/O가 필요할 수 있다는 점이다. 또한 “모두가 이 object를 read할 수 있음” 같은 grouping을 효율적으로 표현하기 어렵다.
 
 #### 17.6.2 Access Lists for Objects
 
-`access list`는 access matrix의 column을 object별 list로 구현한다. Object마다 `<domain, rights-set>` pairs를 저장하고 empty entries는 버린다. Default rights set을 함께 두면 list에 명시되지 않은 domains에 대한 default behavior도 표현할 수 있다.
+`access list`는 access matrix의 column을 object별 list로 구현한다. Object마다 $\langle \text{domain}, \text{rights-set}\rangle$ pairs를 저장하고 empty entries는 버린다. Default rights set을 함께 두면 list에 명시되지 않은 domains에 대한 default behavior도 표현할 수 있다.
 
 Object owner 입장에서는 자연스럽다. Object를 만들 때 어떤 domains가 어떤 operations를 할 수 있는지 지정하기 쉽다. 그러나 domain 하나가 가진 모든 rights를 파악하려면 여러 objects의 access lists를 찾아야 하므로 domain-centric query에는 불리하다. 또한 object access마다 access list search가 필요할 수 있다.
 
 #### 17.6.3 Capability Lists for Domains
 
-`capability list`는 access matrix의 row를 domain별 list로 구현한다. Domain이 접근 가능한 objects와 allowed operations를 list로 가진다. Object는 physical name/address 같은 `capability`로 표현된다. Process가 object `O_j`에 operation `M`을 수행하려면 corresponding capability를 parameter로 제시한다. Capability possession 자체가 access authority가 된다.
+`capability list`는 access matrix의 row를 domain별 list로 구현한다. Domain이 접근 가능한 objects와 allowed operations를 list로 가진다. Object는 physical name/address 같은 `capability`로 표현된다. Process가 object $O_j$에 operation $M$을 수행하려면 corresponding capability를 parameter로 제시한다. Capability possession 자체가 access authority가 된다.
 
 Capability list는 domain/process 관점의 locality가 좋다. Protection system은 capability가 valid한지만 확인하면 된다. 그러나 capability는 user process가 직접 수정할 수 없어야 하므로 OS가 protected object로 관리해야 한다. Capabilities가 user-accessible address space로 흘러가면 위조/변조 위험이 생긴다.
 

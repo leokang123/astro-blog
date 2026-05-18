@@ -131,7 +131,7 @@ exit:
   signal(mutex)
 ```
 
-Writer가 critical section에 있고 `n` readers가 waiting이면, reader 하나는 `rw_mutex`에서 기다리고 나머지 `n - 1` readers는 `mutex`에서 기다릴 수 있다. Writer가 `signal(rw_mutex)`를 실행한 뒤 waiting readers를 resume할지 waiting writer 하나를 resume할지는 scheduler가 결정한다.
+Writer가 critical section에 있고 $n$ readers가 waiting이면, reader 하나는 `rw_mutex`에서 기다리고 나머지 $n - 1$ readers는 `mutex`에서 기다릴 수 있다. Writer가 `signal(rw_mutex)`를 실행한 뒤 waiting readers를 resume할지 waiting writer 하나를 resume할지는 scheduler가 결정한다.
 
 이 문제는 `reader-writer lock`으로 일반화된다. Lock acquire 시 `read mode` 또는 `write mode`를 지정한다. Read mode는 여러 processes가 동시에 획득할 수 있지만, write mode는 exclusive하다. Reader-writer lock은 readers가 writers보다 훨씬 많고, 어떤 code가 read-only인지 write인지 식별하기 쉬울 때 유용하다. 다만 일반 mutex나 semaphore보다 setup overhead가 크므로 increased concurrency가 그 overhead를 보상할 때 적합하다.
 
@@ -152,7 +152,7 @@ Writer가 critical section에 있고 `n` readers가 waiting이면, reader 하나
 semaphore chopstick[5]; // all initialized to 1
 ```
 
-Philosopher `i`는 `wait(chopstick[i])`로 왼쪽 chopstick을, `wait(chopstick[(i + 1) % 5])`로 오른쪽 chopstick을 얻은 뒤 eat하고, 먹은 뒤 두 chopsticks에 `signal()`을 호출한다.
+Philosopher $i$는 `wait(chopstick[i])`로 왼쪽 chopstick을, `wait(chopstick[(i + 1) % 5])`로 오른쪽 chopstick을 얻은 뒤 eat하고, 먹은 뒤 두 chopsticks에 `signal()`을 호출한다.
 
 ![Philosopher semaphore structure](@/assets/images/cs-operating-system-168-figure-7-6-page-380.png)
 <p align="center"><sub>Figure 7.6 · PDF p. 380 · philosopher i가 양쪽 chopsticks semaphore를 차례로 획득하고 해제하는 구조</sub></p>

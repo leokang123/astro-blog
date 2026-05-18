@@ -12,7 +12,7 @@ tags:
 
 ## 개요
 
-Chapter 6은 `heapsort`와 그 기반 자료구조인 `heap`을 다룬다. Heapsort는 `merge sort`처럼 `O(n lg n)` running time을 가지면서, `insertion sort`처럼 in place로 정렬한다. 즉 asymptotic worst-case time과 공간 사용 면에서 앞서 본 두 sorting algorithm의 장점을 결합한다.
+Chapter 6은 `heapsort`와 그 기반 자료구조인 `heap`을 다룬다. Heapsort는 `merge sort`처럼 $O(n \lg n)$ running time을 가지면서, `insertion sort`처럼 in place로 정렬한다. 즉 asymptotic worst-case time과 공간 사용 면에서 앞서 본 두 sorting algorithm의 장점을 결합한다.
 
 이 장의 더 큰 의미는 알고리즘 설계에서 자료구조(data structure)를 적극적으로 사용한다는 점이다. `heap`은 heapsort뿐 아니라 `priority queue`를 효율적으로 구현하는 데 쓰이며, 이후 그래프 알고리즘과 고급 heap 구조에서 반복적으로 등장한다. 여기서 말하는 heap은 garbage-collected storage의 heap이 아니라, complete binary tree로 볼 수 있는 array-based data structure다.
 
@@ -24,7 +24,7 @@ Chapter 6은 `heapsort`와 그 기반 자료구조인 `heap`을 다룬다. Heaps
 | max-heap | 모든 node가 children보다 크거나 같은 heap | max-heap property |
 | min-heap | 모든 node가 children보다 작거나 같은 heap | min-heap property |
 | `A.length` | array 전체 원소 수 | array length |
-| `A.heap-size` | array 안에서 현재 heap으로 유효한 prefix 길이 | heap-size |
+| $A.heap-size$ | array 안에서 현재 heap으로 유효한 prefix 길이 | heap-size |
 | `MAX-HEAPIFY` | 한 node에서 깨진 max-heap property를 아래로 내려 보내며 복구 | float down |
 | `BUILD-MAX-HEAP` | unordered array를 max-heap으로 변환 | build heap |
 | `HEAPSORT` | max-heap root를 끝으로 보내며 in-place 정렬 | in-place sorting |
@@ -44,23 +44,25 @@ Chapter 6은 `heapsort`와 그 기반 자료구조인 `heap`을 다룬다. Heaps
 heap array `A`에는 두 가지 크기 개념이 있다.
 
 - `A.length`: array에 저장 가능한 전체 element 수
-- `A.heap-size`: 현재 heap으로 유효한 element 수
+- $A.heap-size$: 현재 heap으로 유효한 element 수
 
-따라서 `A[1..A.length]`에 값이 있어도 heap으로 다루는 부분은 `A[1..A.heap-size]`뿐이다. 항상
+따라서 $A[1..A.length]$에 값이 있어도 heap으로 다루는 부분은 $A[1..A.heap-size]$뿐이다. 항상
 
-```text
-0 <= A.heap-size <= A.length
-```
+$$
+0 \le A.heap-size \le A.length
+$$
 
 가 성립한다. heapsort에서는 같은 array 안에서 heap 영역과 이미 정렬된 영역을 나누기 때문에 이 구분이 특히 중요하다.
 
-1-indexed array 표현에서 root는 `A[1]`이고, index `i`의 parent/children은 다음처럼 계산한다.
+1-indexed array 표현에서 root는 $A[1]$이고, index `i`의 parent/children은 다음처럼 계산한다.
 
-```text
-PARENT(i) = floor(i/2)
-LEFT(i)   = 2i
-RIGHT(i)  = 2i + 1
-```
+$$
+\begin{aligned}
+PARENT(i) &= \lfloor i/2 \rfloor \\
+LEFT(i) &= 2i \\
+RIGHT(i) &= 2i + 1
+\end{aligned}
+$$
 
 이 계산은 binary representation에서 shift 연산으로 빠르게 구현할 수 있다. 좋은 heapsort 구현은 이 함수들을 macro나 inline procedure로 처리해 constant factor를 줄인다.
 
@@ -68,17 +70,17 @@ RIGHT(i)  = 2i + 1
 
 `max-heap property`는 root를 제외한 모든 node `i`에 대해 다음 조건이 성립한다는 뜻이다.
 
-```text
-A[PARENT(i)] >= A[i]
-```
+$$
+A[PARENT(i)] \ge A[i]
+$$
 
-즉 어떤 node의 값은 parent보다 클 수 없다. 따라서 max-heap에서 가장 큰 element는 항상 root `A[1]`에 있고, 임의의 subtree에서도 subtree root가 그 subtree 안의 maximum이다.
+즉 어떤 node의 값은 parent보다 클 수 없다. 따라서 max-heap에서 가장 큰 element는 항상 root $A[1]$에 있고, 임의의 subtree에서도 subtree root가 그 subtree 안의 maximum이다.
 
 반대로 `min-heap property`는
 
-```text
-A[PARENT(i)] <= A[i]
-```
+$$
+A[PARENT(i)] \le A[i]
+$$
 
 이고, 가장 작은 element가 root에 있다.
 
@@ -88,33 +90,33 @@ Heapsort는 max-heap을 사용한다. Max-priority queue도 max-heap으로 구�
 
 heap에서 node의 height는 그 node에서 leaf까지 내려가는 longest simple downward path의 edge 수다. heap의 height는 root의 height다. `n`개 element를 가진 heap은 complete binary tree 기반이므로 height가
 
-```text
-Θ(lg n)
-```
+$$
+\Theta(\lg n)
+$$
 
-이다. heap의 핵심 연산들은 대개 root-to-leaf 또는 leaf-to-root path를 따라 움직이므로 `O(lg n)`에 수행된다.
+이다. heap의 핵심 연산들은 대개 root-to-leaf 또는 leaf-to-root path를 따라 움직이므로 $O(\lg n)$에 수행된다.
 
 이 장의 주요 procedure는 다음 흐름으로 연결된다.
 
 | procedure | 역할 | 시간 |
 | --- | --- | --- |
-| `MAX-HEAPIFY` | 한 node에서 max-heap property를 복구 | `O(lg n)` |
-| `BUILD-MAX-HEAP` | unordered array를 max-heap으로 변환 | `O(n)` |
-| `HEAPSORT` | max-heap을 이용해 array를 in-place 정렬 | `O(n lg n)` |
-| `HEAP-MAXIMUM` | priority queue의 maximum 반환 | `O(1)` |
-| `HEAP-EXTRACT-MAX` | maximum 제거 및 heap 복구 | `O(lg n)` |
-| `HEAP-INCREASE-KEY` | key 증가 후 위로 올려 heap 복구 | `O(lg n)` |
-| `MAX-HEAP-INSERT` | 새 key 삽입 | `O(lg n)` |
+| `MAX-HEAPIFY` | 한 node에서 max-heap property를 복구 | $O(\lg n)$ |
+| `BUILD-MAX-HEAP` | unordered array를 max-heap으로 변환 | $O(n)$ |
+| `HEAPSORT` | max-heap을 이용해 array를 in-place 정렬 | $O(n \lg n)$ |
+| `HEAP-MAXIMUM` | priority queue의 maximum 반환 | $O(1)$ |
+| `HEAP-EXTRACT-MAX` | maximum 제거 및 heap 복구 | $O(\lg n)$ |
+| `HEAP-INCREASE-KEY` | key 증가 후 위로 올려 heap 복구 | $O(\lg n)$ |
+| `MAX-HEAP-INSERT` | 새 key 삽입 | $O(\lg n)$ |
 
 #### Leaves의 위치
 
 array representation에서 `n`개 element를 가진 heap의 leaves는
 
-```text
-floor(n/2) + 1, floor(n/2) + 2, ..., n
-```
+$$
+\lfloor n/2 \rfloor + 1, \lfloor n/2 \rfloor + 2, \ldots, n
+$$
 
-index에 위치한다. 이 사실은 `BUILD-MAX-HEAP`이 왜 `floor(n/2)`부터 시작하는지 설명한다. leaves는 children이 없으므로 이미 trivial heap이다.
+index에 위치한다. 이 사실은 `BUILD-MAX-HEAP`이 왜 $\lfloor n/2 \rfloor$부터 시작하는지 설명한다. leaves는 children이 없으므로 이미 trivial heap이다.
 
 ### 6.2 Maintaining the heap property
 
@@ -122,11 +124,11 @@ index에 위치한다. 이 사실은 `BUILD-MAX-HEAP`이 왜 `floor(n/2)`부터 
 
 `MAX-HEAPIFY(A, i)`는 heap 알고리즘의 핵심 subroutine이다. 호출 전제는 다음과 같다.
 
-- `LEFT(i)`를 root로 하는 subtree는 이미 max-heap이다.
-- `RIGHT(i)`를 root로 하는 subtree도 이미 max-heap이다.
-- 다만 `A[i]`가 children보다 작아서 node `i`에서 max-heap property가 깨졌을 수 있다.
+- $LEFT(i)$를 root로 하는 subtree는 이미 max-heap이다.
+- $RIGHT(i)$를 root로 하는 subtree도 이미 max-heap이다.
+- 다만 $A[i]$가 children보다 작아서 node `i`에서 max-heap property가 깨졌을 수 있다.
 
-즉 문제는 한 node에서만 발생했고, 그 아래 양쪽 subtree는 이미 정상이라는 구조다. `MAX-HEAPIFY`는 `A[i]`의 값을 아래로 “float down”시켜 subtree rooted at `i` 전체가 max-heap이 되도록 만든다.
+즉 문제는 한 node에서만 발생했고, 그 아래 양쪽 subtree는 이미 정상이라는 구조다. `MAX-HEAPIFY`는 $A[i]$의 값을 아래로 “float down”시켜 subtree rooted at `i` 전체가 max-heap이 되도록 만든다.
 
 ```text
 MAX-HEAPIFY(A, i)
@@ -142,9 +144,9 @@ MAX-HEAPIFY(A, i)
 10     MAX-HEAPIFY(A, largest)
 ```
 
-절차는 `A[i]`, `A[LEFT(i)]`, `A[RIGHT(i)]` 중 가장 큰 값을 찾아 그 index를 `largest`에 둔다. `largest == i`이면 node `i`는 이미 children보다 크거나 같으므로 subtree가 max-heap이고 종료한다. 그렇지 않으면 더 큰 child와 `A[i]`를 swap한다.
+절차는 $A[i]$, $A[LEFT(i)]$, $A[RIGHT(i)]$ 중 가장 큰 값을 찾아 그 index를 `largest`에 둔다. `largest == i`이면 node `i`는 이미 children보다 크거나 같으므로 subtree가 max-heap이고 종료한다. 그렇지 않으면 더 큰 child와 $A[i]$를 swap한다.
 
-swap 후에는 원래 `A[i]`였던 작은 값이 child 위치로 내려갔기 때문에, 그 child subtree에서 다시 max-heap property가 깨질 수 있다. 그래서 `MAX-HEAPIFY(A, largest)`를 recursive하게 호출한다.
+swap 후에는 원래 $A[i]$였던 작은 값이 child 위치로 내려갔기 때문에, 그 child subtree에서 다시 max-heap property가 깨질 수 있다. 그래서 `MAX-HEAPIFY(A, largest)`를 recursive하게 호출한다.
 
 ![Figure 6.2](@/assets/images/cs-algorithm-017-figure-6-2-page-176.png)
 *Figure 6.2 · PDF p. 176 · `MAX-HEAPIFY(A,2)`가 값을 아래로 내리며 max-heap property를 복구하는 과정*
@@ -153,34 +155,34 @@ Figure 6.2에서는 index `2`의 값이 children보다 작아 property를 위반
 
 #### MAX-HEAPIFY의 시간복잡도
 
-한 단계에서 하는 일은 `A[i]`, left child, right child를 비교하고 필요한 경우 swap하는 `Θ(1)` work다. recursive call은 children 중 하나의 subtree로 내려간다.
+한 단계에서 하는 일은 $A[i]$, left child, right child를 비교하고 필요한 경우 swap하는 $\Theta(1)$ work다. recursive call은 children 중 하나의 subtree로 내려간다.
 
-complete binary tree에서 child subtree의 크기는 최악의 경우 전체 `n`의 `2n/3` 이하이므로 recurrence는 다음처럼 쓸 수 있다.
+complete binary tree에서 child subtree의 크기는 최악의 경우 전체 `n`의 $2n/3$ 이하이므로 recurrence는 다음처럼 쓸 수 있다.
 
-```text
-T(n) <= T(2n/3) + Θ(1)
-```
+$$
+T(n) \le T(2n/3) + \Theta(1)
+$$
 
 Master theorem case 2로 풀면
 
-```text
-T(n) = O(lg n)
-```
+$$
+T(n) = O(\lg n)
+$$
 
-이다. 또는 더 직관적으로, `MAX-HEAPIFY`는 heap에서 한 path를 따라 아래로 내려가며 각 level에서 constant work만 하므로 node height를 `h`라고 할 때 `O(h)`다. heap root에서 호출하면 `h = Θ(lg n)`이다.
+이다. 또는 더 직관적으로, `MAX-HEAPIFY`는 heap에서 한 path를 따라 아래로 내려가며 각 level에서 constant work만 하므로 node height를 `h`라고 할 때 $O(h)$다. heap root에서 호출하면 $h = \Theta(\lg n)$이다.
 
 #### 주의할 점
 
 - `MAX-HEAPIFY`는 아무 array나 heap으로 만드는 procedure가 아니다. 양쪽 child subtrees가 이미 max-heap이라는 전제가 필요하다.
 - `i`가 leaf이면 children이 없으므로 호출해도 아무 변화가 없다.
-- `A[i]`가 children보다 이미 크거나 같으면 재귀 없이 즉시 종료한다.
-- min-heap에서는 비교 방향을 반대로 바꾸면 `MIN-HEAPIFY`가 된다. 시간복잡도는 동일하게 `O(lg n)`이다.
+- $A[i]$가 children보다 이미 크거나 같으면 재귀 없이 즉시 종료한다.
+- min-heap에서는 비교 방향을 반대로 바꾸면 `MIN-HEAPIFY`가 된다. 시간복잡도는 동일하게 $O(\lg n)$이다.
 
 ### 6.3 Building a heap
 
 #### Bottom-up으로 heap 만들기
 
-`BUILD-MAX-HEAP`은 unordered array `A[1..n]`을 max-heap으로 바꾼다. 핵심은 leaves가 이미 trivial max-heap이라는 사실이다. `n`개 element의 heap에서 leaves는 `floor(n/2)+1`부터 `n`까지이므로, internal nodes만 뒤에서 앞으로 처리하면 된다.
+`BUILD-MAX-HEAP`은 unordered array $A[1..n]$을 max-heap으로 바꾼다. 핵심은 leaves가 이미 trivial max-heap이라는 사실이다. `n`개 element의 heap에서 leaves는 $\lfloor n/2 \rfloor+1$부터 `n`까지이므로, internal nodes만 뒤에서 앞으로 처리하면 된다.
 
 ```text
 BUILD-MAX-HEAP(A)
@@ -200,72 +202,74 @@ Figure 6.3의 각 단계는 line 3의 `MAX-HEAPIFY` 호출 직전 상태를 보�
 
 원문의 loop invariant는 다음과 같다.
 
-```text
-At the start of each iteration with index i,
-each node i+1, i+2, ..., n is the root of a max-heap.
-```
+$$
+\begin{aligned}
+\text{At the start of each iteration with index i,} \\
+each node i+1, i+2, \ldots, n is the root of a \max-heap.
+\end{aligned}
+$$
 
 Initialization:
 
-처음에는 `i = floor(n/2)`이다. `floor(n/2)+1`부터 `n`까지는 leaves이므로 각각 1-element heap, 즉 trivial max-heap이다.
+처음에는 $i = \lfloor n/2 \rfloor$이다. $\lfloor n/2 \rfloor+1$부터 `n`까지는 leaves이므로 각각 1-element heap, 즉 trivial max-heap이다.
 
 Maintenance:
 
-iteration `i`에서 node `i`의 children은 모두 `i`보다 큰 index다. loop invariant에 의해 그 children은 max-heap roots다. 따라서 `MAX-HEAPIFY(A, i)`의 전제가 성립하고, 호출 후 node `i`도 max-heap root가 된다. 기존에 max-heap이던 nodes `i+1..n`의 성질도 보존된다.
+iteration `i`에서 node `i`의 children은 모두 `i`보다 큰 index다. loop invariant에 의해 그 children은 max-heap roots다. 따라서 `MAX-HEAPIFY(A, i)`의 전제가 성립하고, 호출 후 node `i`도 max-heap root가 된다. 기존에 max-heap이던 nodes $i+1..n$의 성질도 보존된다.
 
 Termination:
 
-loop가 끝나면 `i = 0`이다. invariant에 의해 nodes `1..n`이 모두 max-heap roots이고, 특히 root `1`이 max-heap root이므로 전체 array가 max-heap이다.
+loop가 끝나면 $i = 0$이다. invariant에 의해 nodes `1..n`이 모두 max-heap roots이고, 특히 root `1`이 max-heap root이므로 전체 array가 max-heap이다.
 
 #### 왜 BUILD-MAX-HEAP은 O(n)인가
 
-단순하게 보면 `MAX-HEAPIFY`를 `O(n)`번 호출하고 각 호출이 `O(lg n)`이므로 `O(n lg n)` upper bound가 나온다. 이 bound는 맞지만 tight하지 않다.
+단순하게 보면 `MAX-HEAPIFY`를 $O(n)$번 호출하고 각 호출이 $O(\lg n)$이므로 $O(n \lg n)$ upper bound가 나온다. 이 bound는 맞지만 tight하지 않다.
 
-더 정확한 분석은 node height를 본다. `MAX-HEAPIFY`가 height `h`인 node에서 걸리는 시간은 `O(h)`이다. 그런데 대부분의 node는 heap의 아래쪽에 있고 height가 작다. 원문은 다음 성질을 사용한다.
+더 정확한 분석은 node height를 본다. `MAX-HEAPIFY`가 height `h`인 node에서 걸리는 시간은 $O(h)$이다. 그런데 대부분의 node는 heap의 아래쪽에 있고 height가 작다. 원문은 다음 성질을 사용한다.
 
-```text
-height h인 node 수 <= ceil(n / 2^{h+1})
-```
+$$
+height h인 node 수 \le \lceil n / 2^{h+1} \rceil
+$$
 
 따라서 전체 비용은 다음처럼 합산된다.
 
-```text
-Σ_{h=0}^{floor(lg n)} ceil(n / 2^{h+1}) · O(h)
-```
+$$
+\sum_{h=0}^{\lfloor \lg n \rfloor} \lceil n / 2^{h+1} \rceil \cdot O(h)
+$$
 
 상수와 ceiling을 흡수하면
 
-```text
-O(n Σ_{h=0}^{floor(lg n)} h / 2^h)
-```
+$$
+O(n \sum_{h=0}^{\lfloor \lg n \rfloor} h / 2^{h})
+$$
 
 가 된다. 무한급수
 
-```text
-Σ_{h=0}^{∞} h / 2^h = 2
-```
+$$
+\sum_{h=0}^{\infty} h / 2^{h} = 2
+$$
 
 이므로
 
-```text
+$$
 BUILD-MAX-HEAP = O(n)
-```
+$$
 
 이다.
 
-이 분석의 직관은 아래쪽 node가 많지만 거의 움직이지 않고, 위쪽 node는 길게 내려갈 수 있지만 개수가 적다는 것이다. 그래서 전체 합은 `n lg n`이 아니라 linear time에 수렴한다.
+이 분석의 직관은 아래쪽 node가 많지만 거의 움직이지 않고, 위쪽 node는 길게 내려갈 수 있지만 개수가 적다는 것이다. 그래서 전체 합은 $n \lg n$이 아니라 linear time에 수렴한다.
 
 #### Min-heap 만들기
 
-`BUILD-MIN-HEAP`은 같은 구조에서 line 3의 `MAX-HEAPIFY`를 `MIN-HEAPIFY`로 바꾸면 된다. unordered array를 min-heap으로 만드는 시간도 `O(n)`이다.
+`BUILD-MIN-HEAP`은 같은 구조에서 line 3의 `MAX-HEAPIFY`를 `MIN-HEAPIFY`로 바꾸면 된다. unordered array를 min-heap으로 만드는 시간도 $O(n)$이다.
 
 ### 6.4 The heapsort algorithm
 
 #### Heapsort의 기본 아이디어
 
-`HEAPSORT`는 먼저 input array 전체를 max-heap으로 만든다. Max-heap에서는 maximum element가 root `A[1]`에 있으므로, 이 값을 array의 맨 끝 `A[n]`과 교환하면 maximum이 최종 정렬 위치로 간다.
+`HEAPSORT`는 먼저 input array 전체를 max-heap으로 만든다. Max-heap에서는 maximum element가 root $A[1]$에 있으므로, 이 값을 array의 맨 끝 $A[n]$과 교환하면 maximum이 최종 정렬 위치로 간다.
 
-그다음 `A.heap-size`를 1 줄여서 방금 끝으로 보낸 maximum을 heap에서 제외한다. 이때 root에는 원래 끝에 있던 element가 올라와 있으므로 root에서 max-heap property가 깨질 수 있다. 하지만 root의 두 child subtrees는 여전히 max-heaps이므로 `MAX-HEAPIFY(A, 1)` 한 번으로 heap을 복구할 수 있다.
+그다음 $A.heap-size$를 1 줄여서 방금 끝으로 보낸 maximum을 heap에서 제외한다. 이때 root에는 원래 끝에 있던 element가 올라와 있으므로 root에서 max-heap property가 깨질 수 있다. 하지만 root의 두 child subtrees는 여전히 max-heaps이므로 `MAX-HEAPIFY(A, 1)` 한 번으로 heap을 복구할 수 있다.
 
 이 과정을 heap size가 2가 될 때까지 반복하면 array 뒤쪽부터 큰 값들이 차례로 확정되고, 전체 array가 increasing order로 정렬된다.
 
@@ -283,10 +287,12 @@ HEAPSORT(A)
 
 Figure 6.4에서 lightly shaded nodes만 heap에 남아 있고, 오른쪽/아래쪽의 excluded nodes는 이미 sorted suffix를 이룬다. 즉 같은 array 안에서
 
-```text
-A[1..i]     = 아직 heap으로 관리되는 영역
-A[i+1..n]   = 이미 정렬이 끝난 largest elements
-```
+$$
+\begin{aligned}
+A[1..i] &= 아직 heap으로 관리되는 영역 \\
+A[i+1..n] &= 이미 정렬이 끝난 largest elements
+\end{aligned}
+$$
 
 로 나뉜다.
 
@@ -294,27 +300,31 @@ A[i+1..n]   = 이미 정렬이 끝난 largest elements
 
 원문 exercise가 제시하는 loop invariant는 heapsort correctness를 이해하는 데 좋다.
 
-```text
-At the start of each iteration with index i:
-A[1..i] is a max-heap containing the i smallest elements of A[1..n],
+$$
+\begin{aligned}
+\text{At the start of each iteration with index i:} \\
+A[1..i] is a \max-heap containing the i smallest elements of A[1..n], \\
 A[i+1..n] contains the n-i largest elements of A[1..n], sorted.
-```
+\end{aligned}
+$$
 
-iteration에서 `A[1]`은 heap 영역 `A[1..i]`의 maximum이므로, 전체 array에서 아직 정렬되지 않은 값들 중 가장 큰 값이다. 이를 `A[i]`와 교환하면 그 값은 sorted suffix의 맨 앞, 즉 올바른 최종 위치로 간다. `heap-size`를 줄여 `A[i]`를 heap에서 제외한 뒤 `MAX-HEAPIFY(A,1)`로 남은 `A[1..i-1]`을 다시 max-heap으로 만든다.
+iteration에서 $A[1]$은 heap 영역 $A[1..i]$의 maximum이므로, 전체 array에서 아직 정렬되지 않은 값들 중 가장 큰 값이다. 이를 $A[i]$와 교환하면 그 값은 sorted suffix의 맨 앞, 즉 올바른 최종 위치로 간다. `heap-size`를 줄여 $A[i]$를 heap에서 제외한 뒤 `MAX-HEAPIFY(A,1)`로 남은 $A[1..i-1]$을 다시 max-heap으로 만든다.
 
 #### 시간복잡도와 공간
 
 `HEAPSORT`의 running time은
 
-```text
-BUILD-MAX-HEAP: O(n)
-MAX-HEAPIFY calls: (n-1) · O(lg n)
-Total: O(n lg n)
-```
+$$
+\begin{aligned}
+\text{BUILD-MAX-HEAP:} O(n) \\
+\text{MAX-HEAPIFY calls:} (n-1) \cdot O(\lg n) \\
+\text{Total:} O(n \lg n)
+\end{aligned}
+$$
 
-이다. 또한 array 내부에서 swap하고 `A.heap-size`만 조정하므로 in place sorting이다. 입력 array 밖에 저장하는 element 수가 constant number에 그친다.
+이다. 또한 array 내부에서 swap하고 $A.heap-size$만 조정하므로 in place sorting이다. 입력 array 밖에 저장하는 element 수가 constant number에 그친다.
 
-Heapsort의 장점은 worst-case `O(n lg n)`을 보장하면서 in-place라는 점이다. 다만 실제 구현에서 cache locality나 constant factors 때문에 quicksort 계열이 더 빠를 수 있는 경우도 많다. 그 trade-off는 Chapter 7 이후 sorting algorithm 비교에서 다시 중요해진다.
+Heapsort의 장점은 worst-case $O(n \lg n)$을 보장하면서 in-place라는 점이다. 다만 실제 구현에서 cache locality나 constant factors 때문에 quicksort 계열이 더 빠를 수 있는 경우도 많다. 그 trade-off는 Chapter 7 이후 sorting algorithm 비교에서 다시 중요해진다.
 
 ### 6.5 Priority queues
 
@@ -329,7 +339,7 @@ Max-priority queue가 지원하는 기본 operations:
 | operation | 의미 |
 | --- | --- |
 | `INSERT(S, x)` | element `x`를 set `S`에 삽입 |
-| `MAXIMUM(S)` | largest key를 가진 element 반환 |
+| $MAXIMUM(S)$ | largest key를 가진 element 반환 |
 | `EXTRACT-MAX(S)` | largest key를 가진 element를 제거하고 반환 |
 | `INCREASE-KEY(S, x, k)` | element `x`의 key를 새 값 `k`로 증가 |
 
@@ -348,10 +358,12 @@ Heap으로 priority queue를 구현할 때 heap element는 application object와
 
 따라서 실제 구현에서는 보통 다음 두 방향의 handle이 필요하다.
 
-```text
-heap element -> application object
-application object -> heap array index
-```
+$$
+\begin{aligned}
+heap element \to application object \\
+application object \to heap array index
+\end{aligned}
+$$
 
 문제는 heap operation 중 swap이 자주 일어나 heap element의 array index가 바뀐다는 점이다. 실제 구현에서는 heap element를 이동할 때 application object 안의 index handle도 함께 갱신해야 한다. 원문은 이 세부가 application-dependent라 더 추적하지 않지만, 실전 priority queue 구현에서 매우 중요한 주의점이다.
 
@@ -364,9 +376,9 @@ HEAP-MAXIMUM(A)
 1  return A[1]
 ```
 
-```text
-running time = Θ(1)
-```
+$$
+\text{running time} = \Theta(1)
+$$
 
 #### HEAP-EXTRACT-MAX
 
@@ -385,16 +397,16 @@ HEAP-EXTRACT-MAX(A)
 
 동작 흐름:
 
-1. root `A[1]`에 있는 maximum을 저장한다.
+1. root $A[1]$에 있는 maximum을 저장한다.
 2. heap의 마지막 element를 root로 올린다.
 3. `heap-size`를 줄여 마지막 slot을 heap에서 제거한다.
 4. root에서 max-heap property가 깨졌을 수 있으므로 `MAX-HEAPIFY(A,1)`로 복구한다.
 
-`MAX-HEAPIFY`가 `O(lg n)`이므로 전체 running time도
+`MAX-HEAPIFY`가 $O(\lg n)$이므로 전체 running time도
 
-```text
-O(lg n)
-```
+$$
+O(\lg n)
+$$
 
 이다.
 
@@ -417,13 +429,13 @@ HEAP-INCREASE-KEY(A, i, key)
 ![Figure 6.5](@/assets/images/cs-algorithm-020-figure-6-5-page-186.png)
 *Figure 6.5 · PDF p. 186 · `HEAP-INCREASE-KEY`가 증가한 key를 parent 방향으로 올리는 과정*
 
-Figure 6.5에서는 특정 node의 key가 15로 증가한 뒤, parent보다 커졌기 때문에 parent와 swap한다. 한 번 더 parent와 비교해 필요하면 다시 swap하고, `A[PARENT(i)] >= A[i]`가 되는 지점에서 max-heap property가 회복된다.
+Figure 6.5에서는 특정 node의 key가 15로 증가한 뒤, parent보다 커졌기 때문에 parent와 swap한다. 한 번 더 parent와 비교해 필요하면 다시 swap하고, $A[PARENT(i)] \ge A[i]$가 되는 지점에서 max-heap property가 회복된다.
 
-path는 node에서 root까지의 simple path이고 길이는 `O(lg n)`이므로
+path는 node에서 root까지의 simple path이고 길이는 $O(\lg n)$이므로
 
-```text
-HEAP-INCREASE-KEY = O(lg n)
-```
+$$
+HEAP-INCREASE-KEY = O(\lg n)
+$$
 
 이다.
 
@@ -440,11 +452,11 @@ MAX-HEAP-INSERT(A, key)
 
 원문 extraction에서는 line 2의 sentinel이 깨져 보이지만, CLRS의 의도는 새 leaf의 key를 negative infinity처럼 모든 실제 key보다 작은 값으로 두는 것이다. 그래야 `HEAP-INCREASE-KEY`의 precondition, 즉 새 key가 current key보다 작지 않다는 조건이 항상 만족된다.
 
-`HEAP-INCREASE-KEY`가 `O(lg n)`이므로 insert도
+`HEAP-INCREASE-KEY`가 $O(\lg n)$이므로 insert도
 
-```text
-MAX-HEAP-INSERT = O(lg n)
-```
+$$
+MAX-HEAP-INSERT = O(\lg n)
+$$
 
 이다.
 
@@ -452,21 +464,21 @@ MAX-HEAP-INSERT = O(lg n)
 
 | operation | heap 구현 아이디어 | 시간 |
 | --- | --- | --- |
-| `HEAP-MAXIMUM` | root `A[1]` 반환 | `Θ(1)` |
-| `HEAP-EXTRACT-MAX` | root 제거, last element를 root로 올린 뒤 `MAX-HEAPIFY` | `O(lg n)` |
-| `HEAP-INCREASE-KEY` | key 증가 후 parent 방향으로 bubble up | `O(lg n)` |
-| `MAX-HEAP-INSERT` | 새 leaf 추가 후 `HEAP-INCREASE-KEY` | `O(lg n)` |
+| `HEAP-MAXIMUM` | root $A[1]$ 반환 | $\Theta(1)$ |
+| `HEAP-EXTRACT-MAX` | root 제거, last element를 root로 올린 뒤 `MAX-HEAPIFY` | $O(\lg n)$ |
+| `HEAP-INCREASE-KEY` | key 증가 후 parent 방향으로 bubble up | $O(\lg n)$ |
+| `MAX-HEAP-INSERT` | 새 leaf 추가 후 `HEAP-INCREASE-KEY` | $O(\lg n)$ |
 
-Heap은 set size `n`에 대해 priority queue operations를 모두 `O(lg n)` 이하로 지원한다. `MAXIMUM`만은 root 접근이므로 `Θ(1)`이다.
+Heap은 set size `n`에 대해 priority queue operations를 모두 $O(\lg n)$ 이하로 지원한다. `MAXIMUM`만은 root 접근이므로 $\Theta(1)$이다.
 
 #### Exercises, problems, chapter notes에서 남길 연결
 
 Chapter 6의 exercises와 problems는 heap이 단순 binary heap에 그치지 않음을 보여준다.
 
-- `6.5-7`은 priority queue로 FIFO queue와 stack을 구현하게 한다. 삽입 시각이나 sequence number를 key로 쓰면 ADT를 priority queue로 흉내낼 수 있다.
-- `6.5-8`의 `HEAP-DELETE(A, i)`는 임의 index를 삭제하는 operation이다. 삭제 대상의 위치에 마지막 element를 넣고, 값이 parent보다 크면 bubble up, children보다 작으면 heapify down하는 식으로 `O(lg n)`에 처리할 수 있다.
-- `6.5-9`는 `k sorted lists`를 merge할 때 min-heap을 쓰면 `O(n lg k)`에 k-way merging이 가능함을 묻는다. 이는 external sorting, streaming merge, multiway merge에서 자주 쓰이는 패턴이다.
-- Problem 6-1의 insertion-based heap build는 `BUILD-MAX-HEAP`과 달리 worst-case `Θ(n lg n)`이 될 수 있다. Bottom-up build가 linear인 이유와 대비된다.
+- $6.5-7$은 priority queue로 FIFO queue와 stack을 구현하게 한다. 삽입 시각이나 sequence number를 key로 쓰면 ADT를 priority queue로 흉내낼 수 있다.
+- $6.5-8$의 `HEAP-DELETE(A, i)`는 임의 index를 삭제하는 operation이다. 삭제 대상의 위치에 마지막 element를 넣고, 값이 parent보다 크면 bubble up, children보다 작으면 heapify down하는 식으로 $O(\lg n)$에 처리할 수 있다.
+- $6.5-9$는 `k sorted lists`를 merge할 때 min-heap을 쓰면 $O(n \lg k)$에 k-way merging이 가능함을 묻는다. 이는 external sorting, streaming merge, multiway merge에서 자주 쓰이는 패턴이다.
+- Problem 6-1의 insertion-based heap build는 `BUILD-MAX-HEAP`과 달리 worst-case $\Theta(n \lg n)$이 될 수 있다. Bottom-up build가 linear인 이유와 대비된다.
 - Problem 6-2의 `d-ary heap`은 branching factor를 바꾼 heap이다. Height는 줄지만 한 node에서 maximum child를 찾는 비용이 `d`에 비례하므로 `EXTRACT-MAX`, `INSERT`, `INCREASE-KEY`의 trade-off가 달라진다.
 - Problem 6-3의 `Young tableau`는 row/column sorted matrix를 heap처럼 이용한다. `EXTRACT-MIN`, insert, search가 heapify와 비슷한 구조로 동작한다.
 
@@ -476,20 +488,20 @@ Chapter notes는 heap과 priority queue가 이후 장과 강하게 연결됨을 
 
 | procedure / operation | 시간 | 핵심 이유 |
 | --- | --- | --- |
-| `PARENT`, `LEFT`, `RIGHT` | `Θ(1)` | index arithmetic |
-| `MAX-HEAPIFY` | `O(lg n)` | 한 root-to-leaf path를 따라 float down |
-| `BUILD-MAX-HEAP` | `O(n)` | 많은 node의 height가 작아 weighted sum이 linear |
-| `HEAPSORT` | `O(n lg n)` | build `O(n)` + `n-1`번 heapify |
-| `HEAP-MAXIMUM` | `Θ(1)` | maximum은 root |
-| `HEAP-EXTRACT-MAX` | `O(lg n)` | root 제거 후 heapify down |
-| `HEAP-INCREASE-KEY` | `O(lg n)` | 증가한 key를 root 방향으로 bubble up |
-| `MAX-HEAP-INSERT` | `O(lg n)` | 새 leaf 추가 후 increase-key |
+| `PARENT`, `LEFT`, `RIGHT` | $\Theta(1)$ | index arithmetic |
+| `MAX-HEAPIFY` | $O(\lg n)$ | 한 root-to-leaf path를 따라 float down |
+| `BUILD-MAX-HEAP` | $O(n)$ | 많은 node의 height가 작아 weighted sum이 linear |
+| `HEAPSORT` | $O(n \lg n)$ | build $O(n)$ + $n-1$번 heapify |
+| `HEAP-MAXIMUM` | $\Theta(1)$ | maximum은 root |
+| `HEAP-EXTRACT-MAX` | $O(\lg n)$ | root 제거 후 heapify down |
+| `HEAP-INCREASE-KEY` | $O(\lg n)$ | 증가한 key를 root 방향으로 bubble up |
+| `MAX-HEAP-INSERT` | $O(\lg n)$ | 새 leaf 추가 후 increase-key |
 
 ## 연결 관계
 
 - Chapter 2의 insertion sort와 비교된다. `HEAP-INCREASE-KEY`의 bubble-up loop는 insertion sort의 key 이동과 비슷한 감각을 가진다.
 - Chapter 4의 recurrence와 summation 분석이 `MAX-HEAPIFY`, `BUILD-MAX-HEAP`의 시간 분석에 쓰인다.
-- Chapter 7의 quicksort와 sorting trade-off가 이어진다. Heapsort는 worst-case `O(n lg n)`과 in-place를 보장하지만, quicksort는 평균적으로 매우 빠른 practical choice다.
+- Chapter 7의 quicksort와 sorting trade-off가 이어진다. Heapsort는 worst-case $O(n \lg n)$과 in-place를 보장하지만, quicksort는 평균적으로 매우 빠른 practical choice다.
 - Chapter 16, 23, 24의 algorithms에서 min-priority queue가 사용된다. 특히 shortest path algorithms에서는 `EXTRACT-MIN`과 `DECREASE-KEY`가 성능을 좌우한다.
 - Chapter 19의 Fibonacci heaps, Chapter 20의 integer priority queue 구조는 heap 기반 priority queue의 operation bounds를 더 개선하는 방향이다.
 
@@ -498,8 +510,8 @@ Chapter notes는 heap과 priority queue가 이후 장과 강하게 연결됨을 
 - Heap은 sorted array가 아니다. Parent-child 관계만 보장할 뿐, 같은 level이나 sibling 사이에는 전체 정렬 관계가 없다.
 - Max-heap에서 smallest element는 root가 아니라 leaf 중 어딘가에 있을 수 있다.
 - `MAX-HEAPIFY`는 child subtrees가 이미 max-heaps라는 전제가 있을 때만 한 node의 violation을 고친다.
-- `BUILD-MAX-HEAP`이 `O(n)`인 이유는 `MAX-HEAPIFY`가 싸서가 아니라, 비싼 높은 node가 적고 싼 낮은 node가 많기 때문이다.
-- `A.length`와 `A.heap-size`는 다르다. Heapsort 중에는 array 뒤쪽이 sorted suffix가 되며 heap에서는 제외된다.
+- `BUILD-MAX-HEAP`이 $O(n)$인 이유는 `MAX-HEAPIFY`가 싸서가 아니라, 비싼 높은 node가 적고 싼 낮은 node가 많기 때문이다.
+- `A.length`와 $A.heap-size$는 다르다. Heapsort 중에는 array 뒤쪽이 sorted suffix가 되며 heap에서는 제외된다.
 - `HEAP-INCREASE-KEY`는 key를 줄이는 operation이 아니다. 더 작은 key를 넣으면 max-heap에서는 아래 방향 복구가 필요하므로 다른 procedure가 필요하다.
 - Priority queue 구현에서는 heap element와 application object 사이의 handle/index 갱신이 빠지면 swap 후 object mapping이 깨진다.
 
@@ -508,10 +520,10 @@ Chapter notes는 heap과 priority queue가 이후 장과 강하게 연결됨을 
 1. Binary heap을 array로 표현할 때 `PARENT`, `LEFT`, `RIGHT` index 공식이 왜 성립하는가?
 2. Max-heap property와 sorted array의 차이를 설명하라.
 3. `MAX-HEAPIFY`의 precondition은 무엇이고, 왜 필요한가?
-4. `MAX-HEAPIFY`가 `O(lg n)`인 이유를 height 관점에서 설명하라.
-5. `BUILD-MAX-HEAP`이 왜 `O(n lg n)`이 아니라 `O(n)`인지 설명하라.
-6. Heapsort에서 `A.heap-size`를 줄이는 이유와 sorted suffix의 의미를 설명하라.
-7. Heapsort가 in-place이면서 worst-case `O(n lg n)`인 이유를 설명하라.
+4. `MAX-HEAPIFY`가 $O(\lg n)$인 이유를 height 관점에서 설명하라.
+5. `BUILD-MAX-HEAP`이 왜 $O(n \lg n)$이 아니라 $O(n)$인지 설명하라.
+6. Heapsort에서 $A.heap-size$를 줄이는 이유와 sorted suffix의 의미를 설명하라.
+7. Heapsort가 in-place이면서 worst-case $O(n \lg n)$인 이유를 설명하라.
 8. `HEAP-EXTRACT-MAX`와 heapsort loop body가 어떻게 비슷한가?
 9. `HEAP-INCREASE-KEY`는 왜 `MAX-HEAPIFY`와 반대 방향으로 움직이는가?
 10. Priority queue를 heap으로 구현할 때 application object와 heap index handle을 왜 관리해야 하는가?

@@ -79,42 +79,46 @@ RTT sample은 특정 sequence number를 가진 byte를 보낸 뒤, 그 byte를 c
 
 original TCP specification(RFC 0793)의 classic method는 SRTT(smoothed RTT)를 EWMA(Exponentially Weighted Moving Average), 즉 low-pass filter로 갱신한다.
 
-```text
-SRTT <- alpha * SRTT + (1 - alpha) * RTTs
-```
+$$
+\text{SRTT} \leftarrow \alpha \cdot \text{SRTT} + (1 - \alpha) \cdot \text{RTT}_s
+$$
 
-`RTTs`는 새 RTT sample이고, `alpha`는 smoothing factor다. 권장 범위는 0.8-0.9였으므로 새 SRTT의 80-90%는 이전 estimate, 10-20%는 새 sample에서 온다. 이 방식은 이전 SRTT 하나만 저장하면 되므로 구현이 간단하다.
+$RTT_s$는 새 RTT sample이고, $\alpha$는 smoothing factor다. 권장 범위는 0.8-0.9였으므로 새 SRTT의 80-90%는 이전 estimate, 10-20%는 새 sample에서 온다. 이 방식은 이전 SRTT 하나만 저장하면 되므로 구현이 간단하다.
 
 classic method의 RTO 계산은 다음 형태다.
 
-```text
-RTO = min(ubound, max(lbound, beta * SRTT))
-```
+$$
+\text{RTO} = \min(\text{ubound}, \max(\text{lbound}, \beta \cdot \text{SRTT}))
+$$
 
-`beta`는 delay variance factor로 1.3-2.0 정도가 제안되었고, `lbound`는 lower bound, `ubound`는 upper bound다. 결과적으로 RTO가 대개 1초 또는 SRTT의 약 두 배로 설정된다. RTT 분포가 안정적인 네트워크에서는 충분했지만, RTT 변동이 큰 packet radio network 같은 환경에서는 unnecessary retransmission을 자주 일으켰다.
+$\beta$는 delay variance factor로 1.3-2.0 정도가 제안되었고, `lbound`는 lower bound, `ubound`는 upper bound다. 결과적으로 RTO가 대개 1초 또는 SRTT의 약 두 배로 설정된다. RTT 분포가 안정적인 네트워크에서는 충분했지만, RTT 변동이 큰 packet radio network 같은 환경에서는 unnecessary retransmission을 자주 일으켰다.
 
 ### 14.3.2 The Standard Method
 
 Jacobson 방식은 RTT 평균뿐 아니라 RTT 변동성까지 estimate해야 한다는 점에서 classic method를 개선했다. RTT가 커지고 흔들리는 상황은 이미 네트워크 load가 높다는 신호일 수 있는데, 이때 RTO가 너무 낮으면 unnecessary retransmission으로 load를 더 키운다. 따라서 RTO는 mean만이 아니라 variation을 반영해야 한다.
 
-standard method의 핵심 estimator는 `srtt`와 `rttvar`다. `srtt`는 RTT 평균의 EWMA이고, `rttvar`는 평균에서 얼마나 벗어나는지에 대한 mean deviation의 EWMA다. 표준 형태는 다음과 같다.
+standard method의 핵심 estimator는 $\text{srtt}$와 $\text{rttvar}$다. $\text{srtt}$는 RTT 평균의 EWMA이고, $\text{rttvar}$는 평균에서 얼마나 벗어나는지에 대한 mean deviation의 EWMA다. 표준 형태는 다음과 같다.
 
-```text
-srtt   <- (1 - g) * srtt + g * M
-rttvar <- (1 - h) * rttvar + h * |M - srtt|
-RTO    = srtt + 4 * rttvar
-```
+$$
+\begin{aligned}
+\text{srtt} &\leftarrow (1 - g)\text{srtt} + gM \\
+\text{rttvar} &\leftarrow (1 - h)\text{rttvar} + h\lvert M - \text{srtt}\rvert \\
+\text{RTO} &= \text{srtt} + 4\text{rttvar}
+\end{aligned}
+$$
 
 구현 효율을 위해 같은 의미를 다음처럼 쓸 수 있다.
 
-```text
-Err    = M - srtt
-srtt   <- srtt + g * Err
-rttvar <- rttvar + h * (|Err| - rttvar)
-RTO    = srtt + 4 * rttvar
-```
+$$
+\begin{aligned}
+\text{Err} &= M - \text{srtt} \\
+\text{srtt} &\leftarrow \text{srtt} + g \cdot \text{Err} \\
+\text{rttvar} &\leftarrow \text{rttvar} + h(\lvert\text{Err}\rvert - \text{rttvar}) \\
+\text{RTO} &= \text{srtt} + 4\text{rttvar}
+\end{aligned}
+$$
 
-여기서 `M`은 RTT measurement, `g = 1/8`, `h = 1/4`다. deviation 쪽 gain인 `h`가 더 크므로 RTT가 갑자기 변할 때 RTO가 더 빠르게 올라간다. `g`와 `h`가 2의 음의 거듭제곱인 이유는 multiply/divide 대신 shift/add fixed-point integer arithmetic으로 구현하기 좋기 때문이다.
+여기서 $M$은 RTT measurement, $g = 1/8$, $h = 1/4$다. deviation 쪽 gain인 $h$가 더 크므로 RTT가 갑자기 변할 때 RTO가 더 빠르게 올라간다. $g$와 $h$가 2의 음의 거듭제곱인 이유는 multiply/divide 대신 shift/add fixed-point integer arithmetic으로 구현하기 좋기 때문이다.
 
 classic method와 standard method의 차이는 다음처럼 요약된다.
 
@@ -131,9 +135,9 @@ TCP clock은 무한 정밀한 시간이 아니라 system clock을 따라 증가�
 
 RFC 6298 계열 standard method는 clock granularity와 lower bound를 반영해 RTO를 다음처럼 제한한다.
 
-```text
-RTO = max(srtt + max(G, 4 * rttvar), 1000ms)
-```
+$$
+\text{RTO} = \max(\text{srtt} + \max(G, 4\text{rttvar}), 1000\text{ ms})
+$$
 
 즉 RTO는 적어도 1초다. upper bound도 둘 수 있지만, 적어도 60초 이상이어야 한다. lower bound는 spurious retransmission을 줄이는 보수적 장치다.
 
@@ -143,10 +147,12 @@ RTO = max(srtt + max(G, 4 * rttvar), 1000ms)
 
 첫 RTT measurement `M`이 들어오면 estimator를 다음처럼 초기화한다.
 
-```text
-srtt   <- M
-rttvar <- M / 2
-```
+$$
+\begin{aligned}
+\text{srtt} &\leftarrow M \\
+\text{rttvar} &\leftarrow \frac{M}{2}
+\end{aligned}
+$$
 
 이후부터는 앞의 EWMA update를 적용한다.
 
@@ -198,19 +204,21 @@ Linux가 추가로 유지하는 핵심 변수는 다음과 같다.
 | `mdev_max` | 최근 measured RTT window 동안 관찰한 `mdev`의 최대값 |
 | `rttvar` | RTO 계산에 쓰이는 deviation 값, `mdev_max` 이상이 되도록 관리 |
 
-Linux의 중요한 제약은 `mdev_max`가 50ms보다 작아지지 않도록 하는 것이다. 따라서 `rttvar >= 50ms`가 되고, `RTO = srtt + 4 * rttvar` 구조상 RTO는 사실상 200ms 아래로 내려가지 않는다. `TCP_RTO_MIN`은 kernel configuration이나 일부 route 설정으로 바꿀 수 있지만, global Internet에서는 지나치게 작은 minimum RTO가 권장되지 않는다. data-center network처럼 RTT가 microseconds 단위인 환경에서는 200ms minimum RTO가 incast 문제에서 loss recovery를 심하게 늦출 수 있어 별도 tuning이 논의된다.
+Linux의 중요한 제약은 `mdev_max`가 50ms보다 작아지지 않도록 하는 것이다. 따라서 $\text{rttvar} \ge 50\text{ ms}$가 되고, $\text{RTO} = \text{srtt} + 4\text{rttvar}$ 구조상 RTO는 사실상 200ms 아래로 내려가지 않는다. `TCP_RTO_MIN`은 kernel configuration이나 일부 route 설정으로 바꿀 수 있지만, global Internet에서는 지나치게 작은 minimum RTO가 권장되지 않는다. data-center network처럼 RTT가 microseconds 단위인 환경에서는 200ms minimum RTO가 incast 문제에서 loss recovery를 심하게 늦출 수 있어 별도 tuning이 논의된다.
 
 ![Figure 14-2](@/assets/images/cs-tcp-ip-illustrated-255-figure-14-2-page-697.png)
 *Figure 14-2 · PDF p. 697 · Linux에서 TSOPT 기반 RTT sample로 srtt/rttvar/RTO를 갱신하는 흐름*
 
 Figure 14-2의 초기 SYN RTT가 16ms라면 Linux는 다음처럼 초기값을 잡는다.
 
-```text
-srtt     = 16ms
-mdev     = 16 / 2 = 8ms
-rttvar   = mdev_max = max(8ms, 50ms) = 50ms
-RTO      = srtt + 4 * rttvar = 16 + 200 = 216ms
-```
+$$
+\begin{aligned}
+\text{srtt} &= 16\text{ ms} \\
+\text{mdev} &= 16/2 = 8\text{ ms} \\
+\text{rttvar} &= \text{mdev}_{\max} = \max(8\text{ ms}, 50\text{ ms}) = 50\text{ ms} \\
+\text{RTO} &= \text{srtt} + 4\text{rttvar} = 16 + 200 = 216\text{ ms}
+\end{aligned}
+$$
 
 ACK-only segment나 window update처럼 data, SYN, FIN을 포함하지 않는 segment는 sequence number space를 소비하지 않고 TCP가 reliable하게 재전송하지도 않는다. 따라서 이런 segment에는 retransmission timer를 걸 필요가 없고, RTT estimator update도 수행하지 않는다. TCP options도 option 자체만으로 reliable delivery 대상이 아니다. option이 SYN/FIN/data segment에 포함될 때만 해당 segment 재전송의 부수 효과로 다시 전달된다.
 
@@ -218,12 +226,13 @@ ACK-only segment나 window update처럼 data, SYN, FIN을 포함하지 않는 se
 
 Linux의 deviation update는 RTT가 예상보다 낮게 떨어지는 경우를 특별히 다룬다.
 
-```text
-if (m < srtt - mdev)
-    mdev = (31/32) * mdev + (1/32) * |srtt - m|
-else
-    mdev = (3/4) * mdev + (1/4) * |srtt - m|
-```
+$$
+\text{mdev} =
+\begin{cases}
+\frac{31}{32}\text{mdev} + \frac{1}{32}\lvert\text{srtt} - m\rvert, & m < \text{srtt} - \text{mdev} \\
+\frac{3}{4}\text{mdev} + \frac{1}{4}\lvert\text{srtt} - m\rvert, & \text{otherwise}
+\end{cases}
+$$
 
 새 RTT sample `m`이 예상 RTT range의 하단보다 낮으면, Linux는 deviation sample의 weight를 8배 줄인다. 이렇게 하면 "RTT가 좋아졌는데 RTO가 커지는" 현상을 줄일 수 있다.
 
@@ -268,11 +277,11 @@ timer가 RTO 안에 ACK를 받지 못해 expire되면 TCP는 timer-based retrans
 
 RTO backoff는 다음처럼 표현할 수 있다.
 
-```text
-backed-off RTO = gamma * RTO
-```
+$$
+\text{backed-off RTO} = \gamma \cdot \text{RTO}
+$$
 
-일반 상황에서 `gamma = 1`이다. 같은 segment가 계속 timeout되면 `gamma`는 `2, 4, 8, ...`처럼 두 배로 증가한다. Linux는 실제 사용 RTO가 `TCP_RTO_MAX`, 기본 120초를 넘지 않게 제한한다. acceptable ACK가 도착하면 `gamma`는 다시 1로 reset된다.
+일반 상황에서 $\gamma = 1$이다. 같은 segment가 계속 timeout되면 $\gamma$는 $2, 4, 8, \ldots$처럼 두 배로 증가한다. Linux는 실제 사용 RTO가 `TCP_RTO_MAX`, 기본 120초를 넘지 않게 제한한다. acceptable ACK가 도착하면 $\gamma$는 다시 1로 reset된다.
 
 ### 14.4.1 Example
 
@@ -281,7 +290,7 @@ backed-off RTO = gamma * RTO
 ![Figure 14-5](@/assets/images/cs-tcp-ip-illustrated-258-figure-14-5-page-705.png)
 *Figure 14-5 · PDF p. 705 · segment 1401 loss로 timer-based retransmission이 발생하는 예제*
 
-timeout 후 sender는 sequence 1 segment를 다시 보낸다. 이 retransmission이 receiver에 도착하면 ACK가 돌아오고, 이 ACK는 sender window를 advance하므로 TSER 값을 이용해 `srtt`와 `RTO`를 갱신한다. 예제에서는 `srtt = 34`, `RTO = 234`로 업데이트된다.
+timeout 후 sender는 sequence 1 segment를 다시 보낸다. 이 retransmission이 receiver에 도착하면 ACK가 돌아오고, 이 ACK는 sender window를 advance하므로 TSER 값을 이용해 $\text{srtt}$와 $\text{RTO}$를 갱신한다. 예제에서는 $\text{srtt} = 34$, $\text{RTO} = 234$로 업데이트된다.
 
 이후 도착하는 일부 ACK에는 asterisk가 붙어 있으며 SACK information을 포함한다. 하지만 이 duplicate ACK들은 sender window를 advance하지 않으므로 TSER가 RTT estimator update에 사용되지 않는다. estimator는 "새롭게 ACK된 data가 window를 앞으로 밀었는가"를 기준으로 조심스럽게 갱신된다.
 
@@ -441,12 +450,14 @@ Eifel Response Algorithm은 retransmission이 spurious로 판정된 뒤 실행�
 
 response algorithm은 첫 retransmission timer event에서만 동작한다. timer가 expire되면 현재 estimator를 snapshot으로 저장한다.
 
-```text
-srtt_prev   = srtt + 2 * G
-rttvar_prev = rttvar
-```
+$$
+\begin{aligned}
+\text{srtt}_{\text{prev}} &= \text{srtt} + 2G \\
+\text{rttvar}_{\text{prev}} &= \text{rttvar}
+\end{aligned}
+$$
 
-`G`는 TCP clock granularity다. `srtt_prev`에 `2 * G`를 더하는 이유는 spurious timeout이 `srtt`가 아주 조금 작아서 발생했을 수 있기 때문이다. 약간 키운 값을 저장해 이후 RTO 재설정의 기초로 삼는다.
+$G$는 TCP clock granularity다. $\text{srtt}_{\text{prev}}$에 $2G$를 더하는 이유는 spurious timeout이 $\text{srtt}$가 아주 조금 작아서 발생했을 수 있기 때문이다. 약간 키운 값을 저장해 이후 RTO 재설정의 기초로 삼는다.
 
 detection 결과는 `SpuriousRecovery`에 들어간다.
 
@@ -460,11 +471,13 @@ detection 결과는 `SpuriousRecovery`에 들어간다.
 
 spurious timeout 후 새 data에 대한 acceptable ACK가 오면 estimator는 다음처럼 갱신될 수 있다.
 
-```text
-srtt   <- max(srtt_prev, m)
-rttvar <- max(rttvar_prev, m / 2)
-RTO    = srtt + max(G, 4 * rttvar)
-```
+$$
+\begin{aligned}
+\text{srtt} &\leftarrow \max(\text{srtt}_{\text{prev}}, m) \\
+\text{rttvar} &\leftarrow \max(\text{rttvar}_{\text{prev}}, m/2) \\
+\text{RTO} &= \text{srtt} + \max(G, 4\text{rttvar})
+\end{aligned}
+$$
 
 `m`은 timeout 뒤 보낸 data의 첫 acceptable ACK로 얻은 RTT sample이다. 이 식은 실제 path RTT가 갑자기 커졌을 수도 있고, 일시적 delay spike였을 수도 있다는 두 가능성 사이에서 균형을 잡는다. 새 sample이 더 크면 estimator history를 사실상 재초기화하고, 그렇지 않으면 기존 estimator를 유지해 timeout이 있었다는 사실을 무시하는 쪽에 가깝다.
 

@@ -43,7 +43,7 @@ Figure 8.1은 Chapter 8 전체의 기본 위협 모델이다. Alice와 Bob은 co
 ![Figure 8.2](@/assets/images/cs-computer-network-237-figure-8-2-page-622.png)
 *Figure 8.2 · PDF p. 622 · plaintext, ciphertext, encryption/decryption algorithm, keys KA/KB의 관계*
 
-현대 cryptographic system에서는 encryption algorithm 자체가 공개되어 있는 경우가 많다. Secret은 algorithm이 아니라 `key`에 있다. Alice가 plaintext message `m`과 key `KA`를 encryption algorithm에 넣으면 ciphertext `KA(m)`가 나온다. Bob은 key `KB`로 `KB(KA(m)) = m`을 계산해 원문을 복원한다.
+현대 cryptographic system에서는 encryption algorithm 자체가 공개되어 있는 경우가 많다. Secret은 algorithm이 아니라 `key`에 있다. Alice가 plaintext message $m$과 key $K_A$를 encryption algorithm에 넣으면 ciphertext $K_A(m)$가 나온다. Bob은 key $K_B$로 $K_B(K_A(m)) = m$을 계산해 원문을 복원한다.
 
 | 구분 | key 관계 | 직관 |
 | --- | --- | --- |
@@ -52,7 +52,7 @@ Figure 8.1은 Chapter 8 전체의 기본 위협 모델이다. Alice와 Bob은 co
 
 #### 8.2.1 Symmetric Key Cryptography
 
-`Symmetric key cryptography`는 sender와 receiver가 같은 secret key를 사용한다. 가장 오래된 예는 `Caesar cipher`다. Alphabet의 각 letter를 key `k`만큼 뒤의 letter로 치환한다. 예를 들어 `k = 3`이면 `a -> d`, `b -> e`가 된다. 이 방식은 가능한 key가 25개뿐이라 금방 깨진다.
+`Symmetric key cryptography`는 sender와 receiver가 같은 secret key를 사용한다. 가장 오래된 예는 `Caesar cipher`다. Alphabet의 각 letter를 key `k`만큼 뒤의 letter로 치환한다. 예를 들어 $k = 3$이면 $a \to d$, $b \to e$가 된다. 이 방식은 가능한 key가 25개뿐이라 금방 깨진다.
 
 `Monoalphabetic cipher`는 각 plaintext letter를 임의의 ciphertext letter에 일대일 대응시킨다. 가능한 mapping은 26!개라 brute-force만 보면 강해 보인다.
 
@@ -80,32 +80,32 @@ Intruder가 가진 정보에 따라 attack model이 달라진다.
 
 #### Block Ciphers
 
-현대 symmetric key encryption은 보통 `block cipher`를 사용한다. Message를 `k` bits blocks로 나누고, 각 k-bit cleartext block을 k-bit ciphertext block으로 mapping한다. 이상적으로는 모든 possible inputs에 대해 one-to-one permutation table을 두면 되지만, `k = 64`만 되어도 `2^64` entries를 저장해야 하므로 full-table 방식은 불가능하다.
+현대 symmetric key encryption은 보통 `block cipher`를 사용한다. Message를 `k` bits blocks로 나누고, 각 k-bit cleartext block을 k-bit ciphertext block으로 mapping한다. 이상적으로는 모든 possible inputs에 대해 one-to-one permutation table을 두면 되지만, $k = 64$만 되어도 $2^{64}$ entries를 저장해야 하므로 full-table 방식은 불가능하다.
 
 실제 block cipher는 작은 substitution tables와 bit permutation을 여러 rounds 반복해 큰 random permutation처럼 보이게 만든다. 각 round의 목적은 input의 한 bit 변화가 final output의 많은 bits에 영향을 주게 하는 diffusion이다.
 
 ![Figure 8.5](@/assets/images/cs-computer-network-240-figure-8-5-page-627.png)
 *Figure 8.5 · PDF p. 627 · 64-bit block을 8-bit chunks로 나누어 tables와 scrambler를 여러 rounds 적용하는 block cipher 예*
 
-대표 block cipher는 `DES (Data Encryption Standard)`, `3DES`, `AES (Advanced Encryption Standard)`다. DES는 64-bit block과 56-bit key를 사용하고, AES는 128-bit block과 128/192/256-bit key를 사용할 수 있다. Brute-force attack은 모든 possible keys를 시도하는 방식이며, key length가 `n`이면 possible keys는 `2^n`개다. 따라서 practical security는 algorithm secrecy보다 key length와 key 관리에 크게 의존한다.
+대표 block cipher는 `DES (Data Encryption Standard)`, `3DES`, `AES (Advanced Encryption Standard)`다. DES는 64-bit block과 56-bit key를 사용하고, AES는 128-bit block과 128/192/256-bit key를 사용할 수 있다. Brute-force attack은 모든 possible keys를 시도하는 방식이며, key length가 $n$이면 possible keys는 $2^n$개다. 따라서 practical security는 algorithm secrecy보다 key length와 key 관리에 크게 의존한다.
 
 단순히 같은 block cipher로 long message의 각 block을 독립적으로 encrypt하면 같은 plaintext block이 항상 같은 ciphertext block이 된다. 예를 들어 HTTP protocol 구조처럼 반복되는 patterns가 있으면 attacker가 identical ciphertext blocks를 보고 plaintext 구조를 추론할 수 있다.
 
-이를 막기 위해 randomness를 섞는다. 가장 단순한 방식은 각 block마다 random value `r(i)`를 만들고 `c(i) = KS(m(i) XOR r(i))`를 보내는 것이다. 하지만 block마다 random bits를 함께 보내야 하므로 bandwidth overhead가 거의 두 배가 된다.
+이를 막기 위해 randomness를 섞는다. 가장 단순한 방식은 각 block마다 random value $r(i)$를 만들고 $c(i) = K_S(m(i) \oplus r(i))$를 보내는 것이다. 하지만 block마다 random bits를 함께 보내야 하므로 bandwidth overhead가 거의 두 배가 된다.
 
 `CBC (Cipher Block Chaining)`는 이 문제를 줄인다. Sender는 처음에만 random k-bit `IV (Initialization Vector)`를 만들고 cleartext로 보낸다. 이후 각 block은 직전 ciphertext block과 XOR한 뒤 encrypt한다.
 
-```text
-c(0) = IV
-c(1) = KS(m(1) XOR c(0))
-c(i) = KS(m(i) XOR c(i-1))
+$$
+\begin{aligned}
+c(0) &= IV \\
+c(1) &= K_S(m(1) \oplus c(0)) \\
+c(i) &= K_S(m(i) \oplus c(i - 1)) \\
+\text{receiver:}\quad s(i) &= decrypt_{K_S}(c(i)) = m(i) \oplus c(i - 1) \\
+m(i) &= s(i) \oplus c(i - 1)
+\end{aligned}
+$$
 
-receiver:
-s(i) = decryptKS(c(i)) = m(i) XOR c(i-1)
-m(i) = s(i) XOR c(i-1)
-```
-
-CBC의 효과는 세 가지다. 첫째, 같은 plaintext block이 나와도 앞 block의 ciphertext가 다르면 resulting ciphertext가 달라진다. 둘째, IV는 cleartext로 보내도 secret key `KS`가 없으면 plaintext를 복원할 수 없다. 셋째, long message에서는 IV 한 block만 overhead로 추가되므로 bandwidth cost가 작다. 대신 protocol은 sender가 receiver에게 IV를 전달하는 방법을 반드시 정의해야 한다.
+CBC의 효과는 세 가지다. 첫째, 같은 plaintext block이 나와도 앞 block의 ciphertext가 다르면 resulting ciphertext가 달라진다. 둘째, IV는 cleartext로 보내도 secret key $K_S$가 없으면 plaintext를 복원할 수 없다. 셋째, long message에서는 IV 한 block만 overhead로 추가되므로 bandwidth cost가 작다. 대신 protocol은 sender가 receiver에게 IV를 전달하는 방법을 반드시 정의해야 한다.
 
 #### 8.2.2 Public Key Encryption
 
@@ -114,57 +114,57 @@ Symmetric key의 근본 문제는 `key distribution`이다. Alice와 Bob이 같�
 ![Figure 8.6](@/assets/images/cs-computer-network-241-figure-8-6-page-630.png)
 *Figure 8.6 · PDF p. 630 · Bob의 public key로 encrypt하고 Bob의 private key로 decrypt하는 public key cryptography*
 
-Alice가 Bob에게 secret message `m`을 보내려면 Bob의 public key `KB+`로 `KB+(m)`을 계산해 보낸다. Bob은 private key `KB-`로 `KB-(KB+(m)) = m`을 얻는다. 이 구조에서는 public key가 공개되어도 private key가 없으면 decrypt할 수 없다.
+Alice가 Bob에게 secret message $m$을 보내려면 Bob의 public key $K_B^+$로 $K_B^+(m)$을 계산해 보낸다. Bob은 private key $K_B^-$로 $K_B^-(K_B^+(m)) = m$을 얻는다. 이 구조에서는 public key가 공개되어도 private key가 없으면 decrypt할 수 없다.
 
 하지만 public key encryption만으로 sender authentication이 자동으로 생기지는 않는다. Bob의 public key는 누구나 사용할 수 있으므로 Trudy도 Bob에게 encrypted message를 보낼 수 있다. “이 message가 Alice에게서 왔다”를 보장하려면 뒤에서 배우는 `digital signature`가 필요하다.
 
 ##### RSA
 
-`RSA`는 public key cryptography의 대표 알고리즘이다. Message는 bit pattern이고, bit pattern은 integer로 볼 수 있다. RSA는 modulo arithmetic 위에서 public key `(n, e)`와 private key `(n, d)`를 구성한다.
+`RSA`는 public key cryptography의 대표 알고리즘이다. Message는 bit pattern이고, bit pattern은 integer로 볼 수 있다. RSA는 modulo arithmetic 위에서 public key $(n, e)$와 private key $(n, d)$를 구성한다.
 
 RSA key generation의 핵심 단계는 다음과 같다.
 
 | 단계 | 내용 |
 | --- | --- |
-| 1 | 큰 prime numbers `p`, `q`를 고른다. |
-| 2 | `n = pq`, `z = (p - 1)(q - 1)`를 계산한다. |
-| 3 | `z`와 common factor가 1뿐인 `e < n`을 고른다. 즉 `e`와 `z`는 relatively prime이다. |
-| 4 | `ed mod z = 1`이 되는 `d`를 찾는다. |
-| 5 | Public key는 `(n, e)`, private key는 `(n, d)`가 된다. |
+| 1 | 큰 prime numbers $p$, $q$를 고른다. |
+| 2 | $n = pq$, $z = (p - 1)(q - 1)$를 계산한다. |
+| 3 | $z$와 common factor가 1뿐인 $e < n$을 고른다. 즉 $e$와 $z$는 relatively prime이다. |
+| 4 | $ed \bmod z = 1$이 되는 $d$를 찾는다. |
+| 5 | Public key는 $(n, e)$, private key는 $(n, d)$가 된다. |
 
 Encryption과 decryption은 다음 수식이다.
 
-```text
-encryption: c = m^e mod n
-decryption: m = c^d mod n
-```
+$$
+\begin{aligned}
+\text{encryption:}\quad c &= m^e \bmod n \\
+\text{decryption:}\quad m &= c^d \bmod n
+\end{aligned}
+$$
 
-RSA가 동작하는 이유는 선택한 `e`, `d`, `z`가 `ed mod z = 1`을 만족하고, number theory 결과에 의해 다음이 성립하기 때문이다.
+RSA가 동작하는 이유는 선택한 $e$, $d$, $z$가 $ed \bmod z = 1$을 만족하고, number theory 결과에 의해 다음이 성립하기 때문이다.
 
-```text
-(m^e mod n)^d mod n = m^(ed) mod n = m
-```
+$$
+(m^e \bmod n)^d \bmod n = m^{ed} \bmod n = m
+$$
 
 또한 public/private key 적용 순서를 바꾸어도 같은 결과가 성립한다.
 
-```text
-KB-(KB+(m)) = KB+(KB-(m)) = m
-```
+$$
+K_B^{-}(K_B^{+}(m)) = K_B^{+}(K_B^{-}(m)) = m
+$$
 
 이 두 번째 성질이 digital signature의 기반이다. Private key로 먼저 “적용”한 값을 public key로 확인할 수 있기 때문이다.
 
 ##### Session Keys
 
-RSA는 exponentiation을 사용하므로 large data를 직접 encrypt하기에는 느리다. 그래서 실제 protocol에서는 public key cryptography와 symmetric key cryptography를 결합한다. Alice는 data encryption에 쓸 symmetric `session key KS`를 만들고, 이 session key만 Bob의 public key로 encrypt해 보낸다. Bob은 private key로 `KS`를 복원한 뒤, 이후 bulk data는 AES 같은 symmetric cipher와 `KS`로 빠르게 encrypt/decrypt한다.
+RSA는 exponentiation을 사용하므로 large data를 직접 encrypt하기에는 느리다. 그래서 실제 protocol에서는 public key cryptography와 symmetric key cryptography를 결합한다. Alice는 data encryption에 쓸 symmetric `session key KS`를 만들고, 이 session key만 Bob의 public key로 encrypt해 보낸다. Bob은 private key로 $K_S$를 복원한 뒤, 이후 bulk data는 AES 같은 symmetric cipher와 $K_S$로 빠르게 encrypt/decrypt한다.
 
-```text
-1. Alice chooses session key KS.
-2. Alice sends RSA-encrypted KS: c = (KS)^e mod n.
-3. Bob decrypts c using private key d and obtains KS.
-4. Alice and Bob use symmetric key KS for the data transfer.
-```
+1. Alice chooses session key $K_S$.
+2. Alice sends RSA-encrypted $K_S$: $c = K_S^e \bmod n$.
+3. Bob decrypts $c$ using private key $d$ and obtains $K_S$.
+4. Alice and Bob use symmetric key $K_S$ for the data transfer.
 
-RSA security는 public value `n`을 prime factors `p`, `q`로 빠르게 factorization하는 알려진 classical algorithm이 없다는 사실에 의존한다. `p`, `q`를 알면 `z`와 private key `d`를 계산할 수 있으므로 RSA가 깨진다. 따라서 RSA의 안전성은 “절대 보장”이라기보다 현재 factoring의 계산적 어려움에 기대는 computational security다. Quantum computing과 fast factoring algorithms는 장기적으로 RSA security에 위협이 될 수 있다.
+RSA security는 public value $n$을 prime factors $p$, $q$로 빠르게 factorization하는 알려진 classical algorithm이 없다는 사실에 의존한다. $p$, $q$를 알면 $z$와 private key $d$를 계산할 수 있으므로 RSA가 깨진다. 따라서 RSA의 안전성은 “절대 보장”이라기보다 현재 factoring의 계산적 어려움에 기대는 computational security다. Quantum computing과 fast factoring algorithms는 장기적으로 RSA security에 위협이 될 수 있다.
 
 `Diffie-Hellman Key Exchange`는 arbitrary length messages를 encrypt하는 용도보다는 shared symmetric session key를 establish하는 데 쓰이는 public-key 계열 기법이다. 이 장의 뒤쪽 TLS/IKE 같은 protocols는 결국 public key 방식으로 authentication/key establishment를 하고, symmetric session keys로 실제 traffic을 보호하는 구조를 반복한다.
 
@@ -174,12 +174,12 @@ RSA security는 public value `n`을 prime factors `p`, `q`로 빠르게 factoriz
 
 #### 8.3.1 Cryptographic Hash Functions
 
-`Hash function`은 arbitrary-length input `m`을 fixed-size string `H(m)`으로 바꾼다. Internet checksum이나 CRC도 넓게 보면 hash function이지만, security 용도에는 추가 성질이 필요하다. `Cryptographic hash function`은 서로 다른 두 messages `x`, `y`에 대해 `H(x) = H(y)`가 되도록 찾는 것이 computationally infeasible해야 한다.
+`Hash function`은 arbitrary-length input $m$을 fixed-size string $H(m)$으로 바꾼다. Internet checksum이나 CRC도 넓게 보면 hash function이지만, security 용도에는 추가 성질이 필요하다. `Cryptographic hash function`은 서로 다른 두 messages $x$, $y$에 대해 $H(x) = H(y)$가 되도록 찾는 것이 computationally infeasible해야 한다.
 
 ![Figure 8.7](@/assets/images/cs-computer-network-242-figure-8-7-page-636.png)
 *Figure 8.7 · PDF p. 636 · 긴 message를 fixed-length hash로 줄이는 many-to-one hash function*
 
-이 성질이 중요한 이유는 substitution attack 때문이다. Sender가 `(m, H(m))`을 만들었을 때, intruder가 같은 hash를 갖는 다른 message `y`를 쉽게 만들 수 있으면 Bob은 조작을 감지하지 못한다. 단순 checksum은 이 조건을 만족하지 못한다.
+이 성질이 중요한 이유는 substitution attack 때문이다. Sender가 $(m, H(m))$을 만들었을 때, intruder가 같은 hash를 갖는 다른 message `y`를 쉽게 만들 수 있으면 Bob은 조작을 감지하지 못한다. 단순 checksum은 이 조건을 만족하지 못한다.
 
 ![Figure 8.8](@/assets/images/cs-computer-network-243-figure-8-8-page-637.png)
 *Figure 8.8 · PDF p. 637 · 서로 다른 IOU messages가 같은 simple checksum을 갖는 예*
@@ -188,15 +188,17 @@ Figure 8.8의 예처럼 `IOU100.99BOB`와 `IOU900.19BOB`가 같은 checksum을 �
 
 #### 8.3.2 Message Authentication Code
 
-Hash만 message에 붙이는 방식은 flawed하다. Alice가 `(m, H(m))`을 보내도 Trudy가 bogus message `m'`과 `H(m')`를 만들어 보내면 Bob의 hash check는 통과한다. Hash가 message 변조 여부는 확인해도 “누가 만들었는지”를 확인하지 못하기 때문이다.
+Hash만 message에 붙이는 방식은 flawed하다. Alice가 $(m, H(m))$을 보내도 Trudy가 bogus message $m'$과 $H(m')$를 만들어 보내면 Bob의 hash check는 통과한다. Hash가 message 변조 여부는 확인해도 “누가 만들었는지”를 확인하지 못하기 때문이다.
 
-`MAC (Message Authentication Code)`은 Alice와 Bob이 공유하는 secret `s`를 hash input에 섞는다.
+`MAC (Message Authentication Code)`은 Alice와 Bob이 공유하는 secret $s$를 hash input에 섞는다.
 
-```text
-Alice: MAC = H(m + s)
-send:  (m, H(m + s))
-Bob:   recompute H(m + s), compare with received MAC
-```
+$$
+\begin{aligned}
+\text{Alice:}\quad MAC &= H(m + s) \\
+\text{send:}\quad &(m, H(m + s)) \\
+\text{Bob:}\quad &\text{recompute } H(m + s) \text{ and compare with received MAC}
+\end{aligned}
+$$
 
 ![Figure 8.9](@/assets/images/cs-computer-network-244-figure-8-9-page-638.png)
 *Figure 8.9 · PDF p. 638 · shared secret s를 이용해 H(m+s)를 계산하고 비교하는 Message Authentication Code*
@@ -211,7 +213,7 @@ MAC의 장점은 confidentiality가 필요 없을 때 encryption 없이 integrit
 
 MAC은 digital signature가 되기 어렵다. MAC을 검증하려면 Alice도 Bob의 authentication key를 알아야 하는데, 그러면 그 key는 Bob만의 unique secret이 아니게 된다. Digital signature에는 Bob만 아는 private key와 모두가 아는 public key가 있는 public key cryptography가 적합하다.
 
-실제 signing은 full message를 private key로 encrypt하는 대신, message hash를 sign한다. Bob은 `H(m)`을 만들고 private key `KB-`로 `KB-(H(m))`을 계산해 signature로 붙인다. Alice는 Bob의 public key `KB+`를 signature에 적용해 hash를 얻고, 자신이 받은 cleartext message에 hash function을 적용한 값과 비교한다.
+실제 signing은 full message를 private key로 encrypt하는 대신, message hash를 sign한다. Bob은 $H(m)$을 만들고 private key $K_B^-$로 $K_B^-(H(m))$을 계산해 signature로 붙인다. Alice는 Bob의 public key $K_B^+$를 signature에 적용해 hash를 얻고, 자신이 받은 cleartext message에 hash function을 적용한 값과 비교한다.
 
 ![Figure 8.11](@/assets/images/cs-computer-network-246-figure-8-11-page-641.png)
 *Figure 8.11 · PDF p. 641 · Bob이 message hash를 private key로 sign해 original message와 함께 보내는 흐름*
@@ -223,7 +225,7 @@ Digital signature는 sender authentication과 message integrity를 함께 준다
 
 | 기법 | key 구조 | 제공하는 것 | 비용/조건 |
 | --- | --- | --- | --- |
-| `MAC` | Shared secret `s` | Message integrity, shared-key holder authentication | 빠르고 단순하지만 shared key distribution 필요 |
+| `MAC` | Shared secret $s$ | Message integrity, shared-key holder authentication | 빠르고 단순하지만 shared key distribution 필요 |
 | `Digital signature` | Sender private key + sender public key | Message integrity, sender authentication, nonforgeability | public key computation과 `PKI` 필요 |
 
 ##### Public Key Certification
@@ -263,12 +265,12 @@ Authentication protocol은 보통 실제 application protocol, routing exchange,
 
 `ap3.1`은 password를 symmetric key로 encrypt해서 보낸다. 그러나 encrypted password도 그대로 replay될 수 있다. Trudy가 과거 Alice의 encrypted password message를 녹음해 두었다가 나중에 Bob에게 다시 보내면 Bob은 live Alice인지, old authentication playback인지 구분하지 못한다. 이것이 `playback attack` 또는 `replay attack`이다.
 
-Replay를 막으려면 freshness가 필요하다. `Nonce`는 protocol lifetime에서 한 번만 사용하는 number다. Bob은 방금 만든 nonce `R`을 Alice에게 보내고, Alice는 shared symmetric key `KA-B`로 `KA-B(R)`을 만들어 돌려준다. Bob은 decrypt 결과가 자신이 방금 보낸 `R`과 같은지 확인한다.
+Replay를 막으려면 freshness가 필요하다. `Nonce`는 protocol lifetime에서 한 번만 사용하는 number다. Bob은 방금 만든 nonce $R$을 Alice에게 보내고, Alice는 shared symmetric key `KA-B`로 `KA-B(R)`을 만들어 돌려준다. Bob은 decrypt 결과가 자신이 방금 보낸 `R`과 같은지 확인한다.
 
 ![Figure 8.18](@/assets/images/cs-computer-network-253-figure-8-18-page-650.png)
 *Figure 8.18 · PDF p. 650 · nonce R과 shared symmetric key KA-B로 liveness를 확인하는 ap4.0*
 
-`ap4.0`이 얻는 보장은 두 가지다. Alice가 `KA-B`를 알고 있으므로 claimed identity와 연결되고, Bob이 방금 생성한 nonce `R`에 응답했으므로 live party임을 확인할 수 있다. 이 구조는 TLS handshake의 nonces, WPA four-way handshake, cellular authentication 같은 뒤쪽 protocol에서 반복된다.
+`ap4.0`이 얻는 보장은 두 가지다. Alice가 `KA-B`를 알고 있으므로 claimed identity와 연결되고, Bob이 방금 생성한 nonce $R$에 응답했으므로 live party임을 확인할 수 있다. 이 구조는 TLS handshake의 nonces, WPA four-way handshake, cellular authentication 같은 뒤쪽 protocol에서 반복된다.
 
 | protocol | 사용하는 단서 | 실패 이유 또는 보장 |
 | --- | --- | --- |
@@ -303,12 +305,12 @@ Figure 8.19의 confidentiality-only flow는 다음과 같다.
 5. Bob uses KB- to recover KS, then uses KS to recover m.
 ```
 
-Sender authentication과 message integrity만 필요하다면 Alice는 message digest를 sign한다. Alice는 `H(m)`을 계산하고, 자신의 private key `KA-`로 `KA-(H(m))`을 만든 뒤 original message와 signature를 함께 보낸다. Bob은 Alice의 public key `KA+`로 signed digest를 풀고, 자신이 받은 message의 hash와 비교한다.
+Sender authentication과 message integrity만 필요하다면 Alice는 message digest를 sign한다. Alice는 $H(m)$을 계산하고, 자신의 private key $K_A^-$로 $K_A^-(H(m))$을 만든 뒤 original message와 signature를 함께 보낸다. Bob은 Alice의 public key $K_A^+$로 signed digest를 풀고, 자신이 받은 message의 hash와 비교한다.
 
 ![Figure 8.20](@/assets/images/cs-computer-network-255-figure-8-20-page-653.png)
 *Figure 8.20 · PDF p. 653 · hash function과 digital signature로 sender authentication과 message integrity를 제공하는 방식*
 
-Confidentiality, sender authentication, message integrity를 모두 제공하려면 두 구조를 결합한다. Alice는 먼저 `m + KA-(H(m))` 형태의 signed package를 만들고, 이 전체 package를 session key `KS`로 encrypt한다. 그리고 `KS`는 Bob의 public key로 encrypt해 함께 보낸다.
+Confidentiality, sender authentication, message integrity를 모두 제공하려면 두 구조를 결합한다. Alice는 먼저 $m + K_A^-(H(m))$ 형태의 signed package를 만들고, 이 전체 package를 session key $K_S$로 encrypt한다. 그리고 $K_S$는 Bob의 public key로 encrypt해 함께 보낸다.
 
 ![Figure 8.21](@/assets/images/cs-computer-network-256-figure-8-21-page-653.png)
 *Figure 8.21 · PDF p. 653 · symmetric key, public key, hash, digital signature를 결합한 secure e-mail package*
@@ -322,7 +324,7 @@ Confidentiality, sender authentication, message integrity를 모두 제공하려
 ![Figure 8.22](@/assets/images/cs-computer-network-257-figure-8-22-page-654.png)
 *Figure 8.22 · PDF p. 654 · PGP signed message의 형태와 signed message digest*
 
-PGP signed message에는 plaintext message와 signature block이 함께 들어간다. Encoded data는 `KA-(H(m))`, 즉 Alice의 private key로 sign된 message digest다. Bob이 integrity와 sender authentication을 verify하려면 Alice의 public key가 필요하다.
+PGP signed message에는 plaintext message와 signature block이 함께 들어간다. Encoded data는 $K_A^-(H(m))$, 즉 Alice의 private key로 sign된 message digest다. Bob이 integrity와 sender authentication을 verify하려면 Alice의 public key가 필요하다.
 
 ![Figure 8.23](@/assets/images/cs-computer-network-258-figure-8-23-page-655.png)
 *Figure 8.23 · PDF p. 655 · plaintext 없이 encrypted payload만 포함하는 secret PGP message*
@@ -351,15 +353,13 @@ Handshake에서 client Bob은 TCP connection을 만들고, server Alice가 정�
 
 Almost-TLS handshake의 큰 흐름은 다음과 같다.
 
-```text
 1. TCP three-way handshake establishes a TCP connection.
 2. Bob sends TLS hello.
 3. Alice sends certificate containing Alice's public key.
 4. Bob verifies the certificate using CA trust.
-5. Bob creates Master Secret MS.
-6. Bob sends EMS = KA+(MS).
-7. Alice decrypts EMS with KA- and obtains MS.
-```
+5. Bob creates Master Secret $MS$.
+6. Bob sends $EMS = K_A^+(MS)$.
+7. Alice decrypts $EMS$ with $K_A^-$ and obtains $MS$.
 
 Key derivation에서는 shared MS 하나를 그대로 쓰지 않고 방향과 용도별로 여러 keys를 만든다.
 
@@ -383,7 +383,7 @@ TLS에서 record HMAC만으로는 stream 전체 integrity가 부족하다. Trudy
 
 #### 8.6.2 A More Complete Picture
 
-실제 TLS handshake는 algorithm negotiation과 nonces를 포함한다. Client는 자신이 지원하는 cryptographic algorithms list와 client nonce를 보낸다. Server는 symmetric algorithm, public-key algorithm, HMAC algorithm을 고르고 certificate와 server nonce를 보낸다. Client는 certificate를 검증하고 server public key를 꺼낸 뒤 `PMS (Pre-Master Secret)`를 만들어 server public key로 encrypt해 보낸다. 이후 client와 server는 같은 key derivation function으로 `PMS + nonces`에서 `MS`, encryption keys, HMAC keys, 필요 시 CBC용 IVs를 만든다.
+실제 TLS handshake는 algorithm negotiation과 nonces를 포함한다. Client는 자신이 지원하는 cryptographic algorithms list와 client nonce를 보낸다. Server는 symmetric algorithm, public-key algorithm, HMAC algorithm을 고르고 certificate와 server nonce를 보낸다. Client는 certificate를 검증하고 server public key를 꺼낸 뒤 `PMS (Pre-Master Secret)`를 만들어 server public key로 encrypt해 보낸다. 이후 client와 server는 같은 key derivation function으로 $PMS + nonces$에서 $MS$, encryption keys, HMAC keys, 필요 시 CBC용 IVs를 만든다.
 
 Handshake 마지막에는 client와 server가 자신이 보고 주고받은 모든 handshake messages의 HMAC을 서로 보낸다. 이 단계는 algorithm downgrade attack을 막는다. 예를 들어 Trudy가 client의 algorithm list에서 strong algorithms를 지우면 server와 client가 계산한 handshake transcript HMAC이 달라져 connection을 끊을 수 있다.
 
@@ -508,12 +508,12 @@ WPA의 큰 흐름은 네 단계다.
 
 초기 `WEP (Wired Equivalent Privacy)`는 serious security flaws가 발견되어 사실상 보안이 없는 것과 비슷해졌다. `WPA1`은 WEP의 문제를 보완하기 위해 message integrity checks와 key inference 방어를 추가했고, `WPA2`는 AES symmetric key encryption 사용을 의무화했다.
 
-WPA의 중심은 mutual authentication과 shared session-key derivation을 수행하는 four-way handshake다. Simplified Figure 8.31에서는 mobile device `M`과 authentication server `AS`가 시작 전에 shared secret `KAS-M`을 알고 있다고 가정한다.
+WPA의 중심은 mutual authentication과 shared session-key derivation을 수행하는 four-way handshake다. Simplified Figure 8.31에서는 mobile device $M$과 authentication server `AS`가 시작 전에 shared secret `KAS-M`을 알고 있다고 가정한다.
 
 ![Figure 8.31](@/assets/images/cs-computer-network-266-figure-8-31-page-673.png)
 *Figure 8.31 · PDF p. 673 · NonceAS, NonceM, KAS-M으로 KM-AP를 derivation하는 WPA2 four-way handshake*
 
-핵심은 first two steps다. AS는 `NonceAS`를 만들어 mobile device에 보낸다. Mobile device는 자신의 `NonceM`을 만들고, `NonceAS`, `NonceM`, initial shared secret `KAS-M`, 양쪽 MAC addresses를 사용해 `KM-AP`를 계산한다. 그런 다음 `NonceM`과 `HMAC(f(KAS-M, NonceAS))`를 AS에 보낸다. AS는 자신이 방금 보낸 nonce가 shared secret 기반 HMAC 안에 들어 있음을 확인해 mobile device의 liveness와 identity를 검증하고, 같은 inputs로 `KM-AP`를 계산한다. 이후 AS는 Figure 8.30의 Step 3에서 AP에게 이 session key를 전달한다.
+핵심은 first two steps다. AS는 `NonceAS`를 만들어 mobile device에 보낸다. Mobile device는 자신의 `NonceM`을 만들고, `NonceAS`, `NonceM`, initial shared secret `KAS-M`, 양쪽 MAC addresses를 사용해 `KM-AP`를 계산한다. 그런 다음 `NonceM`과 $HMAC(f(K_{AS-M}, Nonce_{AS}))$를 AS에 보낸다. AS는 자신이 방금 보낸 nonce가 shared secret 기반 HMAC 안에 들어 있음을 확인해 mobile device의 liveness와 identity를 검증하고, 같은 inputs로 `KM-AP`를 계산한다. 이후 AS는 Figure 8.30의 Step 3에서 AP에게 이 session key를 전달한다.
 
 `WPA3`는 WPA2 four-way handshake에 대한 nonce reuse 유도 공격을 보완하고, 더 긴 key lengths 등을 포함한다. 다만 legacy four-way handshake도 여전히 허용한다.
 
@@ -531,7 +531,7 @@ EAP는 mobile device와 authentication server 사이 end-to-end authentication m
 ![Figure 8.33](@/assets/images/cs-computer-network-268-figure-8-33-page-676.png)
 *Figure 8.33 · PDF p. 676 · M, BS, MME, HSS가 참여하는 4G LTE mutual authentication and key agreement*
 
-4G AKA에서 mobile device `M`과 home network의 `HSS`는 시작 전부터 shared secret `KHSS-M`을 알고 있다. 이 secret은 mobile device의 SIM card와 home network HSS database에 저장된다. Visited network의 `MME`는 중간에서 messages를 relay하고 authentication decision을 돕지만, `KHSS-M` 자체를 배우지는 않는다.
+4G AKA에서 mobile device $M$과 home network의 `HSS`는 시작 전부터 shared secret `KHSS-M`을 알고 있다. 이 secret은 mobile device의 SIM card와 home network HSS database에 저장된다. Visited network의 `MME`는 중간에서 messages를 relay하고 authentication decision을 돕지만, `KHSS-M` 자체를 배우지는 않는다.
 
 4G `AKA (Authentication and Key Agreement)` 흐름은 다음과 같다.
 
@@ -610,7 +610,7 @@ Chapter 3의 checksum, sequence number, TCP handshake는 이 장에서 cryptogra
 
 `Encryption`은 security 전체가 아니다. Confidentiality는 제공하지만, sender authentication이나 message integrity는 별도 MAC/signature/certificate/protocol design이 필요하다.
 
-`Hash`만 붙이면 integrity가 되는 것이 아니다. Secret 없이 `H(m)`만 붙이면 attacker도 `m'`와 `H(m')`를 만들 수 있다. MAC은 shared secret을 hash input에 넣어 이 문제를 막는다.
+`Hash`만 붙이면 integrity가 되는 것이 아니다. Secret 없이 $H(m)$만 붙이면 attacker도 $m'$와 $H(m')$를 만들 수 있다. MAC은 shared secret을 hash input에 넣어 이 문제를 막는다.
 
 `Digital signature`와 `MAC`은 비슷해 보여도 trust model이 다르다. MAC은 shared key라 빠르지만 nonrepudiation에는 약하고, digital signature는 private key 기반이라 검증 가능성과 nonforgeability가 강하지만 PKI가 필요하다.
 

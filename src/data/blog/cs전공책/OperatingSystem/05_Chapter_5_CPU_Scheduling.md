@@ -174,21 +174,21 @@ SJF는 주어진 set of processes에 대해 minimum average waiting time을 주�
 
 예측에는 exponential average가 사용된다.
 
-```text
-tau(n+1) = alpha * t(n) + (1 - alpha) * tau(n)
-```
+$$
+\tau_{n+1} = \alpha t_n + (1 - \alpha)\tau_n
+$$
 
 | Symbol | 의미 |
 |---|---|
-| `t(n)` | nth CPU burst의 실제 길이 |
-| `tau(n)` | nth CPU burst에 대한 이전 prediction/history |
-| `tau(n+1)` | 다음 CPU burst prediction |
-| `alpha` | recent history와 past history의 상대 weight, `0 <= alpha <= 1` |
+| $t_n$ | nth CPU burst의 실제 길이 |
+| $\tau_n$ | nth CPU burst에 대한 이전 prediction/history |
+| $\tau_{n+1}$ | 다음 CPU burst prediction |
+| $\alpha$ | recent history와 past history의 상대 weight, $0 \le \alpha \le 1$ |
 
 ![Prediction of the next CPU burst](@/assets/images/cs-operating-system-115-figure-5-4-page-275.png)
-<p align="center"><sub>Figure 5.4 · PDF p. 275 · `alpha = 1/2`, `tau0 = 10`일 때 CPU burst prediction이 실제 burst를 따라가는 모습</sub></p>
+<p align="center"><sub>Figure 5.4 · PDF p. 275 · alpha = 1/2, tau0 = 10일 때 CPU burst prediction이 실제 burst를 따라가는 모습</sub></p>
 
-`alpha = 0`이면 recent burst는 prediction에 영향을 주지 않고, `alpha = 1`이면 가장 최근 burst만 반영된다. 보통 `alpha = 1/2`를 사용하면 recent history와 past history가 같은 weight를 가진다. Formula를 펼치면 오래된 burst일수록 `(1 - alpha)`의 거듭제곱 때문에 weight가 작아진다.
+$\alpha = 0$이면 recent burst는 prediction에 영향을 주지 않고, $\alpha = 1$이면 가장 최근 burst만 반영된다. 보통 $\alpha = 1/2$를 사용하면 recent history와 past history가 같은 weight를 가진다. Formula를 펼치면 오래된 burst일수록 $(1 - \alpha)$의 거듭제곱 때문에 weight가 작아진다.
 
 SJF는 preemptive 또는 nonpreemptive일 수 있다. 새 process가 ready queue에 도착했을 때 그 process의 next CPU burst가 현재 running process의 remaining time보다 짧으면, preemptive SJF는 현재 process를 preempt한다. 이 preemptive version은 `shortest-remaining-time-first` scheduling이라고도 한다. Nonpreemptive SJF는 현재 CPU burst가 끝날 때까지 기다린다.
 
@@ -548,9 +548,9 @@ Rate-monotonic scheduling은 static priority algorithms 중 optimal이다. 어�
 
 Worst-case CPU utilization bound for `N` processes는 다음과 같다.
 
-```text
-N * (2^(1/N) - 1)
-```
+$$
+N\left(2^{1/N} - 1\right)
+$$
 
 `N = 1`이면 100%지만, `N`이 infinity로 갈수록 약 69%로 떨어진다. `N = 2`일 때 bound는 약 83%다. Figure 5.23의 example은 combined utilization이 약 94%라서, rate-monotonic scheduling으로 deadline guarantee가 불가능하다.
 
@@ -769,11 +769,11 @@ Deterministic modeling은 simple and fast하며 exact numbers를 제공한다. �
 
 핵심 공식은 `Little's formula`다.
 
-```text
-n = lambda * W
-```
+$$
+n = \lambda W
+$$
 
-여기서 `n`은 queue에서 service 중인 process를 제외한 long-term average queue length, `W`는 average waiting time, `lambda`는 average arrival rate다. 예를 들어 평균적으로 초당 7 processes가 도착하고 queue에 보통 14 processes가 있다면 average waiting time은 2 seconds다.
+여기서 $n$은 queue에서 service 중인 process를 제외한 long-term average queue length, $W$는 average waiting time, $\lambda$는 average arrival rate다. 예를 들어 평균적으로 초당 7 processes가 도착하고 queue에 보통 14 processes가 있다면 average waiting time은 2 seconds다.
 
 Little's formula는 scheduling algorithm이나 arrival distribution과 관계없이 steady state에서 성립한다는 점이 강력하다. 다만 queueing analysis는 복잡한 algorithms와 realistic distributions를 다루기 어렵고, 수학적으로 tractable하지만 비현실적인 assumptions를 많이 둘 수 있다. 따라서 계산 결과는 real system에 대한 approximation으로 봐야 한다.
 

@@ -438,7 +438,7 @@ Fragmentation attack은 reassembly code의 복잡성을 노린다.
 | UDP header overwrite variant | later overlapping fragment가 earlier fragment의 UDP header를 덮도록 구성 |
 | ping of death | reassembly 후 IPv4 maximum size 65,535 bytes를 넘는 datagram이 되도록 fragment 조작 |
 
-IPv6에서는 overlapping fragments가 RFC5722에 의해 금지되었다. Ping of death의 원리는 Fragment Offset이 최대 8191까지 가능하고, 이는 byte offset `8191 * 8 = 65,528`에 해당한다는 점을 악용한다. 이 offset에서 7 bytes를 넘는 fragment가 reassembled되면 maximum datagram size 65,535 bytes를 초과할 수 있다. 현대 stack은 이런 case를 방어하지만, fragmentation은 여전히 보안상 까다로운 처리 경로다.
+IPv6에서는 overlapping fragments가 RFC5722에 의해 금지되었다. Ping of death의 원리는 Fragment Offset이 최대 8191까지 가능하고, 이는 byte offset $8191 \times 8 = 65{,}528$에 해당한다는 점을 악용한다. 이 offset에서 7 bytes를 넘는 fragment가 reassembled되면 maximum datagram size 65,535 bytes를 초과할 수 있다. 현대 stack은 이런 case를 방어하지만, fragmentation은 여전히 보안상 까다로운 처리 경로다.
 
 ### 10.15 Summary
 

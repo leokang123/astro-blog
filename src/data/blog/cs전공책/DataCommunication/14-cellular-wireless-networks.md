@@ -41,9 +41,9 @@ Cellular approach는 반대로 100 W 이하 수준의 multiple low-power transmi
 ![Figure 14.1](@/assets/images/data-communication-180-figure-14-1-page-434.png)
 *Figure 14.1 · PDF p. 434 · square pattern과 hexagonal pattern의 cell geometry 비교*
 
-Square cell matrix는 정의하기 쉽지만 handoff 판단에는 불리하다. Square width가 `d`이면 인접 cell center까지 거리가 `d`인 neighbor 4개와 `sqrt(2)d`인 neighbor 4개가 생긴다. Mobile user가 cell boundary로 이동할 때 adjacent antenna까지 거리가 균등하지 않아 어느 antenna로 넘길지 판단이 복잡해진다.
+Square cell matrix는 정의하기 쉽지만 handoff 판단에는 불리하다. Square width가 $d$이면 인접 cell center까지 거리가 $d$인 neighbor 4개와 $\sqrt{2}d$인 neighbor 4개가 생긴다. Mobile user가 cell boundary로 이동할 때 adjacent antenna까지 거리가 균등하지 않아 어느 antenna로 넘길지 판단이 복잡해진다.
 
-Hexagonal pattern은 adjacent cell center가 균등한 거리에 놓이도록 해 handoff decision을 단순화한다. Hexagon의 radius `R`은 중심에서 꼭짓점까지의 거리이며 side length와 같다. Cell radius가 `R`일 때 adjacent cell center 사이 거리는 다음과 같다.
+Hexagonal pattern은 adjacent cell center가 균등한 거리에 놓이도록 해 handoff decision을 단순화한다. Hexagon의 radius $R$은 중심에서 꼭짓점까지의 거리이며 side length와 같다. Cell radius가 $R$일 때 adjacent cell center 사이 거리는 다음과 같다.
 
 $$
 d = \sqrt{3}R
@@ -58,42 +58,42 @@ $$
 ![Figure 14.2](@/assets/images/data-communication-181-figure-14-2-page-435.png)
 *Figure 14.2 · PDF p. 435 · reuse factor N=4, N=7, N=19 frequency reuse pattern*
 
-Reuse pattern이 `N`개 cell로 구성되고 전체 system에 `K`개 frequency가 할당되어 있다면, 각 cell은 평균적으로 다음 개수의 frequency를 가진다.
+Reuse pattern이 $N$개 cell로 구성되고 전체 system에 $K$개 frequency가 할당되어 있다면, 각 cell은 평균적으로 다음 개수의 frequency를 가진다.
 
 $$
 \frac{K}{N}
 $$
 
-`N`은 **reuse factor**다. `N`이 작으면 cell당 frequency 수가 많아져 capacity는 커지지만 cochannel interference가 강해질 수 있다. `N`이 크면 같은 frequency를 쓰는 cell 사이 거리가 멀어져 interference는 줄지만 cell당 frequency 수가 줄어든다.
+$N$은 **reuse factor**다. $N$이 작으면 cell당 frequency 수가 많아져 capacity는 커지지만 cochannel interference가 강해질 수 있다. $N$이 크면 같은 frequency를 쓰는 cell 사이 거리가 멀어져 interference는 줄지만 cell당 frequency 수가 줄어든다.
 
 Hexagonal pattern에서 자주 쓰는 parameter는 다음과 같다.
 
 | Symbol | 의미 |
 |---|---|
 | `D` | 같은 frequency band를 쓰는 cell center 사이의 최소 거리, 즉 cochannel distance |
-| `R` | cell radius |
-| `d` | adjacent cell center 사이 거리, `d = sqrt(3)R` |
-| `N` | 반복 pattern 안의 cell 수, reuse factor |
+| $R$ | cell radius |
+| $d$ | adjacent cell center 사이 거리, $d=\sqrt{3}R$ |
+| $N$ | 반복 pattern 안의 cell 수, reuse factor |
 
-Hexagonal cell pattern에서 가능한 `N` 값은 다음 형태로 나온다.
+Hexagonal cell pattern에서 가능한 $N$ 값은 다음 형태로 나온다.
 
 $$
 N = I^2 + J^2 + IJ,\quad I,J = 0,1,2,3,\ldots
 $$
 
-따라서 가능한 값은 `1, 3, 4, 7, 9, 12, 13, 16, 19, 21, ...`이다. Cochannel distance와 cell radius의 관계는 다음과 같다.
+따라서 가능한 값은 $1,3,4,7,9,12,13,16,19,21,\ldots$이다. Cochannel distance와 cell radius의 관계는 다음과 같다.
 
 $$
 \frac{D}{R} = \sqrt{3N}
 $$
 
-또는 adjacent center distance `d`를 쓰면 다음처럼 표현할 수 있다.
+또는 adjacent center distance $d$를 쓰면 다음처럼 표현할 수 있다.
 
 $$
 \frac{D}{d} = \sqrt{N}
 $$
 
-원문 AMPS 예시에서 `K = 395`, `N = 7`이면 cell당 평균 frequency 수는 `395 / 7`, 즉 약 57개다. 이 숫자는 reuse factor가 capacity와 interference의 균형점임을 보여준다.
+원문 AMPS 예시에서 $K=395$, $N=7$이면 cell당 평균 frequency 수는 $395/7$, 즉 약 57개다. 이 숫자는 reuse factor가 capacity와 interference의 균형점임을 보여준다.
 
 #### Increasing Capacity
 
@@ -110,7 +110,7 @@ System이 성장하면 특정 cell에 할당된 frequency만으로 call traffic�
 ![Figure 14.3](@/assets/images/data-communication-182-figure-14-3-page-437.png)
 *Figure 14.3 · PDF p. 437 · 큰 cell을 더 작은 cell로 나누는 cell splitting*
 
-Cell splitting의 capacity 효과는 면적 계산으로 볼 수 있다. Cell radius를 factor `F`만큼 줄이면 coverage area는 `F^2`만큼 줄어들고, 같은 지역을 덮기 위해 필요한 base station 수는 `F^2`만큼 증가한다. 예를 들어 radius를 절반으로 줄이면 같은 area에 필요한 cell 수가 4배가 되고, frequency reuse를 유지한다면 concurrent call capacity도 대략 4배로 늘 수 있다.
+Cell splitting의 capacity 효과는 면적 계산으로 볼 수 있다. Cell radius를 factor $F$만큼 줄이면 coverage area는 $F^2$만큼 줄어들고, 같은 지역을 덮기 위해 필요한 base station 수는 $F^2$만큼 증가한다. 예를 들어 radius를 절반으로 줄이면 같은 area에 필요한 cell 수가 4배가 되고, frequency reuse를 유지한다면 concurrent call capacity도 대략 4배로 늘 수 있다.
 
 Macrocell과 microcell의 차이는 다음처럼 요약된다.
 
@@ -125,19 +125,19 @@ Macrocell과 microcell의 차이는 다음처럼 요약된다.
 
 #### Frequency Reuse 예시
 
-원문 예시는 같은 geographic area를 더 작은 cell로 나눌 때 capacity가 어떻게 늘어나는지 보여준다. Hexagon radius가 `R`일 때 면적은 다음과 같다.
+원문 예시는 같은 geographic area를 더 작은 cell로 나눌 때 capacity가 어떻게 늘어나는지 보여준다. Hexagon radius가 $R$일 때 면적은 다음과 같다.
 
 $$
 A = 1.5R^2\sqrt{3}
 $$
 
-32개 cell, radius `1.6 km`, total traffic channel `336`, reuse factor `N = 7`이면 cell당 channel은 `336 / 7 = 48`개이고, 전체 concurrent call capacity는 다음과 같다.
+32개 cell, radius $1.6\ \text{km}$, total traffic channel $336$, reuse factor $N=7$이면 cell당 channel은 $336/7=48$개이고, 전체 concurrent call capacity는 다음과 같다.
 
 $$
 48 \times 32 = 1536\ \text{channels}
 $$
 
-같은 area를 radius `0.8 km`인 128개 cell로 나누면 cell당 channel 수는 여전히 48개지만 전체 capacity는 다음처럼 증가한다.
+같은 area를 radius $0.8\ \text{km}$인 128개 cell로 나누면 cell당 channel 수는 여전히 48개지만 전체 capacity는 다음처럼 증가한다.
 
 $$
 48 \times 128 = 6144\ \text{channels}
@@ -183,7 +183,7 @@ Mobile radio communication은 wired communication이나 fixed wireless communica
 
 **Signal strength**는 receiver에서 quality를 유지할 만큼 강해야 하지만, 같은 frequency band를 쓰는 다른 cell에 cochannel interference를 만들 만큼 강해서는 안 된다. Human-made noise, 자동차 ignition noise, 다른 signal source, BS와 mobile unit 사이 거리, mobile movement가 모두 signal level을 바꾼다. 따라서 cellular layout 설계자는 BS/mobile transmit power, mobile antenna height, BS antenna height, local propagation model을 함께 고려해야 한다.
 
-원문은 cell size 추정을 위한 대표 empirical model로 **Okumura/Hata model**을 소개한다. Urban environment에서 path loss는 carrier frequency `fc`, transmitting antenna height `ht`, receiving antenna height `hr`, distance `d`, mobile antenna correction factor `A(hr)`의 함수다. 암기할 식이라기보다는, cellular planning이 단순 geometry가 아니라 empirical propagation model에 의존한다는 점이 중요하다.
+원문은 cell size 추정을 위한 대표 empirical model로 **Okumura/Hata model**을 소개한다. Urban environment에서 path loss는 carrier frequency $f_c$, transmitting antenna height $h_t$, receiving antenna height $h_r$, distance $d$, mobile antenna correction factor $A(h_r)$의 함수다. 암기할 식이라기보다는, cellular planning이 단순 geometry가 아니라 empirical propagation model에 의존한다는 점이 중요하다.
 
 #### Fading과 Multipath Propagation
 
@@ -326,7 +326,7 @@ CDMA는 multipath를 단순 noise로만 보지 않고, 경우에 따라 여러 p
 ![Figure 14.9](@/assets/images/data-communication-187-figure-14-9-page-450.png)
 *Figure 14.9 · PDF p. 450 · multipath copy를 여러 correlator로 모아 결합하는 RAKE receiver*
 
-Figure 14.9의 흐름은 다음과 같다. Transmitter는 binary data를 자기 chipping code와 XOR해 spread sequence를 만들고 modulation한다. Wireless multipath channel은 서로 다른 delay `T1`, `T2`, `T3`와 attenuation factor `a1`, `a2`, `a3`를 가진 copy를 만든다. Receiver는 demodulated chip stream을 delay가 다른 여러 correlator에 넣고, channel estimate에서 얻은 weight로 output을 combine한다. 따라서 multipath가 반드시 손실만이 아니라 diversity source로도 사용된다.
+Figure 14.9의 흐름은 다음과 같다. Transmitter는 binary data를 자기 chipping code와 XOR해 spread sequence를 만들고 modulation한다. Wireless multipath channel은 서로 다른 delay $T_1$, $T_2$, $T_3$와 attenuation factor $a_1$, $a_2$, $a_3$를 가진 copy를 만든다. Receiver는 demodulated chip stream을 delay가 다른 여러 correlator에 넣고, channel estimate에서 얻은 weight로 output을 combine한다. 따라서 multipath가 반드시 손실만이 아니라 diversity source로도 사용된다.
 
 #### IS-95 Channel Structure
 
@@ -335,7 +335,7 @@ Figure 14.9의 흐름은 다음과 같다. Transmitter는 binary data를 자기 
 ![Figure 14.10](@/assets/images/data-communication-188-figure-14-10-page-451.png)
 *Figure 14.10 · PDF p. 451 · IS-95 forward/reverse logical CDMA channel structure*
 
-Forward link는 같은 `1.228 MHz` bandwidth를 공유하는 최대 64개 logical CDMA channel로 구성된다. Forward channel의 code는 64 x 64 **Walsh matrix**에서 나온 64개 orthogonal 64-bit code다.
+Forward link는 같은 $1.228\ \text{MHz}$ bandwidth를 공유하는 최대 64개 logical CDMA channel로 구성된다. Forward channel의 code는 64 x 64 **Walsh matrix**에서 나온 64개 orthogonal 64-bit code다.
 
 | Forward channel | 역할 |
 |---|---|
@@ -344,7 +344,7 @@ Forward link는 같은 `1.228 MHz` bandwidth를 공유하는 최대 64개 logica
 | **Paging channels (1-7)** | 하나 이상의 mobile station에 message를 전달한다. |
 | **Traffic channels (8-31, 33-63)** | 최대 55개 traffic channel. Rate set 1은 최대 9600 bps, 이후 revision은 rate set 2로 최대 14,400 bps를 지원한다. |
 
-Reverse link는 같은 `1.228 MHz` bandwidth를 공유하는 최대 94개 logical CDMA channel로 구성된다. 최대 32개 access channel과 62개 traffic channel을 지원한다. Reverse traffic channel은 mobile-unique하며, 각 station은 electronic serial number 기반의 unique long code mask를 사용한다. Access channel은 call initiation, paging response, location update에 사용된다.
+Reverse link는 같은 $1.228\ \text{MHz}$ bandwidth를 공유하는 최대 94개 logical CDMA channel로 구성된다. 최대 32개 access channel과 62개 traffic channel을 지원한다. Reverse traffic channel은 mobile-unique하며, 각 station은 electronic serial number 기반의 unique long code mask를 사용한다. Access channel은 call initiation, paging response, location update에 사용된다.
 
 #### IS-95 Forward Link Transmission
 
@@ -376,12 +376,12 @@ Reverse traffic channel processing은 다음과 같다.
 |---|---|
 | Convolutional encoder | rate 1/3 encoder를 사용해 최대 effective data rate를 28.8 kbps로 만든다. |
 | Block interleaver | forward link와 마찬가지로 error burst 영향을 분산한다. |
-| 64-ary orthogonal modulation | interleaver output을 6-bit unit으로 묶고, 각 6-bit value를 64 x 64 Walsh matrix의 한 row index로 사용한다. 64-bit row가 6-bit input을 대체하므로 data rate가 `64/6`배 확장되어 307.2 kbps가 된다. |
+| 64-ary orthogonal modulation | interleaver output을 6-bit unit으로 묶고, 각 6-bit value를 64 x 64 Walsh matrix의 한 row index로 사용한다. 64-bit row가 6-bit input을 대체하므로 data rate가 $64/6$배 확장되어 307.2 kbps가 된다. |
 | Data burst randomizer | long code mask를 사용해 20-ms frame 안에서 burst를 smoothing하고 다른 mobile station과의 interference를 줄인다. |
 | Long code spreading | mobile-unique long code를 randomizer output과 XOR하여 최종 1.2288 Mbps stream을 만든다. |
 | OQPSK modulation | Offset QPSK로 carrier에 modulation한다. |
 
-Reverse link에서 Walsh matrix는 forward link처럼 channel separation용 orthogonal code만으로 쓰이는 것이 아니다. Reverse에서는 6-bit symbol을 64-bit orthogonal codeword로 바꾸는 block coding에 가까우며, base station receiver의 decision-making을 개선한다. 이를 `(n, k) = (64, 6)`, `d_min = 32`인 block error-correcting code처럼 볼 수 있다.
+Reverse link에서 Walsh matrix는 forward link처럼 channel separation용 orthogonal code만으로 쓰이는 것이 아니다. Reverse에서는 6-bit symbol을 64-bit orthogonal codeword로 바꾸는 block coding에 가까우며, base station receiver의 decision-making을 개선한다. 이를 $(n,k)=(64,6)$, $d_{min}=32$인 block error-correcting code처럼 볼 수 있다.
 
 Forward link와 reverse link의 modulator가 다른 이유도 중요하다. Forward link에서는 Walsh matrix에서 나온 spreading code들이 orthogonal하다. Reverse link에서는 여러 mobile unit의 transmissions가 chip boundary에 완전히 맞지 않으므로 spreading code orthogonality가 보장되지 않는다. 따라서 long code, randomization, power control, OQPSK 같은 장치가 interference를 줄이는 데 더 중요하다.
 
@@ -477,7 +477,7 @@ Cellular wireless network는 앞 장들의 여러 개념과 직접 연결된다.
 | 오해 | 정리 |
 |---|---|
 | Hexagonal cell은 실제 지형 그대로다 | 실제 coverage는 지형, 건물, antenna 위치, propagation condition에 따라 불규칙하다. Hexagon은 설계와 계산을 위한 model이다. |
-| `N`이 작을수록 항상 좋다 | `N`이 작으면 cell당 frequency 수는 늘지만 cochannel interference가 증가한다. Capacity와 interference의 trade-off다. |
+| $N$이 작을수록 항상 좋다 | $N$이 작으면 cell당 frequency 수는 늘지만 cochannel interference가 증가한다. Capacity와 interference의 trade-off다. |
 | Cell splitting은 공짜 capacity 증가다 | capacity는 늘지만 base station 수, handoff frequency, planning complexity가 증가한다. |
 | CDMA는 user 수 제한이 없다 | fixed hard limit은 약하지만 user가 늘면 noise level과 error rate가 증가해 graceful degradation을 겪는다. |
 | Multipath는 항상 버려야 할 noise다 | RAKE receiver처럼 resolvable multipath energy를 결합해 diversity gain으로 활용할 수 있다. |
@@ -490,7 +490,7 @@ Cellular wireless network는 앞 장들의 여러 개념과 직접 연결된다.
 | **cellular network** | coverage area를 여러 cell로 나누고 low-power BS를 배치해 spectrum reuse로 capacity를 높이는 network |
 | **base station (BS)** | cell 안 mobile unit과 radio channel로 통신하고 MTSO에 연결되는 transmitter/receiver/control unit |
 | **MTSO** | BS들을 연결하고 channel assignment, handoff, call setup, billing monitoring을 수행하는 switching office |
-| **frequency reuse / reuse factor** | 충분히 떨어진 cell에서 같은 frequency를 다시 쓰는 방식과 반복 pattern size `N` |
+| **frequency reuse / reuse factor** | 충분히 떨어진 cell에서 같은 frequency를 다시 쓰는 방식과 반복 pattern size $N$ |
 | **handoff** | 이동 중 serving BS/traffic channel을 새 cell로 넘기는 절차 |
 | **fading / multipath / ISI** | mobile propagation에서 signal power variation, 여러 path copy, delayed symbol interference |
 | **AMPS** | first-generation analog cellular system, analog FM voice와 FSK control channel 사용 |

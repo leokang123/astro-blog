@@ -77,22 +77,22 @@ Wireless multiple access가 어려운 또 다른 이유는 모든 node가 서로
 
 `CDMA (code division multiple access)`는 shared medium에서 여러 senders가 동시에 전송하되, time이나 frequency가 아니라 `codespace`를 나누는 channel partitioning protocol이다. 각 sender에게 고유한 code를 주고, receiver는 원하는 sender의 code로 aggregate signal에서 해당 sender의 data를 뽑아낸다.
 
-CDMA에서는 원래 data bit보다 훨씬 빠른 rate로 변하는 code를 사용한다. 이 빠른 rate를 `chipping rate`라고 한다. 하나의 data bit slot을 `M`개의 mini-slots로 나누고, sender code는 `M`개의 `+1` 또는 `-1` 값으로 이루어진 sequence다. 수학적으로 data bit `di`도 `+1` 또는 `-1`로 표현한다. Sender는 각 mini-slot `m`에서 다음처럼 encoding한다.
+CDMA에서는 원래 data bit보다 훨씬 빠른 rate로 변하는 code를 사용한다. 이 빠른 rate를 `chipping rate`라고 한다. 하나의 data bit slot을 $M$개의 mini-slots로 나누고, sender code는 $M$개의 $+1$ 또는 $-1$ 값으로 이루어진 sequence다. 수학적으로 data bit $d_i$도 $+1$ 또는 $-1$로 표현한다. Sender는 각 mini-slot $m$에서 다음처럼 encoding한다.
 
-```text
-Zi,m = di * cm
-```
+$$
+Z_{i,m} = d_i \cdot c_m
+$$
 
 Receiver가 다른 sender interference가 없는 상황에서 original data bit를 복원할 때는 received encoded values에 같은 code를 곱해 평균을 낸다.
 
-```text
-di = (1/M) * Σ(Zi,m * cm),  m = 1..M
-```
+$$
+d_i = \frac{1}{M} \sum_{m=1}^{M} Z_{i,m} c_m
+$$
 
 ![Figure 7.5](@/assets/images/cs-computer-network-209-figure-7-5-page-551.png)
 *Figure 7.5 · PDF p. 551 · 단일 sender CDMA에서 code로 data bit를 encoding하고 같은 code로 decoding하는 예*
 
-현실에서는 여러 senders가 동시에 전송하고, receiver는 각 mini-slot에서 모든 senders의 encoded signals가 더해진 aggregate signal을 받는다. CDMA가 성립하려면 sender들의 codes가 carefully chosen되어야 한다. 그러면 receiver는 aggregate signal `Z*i,m`에 원하는 sender의 code를 곱해 합산함으로써 다른 sender의 signal을 cancel하고 원하는 data를 복원할 수 있다.
+현실에서는 여러 senders가 동시에 전송하고, receiver는 각 mini-slot에서 모든 senders의 encoded signals가 더해진 aggregate signal을 받는다. CDMA가 성립하려면 sender들의 codes가 carefully chosen되어야 한다. 그러면 receiver는 aggregate signal $Z^*_{i,m}$에 원하는 sender의 code를 곱해 합산함으로써 다른 sender의 signal을 cancel하고 원하는 data를 복원할 수 있다.
 
 ![Figure 7.6](@/assets/images/cs-computer-network-210-figure-7-6-page-553.png)
 *Figure 7.6 · PDF p. 553 · 두 sender의 signals가 더해져도 receiver가 한 sender의 code로 원래 data를 복원하는 예*
@@ -331,9 +331,9 @@ Cellular network도 Internet처럼 `network of networks`다. 한 사용자의 `h
 
 5G capacity는 다음 식으로 직관화할 수 있다.
 
-```text
-capacity = cell density * available spectrum * spectral efficiency
-```
+$$
+\text{capacity} = \text{cell density} \cdot \text{available spectrum} \cdot \text{spectral efficiency}
+$$
 
 FR2에서는 range가 짧아 더 많은 base stations가 필요하므로 `cell density`가 커진다. 24-52 GHz 대역은 4G LTE 대역보다 훨씬 넓어 `available spectrum`이 커진다. `spectral efficiency`는 단순히 power를 크게 올리는 대신 `MIMO`와 `beam forming`으로 높인다. 여러 antennas가 signal을 모든 방향으로 뿌리지 않고 user 쪽으로 지향시키면, 한 base station이 같은 frequency band에서 10-20 users에게 동시에 전송할 수 있다.
 

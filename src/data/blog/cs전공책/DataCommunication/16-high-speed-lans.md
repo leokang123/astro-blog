@@ -23,7 +23,7 @@ Chapter 16은 Chapter 15의 LAN architecture 위에 실제 high-speed LAN 기술
 | Ethernet | IEEE 802.3 Ethernet은 어떻게 MAC과 physical layer를 확장했는가? | CSMA/CD, binary exponential backoff, MAC frame, Fast Ethernet, Gigabit Ethernet, 10-Gbps Ethernet |
 | Fibre Channel | 왜 storage/network 양쪽 성격을 가진 switched network가 필요한가? | Fibre Channel, fabric, N_port, F_port, FC-0~FC-4 |
 | Digital Signal Encoding | high data rate에서 왜 단순 bit 전송이 어렵고 encoding이 필요한가? | 4B/5B, MLT-3, 8B6T, 8B/10B, 64B/66B |
-| Performance Issues | LAN utilization은 어떤 물리적 시간 비율에 민감한가? | propagation time, frame transmission time, parameter `a`, normalized throughput |
+| Performance Issues | LAN utilization은 어떤 물리적 시간 비율에 민감한가? | propagation time, frame transmission time, parameter $a$, normalized throughput |
 | Scrambling | 반복 bit pattern이 왜 문제이고 어떻게 섞는가? | scrambler, descrambler, shift register, polynomial |
 
 ## 세부 정리
@@ -389,9 +389,9 @@ MLT-3는 세 voltage level `+V`, `0`, `-V`를 사용한다. Rule은 단순하다
 
 8B6T에서는 8-bit block 하나가 6 ternary symbols의 code group으로 mapping된다. Code group stream은 세 output channel에 round-robin으로 분배된다. 100BASE-T4가 세 pair를 한 방향 전송에 쓰는 이유와 연결된다. 8-bit stream 전체가 100 Mbps일 때 각 channel의 ternary transmission rate는 다음과 같이 25 Mbaud가 된다.
 
-```text
-(6 / 8) × (1 / 3) × 100 Mbps = 25 Mbaud
-```
+$$
+\left(\frac{6}{8}\right)\left(\frac{1}{3}\right) \times 100\ \text{Mbps} = 25\ \text{Mbaud}
+$$
 
 8B6T mapping은 두 요구를 만족하도록 선택된다.
 
@@ -429,88 +429,88 @@ MLT-3는 세 voltage level `+V`, `0`, `-V`를 사용한다. Rule은 단순하다
 | data octets only | 64-bit data field를 scramble하고, synchronization bits `01`을 앞에 붙인다. |
 | mixed data/control block | 56-bit data/control field를 scramble하고, synchronization bits `10`과 8-bit type field를 앞에 붙인다. |
 
-Scrambling polynomial은 `1 + X^39 + X^58`이다. 64B/66B는 transition을 보장하기 위한 specific coding technique에 의존하지 않고, scrambling이 long bit stream에서 필요한 transition/frequency characteristic을 제공한다. Two-bit synchronization field는 block alignment와 long bit stream synchronization에 쓰인다.
+Scrambling polynomial은 $1 + X^{39} + X^{58}$이다. 64B/66B는 transition을 보장하기 위한 specific coding technique에 의존하지 않고, scrambling이 long bit stream에서 필요한 transition/frequency characteristic을 제공한다. Two-bit synchronization field는 block alignment와 long bit stream synchronization에 쓰인다.
 
 ### Appendix 16B Performance Issues
 
 LAN/MAN architecture 선택에서 performance는 핵심 기준이다. 특히 heavy load에서 `throughput`과 `response time`이 어떻게 변하는지가 중요하다. 이 appendix는 세부 queueing model보다, propagation delay와 transmission rate가 LAN utilization을 어떻게 제한하는지 보여준다.
 
-#### Parameter `a`
+#### Parameter $a$
 
-Chapter 7에서 나온 parameter `a`는 여기서도 중심 역할을 한다.
+Chapter 7에서 나온 parameter $a$는 여기서도 중심 역할을 한다.
 
-```text
-a = propagation time / transmission time
-```
+$$
+a = \frac{\text{propagation time}}{\text{transmission time}}
+$$
 
 LAN 문맥에서는 다음처럼 볼 수 있다.
 
-```text
-a = (length of data link in bits) / (length of frame in bits)
-```
+$$
+a = \frac{\text{length of data link in bits}}{\text{length of frame in bits}}
+$$
 
-즉 `a`는 frame 하나를 밀어 넣는 시간에 비해 signal이 network 끝까지 퍼지는 시간이 얼마나 큰지를 나타낸다. Data rate `R`, maximum station distance `d`, propagation velocity `V`, frame length `L`을 쓰면 다음 관계가 된다.
+즉 $a$는 frame 하나를 밀어 넣는 시간에 비해 signal이 network 끝까지 퍼지는 시간이 얼마나 큰지를 나타낸다. Data rate $R$, maximum station distance $d$, propagation velocity $V$, frame length $L$을 쓰면 다음 관계가 된다.
 
-```text
-a = (d / V) / (L / R) = Rd / LV
-```
+$$
+a = \frac{d/V}{L/R} = \frac{Rd}{LV}
+$$
 
-Perfect access mechanism을 가정해도 utilization upper bound는 `a`에 제한된다. 한 frame을 보내는 데 실제 transmission time `L/R`뿐 아니라 propagation delay `d/V`가 붙기 때문이다.
+Perfect access mechanism을 가정해도 utilization upper bound는 $a$에 제한된다. 한 frame을 보내는 데 실제 transmission time $L/R$뿐 아니라 propagation delay $d/V$가 붙기 때문이다.
 
-```text
-U = 1 / (1 + a)
-```
+$$
+U = \frac{1}{1+a}
+$$
 
-여기서 `U`는 normalized utilization, 즉 network throughput을 data rate로 나눈 값이다. `a`가 작으면 propagation delay가 frame transmission time에 비해 작으므로 utilization이 높고, `a`가 커지면 한 frame의 효과가 network 전체에 퍼지기까지 빈 시간이 커져 utilization이 떨어진다.
+여기서 $U$는 normalized utilization, 즉 network throughput을 data rate로 나눈 값이다. $a$가 작으면 propagation delay가 frame transmission time에 비해 작으므로 utilization이 높고, $a$가 커지면 한 frame의 효과가 network 전체에 퍼지기까지 빈 시간이 커져 utilization이 떨어진다.
 
 #### Baseband Bus와 Ring에서의 직관
 
 ![Figure 16.14](@/assets/images/data-communication-220-figure-16-14-page-534.png)
-*Figure 16.14 · PDF p. 534 · baseband bus에서 propagation time `a`가 utilization을 제한하는 과정*
+*Figure 16.14 · PDF p. 534 · baseband bus에서 propagation time $a$가 utilization을 제한하는 과정*
 
-Figure 16.14는 가장 멀리 떨어진 두 station이 번갈아 frame을 보내는 worst-case bus를 가정한다. Frame transmission time을 1로 normalize하면 propagation time은 `a`이다. 한 station이 `t0`에 전송을 시작하고, 상대 station에서 reception이 `t0 + a`에 시작되며, transmission은 `t0 + 1`에 끝난다. 결국 한 turn이 끝나는 시간은 `1 + a`이고, 그중 실제 transmit time은 1이므로 utilization은 `1/(1+a)`가 된다.
+Figure 16.14는 가장 멀리 떨어진 두 station이 번갈아 frame을 보내는 worst-case bus를 가정한다. Frame transmission time을 1로 normalize하면 propagation time은 $a$이다. 한 station이 $t_0$에 전송을 시작하고, 상대 station에서 reception이 $t_0+a$에 시작되며, transmission은 $t_0+1$에 끝난다. 결국 한 turn이 끝나는 시간은 $1+a$이고, 그중 실제 transmit time은 1이므로 utilization은 $1/(1+a)$가 된다.
 
 ![Figure 16.15](@/assets/images/data-communication-221-figure-16-15-page-535.png)
-*Figure 16.15 · PDF p. 535 · ring network에서도 `a`가 utilization에 같은 방식으로 영향을 주는 예*
+*Figure 16.15 · PDF p. 535 · ring network에서도 $a$가 utilization에 같은 방식으로 영향을 주는 예*
 
-Figure 16.15는 ring에서도 같은 직관이 적용됨을 보여준다. 한 station이 transmit한 뒤 자기 transmission이 ring을 돌아오는 것을 기다린다고 보면, turn의 길이는 여전히 transmission time과 propagation time의 합으로 제한된다. LAN에서는 `a`가 대략 0.01-0.1인 경우가 많지만, MAN에서는 0.1에서 1.0을 훨씬 넘을 수 있다. Network가 더 크고 빠를수록 `R`과 `d`가 커져 `a`가 커지기 쉽고, utilization이 떨어진다. 그래서 high-speed LAN에서는 “한 번에 frame 하나만”이라는 제약을 완화하는 switched/full-duplex 구조가 중요해진다.
+Figure 16.15는 ring에서도 같은 직관이 적용됨을 보여준다. 한 station이 transmit한 뒤 자기 transmission이 ring을 돌아오는 것을 기다린다고 보면, turn의 길이는 여전히 transmission time과 propagation time의 합으로 제한된다. LAN에서는 $a$가 대략 0.01-0.1인 경우가 많지만, MAN에서는 0.1에서 1.0을 훨씬 넘을 수 있다. Network가 더 크고 빠를수록 $R$과 $d$가 커져 $a$가 커지기 쉽고, utilization이 떨어진다. 그래서 high-speed LAN에서는 “한 번에 frame 하나만”이라는 제약을 완화하는 switched/full-duplex 구조가 중요해진다.
 
 #### CSMA/CD의 Simple Performance Model
 
-CSMA/CD 성능을 직관적으로 보려면 time을 slot으로 나눈다. Slot length는 `2 × end-to-end propagation delay`이고, 이는 transmission 시작 후 collision을 detect하는 데 걸릴 수 있는 maximum time이다.
+CSMA/CD 성능을 직관적으로 보려면 time을 slot으로 나눈다. Slot length는 $2 \times \text{end-to-end propagation delay}$이고, 이는 transmission 시작 후 collision을 detect하는 데 걸릴 수 있는 maximum time이다.
 
 Model의 단순화 가정은 다음과 같다.
 
 | 가정 | 의미 |
 |---|---|
-| `N` active stations | 모든 station이 항상 보낼 frame을 가지고 있다고 본다. |
-| maximum normalized propagation delay `a` | propagation delay가 frame transmission time에 비해 얼마나 큰지 나타낸다. |
-| station transmit probability `P` | available slot에서 각 station이 probability `P`로 transmit한다. |
+| $N$ active stations | 모든 station이 항상 보낼 frame을 가지고 있다고 본다. |
+| maximum normalized propagation delay $a$ | propagation delay가 frame transmission time에 비해 얼마나 큰지 나타낸다. |
+| station transmit probability $P$ | available slot에서 각 station이 probability $P$로 transmit한다. |
 
-모든 station이 항상 transmit하면 line은 collision뿐이므로, 각 station은 offered load를 restraint해야 한다. 한 slot에서 정확히 하나의 station만 transmit하여 medium을 잡을 probability를 `A`라고 하면,
+모든 station이 항상 transmit하면 line은 collision뿐이므로, 각 station은 offered load를 restraint해야 한다. 한 slot에서 정확히 하나의 station만 transmit하여 medium을 잡을 probability를 $A$라고 하면,
 
-```text
-A = N P (1 - P)^(N - 1)
-```
+$$
+A = NP(1-P)^{N-1}
+$$
 
-이 값은 `P = 1/N`일 때 최대가 된다. Heavy usage에서는 station이 자기 offered load를 대략 `1/N`으로 제한해야 successful seizure probability가 최대가 된다는 뜻이다.
+이 값은 $P=1/N$일 때 최대가 된다. Heavy usage에서는 station이 자기 offered load를 대략 $1/N$으로 제한해야 successful seizure probability가 최대가 된다는 뜻이다.
 
-Transmission interval은 `1/(2a)` slots이고, contention interval은 collision 또는 no transmission slot들이 이어진 뒤 successful transmission slot이 나오는 기간이다. 이 단순 model에서 maximum utilization은 다음 꼴이다.
+Transmission interval은 $1/(2a)$ slots이고, contention interval은 collision 또는 no transmission slot들이 이어진 뒤 successful transmission slot이 나오는 기간이다. 이 단순 model에서 maximum utilization은 다음 꼴이다.
 
-```text
-U = 1 / (1 + 2a(1 - A)/A)
-```
+$$
+U = \frac{1}{1 + 2a(1-A)/A}
+$$
 
-`N`이 매우 커질 때는 근사적으로 다음 한계가 나온다.
+$N$이 매우 커질 때는 근사적으로 다음 한계가 나온다.
 
-```text
-lim U = 1 / (1 + 3.44a)
-```
+$$
+\lim U = \frac{1}{1+3.44a}
+$$
 
 ![Figure 16.16](@/assets/images/data-communication-222-figure-16-16-page-538.png)
-*Figure 16.16 · PDF p. 538 · CSMA/CD normalized throughput이 `a`와 active station 수 `N`에 따라 감소하는 모습*
+*Figure 16.16 · PDF p. 538 · CSMA/CD normalized throughput이 $a$와 active station 수 $N$에 따라 감소하는 모습*
 
-Figure 16.16의 메시지는 두 가지다. 첫째, `a`가 커질수록 throughput은 떨어진다. Propagation delay가 상대적으로 크면 collision detection과 contention에 쓰이는 시간이 커지기 때문이다. 둘째, `N`이 늘면 collision 또는 no transmission slot 가능성이 커져 CSMA/CD performance가 떨어진다. 이 결과는 high-speed Ethernet이 shared-medium CSMA/CD보다 switched full-duplex 구조로 이동한 이유를 뒷받침한다.
+Figure 16.16의 메시지는 두 가지다. 첫째, $a$가 커질수록 throughput은 떨어진다. Propagation delay가 상대적으로 크면 collision detection과 contention에 쓰이는 시간이 커지기 때문이다. 둘째, $N$이 늘면 collision 또는 no transmission slot 가능성이 커져 CSMA/CD performance가 떨어진다. 이 결과는 high-speed Ethernet이 shared-medium CSMA/CD보다 switched full-duplex 구조로 이동한 이유를 뒷받침한다.
 
 ### Appendix 16C Scrambling
 
@@ -525,22 +525,22 @@ Scrambler는 보통 `feedback shift register`로 구성되고, matching descramb
 
 Figure 16.17의 예에서 scrambled sequence는 다음처럼 표현된다.
 
-```text
-B_m = A_m XOR B_(m-3) XOR B_(m-5)
-```
+$$
+B_m = A_m \oplus B_{m-3} \oplus B_{m-5}
+$$
 
-여기서 `A_m`은 original input bit, `B_m`은 scrambled output bit이다. Descrambler는 같은 tap 위치를 이용해 다음처럼 original bit를 되찾는다.
+여기서 $A_m$은 original input bit, $B_m$은 scrambled output bit이다. Descrambler는 같은 tap 위치를 이용해 다음처럼 original bit를 되찾는다.
 
-```text
-C_m = B_m XOR B_(m-3) XOR B_(m-5)
+$$
+C_m = B_m \oplus B_{m-3} \oplus B_{m-5}
     = A_m
-```
+$$
 
 Polynomial 관점에서는 예제 polynomial이 다음과 같다.
 
-```text
+$$
 P(X) = 1 + X^3 + X^5
-```
+$$
 
 Input을 이 polynomial로 나누어 scrambled sequence를 만들고, receiver에서는 같은 polynomial을 곱해 original input을 복원한다. 원문 예시는 input `101010100000111`처럼 periodic sequence와 long zero string을 포함하는 data가 scrambler를 거치며 반복 패턴이 제거되는 모습을 보여준다.
 
@@ -550,7 +550,7 @@ Scrambling은 encoding scheme마다 다른 방식으로 들어간다.
 
 | Scheme | Scrambling 역할 |
 |---|---|
-| `64B/66B` | specific code mapping으로 transition을 보장하지 않고, polynomial `1 + X^39 + X^58` scrambling이 필요한 randomness/transition characteristic을 제공한다. |
+| `64B/66B` | specific code mapping으로 transition을 보장하지 않고, polynomial $1 + X^{39} + X^{58}$ scrambling이 필요한 randomness/transition characteristic을 제공한다. |
 | `MLT-3` / `100BASE-TX` | MLT-3 encoding 전 bit stream을 scramble하여 spectrum distribution을 균일하게 하고 radiated emission을 줄인다. |
 | `4D-PAM5` / `1000BASE-T` | 양방향에 서로 다른 scrambling equation을 사용해 high-speed twisted-pair transmission의 signal property를 조정한다. |
 
@@ -566,7 +566,7 @@ Chapter 16은 Chapter 15의 LAN overview를 실제 high-speed LAN 기술로 확�
 | Chapter 15의 layer 2 switch | Fast/Gigabit/10G Ethernet에서 full-duplex switched operation이 왜 CSMA/CD를 밀어내는지 설명한다. |
 | Chapter 15의 SAN | Fibre Channel이 storage area network에서 널리 쓰인 이유와 연결된다. |
 | Chapter 5의 signal encoding | Manchester, NRZ, NRZI 개념이 4B/5B, MLT-3, 8B/10B, 64B/66B 이해의 전제다. |
-| Chapter 7의 performance parameter `a` | Propagation delay와 transmission time 비율이 LAN utilization을 제한하는 방식으로 재등장한다. |
+| Chapter 7의 performance parameter $a$ | Propagation delay와 transmission time 비율이 LAN utilization을 제한하는 방식으로 재등장한다. |
 
 ## 오해하기 쉬운 내용
 
@@ -577,7 +577,7 @@ Chapter 16은 Chapter 15의 LAN overview를 실제 high-speed LAN 기술로 확�
 | 10-Gbps Ethernet도 shared medium collision 기반이다 | 10-Gbps Ethernet은 full-duplex mode only이며 optical fiber physical media를 중심으로 한다. |
 | Fibre Channel은 그냥 빠른 Ethernet이다 | Fibre Channel은 shared-medium LAN이 아니라 point-to-point link와 switching fabric 기반의 multiprotocol transport에 가깝다. |
 | Encoding overhead는 무조건 낭비다 | Redundancy는 synchronization, clock recovery, DC balance, error detection, spectral property를 얻기 위한 비용이다. |
-| `a`는 링크 길이만의 문제다 | `a = Rd/LV`이므로 data rate가 높아지거나 frame length가 짧아져도 커진다. |
+| $a$는 링크 길이만의 문제다 | $a = Rd/LV$이므로 data rate가 높아지거나 frame length가 짧아져도 커진다. |
 | Scrambling은 암호화다 | Scrambling은 보안이 아니라 signal quality와 spectral property 개선을 위한 deterministic 변환이다. |
 
 ## 면접 질문
@@ -591,8 +591,8 @@ Chapter 16은 Chapter 15의 LAN overview를 실제 high-speed LAN 기술로 확�
 7. `Fibre Channel fabric`에서 `N_port`, `F_port`, fabric의 역할을 설명하라.
 8. Fibre Channel이 shared-medium LAN과 다른 이유를 MAC/access control 관점에서 설명하라.
 9. `4B/5B-NRZI`, `MLT-3`, `8B6T`, `8B/10B`, `64B/66B`를 각각 한 문장씩 비교하라.
-10. LAN performance parameter `a`가 커지면 utilization이 떨어지는 이유를 bus 또는 ring 예로 설명하라.
-11. CSMA/CD simple performance model에서 active station 수 `N`이 커질수록 throughput이 낮아지는 이유는 무엇인가?
+10. LAN performance parameter $a$가 커지면 utilization이 떨어지는 이유를 bus 또는 ring 예로 설명하라.
+11. CSMA/CD simple performance model에서 active station 수 $N$이 커질수록 throughput이 낮아지는 이유는 무엇인가?
 12. Scrambling이 필요한 이유를 long zero/one string, clock recovery, spectral property 관점에서 설명하라.
 
 ## 핵심 용어 정리

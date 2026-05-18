@@ -200,7 +200,7 @@ cache hit이면 cache가 local copy를 HTTP response로 바로 돌려준다. cac
 
 Web caching의 이점은 두 가지다. 첫째, client와 cache 사이 bottleneck bandwidth가 client-origin server 사이보다 크고 cache hit이면 response time이 크게 줄어든다. 둘째, institution access link를 지나는 traffic을 줄여 link upgrade 비용을 늦출 수 있고, Internet 전체 Web traffic도 줄인다.
 
-본문의 계산 예시는 Chapter 1의 traffic intensity가 실제 Web caching 성능에 어떻게 쓰이는지 보여준다. average object size가 1 Mbits, request rate가 15 requests/sec이면 100 Mbps LAN의 traffic intensity는 `15 * 1 / 100 = 0.15`라 delay가 작다. 하지만 15 Mbps access link의 traffic intensity는 `15 * 1 / 15 = 1`이 되어 queuing delay가 폭발한다.
+본문의 계산 예시는 Chapter 1의 traffic intensity가 실제 Web caching 성능에 어떻게 쓰이는지 보여준다. average object size가 1 Mbits, request rate가 15 requests/sec이면 100 Mbps LAN의 traffic intensity는 $15 \cdot 1 / 100 = 0.15$라 delay가 작다. 하지만 15 Mbps access link의 traffic intensity는 $15 \cdot 1 / 15 = 1$이 되어 queuing delay가 폭발한다.
 
 ![Access-link bottleneck](@/assets/images/cs-computer-network-040-figure-2-12-page-121.png)
 *Figure 2.12 · PDF p. 121 · institutional network와 Internet 사이 15 Mbps access link가 bottleneck이 되는 상황*
@@ -445,7 +445,7 @@ root servers에 대한 공격은 packet filtering과 caching 때문에 영향이
 
 지금까지의 Web, e-mail, DNS는 항상 켜져 있는 infrastructure servers에 크게 의존하는 client-server architecture였다. P2P(peer-to-peer) architecture는 always-on infrastructure server 의존을 최소화하고, intermittent하게 연결되는 peers가 직접 서로 통신한다. 여기서 peers는 service provider가 소유한 장비가 아니라 사용자의 PC, laptop, smartphone 같은 end systems다.
 
-P2P file distribution의 대표 문제는 하나의 큰 file을 `N`개 peers에게 배포하는 것이다. client-server 방식에서는 server가 file copy를 각 peer에게 직접 보내야 하므로 server upload bandwidth가 병목이 된다. P2P 방식에서는 peer가 받은 file portion을 다른 peers에게 다시 upload할 수 있어, 소비자인 동시에 redistributor가 된다.
+P2P file distribution의 대표 문제는 하나의 큰 file을 $N$개 peers에게 배포하는 것이다. client-server 방식에서는 server가 file copy를 각 peer에게 직접 보내야 하므로 server upload bandwidth가 병목이 된다. P2P 방식에서는 peer가 받은 file portion을 다른 peers에게 다시 upload할 수 있어, 소비자인 동시에 redistributor가 된다.
 
 #### file distribution model
 
@@ -453,35 +453,37 @@ P2P file distribution의 대표 문제는 하나의 큰 file을 `N`개 peers에�
 
 | 기호 | 의미 |
 |---|---|
-| `F` | 배포할 file size, bits |
-| `N` | file copy를 원하는 peers 수 |
-| `u_s` | server upload rate |
-| `u_i` | peer `i`의 upload rate |
-| `d_i` | peer `i`의 download rate |
-| `d_min` | 가장 느린 peer download rate, `min(d_1, ..., d_N)` |
-| `distribution time` | 모든 `N` peers가 file copy를 얻는 데 걸리는 시간 |
+| $F$ | 배포할 file size, bits |
+| $N$ | file copy를 원하는 peers 수 |
+| $u_s$ | server upload rate |
+| $u_i$ | peer `i`의 upload rate |
+| $d_i$ | peer `i`의 download rate |
+| $d_{min}$ | 가장 느린 peer download rate, $\min(d_1, \ldots, d_N)$ |
+| `distribution time` | 모든 $N$ peers가 file copy를 얻는 데 걸리는 시간 |
 
 ![An illustrative file distribution problem](@/assets/images/cs-computer-network-050-figure-2-22-page-148.png)
 *Figure 2.22 · PDF p. 148 · server upload rate와 peer upload/download rates로 본 file distribution 모델*
 
 #### client-server distribution time
 
-client-server architecture에서는 peers가 distribution을 돕지 않는다. server는 `N`개 peers에게 file을 하나씩 보내야 하므로 총 `NF` bits를 upload해야 한다. 따라서 server upload만 봐도 최소 시간은 `NF/u_s` 이상이다. 또한 가장 느린 peer는 `F/d_min`보다 빨리 file 전체를 받을 수 없다.
+client-server architecture에서는 peers가 distribution을 돕지 않는다. server는 $N$개 peers에게 file을 하나씩 보내야 하므로 총 $NF$ bits를 upload해야 한다. 따라서 server upload만 봐도 최소 시간은 $NF/u_s$ 이상이다. 또한 가장 느린 peer는 $F/d_{min}$보다 빨리 file 전체를 받을 수 없다.
 
-```text
-D_cs = max(NF/u_s, F/d_min)        (2.1)
-```
+$$
+D_{cs} = \max\left(\frac{NF}{u_s}, \frac{F}{d_{min}}\right) \tag{2.1}
+$$
 
-`N`이 커지면 `NF/u_s`가 지배적이므로 distribution time은 peers 수에 선형으로 증가한다. 사용자가 천 배 늘면, 같은 server capacity에서는 배포 시간도 거의 천 배 늘 수 있다.
+$N$이 커지면 $NF/u_s$가 지배적이므로 distribution time은 peers 수에 선형으로 증가한다. 사용자가 천 배 늘면, 같은 server capacity에서는 배포 시간도 거의 천 배 늘 수 있다.
 
 #### P2P distribution time과 self-scalability
 
-P2P architecture에서는 server가 file의 각 bit를 적어도 한 번은 peer community로 넣어야 하므로 `F/u_s`가 하한이다. 가장 느린 peer download 제약은 여전히 `F/d_min`이다. 여기에 system 전체 upload capacity가 중요해진다.
+P2P architecture에서는 server가 file의 각 bit를 적어도 한 번은 peer community로 넣어야 하므로 $F/u_s$가 하한이다. 가장 느린 peer download 제약은 여전히 $F/d_{min}$이다. 여기에 system 전체 upload capacity가 중요해진다.
 
-```text
-u_total = u_s + u_1 + ... + u_N
-D_P2P = max(F/u_s, F/d_min, NF/(u_s + Σu_i))        (2.3)
-```
+$$
+\begin{aligned}
+u_{total} &= u_s + u_1 + \cdots + u_N \\
+D_{P2P} &= \max\left(\frac{F}{u_s}, \frac{F}{d_{min}}, \frac{NF}{u_s + \sum_{i=1}^{N} u_i}\right) \tag{2.3}
+\end{aligned}
+$$
 
 P2P의 핵심은 peers가 늘수록 demand도 늘지만 upload capacity도 함께 늘어난다는 점이다. 이것이 self-scalability다. peers는 file을 받는 소비자이면서 동시에 다른 peers에게 chunks를 공급하는 upload resources가 된다.
 
@@ -525,10 +527,9 @@ video는 일정 rate로 표시되는 images sequence다. digital image는 pixels
 
 networking 관점에서 가장 중요한 성능 지표는 average end-to-end throughput이다. continuous playout을 위해 network가 streaming application에 제공하는 average throughput은 compressed video bit rate 이상이어야 한다.
 
-```text
-continuous playout condition:
-average end-to-end throughput >= encoded video bit rate
-```
+$$
+\text{average end-to-end throughput} \ge \text{encoded video bit rate}
+$$
 
 같은 video를 여러 bit rates로 encoding해 둘 수 있다. 예를 들어 300 kbps, 1 Mbps, 3 Mbps versions를 만들면, low-speed mobile user는 낮은 rate version을, fiber user는 높은 rate version을 받을 수 있다. 이것이 뒤의 DASH adaptive streaming의 기반이다.
 
@@ -770,7 +771,7 @@ end-of-chapter review는 암기보다 구분 능력을 묻는다.
 
 Problems는 실제 protocol traces와 performance 계산을 섞는다. HTTP 문제들은 GET/response raw message에서 URL, HTTP version, connection persistence, `Last-Modified`, `Content-Length`, status code를 찾아내게 한다. timing 문제들은 DNS lookup RTT와 HTTP connection RTT를 합산하고, non-persistent/persistent/parallel connections의 차이를 계산하게 한다.
 
-Web caching 문제는 average object size, request rate, access link rate, miss rate를 이용해 access delay와 total response time을 비교한다. P2P 문제는 `D_cs = max(NF/u_s, F/d_min)`와 `D_P2P = max(F/u_s, F/d_min, NF/(u_s + Σu_i))`를 실제 `N`, `F`, upload/download rates에 적용하게 한다. DASH 문제는 audio/video versions를 하나로 muxing할 때와 separate streams로 둘 때 필요한 files/URLs 수를 비교한다.
+Web caching 문제는 average object size, request rate, access link rate, miss rate를 이용해 access delay와 total response time을 비교한다. P2P 문제는 $D_{cs} = \max(NF/u_s, F/d_{min})$와 $D_{P2P} = \max(F/u_s, F/d_{min}, NF/(u_s + \sum_i u_i))$를 실제 $N$, $F$, upload/download rates에 적용하게 한다. DASH 문제는 audio/video versions를 하나로 muxing할 때와 separate streams로 둘 때 필요한 files/URLs 수를 비교한다.
 
 #### Socket Programming Assignments의 학습 목표
 

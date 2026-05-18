@@ -57,7 +57,7 @@ sending side에서 controller는 higher layers가 host memory에 만든 datagram
 
 ### 6.2 Error-Detection and -Correction Techniques
 
-link-layer frame은 physical link를 통과하는 동안 signal attenuation, electromagnetic noise 등으로 bit flips가 생길 수 있다. `error detection and correction`의 목표는 receiving node가 받은 `D'`와 `EDC'`를 보고 original data `D`가 손상되었는지 판단하고, 가능한 경우 손상 위치를 찾아 수정하는 것이다.
+link-layer frame은 physical link를 통과하는 동안 signal attenuation, electromagnetic noise 등으로 bit flips가 생길 수 있다. `error detection and correction`의 목표는 receiving node가 받은 `D'`와 `EDC'`를 보고 original data $D$가 손상되었는지 판단하고, 가능한 경우 손상 위치를 찾아 수정하는 것이다.
 
 ![Figure 6.3](@/assets/images/cs-computer-network-174-figure-6-3-page-466.png)
 *Figure 6.3 · PDF p. 466 · sender가 data D에 EDC bits를 붙이고 receiver가 D'/EDC'로 오류를 검사하는 구조*
@@ -92,29 +92,33 @@ checksum은 overhead가 작고 software implementation이 쉽다. TCP/UDP checks
 
 `CRC (cyclic redundancy check)`는 bit string을 polynomial처럼 보고 modulo-2 arithmetic으로 나눗셈을 수행하는 error-detection 기법이다. 그래서 CRC codes는 `polynomial codes`라고도 한다.
 
-sender와 receiver는 먼저 `r + 1` bit generator `G`에 합의한다. sender는 data `D` 뒤에 `r` bits인 `R`을 붙여 `D * 2^r XOR R`이 `G`로 나누어떨어지게 만든다. receiver는 받은 `d + r` bits를 같은 `G`로 나누고, remainder가 nonzero이면 error를 detect한다.
+sender와 receiver는 먼저 $r + 1$ bit generator $G$에 합의한다. sender는 data $D$ 뒤에 $r$ bits인 $R$을 붙여 $D \cdot 2^r \oplus R$이 `G`로 나누어떨어지게 만든다. receiver는 받은 $d + r$ bits를 같은 $G$로 나누고, remainder가 nonzero이면 error를 detect한다.
 
 ![Figure 6.6](@/assets/images/cs-computer-network-177-figure-6-6-page-470.png)
 *Figure 6.6 · PDF p. 470 · data bits D 뒤에 CRC bits R을 붙여 generator G로 나누어떨어지게 만드는 구조*
 
 CRC에서 addition/subtraction은 carry/borrow 없는 modulo-2 arithmetic이고, bitwise `XOR`와 같다.
 
-```text
-1011 XOR 0101 = 1110
-1001 XOR 1101 = 0100
-```
+$$
+\begin{aligned}
+1011 \oplus 0101 &= 1110 \\
+1001 \oplus 1101 &= 0100
+\end{aligned}
+$$
 
-sender가 `R`을 구하는 식은 다음처럼 요약된다.
+sender가 $R$을 구하는 식은 다음처럼 요약된다.
 
-```text
-R = remainder( D * 2^r / G )
-transmitted bits = D * 2^r XOR R
-```
+$$
+\begin{aligned}
+R &= \operatorname{remainder}\left(\frac{D \cdot 2^r}{G}\right) \\
+\text{transmitted bits} &= D \cdot 2^r \oplus R
+\end{aligned}
+$$
 
 ![Figure 6.7](@/assets/images/cs-computer-network-178-figure-6-7-page-471.png)
 *Figure 6.7 · PDF p. 471 · D=101110, G=1001일 때 CRC remainder R을 계산하는 예*
 
-CRC 표준 generator는 8-, 12-, 16-, 32-bit 등으로 정의되어 있고, 많은 IEEE link-level protocols는 `CRC-32`를 사용한다. r-bit CRC는 모든 burst errors of fewer than `r + 1` bits를 detect할 수 있고, 조건이 맞으면 더 긴 burst error도 높은 확률로 detect한다. 또한 odd number of bit errors도 detect할 수 있다. 이 때문에 CRC는 adapter hardware에서 수행되는 link-layer error detection에 잘 맞는다.
+CRC 표준 generator는 8-, 12-, 16-, 32-bit 등으로 정의되어 있고, 많은 IEEE link-level protocols는 `CRC-32`를 사용한다. r-bit CRC는 모든 burst errors of fewer than $r + 1$ bits를 detect할 수 있고, 조건이 맞으면 더 긴 burst error도 높은 확률로 detect한다. 또한 odd number of bit errors도 detect할 수 있다. 이 때문에 CRC는 adapter hardware에서 수행되는 link-layer error detection에 잘 맞는다.
 
 ### 6.3 Multiple Access Links and Protocols
 
@@ -129,8 +133,8 @@ network links는 크게 `point-to-point link`와 `broadcast link`로 나눌 수 
 
 | 바람직한 성질 | 의미 |
 |---|---|
-| single active node efficiency | 한 node만 보낼 data가 있으면 그 node가 full channel rate `R bps`를 사용 |
-| fair sharing | `M` nodes가 active이면 각 node가 평균적으로 `R/M bps` 정도를 얻음 |
+| single active node efficiency | 한 node만 보낼 data가 있으면 그 node가 full channel rate $R$ bps를 사용 |
+| fair sharing | $M$ nodes가 active이면 각 node가 평균적으로 $R/M$ bps 정도를 얻음 |
 | decentralized | single point of failure가 되는 master node가 없음 |
 | simple implementation | adapters에 싸고 단순하게 구현 가능 |
 
@@ -149,22 +153,22 @@ multiple access protocols는 거의 모두 세 부류로 나눌 수 있다.
 ![Figure 6.9](@/assets/images/cs-computer-network-180-figure-6-9-page-475.png)
 *Figure 6.9 · PDF p. 475 · 네 nodes가 TDM slots 또는 FDM frequency bands를 나누어 쓰는 예*
 
-TDM/FDM의 장점은 collisions가 없고 공정하다는 점이다. N nodes가 있다면 각 node는 dedicated rate `R/N bps`를 얻는다. 하지만 큰 단점도 있다. 어떤 node가 유일하게 active해도 `R/N bps`보다 더 쓸 수 없고, 자기 turn 또는 frequency allocation에 묶인다. bursty traffic이 많은 LAN에서는 이 낭비가 크다.
+TDM/FDM의 장점은 collisions가 없고 공정하다는 점이다. $N$ nodes가 있다면 각 node는 dedicated rate $R/N$ bps를 얻는다. 하지만 큰 단점도 있다. 어떤 node가 유일하게 active해도 $R/N$ bps보다 더 쓸 수 없고, 자기 turn 또는 frequency allocation에 묶인다. bursty traffic이 많은 LAN에서는 이 낭비가 크다.
 
 `CDMA (code division multiple access)`는 time slot이나 frequency 대신 node마다 다른 code를 할당한다. code가 잘 선택되면 여러 nodes가 동시에 전송해도 receiver가 sender의 code를 알고 있으면 해당 sender의 data bits를 복원할 수 있다. CDMA는 anti-jamming 성질 때문에 군사용으로도 쓰였고 cellular telephony에도 널리 쓰인다. 다만 기술적 세부는 wireless channel과 강하게 연결되므로 Chapter 7에서 다룬다.
 
 #### 6.3.2 Random Access Protocols
 
-`random access protocol`에서는 transmitting node가 channel의 full rate `R bps`로 전송한다. collision이 발생하면 collision에 참여한 nodes가 frame을 성공할 때까지 재전송하지만, 즉시 재전송하지 않고 independent random delay를 기다린다. randomization의 목적은 충돌한 nodes가 다시 같은 시점에 재전송해 또 충돌하는 일을 줄이는 것이다.
+`random access protocol`에서는 transmitting node가 channel의 full rate $R$ bps로 전송한다. collision이 발생하면 collision에 참여한 nodes가 frame을 성공할 때까지 재전송하지만, 즉시 재전송하지 않고 independent random delay를 기다린다. randomization의 목적은 충돌한 nodes가 다시 같은 시점에 재전송해 또 충돌하는 일을 줄이는 것이다.
 
-`slotted ALOHA`는 time을 frame transmission time과 같은 slots로 나누고, nodes가 slot 시작점에서만 frame을 보낼 수 있다고 가정한다. collision이 없으면 성공이고, collision이 있으면 subsequent slots에서 probability `p`로 재전송한다. decentralized이고 단순하며, active node가 하나뿐이면 full rate를 쓸 수 있다. 하지만 multiple active nodes가 있으면 collision slots와 empty slots가 생긴다.
+`slotted ALOHA`는 time을 frame transmission time과 같은 slots로 나누고, nodes가 slot 시작점에서만 frame을 보낼 수 있다고 가정한다. collision이 없으면 성공이고, collision이 있으면 subsequent slots에서 probability $p$로 재전송한다. decentralized이고 단순하며, active node가 하나뿐이면 full rate를 쓸 수 있다. 하지만 multiple active nodes가 있으면 collision slots와 empty slots가 생긴다.
 
 ![Figure 6.10](@/assets/images/cs-computer-network-181-figure-6-10-page-478.png)
 *Figure 6.10 · PDF p. 478 · slotted ALOHA에서 collision, empty, successful slots가 섞이는 예*
 
-slotted ALOHA의 efficiency는 long-run fraction of successful slots다. N active nodes가 각 slot에서 probability `p`로 전송한다고 하면, 어떤 slot이 successful일 확률은 `Np(1-p)^(N-1)`이다. N이 매우 클 때 최대 efficiency는 `1/e ≈ 0.37`이다. 즉 channel 자체는 R bps라도 장기적으로 useful throughput은 최대 약 `0.37R`에 그친다.
+slotted ALOHA의 efficiency는 long-run fraction of successful slots다. N active nodes가 각 slot에서 probability $p$로 전송한다고 하면, 어떤 slot이 successful일 확률은 $Np(1-p)^{N-1}$이다. N이 매우 클 때 최대 efficiency는 $1/e \approx 0.37$이다. 즉 channel 자체는 R bps라도 장기적으로 useful throughput은 최대 약 $0.37R$에 그친다.
 
-`pure ALOHA`는 slot synchronization이 없다. frame이 도착하면 node가 즉시 전송한다. 어떤 frame이 time `t0`에 시작되면, 다른 node가 `[t0-1, t0]` 또는 `[t0, t0+1]`에 전송을 시작해도 overlap collision이 발생한다. 이 때문에 vulnerability interval이 slotted ALOHA의 두 배가 되고, 최대 efficiency는 `1/(2e)`로 slotted ALOHA의 절반이다.
+`pure ALOHA`는 slot synchronization이 없다. frame이 도착하면 node가 즉시 전송한다. 어떤 frame이 time $t_0$에 시작되면, 다른 node가 $[t_0 - 1, t_0]$ 또는 $[t_0, t_0 + 1]$에 전송을 시작해도 overlap collision이 발생한다. 이 때문에 vulnerability interval이 slotted ALOHA의 두 배가 되고, 최대 efficiency는 $1/(2e)$로 slotted ALOHA의 절반이다.
 
 ![Figure 6.11](@/assets/images/cs-computer-network-182-figure-6-11-page-480.png)
 *Figure 6.11 · PDF p. 480 · pure ALOHA에서 앞뒤 한 frame time 안의 전송 시작이 collision을 만드는 구조*
@@ -189,13 +193,13 @@ CSMA/CD adapter 동작은 다음처럼 요약된다.
 5. random backoff 후 다시 carrier sensing부터 반복한다.
 ```
 
-collision 후 fixed delay를 쓰면 충돌한 nodes가 계속 같은 시간에 재시도할 수 있다. 그래서 Ethernet과 DOCSIS는 `binary exponential backoff`를 사용한다. frame이 이미 `n`번 collision을 겪었다면 node는 `K`를 `{0, 1, ..., 2^n - 1}`에서 random하게 고른다. Ethernet에서는 실제 wait time이 `K * 512 bit times`이고, n은 최대 10으로 capped된다. collision이 많을수록 random interval이 지수적으로 커져 large contention에 적응한다.
+collision 후 fixed delay를 쓰면 충돌한 nodes가 계속 같은 시간에 재시도할 수 있다. 그래서 Ethernet과 DOCSIS는 `binary exponential backoff`를 사용한다. frame이 이미 `n`번 collision을 겪었다면 node는 $K$를 $\{0, 1, \ldots, 2^n - 1\}$에서 random하게 고른다. Ethernet에서는 실제 wait time이 $K \cdot 512$ bit times이고, $n$은 최대 10으로 capped된다. collision이 많을수록 random interval이 지수적으로 커져 large contention에 적응한다.
 
 CSMA/CD efficiency는 propagation delay `dprop`와 maximum frame transmission time `dtrans`의 비율에 좌우된다.
 
-```text
-Efficiency ≈ 1 / (1 + 5 dprop / dtrans)
-```
+$$
+Efficiency \approx \frac{1}{1 + 5d_{prop}/d_{trans}}
+$$
 
 `dprop`가 0에 가까울수록 collision을 거의 즉시 감지해 efficiency가 1에 가까워진다. `dtrans`가 매우 크면 한 번 channel을 잡은 frame이 오래 useful transmission을 하므로 역시 efficiency가 높아진다.
 
@@ -325,7 +329,7 @@ Frame의 destination MAC address가 `DD-DD-DD-DD-DD-DD`이고 frame이 interface
 | --- | --- | --- |
 | entry 없음 | `x`를 제외한 모든 interface로 flood/broadcast | 목적지 위치를 모르므로 모든 segment에 뿌린다. |
 | entry가 interface `x`를 가리킴 | frame discard/filtering | 목적지가 frame이 온 같은 segment에 있으므로 더 보낼 필요가 없다. |
-| entry가 interface `y != x`를 가리킴 | interface `y`의 output buffer로 forwarding | 목적지가 다른 segment에 있으므로 해당 방향으로만 보낸다. |
+| entry가 interface $y \ne x$를 가리킴 | interface `y`의 output buffer로 forwarding | 목적지가 다른 segment에 있으므로 해당 방향으로만 보낸다. |
 
 Switch는 destination MAC address를 기준으로 동작한다는 점에서 router의 forwarding과 닮았지만, 전통적인 switch table은 routing algorithm으로 계산되는 router forwarding table과 다르게 만들어진다. 또한 switch는 layer-2 destination MAC address를 보고 forward하고, router는 layer-3 destination IP address를 보고 forward한다.
 
@@ -438,7 +442,7 @@ Load balancer는 NAT-like function도 수행한다. 외부 public IP address를 
 
 작은 data center라면 border router, load balancer, 몇십 racks를 하나의 Ethernet switch로 묶는 정도로 충분할 수 있다. 하지만 수만에서 수십만 hosts 규모에서는 hierarchy가 필요하다. Figure 6.30처럼 border router 아래 access routers, tier-1 switches, tier-2 switches, TOR switches가 계층을 이루고, links는 보통 Ethernet 기반 copper/fiber를 섞어 쓴다.
 
-Hierarchy는 scale 문제를 풀지만 host-to-host capacity가 제한될 수 있다. 예를 들어 각 host-to-TOR link가 10 Gbps이고 switch 사이 link가 100 Gbps라고 하자. 같은 rack의 두 hosts는 full 10 Gbps로 통신할 수 있지만, 서로 다른 racks 사이의 많은 flows가 상위 link 하나를 공유하면 각 flow rate가 크게 줄어든다. 책의 예처럼 40 simultaneous flows가 100 Gbps A-to-B link를 공유하면 각 flow는 단순 fair sharing에서 약 `100 Gbps / 40 = 2.5 Gbps`만 얻는다. 이는 host NIC rate 10 Gbps보다 훨씬 낮다.
+Hierarchy는 scale 문제를 풀지만 host-to-host capacity가 제한될 수 있다. 예를 들어 각 host-to-TOR link가 10 Gbps이고 switch 사이 link가 100 Gbps라고 하자. 같은 rack의 두 hosts는 full 10 Gbps로 통신할 수 있지만, 서로 다른 racks 사이의 많은 flows가 상위 link 하나를 공유하면 각 flow rate가 크게 줄어든다. 책의 예처럼 40 simultaneous flows가 100 Gbps A-to-B link를 공유하면 각 flow는 단순 fair sharing에서 약 $100\text{ Gbps}/40 = 2.5\text{ Gbps}$만 얻는다. 이는 host NIC rate 10 Gbps보다 훨씬 낮다.
 
 해결 방향은 세 가지다. 더 빠른 switches/routers를 배치할 수 있지만 비용이 크다. 관련 services와 data를 같은 rack 또는 가까운 rack에 배치해 inter-rack traffic을 줄일 수 있지만, cloud workloads는 placement flexibility가 중요해서 한계가 있다. 가장 중요한 방향은 TOR-tier2, tier2-tier1 사이 연결성을 높여 multiple link-disjoint and switch-disjoint paths를 제공하는 것이다.
 

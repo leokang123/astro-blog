@@ -122,14 +122,14 @@ IPv4 multicast address는 `224.0.0.0`부터 `239.255.255.255`까지이며, high-
 ![Figure 9-2](@/assets/images/cs-tcp-ip-illustrated-190-figure-9-2-page-482.png)
 *Figure 9-2 · PDF p. 482 · IPv4 multicast address의 lower 23 bits가 01:00:5e prefix 뒤 MAC suffix로 복사된다.*
 
-이 mapping은 nonunique하다. IPv4 multicast group은 2^28개인데 MAC suffix 공간은 2^23개뿐이므로, `2^28 / 2^23 = 32`개의 IPv4 multicast group address가 같은 Ethernet multicast MAC address로 접힌다. 예를 들어 `224.128.64.32`와 `224.0.64.32`는 둘 다 `01:00:5e:00:40:20`으로 mapping될 수 있다. 따라서 NIC가 MAC address 기준으로 filtering을 잘해도 IP layer에서 추가 filtering이 필요하다.
+이 mapping은 nonunique하다. IPv4 multicast group은 $2^{28}$개인데 MAC suffix 공간은 $2^{23}$개뿐이므로, $2^{28} / 2^{23} = 32$개의 IPv4 multicast group address가 같은 Ethernet multicast MAC address로 접힌다. 예를 들어 `224.128.64.32`와 `224.0.64.32`는 둘 다 `01:00:5e:00:40:20`으로 mapping될 수 있다. 따라서 NIC가 MAC address 기준으로 filtering을 잘해도 IP layer에서 추가 filtering이 필요하다.
 
 IPv6 multicast MAC mapping은 prefix `33:33` 뒤에 IPv6 multicast address의 low-order 32 bits를 붙인다. IPv6 multicast address는 `ff`로 시작하고, 이어지는 8 bits는 flags와 scope에 사용된다. 나머지 112 bits가 multicast group 표현 공간인데, MAC mapping에는 lower 32 bits만 쓰인다.
 
 ![Figure 9-3](@/assets/images/cs-tcp-ip-illustrated-191-figure-9-3-page-483.png)
 *Figure 9-3 · PDF p. 483 · IPv6 multicast address는 low-order 32 bits만 33:33 prefix 뒤 MAC suffix로 복사된다.*
 
-IPv6에서도 mapping은 nonunique하다. 이론적으로 `2^112 / 2^32 = 2^80`개의 IPv6 multicast group이 같은 MAC address로 mapping될 수 있다. 이 숫자는 매우 크지만, 실무적으로 기억할 점은 “multicast MAC address만으로는 IP multicast group을 완전히 식별할 수 없다”는 것이다.
+IPv6에서도 mapping은 nonunique하다. 이론적으로 $2^{112} / 2^{32} = 2^{80}$개의 IPv6 multicast group이 같은 MAC address로 mapping될 수 있다. 이 숫자는 매우 크지만, 실무적으로 기억할 점은 “multicast MAC address만으로는 IP multicast group을 완전히 식별할 수 없다”는 것이다.
 
 ### 9.3.2 Examples
 
@@ -325,12 +325,12 @@ IGMP/MLD는 soft-state protocol이므로 timer와 counter가 사실상 protocol�
 
 | Name | 기본값/식 | 의미 |
 | --- | --- | --- |
-| `Robustness Variable (RV)` / `QRV` | 2, 0 금지, 1 비권장 | state-change report/query 재전송 여유를 정함. 최대 `RV - 1`회 재전송 |
+| `Robustness Variable (RV)` / `QRV` | 2, 0 금지, 1 비권장 | state-change report/query 재전송 여유를 정함. 최대 $RV - 1$회 재전송 |
 | `Query Interval (QI)` | 125s | current querier가 general query를 보내는 주기 |
 | `Query Response Interval (QRI)` | 10s | report 생성까지 허용되는 최대 응답 시간, Max Response field로 encoding |
-| `Group Membership Interval (GMI)` / `Multicast Address Listening Interval (MALI)` | `RV * QI + QRI` | report가 보이지 않을 때 group/source 관심이 없다고 선언하기까지의 시간 |
-| `Other Querier Present Interval/Timeout` | `RV * QI + 0.5 * QRI` | non-querier가 active querier 부재를 판단하는 시간 |
-| `Startup Query Interval` | `0.25 * QI` | querier 시작 시 빠르게 상태를 수집하는 general query 간격 |
+| `Group Membership Interval (GMI)` / `Multicast Address Listening Interval (MALI)` | $RV \cdot QI + QRI$ | report가 보이지 않을 때 group/source 관심이 없다고 선언하기까지의 시간 |
+| `Other Querier Present Interval/Timeout` | $RV \cdot QI + 0.5 \cdot QRI$ | non-querier가 active querier 부재를 판단하는 시간 |
+| `Startup Query Interval` | $0.25 \cdot QI$ | querier 시작 시 빠르게 상태를 수집하는 general query 간격 |
 | `Startup Query Count` | `RV` | startup general query 횟수 |
 | `Last Member Query Interval (LMQI)` / `Last Listener Query Interval (LLQI)` | 1s | specific query에 대한 응답 대기 시간, leave latency에 직접 관여 |
 | `Last Member Query Count` / `Last Listener Query Count` | `RV` | 응답 없이 보낼 specific query 횟수 |

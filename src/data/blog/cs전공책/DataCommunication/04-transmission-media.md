@@ -62,7 +62,7 @@ optical fiber의 강점은 네트워크 설계에서 매우 결정적이다. 첫
 
 Figure 4.3의 핵심은 매체별 attenuation 곡선이 다르다는 점이다. twisted pair는 frequency 증가에 따라 손실이 빠르게 증가한다. coaxial cable은 더 높은 주파수까지 견디지만 여전히 거리와 주파수의 영향을 받는다. optical fiber는 특정 optical window에서 매우 낮은 attenuation을 보이므로 long-haul trunk, metropolitan trunk, rural exchange trunk, subscriber loop, high-speed LAN에 적합하다.
 
-Optical fiber transmission은 total internal reflection에 기반한다. 빛은 core 내부에서 반사되며 진행하고, fiber는 약 \(10^{14}\)~\(10^{15}\) Hz 범위의 infrared/visible light에 대한 waveguide처럼 동작한다. 전송 mode는 크게 step-index multimode, single mode, graded-index multimode로 구분된다.
+Optical fiber transmission은 total internal reflection에 기반한다. 빛은 core 내부에서 반사되며 진행하고, fiber는 약 $10^{14}$~$10^{15}$ Hz 범위의 infrared/visible light에 대한 waveguide처럼 동작한다. 전송 mode는 크게 step-index multimode, single mode, graded-index multimode로 구분된다.
 
 ![Figure 4.4](@/assets/images/cs-data-communication-optical-fiber-modes-figure-4-4.png)
 *Figure 4.4 · PDF p. 134 · optical fiber의 step-index multimode, single mode, graded-index multimode 전송 방식*
@@ -71,7 +71,7 @@ step-index multimode에서는 여러 광선이 서로 다른 각도와 경로 �
 
 광원으로는 LED와 ILD(Injection Laser Diode)가 쓰인다. LED는 저렴하고 온도 변화에 강하며 수명이 길지만 data rate와 distance가 제한된다. ILD는 더 효율적이고 higher data rate를 제공하지만 일반적으로 더 정밀한 제어와 비용이 필요하다. 대표 optical transmission window는 820-900 nm, 1280-1350 nm, 1528-1561 nm(C band), 1561-1620 nm(L band)이며, WDM(Wavelength Division Multiplexing)은 특히 C band와 L band에서 여러 wavelength를 동시에 실어 fiber capacity를 크게 높인다.
 
-fiber에서 주의할 점은 wavelength 표기가 보통 vacuum wavelength 기준이라는 것이다. 신호의 frequency는 매체가 바뀌어도 유지되지만, fiber 내부에서는 propagation velocity가 낮아지므로 실제 wavelength는 짧아진다. 예를 들어 1550 nm vacuum wavelength는 약 193.4 THz에 해당하고, fiber 내부 속도가 약 \(2.04 \times 10^8\) m/s라면 fiber 내부 wavelength는 약 1055 nm가 된다.
+fiber에서 주의할 점은 wavelength 표기가 보통 vacuum wavelength 기준이라는 것이다. 신호의 frequency는 매체가 바뀌어도 유지되지만, fiber 내부에서는 propagation velocity가 낮아지므로 실제 wavelength는 짧아진다. 예를 들어 1550 nm vacuum wavelength는 약 193.4 THz에 해당하고, fiber 내부 속도가 약 $2.04 \times 10^8$ m/s라면 fiber 내부 wavelength는 약 1055 nm가 된다.
 
 ## 4.2 Wireless Transmission
 
@@ -81,7 +81,7 @@ Wireless transmission에서는 물리적 선로가 아니라 antenna를 통해 e
 |---|---|---|
 | 약 1-40 GHz | microwave frequencies | highly directional beam이 가능해 point-to-point link와 satellite communication에 적합 |
 | 약 30 MHz-1 GHz | radio range | omnidirectional application에 적합, FM radio와 VHF/UHF television 포함 |
-| 약 \(3 \times 10^{11}\)-\(2 \times 10^{14}\) Hz | infrared | 한 방(room) 같은 confined area의 local point-to-point/multipoint application에 적합 |
+| 약 $3 \times 10^{11}$-$2 \times 10^{14}$ Hz | infrared | 한 방(room) 같은 confined area의 local point-to-point/multipoint application에 적합 |
 
 ### Antennas
 
@@ -96,13 +96,13 @@ radiation pattern은 antenna가 공간 방향별로 얼마나 잘 방사하는�
 
 Parabolic reflective antenna는 terrestrial microwave와 satellite application에서 중요한 antenna다. parabolic surface의 focus에 전자기파 source를 두면 반사파가 축과 평행한 beam으로 나간다. 수신할 때는 축과 평행하게 들어온 wave가 focus에 모인다. 이 구조는 좁고 강한 directional beam을 만들며, antenna diameter가 커질수록 beam이 더 좁아진다.
 
-Antenna gain은 특정 방향의 power output을 완전한 omnidirectional antenna, 즉 isotropic antenna가 같은 방향으로 내는 power와 비교한 값이다. gain이 크다는 말은 더 많은 에너지를 만들어낸다는 뜻이 아니라, 다른 방향으로 갈 power를 줄이고 특정 방향으로 집중시킨다는 뜻이다. effective area \(A_e\)와 gain \(G\)의 관계는 다음과 같다.
+Antenna gain은 특정 방향의 power output을 완전한 omnidirectional antenna, 즉 isotropic antenna가 같은 방향으로 내는 power와 비교한 값이다. gain이 크다는 말은 더 많은 에너지를 만들어낸다는 뜻이 아니라, 다른 방향으로 갈 power를 줄이고 특정 방향으로 집중시킨다는 뜻이다. effective area $A_e$와 gain $G$의 관계는 다음과 같다.
 
-\[
+$$
 G = \frac{4\pi A_e}{\lambda^2} = \frac{4\pi f^2 A_e}{c^2}
-\]
+$$
 
-여기서 \(f\)는 carrier frequency, \(\lambda\)는 carrier wavelength, \(c\)는 speed of light다. frequency가 높아져 wavelength가 짧아지면 같은 effective area에서도 antenna gain이 커질 수 있다. 이 때문에 microwave처럼 높은 frequency에서는 상대적으로 작은 antenna로도 높은 directionality를 얻을 수 있다.
+여기서 $f$는 carrier frequency, $\lambda$는 carrier wavelength, $c$는 speed of light다. frequency가 높아져 wavelength가 짧아지면 같은 effective area에서도 antenna gain이 커질 수 있다. 이 때문에 microwave처럼 높은 frequency에서는 상대적으로 작은 antenna로도 높은 directionality를 얻을 수 있다.
 
 ### Terrestrial Microwave
 
@@ -112,9 +112,9 @@ Terrestrial microwave는 보통 parabolic dish antenna를 지상 높은 곳에 �
 
 microwave transmission의 일반 범위는 1-40 GHz다. frequency가 높을수록 가능한 bandwidth와 data rate가 커지지만 attenuation도 커진다. microwave/free-space loss는 다음 식으로 표현된다.
 
-\[
+$$
 L = 10 \log \left(\frac{4 \pi d}{\lambda}\right)^2 \text{ dB}
-\]
+$$
 
 손실은 distance의 제곱에 비례하고 wavelength가 짧을수록 커진다. guided media의 손실이 거리와 함께 지수적으로 누적되는 것과 달리 microwave에서는 repeater/amplifier 간격을 10-100 km 정도로 둘 수 있다. 그러나 rainfall은 attenuation을 증가시키며, 특히 10 GHz 이상에서 rain attenuation이 두드러진다. 또한 microwave 사용이 많아지면 coverage area가 겹쳐 interference가 생기므로 frequency band assignment는 엄격히 규제된다.
 
@@ -183,30 +183,30 @@ Sky wave propagation은 지상 antenna가 보낸 signal이 상층 대기의 iono
 
 ### Refraction과 Radio Horizon
 
-Refraction은 electromagnetic wave가 밀도가 다른 medium으로 이동할 때 propagation velocity가 달라져 진행 방향이 휘는 현상이다. 진공에서 electromagnetic wave는 \(c \approx 3 \times 10^8\) m/s로 이동하지만, air, water, glass 같은 medium에서는 이보다 느리다. 한 medium에서 다른 medium으로 갑자기 넘어가면 경계에서 한 번 꺾이고, refractive index가 서서히 변하는 medium을 통과하면 signal이 연속적으로 조금씩 휜다.
+Refraction은 electromagnetic wave가 밀도가 다른 medium으로 이동할 때 propagation velocity가 달라져 진행 방향이 휘는 현상이다. 진공에서 electromagnetic wave는 $c \approx 3 \times 10^8$ m/s로 이동하지만, air, water, glass 같은 medium에서는 이보다 느리다. 한 medium에서 다른 medium으로 갑자기 넘어가면 경계에서 한 번 꺾이고, refractive index가 서서히 변하는 medium을 통과하면 signal이 연속적으로 조금씩 휜다.
 
 refractive index는 wavelength에 따라 달라지므로, 같은 경로라도 frequency가 다른 signal은 refraction 효과가 다를 수 있다. 대기에서는 정상 조건에서 지표면 근처의 radio wave가 더 느리게 이동해 wave가 지구 쪽으로 약간 구부러진다.
 
 ![Figure 4.9](@/assets/images/cs-data-communication-optical-radio-horizons-figure-4-9.png)
 *Figure 4.9 · PDF p. 147 · optical horizon보다 radio horizon이 더 멀리 형성되는 이유*
 
-장애물이 없을 때 antenna height \(h\)가 meter 단위라면 optical horizon까지의 거리 \(d\)는 km 단위로 다음과 같이 근사된다.
+장애물이 없을 때 antenna height $h$가 meter 단위라면 optical horizon까지의 거리 $d$는 km 단위로 다음과 같이 근사된다.
 
-\[
+$$
 d = 3.57\sqrt{h}
-\]
+$$
 
-radio horizon은 refraction 보정 계수 \(K\)를 포함해 다음처럼 표현한다.
+radio horizon은 refraction 보정 계수 $K$를 포함해 다음처럼 표현한다.
 
-\[
+$$
 d = 3.57\sqrt{Kh}
-\]
+$$
 
-실무적 rule of thumb은 \(K = 4/3\)이다. 두 antenna 높이가 각각 \(h_1, h_2\)이면 LOS maximum distance는 다음처럼 잡을 수 있다.
+실무적 rule of thumb은 $K = 4/3$이다. 두 antenna 높이가 각각 $h_1, h_2$이면 LOS maximum distance는 다음처럼 잡을 수 있다.
 
-\[
+$$
 d_{\max} = 3.57(\sqrt{Kh_1} + \sqrt{Kh_2})
-\]
+$$
 
 이 식의 설계적 의미는 분명하다. 송신 antenna만 높이는 것보다 수신 antenna도 지면에서 들어 올리면 같은 거리 조건을 훨씬 낮은 transmitter height로 만족할 수 있다. 원문 Example 4.3은 receiver antenna를 10 m만 올려도 필요한 transmitter height가 크게 줄어드는 것을 보여준다.
 
@@ -218,17 +218,17 @@ Line-of-sight transmission에서는 Chapter 3의 일반적 transmission impairme
 
 Wireless communication에서는 신호가 거리가 멀어질수록 더 넓은 면적으로 퍼진다. 따라서 다른 attenuation source가 전혀 없다고 가정해도, 고정된 면적의 receiving antenna가 잡는 signal power는 거리가 멀수록 줄어든다. 이 손실이 free space loss다. satellite communication에서는 이 free space loss가 가장 지배적인 손실 원인이다.
 
-isotropic antenna를 가정하면 radiated power \(P_t\)와 received power \(P_r\)의 비는 다음과 같다.
+isotropic antenna를 가정하면 radiated power $P_t$와 received power $P_r$의 비는 다음과 같다.
 
-\[
+$$
 \frac{P_t}{P_r} = \left(\frac{4\pi d}{\lambda}\right)^2 = \left(\frac{4\pi f d}{c}\right)^2
-\]
+$$
 
-여기서 \(d\)는 antenna 사이의 propagation distance, \(\lambda\)는 carrier wavelength, \(f\)는 carrier frequency, \(c\)는 speed of light다. dB 형태로 쓰면 손실은 거리와 주파수의 log 함수로 커진다.
+여기서 $d$는 antenna 사이의 propagation distance, $\lambda$는 carrier wavelength, $f$는 carrier frequency, $c$는 speed of light다. dB 형태로 쓰면 손실은 거리와 주파수의 log 함수로 커진다.
 
-\[
+$$
 L_{dB} = 20\log\left(\frac{4\pi d}{\lambda}\right)
-\]
+$$
 
 ![Figure 4.10](@/assets/images/cs-data-communication-free-space-loss-figure-4-10.png)
 *Figure 4.10 · PDF p. 150 · distance와 carrier frequency에 따른 free space loss 증가*

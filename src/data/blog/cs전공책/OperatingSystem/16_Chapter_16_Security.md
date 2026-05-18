@@ -237,10 +237,12 @@ Cryptography는 `keys`라는 secrets를 selective distribution하고, keys로 me
 
 간단히 쓰면 다음 관계다.
 
-```text
-plaintext message m --E_k--> ciphertext c
-ciphertext c --D_k--> plaintext message m
-```
+$$
+\begin{aligned}
+\text{plaintext message } m &\xrightarrow{E_k} \text{ciphertext } c \\
+\text{ciphertext } c &\xrightarrow{D_k} \text{plaintext message } m
+\end{aligned}
+$$
 
 핵심 property는 ciphertext `c`가 공개되어도 key `k`를 모르면 `m`을 계산할 수 없어야 한다는 것이다. Encryption algorithms는 크게 symmetric과 asymmetric으로 나뉜다.
 
@@ -408,11 +410,11 @@ Network vulnerability scans는 responding ports를 찾고, 불필요한 services
 
 False alarms는 실제 운영에서 매우 큰 문제다. Audit records가 하루에 백만 개 생성되고 실제 intrusive records가 극히 적으면, false-alarm rate가 아주 낮아 보여도 alarms 대부분이 실제 intrusion이 아닐 수 있다. 원문은 Bayes’ theorem으로 이를 설명한다.
 
-```text
-P(I|A) = P(I)P(A|I) / [P(I)P(A|I) + P(not I)P(A|not I)]
-```
+$$
+P(I \mid A) = \frac{P(I)P(A \mid I)}{P(I)P(A \mid I) + P(\text{not } I)P(A \mid \text{not } I)}
+$$
 
-여기서 `P(I|A)`는 alarm이 울렸을 때 실제 intrusion일 확률이다. 실제 intrusions가 매우 희귀하면 `P(A|not I)`가 작아도 false positives가 alarms를 압도할 수 있다. 이로 인해 administrator가 alarms를 무시하게 되는 `Christmas tree effect`가 생긴다. 따라서 usable IPS/IDS는 extremely low false-alarm rate가 필요하다.
+여기서 $P(I \mid A)$는 alarm이 울렸을 때 실제 intrusion일 확률이다. 실제 intrusions가 매우 희귀하면 $P(A \mid \text{not } I)$가 작아도 false positives가 alarms를 압도할 수 있다. 이로 인해 administrator가 alarms를 무시하게 되는 `Christmas tree effect`가 생긴다. 따라서 usable IPS/IDS는 extremely low false-alarm rate가 필요하다.
 
 #### 16.6.4 Virus Protection
 

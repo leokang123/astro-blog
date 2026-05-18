@@ -230,10 +230,12 @@ Serial schedules의 precedence graph는 cycle이 없다. Figure 17.10은 schedul
 
 판정 규칙은 간단하다.
 
-```text
-precedence graph에 cycle이 없다  => conflict serializable
-precedence graph에 cycle이 있다  => not conflict serializable
-```
+$$
+\begin{aligned}
+\text{precedence graph에 cycle이 없다} &\Rightarrow \text{conflict serializable} \\
+\text{precedence graph에 cycle이 있다} &\Rightarrow \text{not conflict serializable}
+\end{aligned}
+$$
 
 Cycle이 없으면 graph의 partial order와 일치하는 linear order를 만들 수 있고, 이를 `topological sorting`이라고 한다. 이 linear order가 해당 schedule의 `serializability order`다. Cycle detection은 `depth-first search` 같은 graph algorithm으로 수행할 수 있다.
 

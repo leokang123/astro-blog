@@ -44,41 +44,41 @@ tags:
 
 #### Time Domain Concepts
 
-전자기 신호는 시간의 함수 `s(t)`로 볼 수 있다. 이 관점에서 `analog signal`은 signal intensity가 시간에 따라 부드럽게 변하는 신호다. 끊김이나 불연속이 없다고 보는 모델이다. 반면 `digital signal`은 일정 시간 동안 constant level을 유지하다가 다른 constant level로 갑자기 바뀌는 신호다. 실제 회로에서는 전압 전이가 완전히 순간적이지 않지만, 모델상으로는 이 이상화가 유용하다.
+전자기 신호는 시간의 함수 $s(t)$로 볼 수 있다. 이 관점에서 `analog signal`은 signal intensity가 시간에 따라 부드럽게 변하는 신호다. 끊김이나 불연속이 없다고 보는 모델이다. 반면 `digital signal`은 일정 시간 동안 constant level을 유지하다가 다른 constant level로 갑자기 바뀌는 신호다. 실제 회로에서는 전압 전이가 완전히 순간적이지 않지만, 모델상으로는 이 이상화가 유용하다.
 
 ![Figure 3.1](@/assets/images/cs-data-communication-023-figure-3-1-page-87.png)
 *Figure 3.1 · PDF p. 87 · analog waveform과 digital waveform의 시간 영역 차이*
 
-가장 단순한 신호는 같은 패턴이 반복되는 `periodic signal`이다. Periodic signal은 어떤 period `T`에 대해 다음 조건을 만족한다.
+가장 단순한 신호는 같은 패턴이 반복되는 `periodic signal`이다. Periodic signal은 어떤 period $T$에 대해 다음 조건을 만족한다.
 
-```math
+$$
 s(t + T) = s(t)
-```
+$$
 
-조건을 만족하는 가장 작은 `T`가 period이고, 그렇지 않은 신호는 `aperiodic signal`이다. `Sine wave`는 가장 기본적인 periodic signal이며, 일반형은 다음과 같다.
+조건을 만족하는 가장 작은 $T$가 period이고, 그렇지 않은 신호는 `aperiodic signal`이다. `Sine wave`는 가장 기본적인 periodic signal이며, 일반형은 다음과 같다.
 
-```math
+$$
 s(t) = A \sin(2\pi f t + \phi)
-```
+$$
 
-여기서 `A`는 peak amplitude, `f`는 frequency, `phi`는 phase다. `frequency`는 초당 반복 횟수이며 Hertz(Hz)로 측정한다. Period와 frequency는 `T = 1/f` 관계를 가진다. `Phase`는 한 period 안에서 신호가 상대적으로 어디에 위치하는지를 나타낸다.
+여기서 $A$는 peak amplitude, $f$는 frequency, $\phi$는 phase다. `frequency`는 초당 반복 횟수이며 Hertz(Hz)로 측정한다. Period와 frequency는 $T=1/f$ 관계를 가진다. `Phase`는 한 period 안에서 신호가 상대적으로 어디에 위치하는지를 나타낸다.
 
 Figure 3.3은 같은 sine wave에서 amplitude, frequency, phase를 바꾸면 신호 모양이 어떻게 달라지는지 보여준다. Amplitude는 위아래 세기, frequency는 반복 속도, phase는 시간축상 이동으로 이해하면 된다.
 
 ![Figure 3.3](@/assets/images/cs-data-communication-025-figure-3-3-page-89.png)
 *Figure 3.3 · PDF p. 89 · sine wave의 amplitude, frequency, phase 변화 효과*
 
-시간 함수로 본 sine wave와 공간 함수로 본 sine wave는 연결된다. `Wavelength(lambda)`는 한 cycle이 차지하는 거리, 즉 연속된 두 cycle의 같은 phase 지점 사이 거리다. 신호가 velocity `v`로 이동하면 다음 관계가 성립한다.
+시간 함수로 본 sine wave와 공간 함수로 본 sine wave는 연결된다. wavelength $\lambda$는 한 cycle이 차지하는 거리, 즉 연속된 두 cycle의 같은 phase 지점 사이 거리다. 신호가 velocity $v$로 이동하면 다음 관계가 성립한다.
 
-```math
+$$
 \lambda = vT,\quad \lambda f = v
-```
+$$
 
-자유공간에서 전자기파가 빛의 속도 `c approx 3 * 10^8 m/s`로 전파되는 경우 이 관계는 무선 전송과 주파수 이해의 기본이 된다.
+자유공간에서 전자기파가 빛의 속도 $c \approx 3 \times 10^8\ \text{m/s}$로 전파되는 경우 이 관계는 무선 전송과 주파수 이해의 기본이 된다.
 
 #### Frequency Domain Concepts
 
-실제 전자기 신호는 하나의 frequency만으로 이루어지지 않고 여러 frequency component의 조합이다. 원문은 `Fourier analysis` 관점을 도입한다. 충분한 수의 sinusoid를 적절한 amplitude, frequency, phase로 더하면 어떤 전자기 신호도 구성할 수 있다. 따라서 신호는 시간 영역 함수 `s(t)`로도 볼 수 있고, 각 구성 주파수의 peak amplitude를 나타내는 frequency domain function `S(f)`로도 볼 수 있다.
+실제 전자기 신호는 하나의 frequency만으로 이루어지지 않고 여러 frequency component의 조합이다. 원문은 `Fourier analysis` 관점을 도입한다. 충분한 수의 sinusoid를 적절한 amplitude, frequency, phase로 더하면 어떤 전자기 신호도 구성할 수 있다. 따라서 신호는 시간 영역 함수 $s(t)$로도 볼 수 있고, 각 구성 주파수의 peak amplitude를 나타내는 frequency domain function $S(f)$로도 볼 수 있다.
 
 Figure 3.5는 frequency domain representation의 두 예를 보여준다. 첫 예는 특정 discrete frequency component만 가진 신호이고, 두 번째 square pulse 예는 넓은 frequency range에 연속적인 component를 가진다. 실제 신호에서는 높은 frequency component의 크기가 작아지는 경우가 많지만, 수학적으로는 bandwidth가 무한할 수 있다.
 
@@ -101,11 +101,11 @@ Digital waveform은 이상적으로 보면 급격한 transition을 가지므로 
 
 Square wave를 생각하면 관계가 선명해진다. Positive pulse를 binary 0, negative pulse를 binary 1로 보면 alternating `0101...` bit stream이 된다. Square wave는 무한한 odd harmonic component를 가진다.
 
-```math
+$$
 s(t) = A {4 \over \pi}\sum_{k\ \mathrm{odd},\ k=1}^{\infty} {\sin(2\pi k f t) \over k}
-```
+$$
 
-모든 component를 보내면 이상적인 square wave에 가까워지지만, 실제로는 첫 몇 개의 component만 보내도 receiver가 0과 1을 구분할 수 있을 정도의 waveform이 된다. Figure 3.7은 fundamental frequency `f`에 `3f`, `5f`, `7f` 같은 odd multiple을 더할수록 square wave에 가까워지는 과정을 보여준다.
+모든 component를 보내면 이상적인 square wave에 가까워지지만, 실제로는 첫 몇 개의 component만 보내도 receiver가 0과 1을 구분할 수 있을 정도의 waveform이 된다. Figure 3.7은 fundamental frequency $f$에 $3f$, $5f$, $7f$ 같은 odd multiple을 더할수록 square wave에 가까워지는 과정을 보여준다.
 
 ![Figure 3.7](@/assets/images/cs-data-communication-029-figure-3-7-page-94.png)
 *Figure 3.7 · PDF p. 94 · square wave를 odd harmonic frequency component로 근사하는 과정*
@@ -114,13 +114,13 @@ s(t) = A {4 \over \pi}\sum_{k\ \mathrm{odd},\ k=1}^{\infty} {\sin(2\pi k f t) \o
 
 | Case | 조건 | 결과 |
 | --- | --- | --- |
-| I | bandwidth 4 MHz, `f = 1 MHz`, `f`, `3f`, `5f` 사용 | data rate 2 Mbps |
-| II | bandwidth 8 MHz, `f = 2 MHz`, `f`, `3f`, `5f` 사용 | data rate 4 Mbps |
-| III | bandwidth 4 MHz, `f = 2 MHz`, `f`, `3f`만으로 충분히 구분 가능 | data rate 4 Mbps |
+| I | bandwidth 4 MHz, $f=1\ \text{MHz}$, $f$, $3f$, $5f$ 사용 | data rate 2 Mbps |
+| II | bandwidth 8 MHz, $f=2\ \text{MHz}$, $f$, $3f$, $5f$ 사용 | data rate 4 Mbps |
+| III | bandwidth 4 MHz, $f=2\ \text{MHz}$, $f$, $3f$만으로 충분히 구분 가능 | data rate 4 Mbps |
 
 Case I과 II는 다른 조건이 같다면 bandwidth를 두 배로 늘리면 potential data rate도 두 배가 될 수 있음을 보여준다. Case III는 같은 bandwidth라도 receiver가 noise와 impairment 속에서 0과 1을 얼마나 잘 구분할 수 있는지에 따라 지원 가능한 data rate가 달라질 수 있음을 보여준다.
 
-Figure 3.8은 2000 bps digital bit stream이 서로 다른 bandwidth를 거친 뒤 어떻게 변형되는지 보여준다. Bandwidth가 낮을수록 pulse 모양이 더 심하게 둥글어지고, 높을수록 원래 pulse에 가까워진다. 일반적으로 digital signal의 data rate가 `W bps`이면 `2W Hz` bandwidth로 매우 좋은 representation을 얻을 수 있지만, noise가 심하지 않으면 그보다 낮은 bandwidth로도 bit pattern을 복구할 수 있다.
+Figure 3.8은 2000 bps digital bit stream이 서로 다른 bandwidth를 거친 뒤 어떻게 변형되는지 보여준다. Bandwidth가 낮을수록 pulse 모양이 더 심하게 둥글어지고, 높을수록 원래 pulse에 가까워진다. 일반적으로 digital signal의 data rate가 $W\ \text{bps}$이면 $2W\ \text{Hz}$ bandwidth로 매우 좋은 representation을 얻을 수 있지만, noise가 심하지 않으면 그보다 낮은 bandwidth로도 bit pattern을 복구할 수 있다.
 
 ![Figure 3.8](@/assets/images/cs-data-communication-030-figure-3-8-page-96.png)
 *Figure 3.8 · PDF p. 96 · bandwidth 제한이 digital signal pulse 모양에 주는 영향*
@@ -217,11 +217,11 @@ Point-to-point link에서는 transmitter signal strength가 너무 약하면 int
 ![Figure 3.15](@/assets/images/cs-data-communication-037-figure-3-15-page-107.png)
 *Figure 3.15 · PDF p. 107 · voice channel에서 equalization 전후 attenuation과 delay distortion 곡선*
 
-Figure 3.15a에서 attenuation은 1000 Hz에서의 attenuation을 기준으로 상대값을 dB로 나타낸다. 주파수 `f`에서 출력 power를 `P_f`, 1000 Hz 출력 power를 `P_1000`이라 하면 상대 attenuation은 다음처럼 표현된다.
+Figure 3.15a에서 attenuation은 1000 Hz에서의 attenuation을 기준으로 상대값을 dB로 나타낸다. 주파수 $f$에서 출력 power를 $P_f$, 1000 Hz 출력 power를 $P_{1000}$이라 하면 상대 attenuation은 다음처럼 표현된다.
 
-```math
+$$
 N_f = -10 \log_{10} {P_f \over P_{1000}}
-```
+$$
 
 Solid line은 equalization이 없을 때 upper frequency가 더 많이 attenuate되는 모습을 보여주고, dashed line은 equalization으로 response curve가 평탄해진 모습을 보여준다. 이는 voice quality를 높이고, modem을 통해 digital data를 voice line으로 보낼 때 가능한 data rate도 높여 준다.
 
@@ -244,25 +244,25 @@ Digital data에서는 delay distortion이 특히 중요하다. Bit sequence를 a
 
 Thermal noise는 bandwidth 1 Hz에서 noise power density가 다음과 같다.
 
-```math
-N_0 = kT\quad (W/Hz)
-```
+$$
+N_0 = kT\quad (\text{W/Hz})
+$$
 
-여기서 `k = 1.38 * 10^-23 J/K`는 Boltzmann constant, `T`는 kelvin 단위 absolute temperature다. Bandwidth `B` Hz에서 thermal noise power는 다음처럼 표현된다.
+여기서 $k = 1.38 \times 10^{-23}\ \text{J/K}$는 Boltzmann constant, $T$는 kelvin 단위 absolute temperature다. Bandwidth $B$ Hz에서 thermal noise power는 다음처럼 표현된다.
 
-```math
+$$
 N = kTB
-```
+$$
 
 Decibel-watts로는 다음 형태를 쓴다.
 
-```math
-N = -228.6\ dBW + 10\log T + 10\log B
-```
+$$
+N = -228.6\ \text{dBW} + 10\log T + 10\log B
+$$
 
-원문 예시에서 room temperature 290 K의 thermal noise power density는 약 `4 * 10^-21 W/Hz = -204 dBW/Hz`다. Receiver effective noise temperature가 294 K이고 bandwidth가 10 MHz이면 output thermal noise level은 약 `-133.9 dBW`가 된다.
+원문 예시에서 room temperature 290 K의 thermal noise power density는 약 $4 \times 10^{-21}\ \text{W/Hz} = -204\ \text{dBW/Hz}$다. Receiver effective noise temperature가 294 K이고 bandwidth가 10 MHz이면 output thermal noise level은 약 $-133.9\ \text{dBW}$가 된다.
 
-Intermodulation noise는 예를 들어 `f1`과 `f2`가 섞여 `f1 + f2`에 energy를 만들고, 마침 그 frequency를 쓰는 intended signal을 방해할 수 있다. 이는 transmitter, receiver, medium이 완전히 linear하지 않기 때문에 생긴다. Crosstalk는 같은 케이블 주변 pair 사이의 electrical coupling이나 microwave energy spread 때문에 생길 수 있으며, 보통 thermal noise와 비슷하거나 더 작은 크기다.
+Intermodulation noise는 예를 들어 $f_1$과 $f_2$가 섞여 $f_1+f_2$에 energy를 만들고, 마침 그 frequency를 쓰는 intended signal을 방해할 수 있다. 이는 transmitter, receiver, medium이 완전히 linear하지 않기 때문에 생긴다. Crosstalk는 같은 케이블 주변 pair 사이의 electrical coupling이나 microwave energy spread 때문에 생길 수 있으며, 보통 thermal noise와 비슷하거나 더 작은 크기다.
 
 Impulse noise는 analog data에는 비교적 작은 annoyance일 수 있다. Voice transmission에서는 짧은 click이나 crackle로 들리고 intelligibility가 유지될 수 있다. 그러나 digital communication에서는 치명적이다. 예를 들어 0.01 s duration의 sharp energy spike는 voice를 완전히 망치지는 않지만, 56 kbps digital data에서는 약 560 bits를 씻어낼 수 있다.
 
@@ -288,94 +288,94 @@ Figure 3.16은 digital receiver가 bit time마다 received waveform을 sampling�
 
 #### Nyquist Bandwidth
 
-`Nyquist bandwidth` 결과는 먼저 noise-free channel을 가정한다. 이 환경에서는 data rate의 한계가 signal bandwidth에서 온다. Nyquist의 formulation은 bandwidth `B`가 주어졌을 때 최대 signal rate가 `2B`라는 것이다. 반대로 signal transmission rate가 `2B`이면, frequency가 `B`보다 크지 않은 signal로 충분하다.
+`Nyquist bandwidth` 결과는 먼저 noise-free channel을 가정한다. 이 환경에서는 data rate의 한계가 signal bandwidth에서 온다. Nyquist의 formulation은 bandwidth $B$가 주어졌을 때 최대 signal rate가 $2B$라는 것이다. 반대로 signal transmission rate가 $2B$이면, frequency가 $B$보다 크지 않은 signal로 충분하다.
 
-Binary signaling처럼 signal element가 두 level만 가지면, bandwidth `B Hz`가 지원하는 data rate는 `2B bps`다. 하지만 signal element가 `M`개의 discrete level을 가질 수 있으면, 한 signal element가 `log2 M` bits를 담을 수 있다. 이때 Nyquist 공식은 다음과 같다.
+Binary signaling처럼 signal element가 두 level만 가지면, bandwidth $B\ \text{Hz}$가 지원하는 data rate는 $2B\ \text{bps}$다. 하지만 signal element가 $M$개의 discrete level을 가질 수 있으면, 한 signal element가 $\log_2 M$ bits를 담을 수 있다. 이때 Nyquist 공식은 다음과 같다.
 
-```math
+$$
 C = 2B \log_2 M
-```
+$$
 
-여기서 `C`는 capacity 또는 data rate, `B`는 bandwidth, `M`은 discrete signal/voltage level 수다. 예를 들어 bandwidth가 3100 Hz인 voice channel에서 binary signaling이면 `2B = 6200 bps`지만, `M = 8`이면 `C = 2 * 3100 * log2 8 = 18,600 bps`가 된다.
+여기서 $C$는 capacity 또는 data rate, $B$는 bandwidth, $M$은 discrete signal/voltage level 수다. 예를 들어 bandwidth가 3100 Hz인 voice channel에서 binary signaling이면 $2B=6200\ \text{bps}$지만, $M=8$이면 $C=2 \times 3100 \times \log_2 8 = 18{,}600\ \text{bps}$가 된다.
 
-다만 `M`을 무작정 키울 수는 없다. Receiver는 각 signal time마다 가능한 level 중 하나를 구분해야 하는데, M이 커질수록 level 간 간격이 좁아지고 noise와 impairment에 취약해진다. 즉 Nyquist 공식은 bandwidth와 signal level 수의 이상적 관계를 보여주지만, practical system에서는 noise가 M의 유효한 상한을 만든다.
+다만 $M$을 무작정 키울 수는 없다. Receiver는 각 signal time마다 가능한 level 중 하나를 구분해야 하는데, M이 커질수록 level 간 간격이 좁아지고 noise와 impairment에 취약해진다. 즉 Nyquist 공식은 bandwidth와 signal level 수의 이상적 관계를 보여주지만, practical system에서는 noise가 M의 유효한 상한을 만든다.
 
 #### Shannon Capacity Formula
 
 Nyquist가 noise-free bandwidth 한계를 다뤘다면, `Shannon capacity formula`는 noise가 있는 channel의 이론적 최대 capacity를 제시한다. Data rate가 높아지면 bit duration이 짧아지고, Figure 3.16처럼 같은 noise spike가 더 많은 bit를 망가뜨릴 수 있다. 반대로 signal power가 noise power보다 충분히 크면 수신자가 data를 더 잘 복구할 수 있다.
 
-이 관계의 핵심 parameter는 `SNR(Signal-to-Noise Ratio)` 또는 `S/N`이다. SNR은 특정 지점, 보통 receiver에서 signal power와 noise power의 비율이다. Decibel 표현은 다음과 같다.
+이 관계의 핵심 parameter는 SNR(Signal-to-Noise Ratio) 또는 $S/N$이다. SNR은 특정 지점, 보통 receiver에서 signal power와 noise power의 비율이다. Decibel 표현은 다음과 같다.
 
-```math
+$$
 SNR_{dB} = 10 \log_{10} {signal\ power \over noise\ power}
-```
+$$
 
 SNR이 높다는 것은 intended signal이 noise보다 충분히 크다는 뜻이고, high-quality signal과 낮은 repeater 요구로 이어진다. Shannon의 결과는 다음과 같다.
 
-```math
+$$
 C = B \log_2(1 + SNR)
-```
+$$
 
-여기서 `C`는 bits per second 단위 channel capacity, `B`는 Hz 단위 bandwidth다. 이 공식은 theoretical maximum이다. 실제 system은 impulse noise, attenuation distortion, delay distortion을 모두 완벽히 반영하지 못하고, coding length/complexity 같은 encoding issue 때문에 Shannon capacity보다 낮은 rate를 달성한다.
+여기서 $C$는 bits per second 단위 channel capacity, $B$는 Hz 단위 bandwidth다. 이 공식은 theoretical maximum이다. 실제 system은 impulse noise, attenuation distortion, delay distortion을 모두 완벽히 반영하지 못하고, coding length/complexity 같은 encoding issue 때문에 Shannon capacity보다 낮은 rate를 달성한다.
 
 Shannon capacity는 `error-free capacity`라고도 불린다. 실제 information rate가 이 capacity보다 낮으면, 이론적으로는 적절한 signal code를 사용해 error-free transmission이 가능하다. 하지만 Shannon theorem은 그런 code를 찾는 방법을 알려 주지는 않는다. 대신 practical communication scheme의 성능을 재는 yardstick을 제공한다.
 
-Nyquist와 Shannon의 관계는 예제로 이해하기 좋다. Channel spectrum이 3-4 MHz라면 `B = 1 MHz`다. `SNR_dB = 24 dB`이면 `SNR = 251`이고, Shannon 공식에 따라 다음과 같다.
+Nyquist와 Shannon의 관계는 예제로 이해하기 좋다. Channel spectrum이 3-4 MHz라면 $B=1\ \text{MHz}$다. $SNR_{dB}=24\ \text{dB}$이면 $SNR=251$이고, Shannon 공식에 따라 다음과 같다.
 
-```math
-C = 10^6 \log_2(1 + 251) \approx 8 Mbps
-```
+$$
+C = 10^6 \log_2(1 + 251) \approx 8\ \text{Mbps}
+$$
 
 이 theoretical limit을 달성한다고 가정하면, Nyquist 공식에서 필요한 signaling level 수는 다음처럼 계산된다.
 
-```math
-8 * 10^6 = 2 * 10^6 * \log_2 M
-```
+$$
+8 \times 10^6 = 2 \times 10^6 \times \log_2 M
+$$
 
-```math
+$$
 \log_2 M = 4,\quad M = 16
-```
+$$
 
-즉 이 조건에서 8 Mbps를 내려면 16-level signaling이 필요하다. 하지만 signal strength를 키우면 nonlinear effect와 intermodulation noise가 늘 수 있고, bandwidth를 넓히면 white noise도 더 많이 들어온다. `B`를 늘리면 용량이 늘 가능성이 있지만 동시에 SNR이 낮아질 수 있다는 trade-off가 있다.
+즉 이 조건에서 8 Mbps를 내려면 16-level signaling이 필요하다. 하지만 signal strength를 키우면 nonlinear effect와 intermodulation noise가 늘 수 있고, bandwidth를 넓히면 white noise도 더 많이 들어온다. $B$를 늘리면 용량이 늘 가능성이 있지만 동시에 SNR이 낮아질 수 있다는 trade-off가 있다.
 
 #### The Expression Eb/N0
 
-Digital communication에서는 `Eb/N0`도 중요하다. 이는 bit당 signal energy(`Eb`)와 Hertz당 noise power density(`N0`)의 비율이며, bit error rate를 판단하는 표준 quality measure다.
+Digital communication에서는 $E_b/N_0$도 중요하다. 이는 bit당 signal energy($E_b$)와 Hertz당 noise power density($N_0$)의 비율이며, bit error rate를 판단하는 표준 quality measure다.
 
-Bit rate를 `R`, signal power를 `S`, bit time을 `Tb`라 하면 `R = 1/Tb`이고, bit당 energy는 다음과 같다.
+Bit rate를 $R$, signal power를 $S$, bit time을 $T_b$라 하면 $R=1/T_b$이고, bit당 energy는 다음과 같다.
 
-```math
+$$
 E_b = S T_b = {S \over R}
-```
+$$
 
-Thermal noise power density가 `N0 = kT`이므로,
+Thermal noise power density가 $N_0=kT$이므로,
 
-```math
+$$
 {E_b \over N_0} = {S/R \over N_0} = {S \over kTR}
-```
+$$
 
 Decibel 표기로는 다음과 같다.
 
-```math
+$$
 \left({E_b \over N_0}\right)_{dB}
-= S_{dBW} - 10\log R + 228.6\ dBW - 10\log T
-```
+= S_{dBW} - 10\log R + 228.6\ \text{dBW} - 10\log T
+$$
 
-`Eb/N0`가 중요한 이유는 digital data의 bit error rate가 이 비율의 decreasing function이기 때문이다. 원하는 error rate를 달성하는 데 필요한 `Eb/N0`가 주어지면, signal power, data rate, temperature 같은 parameter를 설계할 수 있다. 특히 data rate `R`이 커지면 같은 `Eb/N0`를 유지하기 위해 noise 대비 transmitted signal power가 커져야 한다.
+$E_b/N_0$가 중요한 이유는 digital data의 bit error rate가 이 비율의 decreasing function이기 때문이다. 원하는 error rate를 달성하는 데 필요한 $E_b/N_0$가 주어지면, signal power, data rate, temperature 같은 parameter를 설계할 수 있다. 특히 data rate $R$이 커지면 같은 $E_b/N_0$를 유지하기 위해 noise 대비 transmitted signal power가 커져야 한다.
 
-SNR과 `Eb/N0`는 다음 관계로 연결된다. Bandwidth `B`에서 noise power가 `N = N0 B`이고 data rate가 `R`이면,
+SNR과 $E_b/N_0$는 다음 관계로 연결된다. Bandwidth $B$에서 noise power가 $N=N_0B$이고 data rate가 $R$이면,
 
-```math
+$$
 {E_b \over N_0} = {S \over N} {B \over R}
-```
+$$
 
-Shannon 결과와 연결하면 spectral efficiency `C/B`와 `Eb/N0`의 관계도 얻는다.
+Shannon 결과와 연결하면 spectral efficiency $C/B$와 $E_b/N_0$의 관계도 얻는다.
 
-```math
+$$
 {E_b \over N_0} = {B \over C}(2^{C/B} - 1)
-```
+$$
 
-예를 들어 spectral efficiency가 `6 bps/Hz`라면 필요한 최소 `Eb/N0`는 `(1/6)(2^6 - 1) = 10.5`, 즉 약 `10.21 dB`다.
+예를 들어 spectral efficiency가 $6\ \text{bps/Hz}$라면 필요한 최소 $E_b/N_0$는 $\frac{1}{6}(2^6-1)=10.5$, 즉 약 $10.21\ \text{dB}$다.
 
 ### Appendix 3A Decibels and Signal Strength
 
@@ -385,40 +385,40 @@ Shannon 결과와 연결하면 spectral efficiency `C/B`와 `Eb/N0`의 관계도
 
 Decibel은 두 signal level 사이의 ratio를 나타내는 상대 단위다. Power 기준 gain은 다음과 같다.
 
-```math
+$$
 G_{dB} = 10\log_{10}{P_{out} \over P_{in}}
-```
+$$
 
-`GdB`가 positive이면 actual power gain이고, negative이면 actual power loss다. 예를 들어 `+3 dB`는 power가 대략 2배, `-3 dB` gain은 power가 절반이라는 뜻이다. 보통은 이를 “3 dB loss”라고 말한다. Loss를 positive quantity로 쓰면 다음과 같다.
+$G_{dB}$가 positive이면 actual power gain이고, negative이면 actual power loss다. 예를 들어 $+3\ \text{dB}$는 power가 대략 2배, $-3\ \text{dB}$ gain은 power가 절반이라는 뜻이다. 보통은 이를 “3 dB loss”라고 말한다. Loss를 positive quantity로 쓰면 다음과 같다.
 
-```math
+$$
 L_{dB} = -10\log_{10}{P_{out} \over P_{in}}
 = 10\log_{10}{P_{in} \over P_{out}}
-```
+$$
 
 예를 들어 transmission line 입력이 10 mW이고 어느 지점에서 측정한 power가 5 mW이면,
 
-```math
-L_{dB} = 10\log_{10}(10/5) \approx 3 dB
-```
+$$
+L_{dB} = 10\log_{10}(10/5) \approx 3\ \text{dB}
+$$
 
 Decibel은 상대 차이이므로 1000 mW에서 500 mW로 줄어도 동일하게 3 dB loss다.
 
-Voltage 기준으로도 dB를 쓸 수 있다. 같은 resistance `R`에 대해 `P = V^2/R`이므로 power ratio의 log 계산은 voltage ratio에 대해 20을 곱한 형태가 된다.
+Voltage 기준으로도 dB를 쓸 수 있다. 같은 resistance $R$에 대해 $P = V^2/R$이므로 power ratio의 log 계산은 voltage ratio에 대해 20을 곱한 형태가 된다.
 
-```math
+$$
 L_{dB} = 20\log_{10}{V_{in} \over V_{out}}
-```
+$$
 
-Cascade된 요소에서는 dB gain/loss를 더하면 된다. 예를 들어 input power가 4 mW이고, 첫 transmission line이 12 dB loss, amplifier가 35 dB gain, 다음 line이 10 dB loss라면 net gain은 `-12 + 35 - 10 = 13 dB`다.
+Cascade된 요소에서는 dB gain/loss를 더하면 된다. 예를 들어 input power가 4 mW이고, 첫 transmission line이 12 dB loss, amplifier가 35 dB gain, 다음 line이 10 dB loss라면 net gain은 $-12+35-10=13\ \text{dB}$다.
 
-```math
-13 = 10\log_{10}(P_{out}/4mW)
-```
+$$
+13 = 10\log_{10}(P_{out}/4\ \text{mW})
+$$
 
-```math
-P_{out} = 4 * 10^{1.3} mW \approx 79.8 mW
-```
+$$
+P_{out} = 4 \times 10^{1.3}\ \text{mW} \approx 79.8\ \text{mW}
+$$
 
 #### Absolute Decibel Units
 
@@ -426,9 +426,9 @@ Decibel 자체는 상대 단위지만, 기준 power나 voltage를 정하면 abso
 
 | 단위 | 기준 | 공식 | 예 |
 | --- | --- | --- | --- |
-| `dBW` | 1 W = 0 dBW | `Power_dBW = 10 log10(Power_W / 1W)` | 1000 W = 30 dBW, 1 mW = -30 dBW |
-| `dBm` | 1 mW = 0 dBm | `Power_dBm = 10 log10(Power_mW / 1mW)` | 0 dBm = -30 dBW, +30 dBm = 0 dBW |
-| `dBmV` | 1 mV = 0 dBmV | `Voltage_dBmV = 20 log10(Voltage_mV / 1mV)` | cable TV, broadband LAN에서 사용 |
+| `dBW` | 1 W = 0 dBW | $Power_{dBW}=10\log_{10}(Power_W/1\text{W})$ | 1000 W = 30 dBW, 1 mW = -30 dBW |
+| `dBm` | 1 mW = 0 dBm | $Power_{dBm}=10\log_{10}(Power_{mW}/1\text{mW})$ | 0 dBm = -30 dBW, +30 dBm = 0 dBW |
+| `dBmV` | 1 mV = 0 dBmV | $Voltage_{dBmV}=20\log_{10}(Voltage_{mV}/1\text{mV})$ | cable TV, broadband LAN에서 사용 |
 
 이 appendix의 핵심은 dB가 “절대 크기”가 아니라 ratio를 편하게 다루는 로그 단위라는 점이다. 절대 기준이 필요한 경우에만 dBW, dBm, dBmV처럼 reference를 붙인다.
 
@@ -438,7 +438,7 @@ Decibel 자체는 상대 단위지만, 기준 power나 voltage를 정하면 abso
 - `Bandwidth`와 `effective bandwidth` 개념은 Chapter 8 multiplexing, Chapter 9 spread spectrum, 그리고 이후 Internet traffic/QoS 논의와 계속 연결된다.
 - `Attenuation`, `delay distortion`, `noise`는 Chapter 5의 encoding 선택과 Chapter 6의 error detection/correction 필요성을 설명하는 물리적 원인이다.
 - `Nyquist bandwidth`와 `Shannon capacity formula`는 “왜 bandwidth만 넓힌다고 끝나지 않는가”, “왜 SNR과 error rate가 data rate를 제한하는가”를 정량적으로 보여준다.
-- `Eb/N0`는 digital communication system의 bit error rate 설계 지표로, modulation/encoding 방식 비교에서 반복해서 등장한다.
+- $E_b/N_0$는 digital communication system의 bit error rate 설계 지표로, modulation/encoding 방식 비교에서 반복해서 등장한다.
 - `Decibel`, `dBW`, `dBm`은 attenuation, gain, SNR, noise power를 계산할 때 쓰이는 공통 언어다.
 
 ## 오해하기 쉬운 내용
@@ -463,6 +463,6 @@ Decibel 자체는 상대 단위지만, 기준 power나 voltage를 정하면 abso
 8. `Analog transmission`에서 amplifier를 cascade하면 왜 digital data에 문제가 생길 수 있는가?
 9. `Attenuation distortion`과 `delay distortion`은 각각 어떤 방식으로 신호를 망가뜨리는가?
 10. `Thermal noise`, `intermodulation noise`, `crosstalk`, `impulse noise`의 원인과 digital data에 대한 영향을 비교하라.
-11. Nyquist 공식 `C = 2B log2 M`과 Shannon 공식 `C = B log2(1 + SNR)`의 가정과 의미를 구분하라.
-12. `Eb/N0`가 bit error rate 설계에서 중요한 이유는 무엇인가?
+11. Nyquist 공식 $C = 2B \log_2 M$과 Shannon 공식 $C = B \log_2(1 + SNR)$의 가정과 의미를 구분하라.
+12. $E_b/N_0$가 bit error rate 설계에서 중요한 이유는 무엇인가?
 13. `dB`, `dBW`, `dBm`의 차이를 설명하고 cascade gain/loss를 어떻게 계산하는지 말하라.

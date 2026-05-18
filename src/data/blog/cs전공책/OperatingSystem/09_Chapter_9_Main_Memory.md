@@ -107,17 +107,16 @@ Memory management는 성능만이 아니라 protection 문제이기도 하다. U
 ![Base and limit registers](@/assets/images/cs-operating-system-192-figure-9-1-page-457.png)
 <p align="center"><sub>Figure 9.1 · PDF p. 457 · base와 limit register가 process별 logical address space의 물리 범위를 제한하는 구조</sub></p>
 
-예를 들어 `base = 300040`, `limit = 120900`이면 process는 physical address `300040`부터 `420939`까지 접근할 수 있다. CPU hardware는 user mode에서 생성된 모든 address를 이 range와 비교한다.
+예를 들어 $\text{base} = 300040$, $\text{limit} = 120900$이면 process는 physical address $300040$부터 $420939$까지 접근할 수 있다. CPU hardware는 user mode에서 생성된 모든 address를 이 range와 비교한다.
 
 ![Hardware address protection](@/assets/images/cs-operating-system-193-figure-9-2-page-458.png)
 <p align="center"><sub>Figure 9.2 · PDF p. 458 · user mode address가 base 이상이고 base+limit 미만인지 검사해 illegal access를 trap으로 처리하는 hardware protection</sub></p>
 
 검사는 개념적으로 다음 조건이다.
 
-```text
-legal if base <= address < base + limit
-otherwise trap to operating system
-```
+$$
+\text{legal if } base \le address < base + limit;\quad \text{otherwise trap to operating system}
+$$
 
 User mode program이 OS memory나 다른 process memory에 접근하려 하면 hardware가 trap을 발생시키고, OS는 이를 fatal error로 처리한다. `base`와 `limit` register는 privileged instruction으로만 load할 수 있으므로 kernel mode에서 실행되는 OS만 값을 바꿀 수 있다. 반대로 OS는 kernel mode에서 OS memory와 user memory 모두에 unrestricted access를 가진다. 그래야 user program loading, error dump, system call parameter 접근, user memory와 I/O 사이의 복사, context switch 중 register state 저장/복구 같은 일을 수행할 수 있다.
 
@@ -159,14 +158,16 @@ Run-time mapping은 hardware 장치인 `MMU`가 수행한다.
 ![Dynamic relocation](@/assets/images/cs-operating-system-196-figure-9-5-page-461.png)
 <p align="center"><sub>Figure 9.5 · PDF p. 461 · relocation register 값 14000을 logical address 346에 더해 physical address 14346으로 변환하는 dynamic relocation</sub></p>
 
-예를 들어 `relocation register = 14000`이면 user program이 logical address `0`을 참조할 때 physical address `14000`으로, logical address `346`을 참조할 때 physical address `14346`으로 변환된다.
+예를 들어 $\text{relocation register} = 14000$이면 user program이 logical address $0$을 참조할 때 physical address $14000$으로, logical address $346$을 참조할 때 physical address $14346$으로 변환된다.
 
-```text
-physical address = relocation register + logical address
-                 = R + logical address
-```
+$$
+\begin{aligned}
+\text{physical address} &= \text{relocation register} + \text{logical address} \\
+&= R + \text{logical address}
+\end{aligned}
+$$
 
-중요한 점은 user program이 실제 physical address를 직접 보지 않는다는 것이다. Program은 pointer `346`을 만들고, 저장하고, 비교하고, 조작할 수 있지만, 그 값이 memory address로 실제 사용되는 순간에만 MMU가 physical address로 변환한다. 따라서 process는 자신이 `0`부터 `max`까지의 logical memory에서 실행된다고 생각하고, hardware는 이를 `R + 0`부터 `R + max`까지의 physical memory로 mapping한다. Logical address space와 physical address space의 분리는 memory management의 핵심 전제다.
+중요한 점은 user program이 실제 physical address를 직접 보지 않는다는 것이다. Program은 pointer $346$을 만들고, 저장하고, 비교하고, 조작할 수 있지만, 그 값이 memory address로 실제 사용되는 순간에만 MMU가 physical address로 변환한다. 따라서 process는 자신이 $0$부터 $\max$까지의 logical memory에서 실행된다고 생각하고, hardware는 이를 $R + 0$부터 $R + \max$까지의 physical memory로 mapping한다. Logical address space와 physical address space의 분리는 memory management의 핵심 전제다.
 
 ### 9.1.4 Dynamic Loading
 
@@ -274,53 +275,60 @@ Paging은 거의 모든 종류의 operating systems에서 사용되며, OS와 ha
 
 Paging의 기본 아이디어는 physical memory를 fixed-sized blocks인 `frames`로 나누고, logical memory를 같은 크기의 `pages`로 나누는 것이다. Process가 실행될 때 각 page는 file system이나 backing store에서 available memory frames 중 아무 곳에나 load된다. Backing store도 보통 frame과 같은 크기의 fixed-sized blocks 또는 여러 frames의 cluster로 나뉜다.
 
-이 방식의 효과는 크다. Logical address space와 physical address space가 분리되므로, process는 64-bit logical address space를 가질 수 있지만 실제 physical memory는 `2^64` bytes보다 훨씬 작을 수 있다.
+이 방식의 효과는 크다. Logical address space와 physical address space가 분리되므로, process는 64-bit logical address space를 가질 수 있지만 실제 physical memory는 $2^{64}$ bytes보다 훨씬 작을 수 있다.
 
 CPU가 생성하는 logical address는 두 부분으로 나뉜다.
 
-```text
-logical address = (page number p, page offset d)
-```
+$$
+\text{logical address} = (\text{page number } p,\ \text{page offset } d)
+$$
 
-`page number p`는 per-process `page table`의 index로 사용된다. Page table entry는 해당 page가 들어 있는 physical `frame number f`를 담는다. `page offset d`는 page 내부 위치이므로 변하지 않는다.
+$\text{page number }p$는 per-process `page table`의 index로 사용된다. Page table entry는 해당 page가 들어 있는 physical $\text{frame number }f$를 담는다. $\text{page offset }d$는 page 내부 위치이므로 변하지 않는다.
 
 ![Paging hardware](@/assets/images/cs-operating-system-199-figure-9-8-page-467.png)
 <p align="center"><sub>Figure 9.8 · PDF p. 467 · page number로 page table을 조회하고 frame number와 offset을 결합해 physical address를 만드는 paging hardware</sub></p>
 
 MMU의 logical-to-physical translation은 다음 순서다.
 
-1. Logical address에서 `page number p`를 추출해 page table index로 사용한다.
-2. Page table에서 대응하는 `frame number f`를 가져온다.
-3. Logical address의 `p`를 `f`로 대체하고, `offset d`는 그대로 둔다.
+1. Logical address에서 $\text{page number }p$를 추출해 page table index로 사용한다.
+2. Page table에서 대응하는 $\text{frame number }f$를 가져온다.
+3. Logical address의 $p$를 $f$로 대체하고, $\text{offset }d$는 그대로 둔다.
 
-```text
-logical address  = (p, d)
-page_table[p]    = f
-physical address = (f, d)
-```
+$$
+\begin{aligned}
+\text{logical address} &= (p, d) \\
+\text{page\_table}[p] &= f \\
+\text{physical address} &= (f, d)
+\end{aligned}
+$$
 
 ![Paging model](@/assets/images/cs-operating-system-200-figure-9-9-page-468.png)
 <p align="center"><sub>Figure 9.9 · PDF p. 468 · programmer가 보는 logical pages가 physical memory의 frames에 흩어져 배치되는 paging model</sub></p>
 
-Page size와 frame size는 hardware가 정하며, 보통 2의 거듭제곱이다. Logical address space 크기가 `2^m`, page size가 `2^n` bytes라면 logical address의 상위 `m - n` bits가 page number, 하위 `n` bits가 page offset이 된다.
+Page size와 frame size는 hardware가 정하며, 보통 2의 거듭제곱이다. Logical address space 크기가 $2^m$, page size가 $2^n$ bytes라면 logical address의 상위 $m - n$ bits가 page number, 하위 $n$ bits가 page offset이 된다.
 
-```text
-| page number p | page offset d |
-|    m - n bits |       n bits  |
-```
+$$
+\begin{array}{|c|c|}
+\hline
+\text{page number } p & \text{page offset } d \\
+\hline
+m - n\text{ bits} & n\text{ bits} \\
+\hline
+\end{array}
+$$
 
 Page size를 2의 거듭제곱으로 잡으면 bit slicing만으로 page number와 offset을 분리할 수 있어 address translation이 단순해진다.
 
 ![Paging example](@/assets/images/cs-operating-system-201-figure-9-10-page-469.png)
 <p align="center"><sub>Figure 9.10 · PDF p. 469 · 32-byte physical memory와 4-byte pages에서 logical address를 physical address로 변환하는 예</sub></p>
 
-Figure 9.10의 작은 예에서 page size는 4 bytes이므로 offset은 2 bits다. Logical address `0`은 page `0`, offset `0`이고, page table에서 page `0`은 frame `5`에 있다. 따라서 physical address는 `(5 × 4) + 0 = 20`이다. Logical address `3`은 page `0`, offset `3`이므로 physical address `23`이 된다. Logical address `4`는 page `1`, offset `0`이고 page `1`이 frame `6`에 있으므로 physical address `24`로 mapping된다.
+Figure 9.10의 작은 예에서 page size는 4 bytes이므로 offset은 2 bits다. Logical address $0$은 page $0$, offset $0$이고, page table에서 page $0$은 frame $5$에 있다. 따라서 physical address는 $(5 \times 4) + 0 = 20$이다. Logical address $3$은 page $0$, offset $3$이므로 physical address $23$이 된다. Logical address $4$는 page $1$, offset $0$이고 page $1$이 frame $6$에 있으므로 physical address $24$로 mapping된다.
 
 Paging은 dynamic relocation의 한 형태다. 차이는 relocation register 하나가 아니라 page별 base register table, 즉 page table을 사용한다는 점이다. 그래서 logical page마다 서로 다른 physical frame으로 mapping할 수 있다.
 
 Paging은 `external fragmentation`을 없앤다. 어떤 free frame이든 필요한 process page에 배정할 수 있기 때문이다. 그러나 `internal fragmentation`은 생길 수 있다. Frames는 unit 단위로 allocation되므로 process size가 page boundary와 딱 맞지 않으면 마지막 frame 일부가 비게 된다.
 
-예를 들어 page size가 2,048 bytes이고 process size가 72,766 bytes라면 35 pages와 1,086 bytes가 필요하므로 총 36 frames가 할당된다. 마지막 frame의 unused space는 `2,048 - 1,086 = 962 bytes`다. Worst case에서는 process가 `n pages + 1 byte`를 요구해 `n + 1 frames`를 받고, 거의 한 frame 전체가 internal fragmentation이 될 수 있다. Process size가 page size와 독립적이라면 평균 internal fragmentation은 process당 half page 정도로 기대된다.
+예를 들어 page size가 2,048 bytes이고 process size가 72,766 bytes라면 35 pages와 1,086 bytes가 필요하므로 총 36 frames가 할당된다. 마지막 frame의 unused space는 $2{,}048 - 1{,}086 = 962$ bytes다. Worst case에서는 process가 $n\text{ pages} + 1\text{ byte}$를 요구해 $n + 1$ frames를 받고, 거의 한 frame 전체가 internal fragmentation이 될 수 있다. Process size가 page size와 독립적이라면 평균 internal fragmentation은 process당 half page 정도로 기대된다.
 
 Page size 선택에는 trade-off가 있다.
 
@@ -329,9 +337,9 @@ Page size 선택에는 trade-off가 있다.
 | Smaller pages | 평균 internal fragmentation 감소 | page-table entries 수 증가, page table overhead 증가 |
 | Larger pages | page table overhead 감소, 큰 disk I/O transfer에 유리 | 평균 internal fragmentation 증가 |
 
-현대 systems에서는 4 KB 또는 8 KB pages가 흔하고, 일부 systems는 2 MB 같은 larger pages 또는 `huge pages`를 지원한다. Page-table entry size도 architecture에 따라 다르다. 예를 들어 32-bit page-table entry가 4 bytes이고 frame size가 4 KB라면 이론상 `2^32`개의 frames, 즉 `2^44` bytes = 16 TB physical memory를 가리킬 수 있다. 하지만 page-table entry에는 frame number 외에도 protection, valid bit 같은 정보가 들어가므로 실제 addressable physical memory는 이론 최대보다 작을 수 있다.
+현대 systems에서는 4 KB 또는 8 KB pages가 흔하고, 일부 systems는 2 MB 같은 larger pages 또는 `huge pages`를 지원한다. Page-table entry size도 architecture에 따라 다르다. 예를 들어 32-bit page-table entry가 4 bytes이고 frame size가 4 KB라면 이론상 $2^{32}$개의 frames, 즉 $2^{44}$ bytes = 16 TB physical memory를 가리킬 수 있다. 하지만 page-table entry에는 frame number 외에도 protection, valid bit 같은 정보가 들어가므로 실제 addressable physical memory는 이론 최대보다 작을 수 있다.
 
-Process가 도착하면 OS는 process size를 pages 단위로 본다. Process가 `n` pages를 요구하면 적어도 `n` free frames가 필요하다. 충분하면 OS는 각 page를 free frame에 load하고, 각 mapping을 process page table에 기록한다.
+Process가 도착하면 OS는 process size를 pages 단위로 본다. Process가 $n$ pages를 요구하면 적어도 $n$ free frames가 필요하다. 충분하면 OS는 각 page를 free frame에 load하고, 각 mapping을 process page table에 기록한다.
 
 ![Free frame allocation](@/assets/images/cs-operating-system-202-figure-9-11-page-470.png)
 <p align="center"><sub>Figure 9.11 · PDF p. 470 · free-frame list에서 frames를 골라 새 process pages에 할당하고 page table을 채우는 과정</sub></p>
@@ -372,18 +380,13 @@ TLB가 가득 차면 기존 entry를 교체해야 한다. Replacement policy는 
 
 TLB 성능은 `hit ratio`에 크게 좌우된다. Memory access가 10 ns이고, TLB hit이면 10 ns, miss이면 page table access 10 ns + data access 10 ns = 20 ns가 걸린다고 하자.
 
-```text
-effective access time
-  = hit_ratio * hit_time + miss_ratio * miss_time
-
-80% hit ratio:
-  = 0.80 * 10 + 0.20 * 20
-  = 12 ns
-
-99% hit ratio:
-  = 0.99 * 10 + 0.01 * 20
-  = 10.1 ns
-```
+$$
+\begin{aligned}
+\text{effective access time} &= hit\_ratio \cdot hit\_time + miss\_ratio \cdot miss\_time \\
+\text{80\% hit ratio:}\quad &= 0.80 \cdot 10 + 0.20 \cdot 20 = 12\text{ ns} \\
+\text{99\% hit ratio:}\quad &= 0.99 \cdot 10 + 0.01 \cdot 20 = 10.1\text{ ns}
+\end{aligned}
+$$
 
 80% hit ratio에서는 평균 access time이 10 ns에서 12 ns로 20% 느려진다. 99% hit ratio에서는 10.1 ns로 약 1% slowdown에 그친다. Modern CPUs는 multi-level TLB를 제공하므로 실제 effective memory-access time 계산은 더 복잡하다. L1 TLB miss 후 L2 TLB를 확인하고, L2 miss이면 hardware가 page table walk를 수행하거나 OS interrupt가 필요할 수 있다. 이 때문에 OS designer는 특정 hardware platform의 TLB design을 이해하고 paging implementation을 맞춰야 한다.
 
@@ -423,7 +426,7 @@ Paging의 기본 구조는 단순하지만, modern systems의 logical address sp
 
 ### 9.4.1 Hierarchical Paging
 
-큰 logical address space에서는 linear page table 하나가 과도하게 커질 수 있다. 예를 들어 32-bit logical address space와 4 KB (`2^12`) page size를 가진 system을 생각하자. Page table은 `2^32 / 2^12 = 2^20`, 즉 1 million entries 이상을 가질 수 있다. Entry 하나가 4 bytes라면 process마다 page table만 최대 4 MB physical memory를 요구한다. 이런 page table을 contiguous main memory에 통째로 두고 싶지는 않다.
+큰 logical address space에서는 linear page table 하나가 과도하게 커질 수 있다. 예를 들어 32-bit logical address space와 4 KB ($2^{12}$) page size를 가진 system을 생각하자. Page table은 $2^{32} / 2^{12} = 2^{20}$, 즉 1 million entries 이상을 가질 수 있다. Entry 하나가 4 bytes라면 process마다 page table만 최대 4 MB physical memory를 요구한다. 이런 page table을 contiguous main memory에 통째로 두고 싶지는 않다.
 
 간단한 해결은 page table을 smaller pieces로 나누는 것이다. `two-level paging`에서는 page table 자체도 paging된다.
 
@@ -432,19 +435,22 @@ Paging의 기본 구조는 단순하지만, modern systems의 logical address sp
 
 32-bit logical address와 4 KB page size에서는 logical address가 20-bit page number와 12-bit offset으로 나뉜다. Page table도 paging하므로 20-bit page number를 다시 10-bit outer index와 10-bit inner index로 나눈다.
 
-```text
-32-bit two-level paging:
+$$
+\begin{array}{|c|c|c|}
+\hline
+\text{outer page } p_1 & \text{inner page } p_2 & \text{offset } d \\
+\hline
+10\text{ bits} & 10\text{ bits} & 12\text{ bits} \\
+\hline
+\end{array}
+$$
 
-| outer page p1 | inner page p2 | offset d |
-|    10 bits    |    10 bits    | 12 bits  |
-```
-
-`p1`은 outer page table의 index이고, `p2`는 inner page table page 안의 displacement다. Translation은 outer page table에서 시작해 안쪽으로 들어가므로 이 구조를 `forward-mapped page table`이라고도 한다.
+$p_1$은 outer page table의 index이고, $p_2$는 inner page table page 안의 displacement다. Translation은 outer page table에서 시작해 안쪽으로 들어가므로 이 구조를 `forward-mapped page table`이라고도 한다.
 
 ![Two-level address translation](@/assets/images/cs-operating-system-207-figure-9-16-page-479.png)
 <p align="center"><sub>Figure 9.16 · PDF p. 479 · 32-bit two-level paging에서 p1으로 outer table을 찾고 p2로 inner table entry를 찾아 frame을 얻는 과정</sub></p>
 
-하지만 64-bit logical address space에서는 two-level paging이 충분하지 않다. Page size가 4 KB이면 page table은 최대 `2^52` entries를 가질 수 있다. Inner page table을 한 page 크기, 즉 `2^10`개의 4-byte entries로 맞추면 outer page table은 `2^42` entries, `2^44` bytes가 된다. Outer page table 자체가 너무 크다.
+하지만 64-bit logical address space에서는 two-level paging이 충분하지 않다. Page size가 4 KB이면 page table은 최대 $2^{52}$ entries를 가질 수 있다. Inner page table을 한 page 크기, 즉 $2^{10}$개의 4-byte entries로 맞추면 outer page table은 $2^{42}$ entries, $2^{44}$ bytes가 된다. Outer page table 자체가 너무 크다.
 
 Outer page table을 다시 paging하면 three-level paging이 되지만, 64-bit address space에서는 여전히 큰 구조가 남는다. 계속 더 나누면 four-level, seven-level paging까지 갈 수 있지만, level이 늘수록 logical address 하나를 translate하기 위해 필요한 memory accesses가 증가한다. 그래서 순수 hierarchical page tables는 64-bit architectures에서 부적절해질 수 있다. 실제 systems는 TLB, larger pages, sparse mapping, hashed/inverted structures를 함께 사용해 비용을 줄인다.
 
@@ -481,10 +487,12 @@ Algorithm은 다음과 같다.
 
 Inverted page table은 여러 address spaces가 하나의 table에 섞이므로 각 entry에 `address-space identifier (ASID)` 또는 process id가 필요하다. 단순화하면 virtual address는 다음 triple로 볼 수 있다.
 
-```text
-virtual address = <process-id, page-number, offset>
-inverted entry  = <process-id, page-number>
-```
+$$
+\begin{aligned}
+\text{virtual address} &= \langle process\text{-}id, page\text{-}number, offset \rangle \\
+\text{inverted entry} &= \langle process\text{-}id, page\text{-}number \rangle
+\end{aligned}
+$$
 
 Memory reference가 발생하면 `<process-id, page-number>`를 inverted page table에서 찾는다. Match가 entry `i`에서 발견되면 physical address는 `<i, offset>`이 된다. Match가 없으면 illegal address access다.
 
@@ -590,10 +598,15 @@ IA-32에서 segment는 최대 4 GB까지 가능하고, process당 최대 16 K se
 
 IA-32 logical address는 `(selector, offset)` pair다. Selector는 16-bit이고 다음 fields로 나뉜다.
 
-```text
-selector = | segment number s | GDT/LDT bit g | protection p |
-           |      13 bits      |    1 bit      |   2 bits    |
-```
+$$
+\begin{array}{|c|c|c|}
+\hline
+\text{segment number } s & \text{GDT/LDT bit } g & \text{protection } p \\
+\hline
+13\text{ bits} & 1\text{ bit} & 2\text{ bits} \\
+\hline
+\end{array}
+$$
 
 Offset은 해당 segment 안의 byte 위치를 나타내는 32-bit number다. Segment register는 LDT 또는 GDT의 적절한 entry를 가리킨다. Hardware는 먼저 descriptor의 limit으로 offset이 valid한지 검사한다. Invalid이면 memory fault가 발생해 OS로 trap된다. Valid이면 descriptor의 base에 offset을 더해 32-bit linear address를 만든다.
 
@@ -601,12 +614,15 @@ Offset은 해당 segment 안의 byte 위치를 나타내는 32-bit number다. Se
 
 IA-32는 4 KB 또는 4 MB page size를 지원한다. 4 KB pages에서는 32-bit linear address를 10-bit page directory index, 10-bit page table index, 12-bit offset으로 나누는 two-level paging을 사용한다.
 
-```text
-IA-32 4-KB page:
-
-| page directory p1 | page table p2 | offset d |
-|      10 bits      |    10 bits    | 12 bits  |
-```
+$$
+\begin{array}{|c|c|c|}
+\hline
+\text{page directory } p_1 & \text{page table } p_2 & \text{offset } d \\
+\hline
+10\text{ bits} & 10\text{ bits} & 12\text{ bits} \\
+\hline
+\end{array}
+$$
 
 ![IA-32 paging](@/assets/images/cs-operating-system-214-figure-9-23-page-487.png)
 <p align="center"><sub>Figure 9.23 · PDF p. 487 · CR3가 page directory를 가리키고, page directory와 page table을 거쳐 4-KB page frame을 찾는 IA-32 paging</sub></p>
@@ -626,17 +642,22 @@ PAE는 page-directory/page-table entries를 32 bits에서 64 bits로 키웠고, 
 
 ### 9.6.2 x86-64
 
-`x86-64`는 IA-32 instruction set을 확장한 64-bit architecture다. 이론적으로 64-bit address space는 `2^64` bytes를 표현할 수 있지만, 현재 설계에서는 실제로 모든 64 bits를 address representation에 쓰지는 않는다. x86-64는 현재 48-bit virtual address를 제공하고, 4 KB, 2 MB, 1 GB page sizes를 지원하며, four-level paging hierarchy를 사용한다. PAE를 사용할 수 있어 virtual address는 48 bits지만 physical address는 52 bits, 즉 4,096 TB까지 지원한다.
+`x86-64`는 IA-32 instruction set을 확장한 64-bit architecture다. 이론적으로 64-bit address space는 $2^{64}$ bytes를 표현할 수 있지만, 현재 설계에서는 실제로 모든 64 bits를 address representation에 쓰지는 않는다. x86-64는 현재 48-bit virtual address를 제공하고, 4 KB, 2 MB, 1 GB page sizes를 지원하며, four-level paging hierarchy를 사용한다. PAE를 사용할 수 있어 virtual address는 48 bits지만 physical address는 52 bits, 즉 4,096 TB까지 지원한다.
 
 ![x86-64 linear address](@/assets/images/cs-operating-system-216-figure-9-25-page-488.png)
 <p align="center"><sub>Figure 9.25 · PDF p. 488 · x86-64에서 48-bit linear address를 four-level paging index와 offset으로 나누는 구조</sub></p>
 
 4-KB pages 기준으로 x86-64 linear address는 다음처럼 읽으면 된다.
 
-```text
-| unused | page map level 4 | page directory pointer table | page directory | page table | offset |
-| 63-48  |      47-39       |             38-30            |     29-21      |   20-12    | 11-0   |
-```
+$$
+\begin{array}{|c|c|c|c|c|c|}
+\hline
+\text{unused} & \text{page map level 4} & \text{page directory pointer table} & \text{page directory} & \text{page table} & \text{offset} \\
+\hline
+63\text{-}48 & 47\text{-}39 & 38\text{-}30 & 29\text{-}21 & 20\text{-}12 & 11\text{-}0 \\
+\hline
+\end{array}
+$$
 
 핵심은 64-bit architecture라고 해서 항상 64-bit virtual address 전체를 paging index로 쓰는 것이 아니라는 점이다. 현재 systems는 architecture가 허용하는 큰 주소 공간 중 일부 bits만 실제 translation에 사용하고, page sizes와 multi-level hierarchy로 translation overhead와 page-table memory overhead를 조절한다.
 
@@ -659,12 +680,15 @@ ARMv8에는 세 가지 `translation granules`가 있다.
 
 4-KB granule에서 address는 level 0, level 1, level 2, level 3 indexes와 12-bit offset으로 나뉜다.
 
-```text
-ARMv8 4-KB translation granule:
-
-| unused | level 0 index | level 1 index | level 2 index | level 3 index | offset |
-| 63-48  |     47-39     |     38-30     |     29-21     |     20-12     | 11-0   |
-```
+$$
+\begin{array}{|c|c|c|c|c|c|}
+\hline
+\text{unused} & \text{level 0 index} & \text{level 1 index} & \text{level 2 index} & \text{level 3 index} & \text{offset} \\
+\hline
+63\text{-}48 & 47\text{-}39 & 38\text{-}30 & 29\text{-}21 & 20\text{-}12 & 11\text{-}0 \\
+\hline
+\end{array}
+$$
 
 ![ARM four-level hierarchical paging](@/assets/images/cs-operating-system-218-figure-9-27-page-490.png)
 <p align="center"><sub>Figure 9.27 · PDF p. 490 · TTBR이 level 0 table을 가리키고, table entries가 다음 table 또는 큰 region을 가리키는 ARMv8 four-level hierarchical paging</sub></p>

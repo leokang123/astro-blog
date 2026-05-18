@@ -46,18 +46,20 @@ packet loss observed by TCP sender
 
 TCP sender를 늦추는 핵심 변수는 congestion window(`cwnd`)다. Chapter 15의 advertised window(`awnd`)는 receiver가 “내 buffer에 이만큼 받을 수 있다”고 알려주는 값이고, `cwnd`는 sender가 추정한 network capacity에 기반한 제한이다. 실제 sender usable window `W`는 둘 중 작은 값이다.
 
-```text
-W = min(cwnd, awnd)
-flight size <= W
-```
+$$
+\begin{aligned}
+W &= \min(\text{cwnd}, \text{awnd}) \\
+\text{flight size} &\le W
+\end{aligned}
+$$
 
 `flight size`는 sender가 network에 넣었지만 아직 ACK 받지 못한 data 양이다. TCP sender는 `flight size`가 `W`를 넘지 않도록 한다. SACK을 쓰지 않는 TCP에서는 highest acknowledged sequence number + `W`를 넘는 segment를 보낼 수 없다는 식으로 이해할 수 있고, SACK TCP에서는 `W`가 전체 flight size 제한으로 쓰인다.
 
 좋은 `cwnd` 값은 path의 bandwidth-delay product(BDP), 즉 optimal window size에 가깝다.
 
-```text
-BDP = bottleneck bandwidth * RTT
-```
+$$
+\text{BDP} = \text{bottleneck bandwidth} \cdot \text{RTT}
+$$
 
 `cwnd`가 BDP보다 너무 작으면 path capacity를 못 채워 throughput이 낮다. 반대로 BDP보다 크게 초과하면 router queue에 data가 쌓여 delay가 커지고 buffer bloat 같은 문제가 생긴다. 하지만 Internet path는 route, RTT, bottleneck capacity, statistical multiplexing 정도가 계속 변하므로 sender는 BDP를 정확히 알 수 없다. 따라서 TCP congestion control은 ACK/loss/delay/ECN 같은 관찰 가능한 signal로 `cwnd`를 동적으로 조정한다.
 
@@ -78,16 +80,18 @@ Classic TCP의 두 축은 slow start와 congestion avoidance다. 둘은 동시�
 
 Slow start는 이름과 달리 매우 빠른 exponential growth 알고리즘이다. “처음부터 full window로 보내지 않는다”는 의미에서 slow일 뿐이다. 새 connection, RTO로 loss가 감지된 뒤, 또는 sender가 오래 idle 상태였던 뒤에 실행될 수 있다.
 
-TCP는 initial window(`IW`)만큼 시작한다. 과거에는 `IW = 1 SMSS`였고, RFC5681에서는 SMSS 크기에 따라 2-4 segments까지 허용한다. 단순화를 위해 `cwnd = 1 SMSS`로 시작한다고 보면, 첫 segment의 ACK가 돌아올 때 `cwnd`가 증가하고 다음 RTT에는 더 많은 segment를 보낸다.
+TCP는 initial window(`IW`)만큼 시작한다. 과거에는 $IW = 1\text{ SMSS}$였고, RFC5681에서는 SMSS 크기에 따라 2-4 segments까지 허용한다. 단순화를 위해 $\text{cwnd} = 1\text{ SMSS}$로 시작한다고 보면, 첫 segment의 ACK가 돌아올 때 $\text{cwnd}$가 증가하고 다음 RTT에는 더 많은 segment를 보낸다.
 
-Slow start에서 sender는 good ACK를 받을 때마다 `cwnd`를 증가시킨다. good ACK는 지금까지 본 것보다 더 높은 ACK number를 반환하는 ACK다. Appropriate Byte Counting(ABC)을 고려하면 증가량은 `min(N, SMSS)`이며, `N`은 해당 ACK가 새로 ACK한 byte 수다. ABC는 ACK division attack처럼 많은 작은 ACK로 sender를 부당하게 빠르게 만들려는 공격을 완화하는 목적도 있다.
+Slow start에서 sender는 good ACK를 받을 때마다 $\text{cwnd}$를 증가시킨다. good ACK는 지금까지 본 것보다 더 높은 ACK number를 반환하는 ACK다. Appropriate Byte Counting(ABC)을 고려하면 증가량은 $\min(N, \text{SMSS})$이며, $N$은 해당 ACK가 새로 ACK한 byte 수다. ABC는 ACK division attack처럼 많은 작은 ACK로 sender를 부당하게 빠르게 만들려는 공격을 완화하는 목적도 있다.
 
 ACK가 매 packet마다 온다고 가정하면 `cwnd`는 RTT마다 대략 1, 2, 4, 8 ...로 증가한다.
 
-```text
-W after k RTTs ~= 2^k
-k ~= log2(W)
-```
+$$
+\begin{aligned}
+W\text{ after }k\text{ RTTs} &\approx 2^k \\
+k &\approx \log_2 W
+\end{aligned}
+$$
 
 Delayed ACK로 두 packet마다 ACK 하나가 오면 증가 속도는 여전히 exponential이지만 더 느려진다. 일부 TCP가 slow start 동안 quick acknowledgments(quickack mode)를 쓰는 이유도 ACK clock을 더 촘촘히 세워 slow start 진행을 원활히 하기 위해서다.
 
@@ -102,11 +106,11 @@ Congestion avoidance는 이미 어느 정도 `cwnd`가 잡힌 뒤, 새로 생긴
 
 각 nonduplicate ACK에 대한 대표 update는 다음과 같다.
 
-```text
-cwnd(t+1) = cwnd(t) + SMSS * SMSS / cwnd(t)
-```
+$$
+\text{cwnd}(t+1) = \text{cwnd}(t) + \frac{\text{SMSS}^2}{\text{cwnd}(t)}
+$$
 
-예를 들어 `cwnd = k * SMSS`라면 ACK 하나가 올 때마다 증가량은 대략 `(1/k) * SMSS`다. 한 RTT 동안 k개의 ACK가 오면 전체적으로 약 1 SMSS 증가한다. 이 때문에 congestion avoidance는 additive increase라고도 부른다.
+예를 들어 $\text{cwnd} = k \cdot \text{SMSS}$라면 ACK 하나가 올 때마다 증가량은 대략 $(1/k) \cdot \text{SMSS}$다. 한 RTT 동안 $k$개의 ACK가 오면 전체적으로 약 1 SMSS 증가한다. 이 때문에 congestion avoidance는 additive increase라고도 부른다.
 
 ![Figure 16-3](@/assets/images/cs-tcp-ip-illustrated-288-figure-16-3-page-774.png)
 *Figure 16-3 · PDF p. 774 · congestion avoidance에서 ACK마다 작은 비율로 증가해 linear growth가 되는 흐름*
@@ -119,15 +123,15 @@ TCP는 정상 동작 중 slow start 또는 congestion avoidance 중 하나만 �
 
 | 조건 | 실행 알고리즘 |
 |---|---|
-| `cwnd < ssthresh` | slow start |
-| `cwnd > ssthresh` | congestion avoidance |
-| `cwnd == ssthresh` | 구현에 따라 둘 중 하나 가능 |
+| $\text{cwnd} < \text{ssthresh}$ | slow start |
+| $\text{cwnd} > \text{ssthresh}$ | congestion avoidance |
+| $\text{cwnd} = \text{ssthresh}$ | 구현에 따라 둘 중 하나 가능 |
 
 `ssthresh`는 고정값이 아니라 loss event에 따라 변한다. retransmission timeout이나 fast retransmit이 필요해지면 TCP는 현재 operating window가 network에 너무 컸다고 보고 다음과 같이 threshold를 조정한다.
 
-```text
-ssthresh = max(flight size / 2, 2 * SMSS)
-```
+$$
+\text{ssthresh} = \max\left(\frac{\text{flight size}}{2}, 2\text{SMSS}\right)
+$$
 
 즉 TCP는 loss를 만나면 “직전 flight size의 절반 정도가 더 안전한 operating point”라고 추정한다. 이 값은 대개 낮아지지만, congestion avoidance가 오랫동안 성공적으로 window를 키운 뒤라면 이전보다 커질 수도 있다. `cwnd`와 `ssthresh`의 상호작용이 TCP의 sawtooth-like behavior를 만든다.
 
@@ -145,23 +149,24 @@ RFC5681 관점의 standard TCP는 slow start, congestion avoidance, fast retrans
 
 Good ACK가 도착할 때의 기본 `cwnd` update는 다음처럼 요약된다.
 
-```text
-if cwnd < ssthresh:
-    cwnd += SMSS                  # slow start
-elif cwnd > ssthresh:
-    cwnd += SMSS * SMSS / cwnd    # congestion avoidance
-```
+$$
+\Delta\text{cwnd} =
+\begin{cases}
+\text{SMSS}, & \text{cwnd} < \text{ssthresh} \\
+\frac{\text{SMSS}^2}{\text{cwnd}}, & \text{cwnd} > \text{ssthresh}
+\end{cases}
+$$
 
 Third duplicate ACK 등으로 fast retransmit이 호출되면 baseline 동작은 다음과 같다.
 
-1. `ssthresh`를 `max(flight size/2, 2*SMSS)` 이하로 갱신한다.
-2. fast retransmit을 수행하고 `cwnd = ssthresh + 3*SMSS`로 둔다.
-3. duplicate ACK마다 `cwnd += SMSS`로 temporary inflation을 계속한다.
-4. good ACK가 오면 recovery가 끝났다고 보고 `cwnd = ssthresh`로 deflation한다.
+1. `ssthresh`를 $\max(\text{flight size}/2, 2\text{SMSS})$ 이하로 갱신한다.
+2. fast retransmit을 수행하고 $\text{cwnd} = \text{ssthresh} + 3\text{SMSS}$로 둔다.
+3. duplicate ACK마다 $\text{cwnd} \mathrel{+}= \text{SMSS}$로 temporary inflation을 계속한다.
+4. good ACK가 오면 recovery가 끝났다고 보고 $\text{cwnd} = \text{ssthresh}$로 deflation한다.
 
 여기서 `cwnd`를 대략 절반으로 줄이는 부분이 multiplicative decrease다. Congestion avoidance의 additive increase와 합쳐져 classic TCP의 AIMD(Additive Increase Multiplicative Decrease) 성격이 만들어진다.
 
-Slow start는 새 connection과 RTO 뒤에는 항상 쓰인다. 오래 idle이었던 sender도 현재 `cwnd`가 network state를 더 이상 반영하지 못한다고 보고 restart window(`RW`)로 slow start를 다시 시작할 수 있다. RFC5681의 권장값은 `RW = min(IW, cwnd)`다.
+Slow start는 새 connection과 RTO 뒤에는 항상 쓰인다. 오래 idle이었던 sender도 현재 $\text{cwnd}$가 network state를 더 이상 반영하지 못한다고 보고 restart window(`RW`)로 slow start를 다시 시작할 수 있다. RFC5681의 권장값은 $RW = \min(IW, \text{cwnd})$다.
 
 ### 16.3 Evolution of the Standard Algorithms
 
@@ -189,9 +194,9 @@ which packets to send  !=  when packets may be sent
 
 RFC3517 방식은 `pipe` variable로 network 안에 남아 있다고 추정되는 data 양, 즉 flight size를 별도로 추적한다. `pipe`는 lost로 알려지지 않은 original transmissions와 retransmissions를 포함한다. Sender는 다음 조건을 만족할 때 segment를 보낼 수 있다.
 
-```text
-cwnd - pipe >= SMSS
-```
+$$
+\text{cwnd} - \text{pipe} \ge \text{SMSS}
+$$
 
 따라서 `cwnd`는 여전히 outstanding data의 상한이고, `pipe`가 실제 in-network data 추정치를 나타낸다. 이 구분이 SACK-based recovery의 핵심이다.
 
@@ -203,9 +208,9 @@ FACK(Forward Acknowledgment)은 SACK 정보를 이용해 receiver에 도달한 �
 
 RHBP의 전송 허용 조건은 다음 관계로 표현된다.
 
-```text
-(SND.NXT - fack + retran_data + len) < cwnd
-```
+$$
+\text{SND.NXT} - \text{fack} + \text{retran\_data} + \text{len} < \text{cwnd}
+$$
 
 이 식은 retransmission까지 포함한 flight size에 새 packet 길이 `len`을 더해도 `cwnd`를 넘지 않는지 확인한다. 다만 FACK은 SACK hole을 lost로 해석하는 경향이 있어 packet reordering이 있는 path에서는 overly aggressive할 수 있다. 그래서 Linux도 reordering을 감지하면 FACK의 공격적 behavior를 비활성화한다.
 
@@ -226,25 +231,25 @@ CWV(Congestion Window Validation)는 nonuse 기간 동안 `cwnd`를 decay시키�
 | idle sender | 보낼 data가 없고 이전 data의 ACK도 모두 받음 | idle RTT마다 `cwnd`를 절반으로 줄이되 최소 1 SMSS 유지 |
 | application-limited sender | data는 더 있지만 CPU/하위 layer/다른 이유로 allowed window를 다 못 씀 | 실제 사용한 window `W_used`와 `cwnd` 평균 쪽으로 줄임 |
 
-두 경우 모두 `ssthresh = max(ssthresh, 3/4*cwnd)` 형태로 줄이지 않고 memory를 보존한다. 충분히 긴 pause 뒤에는 `cwnd`가 작아져 sender가 slow start에 들어갈 수 있고, 이는 idle 뒤 burst를 줄여 router buffer pressure와 packet drop을 완화한다.
+두 경우 모두 $\text{ssthresh} = \max(\text{ssthresh}, 3\text{cwnd}/4)$ 형태로 줄이지 않고 memory를 보존한다. 충분히 긴 pause 뒤에는 $\text{cwnd}$가 작아져 sender가 slow start에 들어갈 수 있고, 이는 idle 뒤 burst를 줄여 router buffer pressure와 packet drop을 완화한다.
 
 ### 16.4 Handling Spurious RTOs: Eifel Response Algorithm
 
-Spurious RTO는 packet이 실제로 lost되지 않았는데 delay spike 때문에 retransmission timeout이 발생하는 상황이다. Cellular handoff, link-layer 변화, 갑작스러운 RTT 증가, severe congestion으로 인한 delay spike 등이 원인이 될 수 있다. TCP는 RTO가 나면 보수적으로 `ssthresh`를 낮추고 `cwnd = IW`로 slow start에 들어가지만, loss가 없었다면 이 반응은 지나치게 보수적이다.
+Spurious RTO는 packet이 실제로 lost되지 않았는데 delay spike 때문에 retransmission timeout이 발생하는 상황이다. Cellular handoff, link-layer 변화, 갑작스러운 RTT 증가, severe congestion으로 인한 delay spike 등이 원인이 될 수 있다. TCP는 RTO가 나면 보수적으로 `ssthresh`를 낮추고 $\text{cwnd} = IW$로 slow start에 들어가지만, loss가 없었다면 이 반응은 지나치게 보수적이다.
 
 Eifel Response Algorithm은 DSACK, Eifel Detection, F-RTO 같은 spurious retransmission detection과 결합해 RTO 뒤 congestion control state 변화를 undo하는 response algorithm이다. Eifel은 detection과 response를 논리적으로 분리한다.
 
 RTO 때문에 `ssthresh`를 바꾸기 전에 TCP는 다음 값을 저장한다.
 
-```text
-pipe_prev = min(flight size, ssthresh)
-```
+$$
+\text{pipe}_{\text{prev}} = \min(\text{flight size}, \text{ssthresh})
+$$
 
 이후 detection algorithm이 RTO가 spurious였다고 판단하면 ACK 도착 시 다음을 수행한다.
 
 1. good ACK에 ECN-Echo flag가 있으면 undo하지 않고 중단한다.
-2. `cwnd = flight size + min(bytes_acked, IW)`로 복원한다.
-3. `ssthresh = pipe_prev`로 RTO 이전 threshold memory를 되살린다.
+2. $\text{cwnd} = \text{flight size} + \min(\text{bytes}_{\text{acked}}, IW)$로 복원한다.
+3. $\text{ssthresh} = \text{pipe}_{\text{prev}}$로 RTO 이전 threshold memory를 되살린다.
 
 ECN-Echo가 있으면 실제 congestion signal일 수 있으므로 reduction을 되돌리는 것이 안전하지 않다. ECN이 없다면 `cwnd`는 다시 traffic을 조금 넣을 수 있는 수준으로 복원하되, unknown congestion state에서 안전한 양인 `IW` 이상 새 data를 과하게 넣지 않도록 제한한다.
 
@@ -280,7 +285,7 @@ Figure 16-4에서 time 5.512 근처에 sender pause가 생기고 time 6.162 이�
 
 원인은 local congestion이다. Linux sender가 lower-layer queue를 burst로 채웠고, TCP 아래 layer에서 packet drop/queue limit이 발생했다. 이 packet transmission attempt는 tcpdump capture 위치보다 아래/위 layer 차이 때문에 trace에는 직접 보이지 않는다. 즉 network core에서 drop된 것이 아니라 sender host 내부 local queue가 bottleneck이 된 것이다.
 
-Linux TCP는 이런 local congestion을 감지하면 Congestion Window Reducing(CWR) state에 들어갈 수 있다. 이 예시에서는 `ssthresh = cwnd/2 = 49 packets`로 줄이고, `cwnd = min(cwnd, flight size + sent burst)`에 해당하는 식으로 87 packets 근처로 낮춘 뒤, ACK 두 개당 `cwnd`를 1 packet 줄이는 rate-halving식 동작을 한다. 그래서 time 8.364 근처까지 `cwnd`가 66 packets로 내려가며 sending rate가 줄어든다.
+Linux TCP는 이런 local congestion을 감지하면 Congestion Window Reducing(CWR) state에 들어갈 수 있다. 이 예시에서는 $\text{ssthresh} = \text{cwnd}/2 = 49\text{ packets}$로 줄이고, $\text{cwnd} = \min(\text{cwnd}, \text{flight size} + \text{sent burst})$에 해당하는 식으로 87 packets 근처로 낮춘 뒤, ACK 두 개당 $\text{cwnd}$를 1 packet 줄이는 rate-halving식 동작을 한다. 그래서 time 8.364 근처까지 $\text{cwnd}$가 66 packets로 내려가며 sending rate가 줄어든다.
 
 ![Figure 16-8](@/assets/images/cs-tcp-ip-illustrated-293-figure-16-8-page-793.png)
 *Figure 16-8 · PDF p. 793 · sender rate가 path forwarding rate를 넘으면 queue가 차 RTT가 증가하고, sender가 느려지면 queue가 비며 RTT가 감소하는 흐름*
@@ -291,7 +296,7 @@ Figure 16-8은 local congestion 이후 RTT가 어떻게 변하는지 보여준�
 
 Figure 16-9의 stretch ACK는 한 ACK가 세 packet 분량의 sequence number를 한 번에 ACK하는 사건이다. Lost ACK, ACK coalescing, receiver behavior 등 원인은 여러 가지일 수 있지만, sender 입장에서는 flight size estimate가 갑자기 줄어들 수 있다. CWR state에서 Linux TCP는 `cwnd`와 flight size estimate를 강하게 맞추므로, stretch ACK 이후 `cwnd`가 68에서 66으로 내려간다.
 
-CWR state에서 delayed ACK가 섞이면 “두 ACK가 도착하면 `cwnd`는 2 packets 줄고, ACKed packet은 3개라 결과적으로 packet 하나만 liberate”되는 식의 동작이 나온다. Sender는 time 9.37 근처에 `cwnd == ssthresh == 49`가 되며 CWR을 빠져나와 normal congestion avoidance로 돌아간다. Figure 16-10과 Figure 16-11은 이때 sender가 다시 ACK당 한두 packet을 보내는 정상 동작으로 복귀했음을 보여준다.
+CWR state에서 delayed ACK가 섞이면 “두 ACK가 도착하면 $\text{cwnd}$는 2 packets 줄고, ACKed packet은 3개라 결과적으로 packet 하나만 liberate”되는 식의 동작이 나온다. Sender는 time 9.37 근처에 $\text{cwnd} = \text{ssthresh} = 49$가 되며 CWR을 빠져나와 normal congestion avoidance로 돌아간다. Figure 16-10과 Figure 16-11은 이때 sender가 다시 ACK당 한두 packet을 보내는 정상 동작으로 복귀했음을 보여준다.
 
 이후 time 17.232부터 severe network congestion이 형성되고 RTT가 약 2s에서 6.5s 수준까지 크게 증가한다. RTT 증가는 queue가 많이 찼다는 강한 힌트이고, 결국 packet drop과 첫 retransmission으로 이어진다.
 
@@ -302,43 +307,43 @@ CWR state에서 delayed ACK가 섞이면 “두 ACK가 도착하면 `cwnd`는 2 
 ![Figure 16-12](@/assets/images/cs-tcp-ip-illustrated-297-figure-16-12-page-797.png)
 *Figure 16-12 · PDF p. 797 · 첫 fast retransmission과 SACK block 기반 recovery 시작*
 
-이 시점에서 `cwnd = 52`, `ssthresh`는 49에서 26으로 줄고 TCP는 Recovery state로 들어간다. Recovery는 cumulative ACK가 recovery point인 763000 이상을 ACK할 때까지 유지된다.
+이 시점에서 $\text{cwnd} = 52$, `ssthresh`는 49에서 26으로 줄고 TCP는 Recovery state로 들어간다. Recovery는 cumulative ACK가 recovery point인 763000 이상을 ACK할 때까지 유지된다.
 
 SACK/FACK 기반 flight size 계산은 다음 구조다.
 
-```text
-flight size = packets_outstanding + packets_retransmitted - packets_removed
-```
+$$
+\text{flight size} = \text{packets}_{\text{outstanding}} + \text{packets}_{\text{retransmitted}} - \text{packets}_{\text{removed}}
+$$
 
 `packets_removed`는 receiver에 out-of-order로 저장된 packet과 network에서 lost된 packet의 추정 합이다. SACK은 receiver에 저장된 block을 알려주지만, lost packet 수는 여전히 추정해야 한다. FACK이 켜진 Linux는 SACK으로 보이는 hole을 lost로 추정해 `cwnd`를 더 적극적으로 조정한다.
 
-Figure 16-13은 SACK option이 recovery 동안 ACK마다 어떤 block을 싣는지 보여준다. 이 구간에서 대부분의 ACK는 duplicate ACK이고, 일부 good ACK는 partial ACK라 recovery point 아래까지만 전진한다. NewReno 설명처럼 partial ACK는 recovery 종료 조건이 아니다. Sender는 time 23.301에 recovery point를 넘는 ACK 765801을 받고 recovery를 마친다. 이때 `cwnd = 20`, `ssthresh = 26`이라 다시 slow start에 들어가고, 곧 `cwnd`가 27이 되며 congestion avoidance로 복귀한다.
+Figure 16-13은 SACK option이 recovery 동안 ACK마다 어떤 block을 싣는지 보여준다. 이 구간에서 대부분의 ACK는 duplicate ACK이고, 일부 good ACK는 partial ACK라 recovery point 아래까지만 전진한다. NewReno 설명처럼 partial ACK는 recovery 종료 조건이 아니다. Sender는 time 23.301에 recovery point를 넘는 ACK 765801을 받고 recovery를 마친다. 이때 $\text{cwnd} = 20$, $\text{ssthresh} = 26$이라 다시 slow start에 들어가고, 곧 $\text{cwnd}$가 27이 되며 congestion avoidance로 복귀한다.
 
 ### 16.5.5 Additional Local Congestion and Fast Retransmit Events
 
-이후 event 3-6은 이미 본 패턴의 반복이다. Event 3은 local congestion으로 CWR에 들어가 `ssthresh`를 15로 낮춘다. Event 4는 second fast retransmit이며, Figure 16-14는 Linux TCP가 SACK 정보나 duplicate ACK를 받으면 먼저 Disorder state로 들어가 limited-transmit처럼 new data를 보내고, 이후 Recovery state에서 retransmission을 수행하는 모습을 보여준다. Recovery 완료 후 `cwnd = 4`, `ssthresh = 8`이라 sender는 slow start 상태가 된다.
+이후 event 3-6은 이미 본 패턴의 반복이다. Event 3은 local congestion으로 CWR에 들어가 `ssthresh`를 15로 낮춘다. Event 4는 second fast retransmit이며, Figure 16-14는 Linux TCP가 SACK 정보나 duplicate ACK를 받으면 먼저 Disorder state로 들어가 limited-transmit처럼 new data를 보내고, 이후 Recovery state에서 retransmission을 수행하는 모습을 보여준다. Recovery 완료 후 $\text{cwnd} = 4$, $\text{ssthresh} = 8$이라 sender는 slow start 상태가 된다.
 
 Events 5와 6은 local congestion이 반복되어 CWR이 다시 발생하는 구간이다. 특히 event 6은 CWR 도중 timeout이 끼어들어 Loss state로 넘어가며, 다음 subsection의 timeout 처리로 이어진다.
 
 ### 16.5.6 Timeouts, Retransmissions, and Undoing cwnd Changes
 
-Timeout은 fast retransmit보다 더 심각한 신호로 취급된다. Duplicate ACK나 SACK 없이 RTO가 만료되면 sender는 Loss state로 들어가고 보통 `cwnd = 1`, `ssthresh`를 낮춘 뒤 slow start를 재시작한다. 또한 timeout 시 기존 SACK 정보는 receiver reneging 가능성 때문에 버리는 것이 원칙이다. Receiver가 예전에 SACK한 out-of-order data를 buffer 정책상 나중에 버릴 수도 있기 때문이다.
+Timeout은 fast retransmit보다 더 심각한 신호로 취급된다. Duplicate ACK나 SACK 없이 RTO가 만료되면 sender는 Loss state로 들어가고 보통 $\text{cwnd} = 1$, `ssthresh`를 낮춘 뒤 slow start를 재시작한다. 또한 timeout 시 기존 SACK 정보는 receiver reneging 가능성 때문에 버리는 것이 원칙이다. Receiver가 예전에 SACK한 out-of-order data를 buffer 정책상 나중에 버릴 수도 있기 때문이다.
 
-Event 7의 first timeout은 time 62.486에 sequence 1773801 retransmission으로 나타난다. 이때 sender는 `cwnd = 1`, `ssthresh = 5`로 slow start에 들어가지만, timestamp evidence로 timeout이 spurious였다고 판단해 Eifel-like response로 상태를 되돌린다.
+Event 7의 first timeout은 time 62.486에 sequence 1773801 retransmission으로 나타난다. 이때 sender는 $\text{cwnd} = 1$, $\text{ssthresh} = 5$로 slow start에 들어가지만, timestamp evidence로 timeout이 spurious였다고 판단해 Eifel-like response로 상태를 되돌린다.
 
 ![Figure 16-15](@/assets/images/cs-tcp-ip-illustrated-300-figure-16-15-page-802.png)
 *Figure 16-15 · PDF p. 802 · first timeout이 spurious로 판정되어 congestion control state가 undo되는 흐름*
 
-Spurious 판정의 핵심은 TSOPT timestamp다. Retransmission을 덮는 ACK의 TSER 값이 retransmission의 TSV보다 이르면, ACK가 실제 retransmitted packet이 아니라 original transmission을 보고 생성되었음을 뜻한다. 즉 “hole”은 진짜 hole이 아니었고 RTO가 잘못 발생했다. 그래서 Linux TCP는 `cwnd`와 `ssthresh`를 이전 값 10으로 복원하고 normal state/congestion avoidance로 돌아간다.
+Spurious 판정의 핵심은 TSOPT timestamp다. Retransmission을 덮는 ACK의 TSER 값이 retransmission의 TSV보다 이르면, ACK가 실제 retransmitted packet이 아니라 original transmission을 보고 생성되었음을 뜻한다. 즉 “hole”은 진짜 hole이 아니었고 RTO가 잘못 발생했다. 그래서 Linux TCP는 $\text{cwnd}$와 $\text{ssthresh}$를 이전 값 10으로 복원하고 normal state/congestion avoidance로 돌아간다.
 
-Event 8은 다시 fast retransmit이며, SACK block과 duplicate ACK로 Disorder -> Recovery가 진행된다. Event 9는 local congestion으로 CWR에 들어가지만, event 10 timeout이 끼어들어 다시 Loss state를 만든다. Event 10도 timestamp evidence로 spurious timeout이었음이 확인되어 undo된다. 다만 이전 `cwnd`를 그대로 복원하면 ACK 하나에 여러 packet burst가 나갈 수 있으므로, Linux는 `maxburst = 3` 같은 congestion window moderation으로 `cwnd = flight size + maxburst` 수준으로 제한한다.
+Event 8은 다시 fast retransmit이며, SACK block과 duplicate ACK로 Disorder -> Recovery가 진행된다. Event 9는 local congestion으로 CWR에 들어가지만, event 10 timeout이 끼어들어 다시 Loss state를 만든다. Event 10도 timestamp evidence로 spurious timeout이었음이 확인되어 undo된다. 다만 이전 $\text{cwnd}$를 그대로 복원하면 ACK 하나에 여러 packet burst가 나갈 수 있으므로, Linux는 $\text{maxburst} = 3$ 같은 congestion window moderation으로 $\text{cwnd} = \text{flight size} + \text{maxburst}$ 수준으로 제한한다.
 
 Event 11은 undo되지 않는 timeout이다. time 88.929에 retransmission timer가 만료되어 sequence 2185401을 retransmit하고, sender는 slow start로 진행한다.
 
 ![Figure 16-16](@/assets/images/cs-tcp-ip-illustrated-301-figure-16-16-page-804.png)
 *Figure 16-16 · PDF p. 804 · undo되지 않는 retransmission timeout 뒤 slow start가 재개되는 흐름*
 
-Figure 16-17은 이 timeout 뒤 ACK 하나가 두세 packet을 liberate하는 slow start 패턴이 다시 나타남을 보여준다. `cwnd`가 `ssthresh = 5`에 도달하면 sender는 congestion avoidance로 넘어간다.
+Figure 16-17은 이 timeout 뒤 ACK 하나가 두세 packet을 liberate하는 slow start 패턴이 다시 나타남을 보여준다. $\text{cwnd}$가 $\text{ssthresh} = 5$에 도달하면 sender는 congestion avoidance로 넘어간다.
 
 ### 16.5.7 Connection Completion
 
@@ -365,15 +370,14 @@ TFRC(TCP Friendly Rate Control)는 packet size, RTT, loss event rate, RTO 등을
 
 Standard TCP의 congestion avoidance는 AIMD로 볼 수 있다.
 
-```text
-# additive increase
-cwnd(t+1) = cwnd(t) + a / cwnd(t)
+$$
+\begin{aligned}
+\text{additive increase: }\quad \text{cwnd}(t+1) &= \text{cwnd}(t) + \frac{a}{\text{cwnd}(t)} \\
+\text{multiplicative decrease: }\quad \text{cwnd}(t+1) &= \text{cwnd}(t) - b \cdot \text{cwnd}(t)
+\end{aligned}
+$$
 
-# multiplicative decrease
-cwnd(t+1) = cwnd(t) - b * cwnd(t)
-```
-
-Regular TCP는 대략 `a = 1`, `b = 0.5`다. 이 response function은 packet drop rate `p`와 TCP sending rate를 연결한다. 새 알고리즘이 이 response function보다 훨씬 공격적이면 standard TCP flow를 밀어낼 수 있다. 그래서 relative fairness는 modified congestion control의 속도를 standard TCP 속도와 비교한 ratio로 평가한다.
+Regular TCP는 대략 $a = 1$, $b = 0.5$다. 이 response function은 packet drop rate $p$와 TCP sending rate를 연결한다. 새 알고리즘이 이 response function보다 훨씬 공격적이면 standard TCP flow를 밀어낼 수 있다. 그래서 relative fairness는 modified congestion control의 속도를 standard TCP 속도와 비교한 ratio로 평가한다.
 
 ### 16.8 TCP in High-Speed Environments
 
@@ -394,10 +398,12 @@ HSTCP(HighSpeed TCP)는 `cwnd`가 일정 기준, 예를 들어 Low_Window = 38 M
 
 HSTCP는 additive increase와 multiplicative decrease 계수를 고정하지 않고 current window size의 함수로 둔다.
 
-```text
-cwnd(t+1) = cwnd(t) + a(cwnd) / cwnd(t)
-cwnd(t+1) = cwnd(t) - b(cwnd) * cwnd(t)
-```
+$$
+\begin{aligned}
+\text{cwnd}(t+1) &= \text{cwnd}(t) + \frac{a(\text{cwnd})}{\text{cwnd}(t)} \\
+\text{cwnd}(t+1) &= \text{cwnd}(t) - b(\text{cwnd}) \cdot \text{cwnd}(t)
+\end{aligned}
+$$
 
 즉 high-speed 영역에서는 `a()`와 `b()`를 조정해 standard TCP보다 더 빠르게 큰 window에 도달한다. 단, slow start도 large window에서 무작정 RTT마다 두 배로 커지면 위험하므로 limited slow start가 제안된다. `max_ssthresh`보다 작은 동안은 regular slow start를 쓰고, `cwnd`가 그보다 커지면 RTT당 증가량을 제한해 수천/수만 packet window가 한 RTT에 두 배가 되는 일을 막는다.
 
@@ -417,9 +423,9 @@ BIC은 saturation point 근처에서 작은 변화만 주어 안정성을 얻지
 
 CUBIC은 window growth function을 cubic function으로 정의한다.
 
-```text
-W(t) = C(t - K)^3 + Wmax
-```
+$$
+W(t) = C(t - K)^3 + W_{\max}
+$$
 
 여기서 `Wmax`는 마지막 window reduction 전의 window size, `t`는 마지막 reduction 이후 경과 시간, `C`는 상수, `K`는 loss가 없으면 다시 `Wmax`에 도달하는 데 걸리는 시간이다.
 
@@ -448,11 +454,11 @@ TCP Vegas는 대표적인 delay-based TCP다. Vegas는 일정 시간 동안 기�
 
 Vegas는 두 threshold `alpha(α)`와 `beta(β)`를 둔다.
 
-- expected - actual < `α`: queue가 너무 비어 있다고 보고 `cwnd`를 증가시킨다.
-- expected - actual > `β`: queue가 너무 차 있다고 보고 `cwnd`를 감소시킨다.
-- `α <= diff <= β`: 적절한 operating range로 보고 `cwnd`를 유지한다.
+- $\text{expected} - \text{actual} < \alpha$: queue가 너무 비어 있다고 보고 $\text{cwnd}$를 증가시킨다.
+- $\text{expected} - \text{actual} > \beta$: queue가 너무 차 있다고 보고 $\text{cwnd}$를 감소시킨다.
+- $\alpha \le \text{diff} \le \beta$: 적절한 operating range로 보고 $\text{cwnd}$를 유지한다.
 
-Vegas의 window 변화는 additive increase/additive decrease(AIAD)다. 원문에서 `α=1`, `β=3`은 bottleneck queue에 최소 1 packet은 유지해 pipe를 비우지 않고, 최대 몇 packet 정도의 여유 범위 안에서 oscillation을 줄이려는 의미다. Slow start에도 변형을 적용할 수 있는데, 매 RTT마다 무조건 늘리는 대신 증가하지 않는 RTT에 throughput 증가 여부를 측정해, 더 이상 증가하지 않으면 Vegas congestion avoidance로 전환한다.
+Vegas의 window 변화는 additive increase/additive decrease(AIAD)다. 원문에서 $\alpha = 1$, $\beta = 3$은 bottleneck queue에 최소 1 packet은 유지해 pipe를 비우지 않고, 최대 몇 packet 정도의 여유 범위 안에서 oscillation을 줄이려는 의미다. Slow start에도 변형을 적용할 수 있는데, 매 RTT마다 무조건 늘리는 대신 증가하지 않는 RTT에 throughput 증가 여부를 측정해, 더 이상 증가하지 않으면 Vegas congestion avoidance로 전환한다.
 
 Vegas의 큰 약점은 RTT measurement가 forward path queue만 반영하지 않는다는 점이다. Reverse path에서 ACK가 밀려도 sender는 RTT 증가로 본다. 그러면 sender 자신이 만든 congestion이 아닌데도 `cwnd`를 줄인다. 또한 standard TCP와 경쟁하면 standard TCP가 queue를 채우고 Vegas는 delay 증가를 보고 물러나므로, loss-based TCP에 bandwidth를 빼앗기기 쉽다.
 
@@ -466,9 +472,9 @@ TCP Westwood/TCP Westwood+(TCPW/TCPW+)는 NewReno sender를 수정해 large BDP 
 
 Loss가 감지되면 standard TCP처럼 `cwnd`를 단순히 절반으로 줄이는 대신, 다음 값을 새 `ssthresh`로 사용한다.
 
-```text
-ssthresh ~= ERE * minimum RTT
-```
+$$
+\text{ssthresh} \approx \text{ERE} \cdot \text{minimum RTT}
+$$
 
 즉 estimated BDP에 가까운 값을 threshold로 삼는다. Agile probing은 otherwise slow start로 동작할 구간에서 `ssthresh`를 적응적으로 반복 설정해 `cwnd`가 더 알맞게 커지게 돕는다.
 
@@ -476,17 +482,17 @@ ssthresh ~= ERE * minimum RTT
 
 Compound TCP(CTCP)는 loss-based와 delay-based를 결합한 방식이다. Windows Vista 이후 congestion provider로 선택 가능하며, Windows Server 2008에서는 기본값으로 쓰인 맥락이 있다. CTCP는 standard TCP식 `cwnd`에 delay-based component인 `dwnd(delay window)`를 더한다.
 
-```text
-W = min(cwnd + dwnd, awnd)
-```
+$$
+W = \min(\text{cwnd} + \text{dwnd}, \text{awnd})
+$$
 
 `cwnd`는 standard TCP처럼 loss-based로 관리되고, `dwnd`는 Vegas와 유사하게 queueing delay를 추정해 관리된다. CTCP는 minimum RTT를 `baseRTT`로 유지하고, 현재 RTT와 비교해 network에 queueing된 것으로 보이는 data 양 `diff`를 계산한다.
 
-```text
-diff = W * (1 - baseRTT / RTT)
-```
+$$
+\text{diff} = W\left(1 - \frac{\text{baseRTT}}{\text{RTT}}\right)
+$$
 
-`diff`가 목표 threshold `γ`보다 작으면 network가 덜 찼다고 보고 `dwnd`를 키워 더 aggressive하게 보낸다. `diff >= γ`이면 queue가 목표보다 차 있다고 보고 `dwnd`를 줄인다. Loss가 발생하면 `dwnd`에도 multiplicative decrease를 적용한다. `dwnd`는 음수가 될 수 없으며, 0이면 CTCP는 standard TCP처럼 동작한다.
+$\text{diff}$가 목표 threshold $\gamma$보다 작으면 network가 덜 찼다고 보고 $\text{dwnd}$를 키워 더 aggressive하게 보낸다. $\text{diff} \ge \gamma$이면 queue가 목표보다 차 있다고 보고 $\text{dwnd}$를 줄인다. Loss가 발생하면 $\text{dwnd}$에도 multiplicative decrease를 적용한다. $\text{dwnd}$는 음수가 될 수 없으며, 0이면 CTCP는 standard TCP처럼 동작한다.
 
 CTCP의 의도는 delay-based 방식의 낮은 loss/빠른 convergence 장점과 loss-based 방식의 TCP competition 능력을 결합하는 것이다. 하지만 buffer가 너무 작거나, many CTCP flows가 같은 bottleneck에서 각자 `γ` packets를 유지하려 하면 성능이 나빠질 수 있다. Vegas처럼 rerouting이나 persistent congestion에 취약할 수 있다는 점도 주의해야 한다.
 
@@ -556,13 +562,13 @@ Optimistic ACKing은 아직 도착하지 않은 data에 대해 미리 ACK을 보
 
 ECN도 receiver가 정직하게 congestion indication을 되돌려준다는 가정이 필요하다. ECN-capable router가 CE mark를 설정했는데 receiver가 ACK에 ECN-Echo(ECE)를 싣지 않거나, network 중간에서 ECN indicator를 지워버리면 sender는 congestion을 알지 못해 `cwnd`를 줄이지 않는다.
 
-RFC3540의 experimental ECN nonce는 이 문제를 줄이려는 방법이다. Sender는 IP packet의 ECN field 중 ECT bit field에 random binary value를 넣고, receiver는 시간에 따라 받은 값들의 1-bit sum, 즉 XOR 결과를 ACK의 reserved bit에 되돌려준다. Misbehaving receiver가 실제 packet을 받지 않았거나 CE 정보를 숨기려면 이 sum을 맞혀야 하는데, packet마다 성공 확률이 `1/2`이고 `k` packets 모두 맞출 확률은 `1/2^k`로 작아진다. 즉 nonce는 receiver가 “봤다고 주장하는 packet stream”이 실제 packet stream과 맞는지 확률적으로 검증하는 장치다.
+RFC3540의 experimental ECN nonce는 이 문제를 줄이려는 방법이다. Sender는 IP packet의 ECN field 중 ECT bit field에 random binary value를 넣고, receiver는 시간에 따라 받은 값들의 1-bit sum, 즉 XOR 결과를 ACK의 reserved bit에 되돌려준다. Misbehaving receiver가 실제 packet을 받지 않았거나 CE 정보를 숨기려면 이 sum을 맞혀야 하는데, packet마다 성공 확률이 $1/2$이고 $k$ packets 모두 맞출 확률은 $1/2^k$로 작아진다. 즉 nonce는 receiver가 “봤다고 주장하는 packet stream”이 실제 packet stream과 맞는지 확률적으로 검증하는 장치다.
 
 ### 16.13 Summary
 
 TCP는 reliable transport protocol로 설계될 때 receiver를 보호하는 flow control은 포함했지만, network 중간을 congestion으로부터 보호하는 mechanism은 처음부터 충분하지 않았다. 이후 slow start와 congestion avoidance가 도입되면서 sender는 `cwnd(congestion window)`를 사용해 network에 넣는 data 양을 조절하게 되었다. 실제 sending window는 receiver가 광고한 `awnd(advertised window)`와 `cwnd` 중 작은 값이다.
 
-Slow start는 `cwnd`를 RTT마다 대략 exponential하게 키워 path capacity를 빠르게 탐색한다. Congestion avoidance는 `cwnd`를 RTT마다 대략 linear하게 키워 loss 이후 더 조심스럽게 bandwidth를 탐색한다. 두 algorithm 중 어느 쪽이 동작할지는 `cwnd`와 `ssthresh(slow start threshold)` 비교로 결정된다. `cwnd <= ssthresh`이면 slow start, `cwnd > ssthresh`이면 congestion avoidance가 담당한다. Timeout이나 idle restart 뒤에도 slow start가 사용될 수 있고, `ssthresh`는 connection 중 동적으로 바뀐다.
+Slow start는 $\text{cwnd}$를 RTT마다 대략 exponential하게 키워 path capacity를 빠르게 탐색한다. Congestion avoidance는 $\text{cwnd}$를 RTT마다 대략 linear하게 키워 loss 이후 더 조심스럽게 bandwidth를 탐색한다. 두 algorithm 중 어느 쪽이 동작할지는 $\text{cwnd}$와 `ssthresh(slow start threshold)` 비교로 결정된다. $\text{cwnd} \le \text{ssthresh}$이면 slow start, $\text{cwnd} > \text{ssthresh}$이면 congestion avoidance가 담당한다. Timeout이나 idle restart 뒤에도 slow start가 사용될 수 있고, `ssthresh`는 connection 중 동적으로 바뀐다.
 
 Reno/NewReno/SACK TCP는 여러 packet loss 상황에서 recovery stall을 줄이기 위해 발전했다. Reno는 fast retransmit/fast recovery로 timeout 없이 일부 loss를 복구하지만, 한 window 안의 multiple losses에서 취약하다. NewReno는 partial ACK을 이용해 여러 손실을 한 RTT당 하나씩 복구한다. SACK TCP는 receiver가 받은 block을 명시해 sender가 한 RTT에 여러 손실을 더 지능적으로 복구할 수 있게 한다. 대신 SACK sender는 pipe 추정, outstanding data accounting을 보수적으로 해야 다른 TCP flow에 비해 과도하게 공격적이지 않다.
 
@@ -590,7 +596,7 @@ Buffer bloat는 큰 buffer가 loss를 늦추는 대신 latency를 크게 키우�
 
 - Chapter 13 TCP Connection Management와 연결: congestion control은 ESTABLISHED 상태에서 핵심이고, SYN/FIN/RST 같은 state machine 공격과 별개로 ACK stream 조작 공격도 가능하다.
 - Chapter 14 TCP Timeout and Retransmission과 연결: RTO, spurious timeout, Eifel detection/response는 `cwnd` reduction과 recovery 성능을 직접 좌우한다.
-- Chapter 15 TCP Data Flow and Window Management와 연결: advertised window `awnd`, send window, receive window는 flow control이고, `cwnd`는 congestion control이다. 실제 전송 가능량은 `min(cwnd, awnd)`다.
+- Chapter 15 TCP Data Flow and Window Management와 연결: advertised window $\text{awnd}$, send window, receive window는 flow control이고, $\text{cwnd}$는 congestion control이다. 실제 전송 가능량은 $\min(\text{cwnd}, \text{awnd})$다.
 - Chapter 5 Internet Protocol과 연결: ECN은 IP header의 ECN bits를 사용하고, router가 CE mark를 설정한다.
 - Router/queueing 내용과 연결: drop tail, RED, AQM, buffer bloat는 TCP sender가 보는 loss/delay/ECN signal을 만든다.
 

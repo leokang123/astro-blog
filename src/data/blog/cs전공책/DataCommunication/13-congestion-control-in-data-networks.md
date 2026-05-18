@@ -230,7 +230,7 @@ $$
 \sum_i CIR_{i,j} \le AccessRate_j
 $$
 
-여기서 `CIR_{i,j}`는 user access channel `j` 위 connection `i`의 committed information rate이고, `AccessRate_j`는 user-network interface의 fixed data-rate TDM channel rate다. 실제로는 node capacity 때문에 일부 CIR을 더 낮게 잡을 수도 있다.
+여기서 $CIR_{i,j}$는 user access channel $j$ 위 connection $i$의 committed information rate이고, $AccessRate_j$는 user-network interface의 fixed data-rate TDM channel rate다. 실제로는 node capacity 때문에 일부 CIR을 더 낮게 잡을 수도 있다.
 
 Permanent frame relay connection에서는 CIR이 connection agreement 시점에 정해지고, switched connection에서는 call control protocol의 setup phase에서 협상된다.
 
@@ -249,16 +249,16 @@ CIR만으로는 bursty traffic을 충분히 표현하기 어렵기 때문에 두
 
 | Parameter | 의미 |
 |---|---|
-| **Committed burst size (Bc)** | measurement interval `T` 동안 network가 정상 조건에서 transfer하기로 동의한 최대 data amount |
-| **Excess burst size (Be)** | `Bc`를 초과하지만 network가 정상 조건에서 transfer를 시도할 수 있는 최대 excess data amount. Delivery commitment는 낮다. |
+| **Committed burst size (Bc)** | measurement interval $T$ 동안 network가 정상 조건에서 transfer하기로 동의한 최대 data amount |
+| **Excess burst size (Be)** | $B_c$를 초과하지만 network가 정상 조건에서 transfer를 시도할 수 있는 최대 excess data amount. Delivery commitment는 낮다. |
 
-`Bc`와 `CIR`의 관계는 다음과 같다.
+$B_c$와 $CIR$의 관계는 다음과 같다.
 
 $$
 T = \frac{B_c}{CIR}
 $$
 
-즉 `CIR`은 committed data를 시간으로 나눈 rate이고, `Bc`는 interval `T` 동안 허용되는 committed data 양이다.
+즉 $CIR$은 committed data를 시간으로 나눈 rate이고, $B_c$는 interval $T$ 동안 허용되는 committed data 양이다.
 
 ![Figure 13.7](@/assets/images/data-communication-171-figure-13-7-page-411.png)
 *Figure 13.7 · PDF p. 411 · Bc, Be, DE=0/DE=1/discard region의 관계*
@@ -267,9 +267,9 @@ Figure 13.7은 cumulative bits 기준으로 DE marking과 discard를 보여준�
 
 | 경우 | 해석 |
 |---|---|
-| Figure 13.7a | interval `T` 안의 cumulative bits가 `Bc` 이하이므로 모든 frame이 `DE=0`이다. 개별 frame 전송 순간에는 access rate로 보내져 CIR보다 빠를 수 있지만, interval 전체 cumulative amount가 기준이다. |
-| Figure 13.7b | 마지막 frame 때문에 cumulative bits가 `Bc`를 넘으므로 해당 frame은 `DE=1`로 mark된다. |
-| Figure 13.7c | 세 번째 frame은 `Bc`를 넘어 `DE=1`이 되고, 네 번째 frame은 `Bc + Be`를 넘어 discard된다. |
+| Figure 13.7a | interval $T$ 안의 cumulative bits가 $B_c$ 이하이므로 모든 frame이 $DE=0$이다. 개별 frame 전송 순간에는 access rate로 보내져 CIR보다 빠를 수 있지만, interval 전체 cumulative amount가 기준이다. |
+| Figure 13.7b | 마지막 frame 때문에 cumulative bits가 $B_c$를 넘으므로 해당 frame은 $DE=1$로 mark된다. |
+| Figure 13.7c | 세 번째 frame은 $B_c$를 넘어 $DE=1$이 되고, 네 번째 frame은 $B_c+B_e$를 넘어 discard된다. |
 
 #### Explicit Signaling: FECN과 BECN
 
@@ -313,13 +313,13 @@ $$
 \frac{53 \times 8\ \text{bits}}{150 \times 10^6\ \text{bps}} \approx 2.8 \times 10^{-6}\ \text{s}
 $$
 
-미국 동서 해안 정도의 거리에서 round-trip propagation delay를 약 `48 ms`로 보면, congestion 때문에 cell drop이 발생하고 destination이 reject message를 보낸 뒤 source가 그 신호를 받기까지 source는 추가로 다음 개수의 cell을 보낼 수 있다.
+미국 동서 해안 정도의 거리에서 round-trip propagation delay를 약 $48\ \text{ms}$로 보면, congestion 때문에 cell drop이 발생하고 destination이 reject message를 보낸 뒤 source가 그 신호를 받기까지 source는 추가로 다음 개수의 cell을 보낼 수 있다.
 
 $$
 N = \frac{48 \times 10^{-3}}{2.8 \times 10^{-6}} \approx 1.7 \times 10^4\ \text{cells}
 $$
 
-이는 약 `7.2 × 10^6 bits`다. 즉 source가 congestion indication에 반응하기 전에 7 Mbit 이상이 이미 network로 들어간다. 그래서 traditional network에서 괜찮던 loss 기반 implicit reaction은 ATM WAN에서는 너무 늦다.
+이는 약 $7.2 \times 10^6\ \text{bits}$다. 즉 source가 congestion indication에 반응하기 전에 7 Mbit 이상이 이미 network로 들어간다. 그래서 traditional network에서 괜찮던 loss 기반 implicit reaction은 ATM WAN에서는 너무 늦다.
 
 #### Cell Delay Variation과 CBR Reassembly
 
@@ -328,7 +328,7 @@ ATM은 voice/video를 digitized cell stream으로 전달할 수 있다. 특히 v
 ![Figure 13.8](@/assets/images/data-communication-172-figure-13-8-page-415.png)
 *Figure 13.8 · PDF p. 415 · CBR cell stream을 일정 rate로 재조립하기 위한 delay buffer*
 
-Figure 13.8에서 `D(i)`는 `i`번째 cell의 end-to-end delay이고, `V(i)`는 destination이 application에 넘기기 전 추가로 기다리는 reassembly delay다. 첫 cell이 `t0`에 도착하면 destination은 `V(0)`만큼 기다린 뒤 application에 전달한다. 이후 cell들은 `R` cells/s의 constant rate로 전달되어야 하므로 delivery interval은 `d = 1/R`이다.
+Figure 13.8에서 $D(i)$는 $i$번째 cell의 end-to-end delay이고, $V(i)$는 destination이 application에 넘기기 전 추가로 기다리는 reassembly delay다. 첫 cell이 $t_0$에 도착하면 destination은 $V(0)$만큼 기다린 뒤 application에 전달한다. 이후 cell들은 $R$ cells/s의 constant rate로 전달되어야 하므로 delivery interval은 $d=1/R$이다.
 
 원문 식을 개념적으로 정리하면 다음과 같다.
 
@@ -342,7 +342,7 @@ $$
 V(i) = V(i-1) - [t_i - (t_{i-1} + d)]
 $$
 
-만약 계산된 `V(i)`가 음수라면, 해당 cell은 약속된 playback/reassembly 시점보다 늦게 도착한 것이므로 discard된다. 따라서 higher layer는 constant bit rate로 data를 받지만, 늦은 cell 때문에 gap이 생길 수 있다. `V(0)`를 크게 잡으면 late discard가 줄지만 average delay가 늘고, `V(0)`를 작게 잡으면 delay는 줄지만 cell delay variation에 취약해진다. 이 trade-off 때문에 subscriber는 network provider에게 작은 **Cell Delay Variation (CDV)**를 요구하게 된다.
+만약 계산된 $V(i)$가 음수라면, 해당 cell은 약속된 playback/reassembly 시점보다 늦게 도착한 것이므로 discard된다. 따라서 higher layer는 constant bit rate로 data를 받지만, 늦은 cell 때문에 gap이 생길 수 있다. $V(0)$를 크게 잡으면 late discard가 줄지만 average delay가 늘고, $V(0)$를 작게 잡으면 delay는 줄지만 cell delay variation에 취약해진다. 이 trade-off 때문에 subscriber는 network provider에게 작은 **Cell Delay Variation (CDV)**를 요구하게 된다.
 
 #### Network와 UNI가 만드는 Cell Delay Variation
 
@@ -432,7 +432,7 @@ Traffic parameter 값은 Table 13.4처럼 설정될 수 있다.
 | **SVC (Switched Virtual Connection)** | user/NMS가 signaling으로 요청 | network operator가 subscription별 assign | network-operator default rules |
 | **PVC (Permanent Virtual Connection)** | NMS로 설정 | network operator가 subscription별 assign | network-operator default rules |
 
-또 다른 QoS 요소는 **Cell Loss Priority (CLP)**다. User는 ATM connection에 두 수준의 cell loss priority를 요청할 수 있고, 각 cell의 priority는 cell header의 **CLP bit**로 표시된다. 두 priority level을 쓰면 보통 `CLP = 0` high-priority traffic에 대한 parameter set과 `CLP = 0 or 1` aggregate traffic에 대한 parameter set을 따로 지정한다.
+또 다른 QoS 요소는 **Cell Loss Priority (CLP)**다. User는 ATM connection에 두 수준의 cell loss priority를 요청할 수 있고, 각 cell의 priority는 cell header의 **CLP bit**로 표시된다. 두 priority level을 쓰면 보통 $CLP=0$ high-priority traffic에 대한 parameter set과 $CLP=0\text{ or }1$ aggregate traffic에 대한 parameter set을 따로 지정한다.
 
 #### Usage Parameter Control (UPC)
 
@@ -445,7 +445,7 @@ UPC가 감시하는 기능은 두 가지다.
 | peak cell rate와 associated CDV 제어 | `PCR`, `CDV tolerance` |
 | sustainable cell rate와 associated burst tolerance 제어 | `SCR`, `Burst tolerance` |
 
-Peak cell rate algorithm은 peak cell rate `R`과 CDV tolerance limit `τ`를 사용한다. CDV가 없다면 cell interarrival time은 `T = 1/R`이다. CDV가 있으면 `T`는 peak rate에서의 average interarrival time이며, algorithm은 cell arrival rate를 감시해 interarrival time이 너무 짧아져 tolerance를 넘는 peak rate violation을 만들지 않도록 compliance를 판단한다. 같은 algorithm은 parameter만 바꿔 sustainable cell rate `R_s`와 burst tolerance `τ_s` 감시에도 쓰일 수 있다.
+Peak cell rate algorithm은 peak cell rate $R$과 CDV tolerance limit $\tau$를 사용한다. CDV가 없다면 cell interarrival time은 $T=1/R$이다. CDV가 있으면 $T$는 peak rate에서의 average interarrival time이며, algorithm은 cell arrival rate를 감시해 interarrival time이 너무 짧아져 tolerance를 넘는 peak rate violation을 만들지 않도록 compliance를 판단한다. 같은 algorithm은 parameter만 바꿔 sustainable cell rate $R_s$와 burst tolerance $\tau_s$ 감시에도 쓰일 수 있다.
 
 UPC algorithm 자체는 compliance를 판단하는 도구다. 실제 action은 network policy가 결정한다.
 
@@ -453,21 +453,21 @@ UPC algorithm 자체는 compliance를 판단하는 도구다. 실제 action은 n
 |---|---|
 | compliant cell | forward/pass |
 | noncompliant cell | UPC point에서 discard |
-| noncompliant cell with tagging option | `CLP = 1`로 tag한 뒤 pass, 이후 congestion 시 discard 후보 |
+| noncompliant cell with tagging option | $CLP=1$로 tag한 뒤 pass, 이후 congestion 시 discard 후보 |
 
 두 수준의 CLP traffic contract가 있으면 규칙은 더 세밀하다.
 
 | Cell | Contract 판단 | Action |
 |---|---|---|
-| `CLP = 0` | `CLP = 0` contract compliant | pass |
-| `CLP = 0` | `CLP = 0`에는 noncompliant, `CLP = 0 or 1` aggregate에는 compliant | `CLP = 1`로 tag하고 pass |
-| `CLP = 0` | high-priority와 aggregate 모두 noncompliant | discard |
-| `CLP = 1` | aggregate contract compliant | pass |
-| `CLP = 1` | aggregate contract noncompliant | discard |
+| $CLP=0$ | $CLP=0$ contract compliant | pass |
+| $CLP=0$ | $CLP=0$에는 noncompliant, $CLP=0\text{ or }1$ aggregate에는 compliant | $CLP=1$로 tag하고 pass |
+| $CLP=0$ | high-priority와 aggregate 모두 noncompliant | discard |
+| $CLP=1$ | aggregate contract compliant | pass |
+| $CLP=1$ | aggregate contract noncompliant | discard |
 
 #### Selective Cell Discard
 
-**Selective cell discard**는 UPC 이후 network 내부에서 congestion이 생겼을 때 `CLP = 1` cell을 우선 discard하는 기법이다. 목적은 lower-priority cell을 버려 higher-priority cell의 performance를 보호하는 것이다. Network는 source가 원래 lower priority로 보낸 cell과 UPC가 noncompliance 때문에 `CLP = 1`로 tag한 cell을 구분하지 않는다. 둘 다 congestion 시 discard 후보가 된다.
+**Selective cell discard**는 UPC 이후 network 내부에서 congestion이 생겼을 때 $CLP=1$ cell을 우선 discard하는 기법이다. 목적은 lower-priority cell을 버려 higher-priority cell의 performance를 보호하는 것이다. Network는 source가 원래 lower priority로 보낸 cell과 UPC가 noncompliance 때문에 $CLP=1$로 tag한 cell을 구분하지 않는다. 둘 다 congestion 시 discard 후보가 된다.
 
 #### Traffic Shaping과 Token Bucket
 
@@ -478,9 +478,9 @@ UPC algorithm 자체는 compliance를 판단하는 도구다. 실제 action은 n
 ![Figure 13.11](@/assets/images/data-communication-175-figure-13-11-page-424.png)
 *Figure 13.11 · PDF p. 424 · token bucket 기반 traffic shaping 구조*
 
-Figure 13.11에서 token generator는 초당 `r` tokens를 만들고 최대 `b` tokens를 담을 수 있는 token bucket에 넣는다. Source에서 오는 cell은 최대 `K` cells를 담는 buffer에 저장된다. Server를 통해 cell 하나를 보내려면 token 하나를 꺼내야 한다. Bucket이 비어 있으면 cell은 다음 token이 생길 때까지 queue에서 기다린다.
+Figure 13.11에서 token generator는 초당 $r$ tokens를 만들고 최대 $b$ tokens를 담을 수 있는 token bucket에 넣는다. Source에서 오는 cell은 최대 $K$ cells를 담는 buffer에 저장된다. Server를 통해 cell 하나를 보내려면 token 하나를 꺼내야 한다. Bucket이 비어 있으면 cell은 다음 token이 생길 때까지 queue에서 기다린다.
 
-Backlog가 있고 bucket이 비어 있는 상태에서는 cell이 `r` cells/s의 smooth flow로 방출된다. 따라서 burst가 들어와도 output은 더 일정해지고, cell delay variation이 줄어든다.
+Backlog가 있고 bucket이 비어 있는 상태에서는 cell이 $r$ cells/s의 smooth flow로 방출된다. 따라서 burst가 들어와도 output은 더 일정해지고, cell delay variation이 줄어든다.
 
 ### 13.7 ATM-GFR Traffic Management
 
@@ -488,7 +488,7 @@ Backlog가 있고 bucket이 비어 있는 상태에서는 cell이 `r` cells/s의
 
 UBR과 마찬가지로 GFR도 frame delivery를 절대 보장하지 않는다. Dropped frame이 생기면 TCP 같은 higher layer가 window management와 congestion control로 반응해야 한다. 그러나 UBR과 달리 GFR은 각 GFR VC에 대해 cell rate 기준의 일정 capacity를 reserve할 수 있다. 즉 application은 minimum rate에서는 loss 없이 전송할 수 있다는 보장을 받고, network가 congested하지 않으면 더 높은 rate로도 보낼 수 있다.
 
-GFR의 독특한 점은 network가 cell뿐 아니라 **frame**도 인식해야 한다는 것이다. Congestion이 생기면 network는 individual cell이 아니라 entire frame을 discard한다. 또한 한 frame에 속한 모든 cell은 같은 **CLP bit** setting을 가져야 한다. `CLP = 1` AAL5 frame은 lower-priority frame으로 best-effort basis에서 전송되고, minimum guaranteed capacity는 `CLP = 0` frame에 적용된다.
+GFR의 독특한 점은 network가 cell뿐 아니라 **frame**도 인식해야 한다는 것이다. Congestion이 생기면 network는 individual cell이 아니라 entire frame을 discard한다. 또한 한 frame에 속한 모든 cell은 같은 **CLP bit** setting을 가져야 한다. $CLP=1$ AAL5 frame은 lower-priority frame으로 best-effort basis에서 전송되고, minimum guaranteed capacity는 $CLP=0$ frame에 적용된다.
 
 GFR traffic contract는 다음 parameter로 구성된다.
 
@@ -517,9 +517,9 @@ Figure 13.12는 GFR을 세 단계로 보여준다. 먼저 UPC가 service conform
 
 #### Tagging and Policing
 
-**Tagging**은 GFR traffic contract에 conform하는 frame과 그렇지 않은 frame을 구별한다. Conformance checking을 수행하는 network element는 nonconforming frame의 모든 cell에 `CLP = 1`을 설정한다. Tagged cell은 traffic contract violation으로 간주되며, 이후 buffer management나 scheduling에서 untagged cell보다 낮은 QoS를 받는다.
+**Tagging**은 GFR traffic contract에 conform하는 frame과 그렇지 않은 frame을 구별한다. Conformance checking을 수행하는 network element는 nonconforming frame의 모든 cell에 $CLP=1$을 설정한다. Tagged cell은 traffic contract violation으로 간주되며, 이후 buffer management나 scheduling에서 untagged cell보다 낮은 QoS를 받는다.
 
-Tagging은 보통 ATM network ingress element에서 network가 수행할 수 있지만, source end system이 덜 중요한 frame을 표시하기 위해 직접 수행할 수도 있다. Network는 ingress 또는 다른 ATM switching element에서 `CLP = 1`인 nonconforming frame의 cell을 discard할 수 있고, 이 cell discard는 policing function에 해당한다.
+Tagging은 보통 ATM network ingress element에서 network가 수행할 수 있지만, source end system이 덜 중요한 frame을 표시하기 위해 직접 수행할 수도 있다. Network는 ingress 또는 다른 ATM switching element에서 $CLP=1$인 nonconforming frame의 cell을 discard할 수 있고, 이 cell discard는 policing function에 해당한다.
 
 #### Buffer Management
 
@@ -529,7 +529,7 @@ Fair하고 efficient한 buffer 사용을 위해 network element는 per-VC buffer
 
 #### Scheduling
 
-**Scheduling**은 최소한 untagged cell을 tagged cell보다 우선 처리할 수 있다. 더 나아가 VC별 separate queue를 유지하고 per-VC scheduling decision을 수행할 수 있다. 각 queue 내부에서는 first-come, first-served discipline을 쓰되 `CLP = 0` frame에 higher priority를 줄 수 있다.
+**Scheduling**은 최소한 untagged cell을 tagged cell보다 우선 처리할 수 있다. 더 나아가 VC별 separate queue를 유지하고 per-VC scheduling decision을 수행할 수 있다. 각 queue 내부에서는 first-come, first-served discipline을 쓰되 $CLP=0$ frame에 higher priority를 줄 수 있다.
 
 Queue 사이 scheduling은 individual VC의 outgoing rate를 제어한다. 그 결과 각 VC가 fair allocation of capacity를 받고, GFR traffic contract의 **MCR (Minimum Cell Rate)** 요구를 만족하도록 만들 수 있다.
 
@@ -549,7 +549,7 @@ QoS eligibility test는 사실상 two-stage filtering이다.
 
 | Stage | 기준 | 결과 |
 |---|---|---|
-| Conformance test | traffic upper bound를 넘는지 검사 | nonconforming frame은 즉시 discard되거나 `CLP = 1`로 tag되어 이후 discard에 취약해진다. |
+| Conformance test | traffic upper bound를 넘는지 검사 | nonconforming frame은 즉시 discard되거나 $CLP=1$로 tag되어 이후 discard에 취약해진다. |
 | QoS eligibility test | GFR contract의 lower bound, 즉 guarantee 대상 traffic인지 검사 | eligible frame은 QoS guarantee 대상이 되고, ineligible traffic은 best-effort에 가깝게 처리된다. |
 
 따라서 GFR VC 위 frame은 세 범주로 나뉜다.

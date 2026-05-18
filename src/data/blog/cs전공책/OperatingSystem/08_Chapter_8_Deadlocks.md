@@ -132,15 +132,15 @@ Deadlock이 발생하려면 네 조건이 모두 필요하다. `circular wait`�
 
 Deadlock은 `system resource-allocation graph`라는 directed graph로 더 정확히 표현할 수 있다. Graph는 vertices `V`와 edges `E`로 구성된다.
 
-- `T = {T1, T2, ..., Tn}`: active threads 집합
-- `R = {R1, R2, ..., Rm}`: resource types 집합
+- $T = \{T_1, T_2, \ldots, T_n\}$: active threads 집합
+- $R = \{R_1, R_2, \ldots, R_m\}$: resource types 집합
 
 Edges는 두 종류다.
 
 | Edge | 이름 | 의미 |
 |---|---|---|
-| `Ti -> Rj` | `request edge` | Thread `Ti`가 resource type `Rj`의 instance를 요청했고 기다리는 중 |
-| `Rj -> Ti` | `assignment edge` | Resource type `Rj`의 instance 하나가 thread `Ti`에 allocated됨 |
+| $T_i \to R_j$ | `request edge` | Thread $T_i$가 resource type $R_j$의 instance를 요청했고 기다리는 중 |
+| $R_j \to T_i$ | `assignment edge` | Resource type $R_j$의 instance 하나가 thread $T_i$에 allocated됨 |
 
 Pictorially, thread는 circle, resource type은 rectangle로 표현한다. Resource type에 여러 instances가 있으면 rectangle 안의 dots로 instances를 나타낸다. Request edge는 resource rectangle을 향하고, assignment edge는 그 resource type 안의 특정 dot에서 thread로 향한다.
 
@@ -154,12 +154,12 @@ Figure 8.4는 다음 상태를 표현한다.
 ![Resource-allocation graph](@/assets/images/cs-operating-system-182-figure-8-4-page-422.png)
 <p align="center"><sub>Figure 8.4 · PDF p. 422 · threads T1-T3와 resource types R1-R4의 request/assignment 관계</sub></p>
 
-- `T = {T1, T2, T3}`
-- `R = {R1, R2, R3, R4}`
-- `R1`은 instance 1개, `R2`는 2개, `R3`는 1개, `R4`는 3개
-- `T1`은 `R2` instance를 holding하고 `R1` instance를 waiting
-- `T2`는 `R1`, `R2` instances를 holding하고 `R3` instance를 waiting
-- `T3`는 `R3` instance를 holding
+- $T = \{T_1, T_2, T_3\}$
+- $R = \{R_1, R_2, R_3, R_4\}$
+- $R_1$은 instance 1개, $R_2$는 2개, $R_3$는 1개, $R_4$는 3개
+- $T_1$은 $R_2$ instance를 holding하고 $R_1$ instance를 waiting
+- $T_2$는 $R_1$, $R_2$ instances를 holding하고 $R_3$ instance를 waiting
+- $T_3$는 $R_3$ instance를 holding
 
 Resource-allocation graph의 핵심 판정은 cycle이다.
 
@@ -169,26 +169,28 @@ Resource-allocation graph의 핵심 판정은 cycle이다.
 | Cycle + 각 resource type instance가 1개 | Deadlock 발생. Cycle은 necessary and sufficient condition |
 | Cycle + resource type에 여러 instances 가능 | Deadlock일 수도 있고 아닐 수도 있음. Cycle은 necessary but not sufficient condition |
 
-Figure 8.4 상태에서 `T3`가 `R2` instance를 요청하면 available `R2` instance가 없으므로 request edge `T3 -> R2`가 추가된다.
+Figure 8.4 상태에서 $T_3$가 $R_2$ instance를 요청하면 available $R_2$ instance가 없으므로 request edge $T_3 \to R_2$가 추가된다.
 
 ![Resource-allocation graph with deadlock](@/assets/images/cs-operating-system-183-figure-8-5-page-423.png)
 <p align="center"><sub>Figure 8.5 · PDF p. 423 · T3가 R2를 요청하면서 두 minimal cycles가 생기고 deadlock이 발생한 graph</sub></p>
 
 이때 두 minimal cycles가 생긴다.
 
-```text
-T1 -> R1 -> T2 -> R3 -> T3 -> R2 -> T1
-T2 -> R3 -> T3 -> R2 -> T2
-```
+$$
+\begin{aligned}
+T_1 &\to R_1 \to T_2 \to R_3 \to T_3 \to R_2 \to T_1 \\
+T_2 &\to R_3 \to T_3 \to R_2 \to T_2
+\end{aligned}
+$$
 
-`T1`, `T2`, `T3` 모두 deadlocked다. `T2`는 `T3`가 가진 `R3`를 기다리고, `T3`는 `T1` 또는 `T2`가 가진 `R2` release를 기다리고, `T1`은 `T2`가 가진 `R1` release를 기다린다.
+$T_1$, $T_2$, $T_3$ 모두 deadlocked다. $T_2$는 $T_3$가 가진 $R_3$를 기다리고, $T_3$는 $T_1$ 또는 $T_2$가 가진 $R_2$ release를 기다리고, $T_1$은 $T_2$가 가진 $R_1$ release를 기다린다.
 
 반면 Figure 8.6에는 cycle이 있지만 deadlock은 없다.
 
 ![Cycle without deadlock](@/assets/images/cs-operating-system-184-figure-8-6-page-423.png)
 <p align="center"><sub>Figure 8.6 · PDF p. 423 · cycle은 있지만 T4가 R2 instance를 release하면 cycle이 깨질 수 있어 deadlock이 아닌 graph</sub></p>
 
-Cycle `T1 -> R1 -> T3 -> R2 -> T1`이 존재하지만, `T4`가 `R2` instance를 release할 수 있다. 그러면 그 instance를 `T3`에 allocate해 cycle을 깰 수 있다. 따라서 multiple instances가 있는 resource-allocation graph에서는 cycle만 보고 deadlock이라고 단정하면 안 된다.
+Cycle $T_1 \to R_1 \to T_3 \to R_2 \to T_1$이 존재하지만, $T_4$가 $R_2$ instance를 release할 수 있다. 그러면 그 instance를 $T_3$에 allocate해 cycle을 깰 수 있다. 따라서 multiple instances가 있는 resource-allocation graph에서는 cycle만 보고 deadlock이라고 단정하면 안 된다.
 
 ## 8.4 Methods for Handling Deadlocks
 
@@ -246,21 +248,23 @@ Deadlock prevention은 네 necessary conditions 중 적어도 하나가 성립�
 
 앞의 세 조건을 깨는 방법은 현실적으로 제약이 크다. 가장 실용적인 prevention target은 `circular wait`이다. 핵심은 모든 resource types에 total ordering을 부여하고, threads가 increasing order로만 resources를 요청하게 하는 것이다.
 
-Resource types 집합을 `R = {R1, R2, ..., Rm}`이라 하고, 각 resource type에 unique integer를 부여하는 one-to-one function `F: R -> N`을 정의한다. 예를 들어 Figure 8.1의 두 mutex에 다음 ordering을 줄 수 있다.
+Resource types 집합을 $R = \{R_1, R_2, \ldots, R_m\}$이라 하고, 각 resource type에 unique integer를 부여하는 one-to-one function $F: R \to \mathbb{N}$을 정의한다. 예를 들어 Figure 8.1의 두 mutex에 다음 ordering을 줄 수 있다.
 
-```text
-F(first_mutex) = 1
-F(second_mutex) = 5
-```
+$$
+\begin{aligned}
+F(\text{first\_mutex}) &= 1 \\
+F(\text{second\_mutex}) &= 5
+\end{aligned}
+$$
 
 Protocol은 다음과 같다.
 
-- Thread는 처음에 임의의 resource `Ri`를 요청할 수 있다.
-- 이후 resource `Rj`를 요청하려면 반드시 `F(Rj) > F(Ri)`여야 한다.
-- 또는 `Rj`를 요청하기 전에 `F(Ri) >= F(Rj)`인 resources를 모두 release해야 한다.
+- Thread는 처음에 임의의 resource $R_i$를 요청할 수 있다.
+- 이후 resource $R_j$를 요청하려면 반드시 $F(R_j) > F(R_i)$여야 한다.
+- 또는 $R_j$를 요청하기 전에 $F(R_i) \ge F(R_j)$인 resources를 모두 release해야 한다.
 - 같은 resource type의 여러 instances가 필요하면 한 번의 request로 모두 요청해야 한다.
 
-이 ordering이 circular wait을 막는 이유는 contradiction으로 볼 수 있다. Circular wait이 있다고 가정하면 `Ti`는 `Ri`를 기다리고, `Ri`는 `Ti+1`이 holding한다. 그런데 `Ti+1`이 `Ri`를 holding한 상태에서 `Ri+1`을 요청했다면 ordering protocol 때문에 `F(Ri) < F(Ri+1)`이어야 한다. Cycle 전체에 대해 `F(R0) < F(R1) < ... < F(Rn) < F(R0)`가 되어야 하는데, 이는 불가능하다. 따라서 circular wait은 생길 수 없다.
+이 ordering이 circular wait을 막는 이유는 contradiction으로 볼 수 있다. Circular wait이 있다고 가정하면 $T_i$는 $R_i$를 기다리고, $R_i$는 $T_{i+1}$이 holding한다. 그런데 $T_{i+1}$이 $R_i$를 holding한 상태에서 $R_{i+1}$을 요청했다면 ordering protocol 때문에 $F(R_i) < F(R_{i+1})$이어야 한다. Cycle 전체에 대해 $F(R_0) < F(R_1) < \cdots < F(R_n) < F(R_0)$가 되어야 하는데, 이는 불가능하다. 따라서 circular wait은 생길 수 없다.
 
 다만 ordering을 정의하는 것만으로 deadlock이 자동으로 방지되지는 않는다. Application developers가 그 ordering을 실제 code에서 지켜야 한다. Locks가 수백/수천 개 있는 system에서는 hierarchy 설계 자체가 어렵다. Java 개발자들은 때때로 `System.identityHashCode(Object)`를 lock acquisition ordering function으로 사용하기도 한다.
 
@@ -352,16 +356,16 @@ Cycle은 unsafe state를 의미한다. 이후 `T1`이 `R2`를 요청하고 `T2`�
 
 New thread가 system에 들어올 때 각 resource type에 대해 maximum number of instances를 declare해야 한다. 이 maximum은 system 전체 resource 수를 넘을 수 없다. Thread가 resources를 request하면 system은 그 allocation이 safe state를 유지하는지 판단한다. Safe하면 allocate하고, unsafe하면 다른 thread가 충분한 resources를 release할 때까지 wait시킨다.
 
-Banker's Algorithm은 `n` threads, `m` resource types에 대해 다음 data structures를 유지한다.
+Banker's Algorithm은 $n$ threads, $m$ resource types에 대해 다음 data structures를 유지한다.
 
 | Data structure | 크기 | 의미 |
 |---|---:|---|
-| `Available` | length `m` vector | 각 resource type의 available instances 수. `Available[j] = k`이면 `Rj`가 k개 available |
-| `Max` | `n x m` matrix | 각 thread의 maximum demand. `Max[i][j] = k`이면 `Ti`가 `Rj`를 최대 k개 요청 가능 |
-| `Allocation` | `n x m` matrix | 현재 allocation. `Allocation[i][j] = k`이면 `Ti`가 `Rj`를 k개 holding |
-| `Need` | `n x m` matrix | remaining need. `Need[i][j] = Max[i][j] - Allocation[i][j]` |
+| `Available` | length $m$ vector | 각 resource type의 available instances 수. $\text{Available}[j] = k$이면 $R_j$가 $k$개 available |
+| `Max` | $n \times m$ matrix | 각 thread의 maximum demand. $\text{Max}[i][j] = k$이면 $T_i$가 $R_j$를 최대 $k$개 요청 가능 |
+| `Allocation` | $n \times m$ matrix | 현재 allocation. $\text{Allocation}[i][j] = k$이면 $T_i$가 $R_j$를 $k$개 holding |
+| `Need` | $n \times m$ matrix | remaining need. $\text{Need}[i][j] = \text{Max}[i][j] - \text{Allocation}[i][j]$ |
 
-Vector 비교는 component-wise로 한다. `X <= Y`는 모든 `i`에 대해 `X[i] <= Y[i]`라는 뜻이다.
+Vector 비교는 component-wise로 한다. $X \le Y$는 모든 $i$에 대해 $X[i] \le Y[i]$라는 뜻이다.
 
 #### Safety Algorithm
 
@@ -388,7 +392,7 @@ System이 safe state인지 확인하는 algorithm은 다음이다.
 
 #### Resource-Request Algorithm
 
-Thread `Ti`의 request vector를 `Request_i`라고 하자. `Request_i[j] = k`이면 `Ti`가 resource type `Rj`의 k instances를 요청한다.
+Thread $T_i$의 request vector를 $\text{Request}_i$라고 하자. $\text{Request}_i[j] = k$이면 $T_i$가 resource type $R_j$의 $k$ instances를 요청한다.
 
 Request 처리 흐름은 다음과 같다.
 
@@ -413,7 +417,7 @@ Request 처리 흐름은 다음과 같다.
 
 #### Illustrative Example
 
-Threads `T0`-`T4`, resource types `A`, `B`, `C`가 있고 total instances가 `A=10`, `B=5`, `C=7`이라고 하자. Snapshot은 다음과 같다.
+Threads $T_0$-$T_4$, resource types $A$, $B$, $C$가 있고 total instances가 $A=10$, $B=5$, $C=7$이라고 하자. Snapshot은 다음과 같다.
 
 | Thread | Allocation `A B C` | Max `A B C` |
 |---|---|---|
@@ -423,7 +427,7 @@ Threads `T0`-`T4`, resource types `A`, `B`, `C`가 있고 total instances가 `A=
 | `T3` | `2 1 1` | `2 2 2` |
 | `T4` | `0 0 2` | `4 3 3` |
 
-`Available = 3 3 2`이고, `Need = Max - Allocation`은 다음과 같다.
+$\text{Available} = (3, 3, 2)$이고, $\text{Need} = \text{Max} - \text{Allocation}$은 다음과 같다.
 
 | Thread | Need `A B C` |
 |---|---|
@@ -433,9 +437,9 @@ Threads `T0`-`T4`, resource types `A`, `B`, `C`가 있고 total instances가 `A=
 | `T3` | `0 1 1` |
 | `T4` | `4 3 1` |
 
-이 상태는 safe하다. Safe sequence `<T1, T3, T4, T2, T0>`가 존재한다.
+이 상태는 safe하다. Safe sequence $\langle T_1, T_3, T_4, T_2, T_0\rangle$가 존재한다.
 
-`T1`이 `Request_1 = (1, 0, 2)`를 요청하면 `Request_1 <= Available`이므로 현재 resources는 충분하다. Pretend allocation 후에도 safe sequence `<T1, T3, T4, T0, T2>`가 존재하므로 request를 grant할 수 있다. 반대로 이 상태에서 `T4`의 `(3,3,0)` request는 resources가 available하지 않아 grant할 수 없고, `T0`의 `(0,2,0)` request는 resources는 available하지만 resulting state가 unsafe하므로 grant할 수 없다.
+$T_1$이 $\text{Request}_1 = (1, 0, 2)$를 요청하면 $\text{Request}_1 \le \text{Available}$이므로 현재 resources는 충분하다. Pretend allocation 후에도 safe sequence $\langle T_1, T_3, T_4, T_0, T_2\rangle$가 존재하므로 request를 grant할 수 있다. 반대로 이 상태에서 $T_4$의 $(3,3,0)$ request는 resources가 available하지 않아 grant할 수 없고, $T_0$의 $(0,2,0)$ request는 resources는 available하지만 resulting state가 unsafe하므로 grant할 수 없다.
 
 ## 8.7 Deadlock Detection
 
@@ -467,11 +471,11 @@ Java는 명시적인 deadlock detection API를 제공하지 않지만, `thread d
 
 | Data structure | 크기 | 의미 |
 |---|---:|---|
-| `Available` | length `m` vector | 각 resource type의 available instances 수 |
-| `Allocation` | `n x m` matrix | 각 thread에 currently allocated된 resources |
-| `Request` | `n x m` matrix | 각 thread의 current request. `Request[i][j] = k`이면 `Ti`가 `Rj`를 k개 더 요청 중 |
+| `Available` | length $m$ vector | 각 resource type의 available instances 수 |
+| `Allocation` | $n \times m$ matrix | 각 thread에 currently allocated된 resources |
+| `Request` | $n \times m$ matrix | 각 thread의 current request. $\text{Request}[i][j] = k$이면 $T_i$가 $R_j$를 $k$개 더 요청 중 |
 
-Rows는 vectors로 취급해 `Allocation_i`, `Request_i`라고 쓴다. Detection algorithm은 completion 가능한 threads를 하나씩 가정하며, 완료 가능한 thread가 가진 resources를 회수한다고 보고 나머지를 검사한다.
+Rows는 vectors로 취급해 $\text{Allocation}_i$, $\text{Request}_i$라고 쓴다. Detection algorithm은 completion 가능한 threads를 하나씩 가정하며, 완료 가능한 thread가 가진 resources를 회수한다고 보고 나머지를 검사한다.
 
 ```text
 1. Work = Available
@@ -492,11 +496,11 @@ Rows는 vectors로 취급해 `Allocation_i`, `Request_i`라고 쓴다. Detection
    Each Ti with Finish[i] == false is deadlocked.
 ```
 
-이 algorithm은 `m x n^2` order의 operations가 필요할 수 있다. Banker’s Algorithm의 safety algorithm과 비슷하지만 목적이 다르다. Banker’s Algorithm은 request를 grant하기 전에 unsafe state를 피하려고 검사한다. Detection algorithm은 이미 발생한 deadlock을 찾기 위해 현재 requests를 기준으로 completion 가능한 sequence가 있는지 본다.
+이 algorithm은 $m \times n^2$ order의 operations가 필요할 수 있다. Banker’s Algorithm의 safety algorithm과 비슷하지만 목적이 다르다. Banker’s Algorithm은 request를 grant하기 전에 unsafe state를 피하려고 검사한다. Detection algorithm은 이미 발생한 deadlock을 찾기 위해 현재 requests를 기준으로 completion 가능한 sequence가 있는지 본다.
 
-Step 3에서 `Request_i <= Work`인 thread의 resources를 회수한다고 가정하는 이유는, 그 thread는 현재 deadlock에 참여하지 않았다고 볼 수 있기 때문이다. 이 thread가 더 이상 resources를 요구하지 않고 곧 끝나서 allocated resources를 반환한다고 optimistic하게 가정한다. 이 가정이 틀리면 나중에 deadlock이 발생할 수 있지만, 다음 detection run에서 잡힐 수 있다.
+Step 3에서 $\text{Request}_i \le \text{Work}$인 thread의 resources를 회수한다고 가정하는 이유는, 그 thread는 현재 deadlock에 참여하지 않았다고 볼 수 있기 때문이다. 이 thread가 더 이상 resources를 요구하지 않고 곧 끝나서 allocated resources를 반환한다고 optimistic하게 가정한다. 이 가정이 틀리면 나중에 deadlock이 발생할 수 있지만, 다음 detection run에서 잡힐 수 있다.
 
-예시로 resource types `A`, `B`, `C`가 각각 7, 2, 6 instances 있고 threads `T0`-`T4`가 있다고 하자.
+예시로 resource types $A$, $B$, $C$가 각각 7, 2, 6 instances 있고 threads $T_0$-$T_4$가 있다고 하자.
 
 | Thread | Allocation `A B C` | Request `A B C` |
 |---|---|---|
@@ -506,9 +510,9 @@ Step 3에서 `Request_i <= Work`인 thread의 resources를 회수한다고 가�
 | `T3` | `2 1 1` | `1 0 0` |
 | `T4` | `0 0 2` | `0 0 2` |
 
-`Available = 0 0 0`이다. Detection algorithm을 실행하면 `<T0, T2, T3, T1, T4>` 순서로 모든 `Finish[i]`를 true로 만들 수 있으므로 deadlock은 없다.
+$\text{Available} = (0, 0, 0)$이다. Detection algorithm을 실행하면 $\langle T_0, T_2, T_3, T_1, T_4\rangle$ 순서로 모든 $\text{Finish}[i]$를 true로 만들 수 있으므로 deadlock은 없다.
 
-그런데 `T2`가 resource type `C`를 하나 더 요청하면 `Request`에서 `T2 = 0 0 1`이 된다. 이제 `T0`의 resources는 회수할 수 있지만, 나머지 requests를 만족할 available resources가 부족하다. 따라서 `T1`, `T2`, `T3`, `T4`가 deadlocked set이 된다.
+그런데 $T_2$가 resource type $C$를 하나 더 요청하면 `Request`에서 $T_2 = (0, 0, 1)$이 된다. 이제 $T_0$의 resources는 회수할 수 있지만, 나머지 requests를 만족할 available resources가 부족하다. 따라서 $T_1$, $T_2$, $T_3$, $T_4$가 deadlocked set이 된다.
 
 ### Detection-Algorithm Usage
 

@@ -113,9 +113,9 @@ Modern secondary storage는 대부분 HDDs와 NVM devices가 담당한다. 이 �
 
 HDD performance는 mechanical movement 때문에 결정된다. Motor는 platters를 high RPM으로 회전시키며, common speeds는 5,400, 7,200, 10,000, 15,000 RPM이다. Data가 drive와 computer 사이를 흐르는 속도는 `transfer rate`다. 하지만 random access에서는 data transfer보다 `positioning time`이 중요하다.
 
-```text
-positioning time = seek time + rotational latency
-```
+$$
+\text{positioning time} = \text{seek time} + \text{rotational latency}
+$$
 
 `seek time`은 disk arm을 desired cylinder로 옮기는 시간이고, `rotational latency`는 desired sector가 head 아래로 올 때까지 기다리는 시간이다. Typical HDDs는 seek/rotational latency가 several milliseconds이고, transfer rate는 tens to hundreds of MB/s다. Drive controller의 DRAM buffer는 performance를 높이는 데 쓰인다.
 
@@ -197,9 +197,9 @@ Storage devices는 HDD/NVM만 있는 것이 아니다. Shingled magnetic recordi
 
 OS의 책임 중 하나는 hardware를 효율적으로 쓰는 것이다. HDD에서는 access time을 줄이고 data transfer bandwidth를 높이는 것이 핵심이다. HDD access time은 주로 두 요소로 구성된다.
 
-```text
-access time ≈ seek time + rotational latency
-```
+$$
+\text{access time} \approx \text{seek time} + \text{rotational latency}
+$$
 
 `device bandwidth`는 첫 request service 시작부터 마지막 transfer 완료까지의 전체 시간으로 나눈 total bytes transferred다. Pending I/O requests의 service order를 조정하면 access time과 bandwidth를 개선할 수 있다.
 

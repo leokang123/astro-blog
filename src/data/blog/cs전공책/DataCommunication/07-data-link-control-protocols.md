@@ -74,25 +74,25 @@ $$
 
 | 기호 | 의미 |
 | --- | --- |
-| `B` | link length in bits, 즉 링크 위에 동시에 존재할 수 있는 bit 수 |
-| `R` | data rate, bps |
-| `d` | link distance, meters |
-| `V` | propagation velocity, m/s |
+| $B$ | link length in bits, 즉 링크 위에 동시에 존재할 수 있는 bit 수 |
+| $R$ | data rate, bps |
+| $d$ | link distance, meters |
+| $V$ | propagation velocity, m/s |
 
-frame 길이를 `L` bits라고 하면, 원문은 다음 비율을 사용한다.
+frame 길이를 $L$ bits라고 하면, 원문은 다음 비율을 사용한다.
 
 $$
 a = \frac{B}{L}
 $$
 
-이는 사실상 `propagation time / transmission time`으로 해석할 수 있다. `a < 1`이면 propagation time이 transmission time보다 짧아서 sender가 frame을 다 밀어 넣기 전에 앞부분이 receiver에 도착한다. `a > 1`이면 sender가 frame 전체를 다 보낸 뒤에도 첫 bit가 아직 receiver에 도착하지 않았을 수 있다. 즉 `a`가 클수록 long distance, high data rate, small frame 조합에서 stop-and-wait의 낭비가 커진다.
+이는 사실상 `propagation time / transmission time`으로 해석할 수 있다. $a<1$이면 propagation time이 transmission time보다 짧아서 sender가 frame을 다 밀어 넣기 전에 앞부분이 receiver에 도착한다. $a>1$이면 sender가 frame 전체를 다 보낸 뒤에도 첫 bit가 아직 receiver에 도착하지 않았을 수 있다. 즉 $a$가 클수록 long distance, high data rate, small frame 조합에서 stop-and-wait의 낭비가 커진다.
 
-Figure 7.2는 transmission time을 1로 정규화하고 propagation time을 `a`로 둔 stop-and-wait utilization을 보여준다. 특히 `a > 1`인 satellite link 같은 경우, sender는 짧은 시간 동안 frame을 보내고 매우 긴 시간 동안 ACK를 기다린다.
+Figure 7.2는 transmission time을 1로 정규화하고 propagation time을 $a$로 둔 stop-and-wait utilization을 보여준다. 특히 $a>1$인 satellite link 같은 경우, sender는 짧은 시간 동안 frame을 보내고 매우 긴 시간 동안 ACK를 기다린다.
 
 ![Figure 7.2](@/assets/images/data-communication-stop-and-wait-utilization-figure-7-2.png)
 *Figure 7.2 · PDF p. 230 · stop-and-wait에서 propagation delay가 utilization을 제한하는 모습*
 
-Example 7.1의 대비가 중요하다. 200 m optical fiber link, 1 Gbps, 8000-bit frame에서는 `B = 1000 bits`, `a = 0.125`라서 실제 frame transmission time 8 us에 대해 ACK까지 약 10 us 수준이다. 반면 1 Mbps satellite relay, 왕복에 해당하는 긴 propagation path, 8000-bit frame에서는 `B = 240,000 bits`, `a = 30`이 되고, frame 자체는 8 ms에 보내지만 ACK를 받을 때까지 약 488 ms를 기다린다. 같은 stop-and-wait 절차라도 링크의 `bandwidth-delay product`가 커질수록 사용률은 크게 나빠진다.
+Example 7.1의 대비가 중요하다. 200 m optical fiber link, 1 Gbps, 8000-bit frame에서는 $B=1000\ \text{bits}$, $a=0.125$라서 실제 frame transmission time 8 us에 대해 ACK까지 약 10 us 수준이다. 반면 1 Mbps satellite relay, 왕복에 해당하는 긴 propagation path, 8000-bit frame에서는 $B=240{,}000\ \text{bits}$, $a=30$이 되고, frame 자체는 8 ms에 보내지만 ACK를 받을 때까지 약 488 ms를 기다린다. 같은 stop-and-wait 절차라도 링크의 `bandwidth-delay product`가 커질수록 사용률은 크게 나빠진다.
 
 ## 세부 정리
 
@@ -104,7 +104,7 @@ Example 7.1의 대비가 중요하다. 200 m optical fiber link, 1 Gbps, 8000-bi
 
 ### Sliding-Window Flow Control
 
-`sliding-window flow control`의 핵심은 링크를 하나의 pipeline으로 보고, ACK를 기다리는 동안에도 여러 frame을 계속 흘려보내는 것이다. full-duplex link에서 station B가 `W`개 frame을 담을 buffer를 준비했다면, station A는 ACK 없이도 최대 `W`개 frame을 연속 전송할 수 있다. 각 frame에는 `sequence number`가 붙고, ACK는 “다음에 기대하는 frame 번호”를 담는다.
+`sliding-window flow control`의 핵심은 링크를 하나의 pipeline으로 보고, ACK를 기다리는 동안에도 여러 frame을 계속 흘려보내는 것이다. full-duplex link에서 station B가 $W$개 frame을 담을 buffer를 준비했다면, station A는 ACK 없이도 최대 $W$개 frame을 연속 전송할 수 있다. 각 frame에는 `sequence number`가 붙고, ACK는 “다음에 기대하는 frame 번호”를 담는다.
 
 예를 들어 receiver가 frame 2, 3, 4를 모두 받은 뒤 `ACK 5` 또는 HDLC식 표현으로 `RR 5`를 보내면, 이는 frame 4까지 누적 확인했고 다음 frame 5부터 받을 준비가 되었다는 의미다. 이처럼 sliding-window의 ACK는 보통 `cumulative acknowledgment`로 동작한다.
 
@@ -117,7 +117,7 @@ sender와 receiver는 각각 window를 유지한다.
 | sender perspective | 지금 전송해도 되는 sequence number 집합 | frame을 전송할 때 | ACK를 받을 때 |
 | receiver perspective | 지금 수신해도 되는 sequence number 집합 | frame을 수신할 때 | ACK를 보낼 때 |
 
-Figure 7.3은 3-bit sequence number를 가정한다. sequence number는 `0`부터 `7`까지 간 뒤 다시 `0`으로 돌아가므로 `modulo 8`로 번호가 붙는다. 일반적으로 sequence number field가 `k` bits이면 번호 범위는 `0`부터 `2^k - 1`이고, numbering은 `modulo 2^k`가 된다.
+Figure 7.3은 3-bit sequence number를 가정한다. sequence number는 $0$부터 $7$까지 간 뒤 다시 $0$으로 돌아가므로 modulo $8$로 번호가 붙는다. 일반적으로 sequence number field가 $k$ bits이면 번호 범위는 $0$부터 $2^k - 1$이고, numbering은 modulo $2^k$가 된다.
 
 ![Figure 7.3](@/assets/images/data-communication-sliding-window-depiction-figure-7-3.png)
 *Figure 7.3 · PDF p. 232 · sender/receiver 관점의 sliding-window 이동*
@@ -126,9 +126,9 @@ sender window에서 이미 전송했지만 ACK를 받지 못한 frame은 재전�
 
 #### Sequence Number와 Maximum Window Size
 
-원문은 `k-bit sequence number field`에서 maximum window size가 `2^k - 1`이라고 설명한다. 단순히 가능한 번호가 `2^k`개라고 해서 window를 `2^k`까지 열면, 번호가 한 바퀴 돈 뒤 이전 frame과 새 frame을 구분하기 어려운 ambiguity가 생길 수 있다. 뒤의 `sliding-window ARQ` 논의에서는 error recovery까지 고려해 이 제한이 더 중요해진다.
+원문은 $k$-bit sequence number field에서 maximum window size가 $2^k - 1$이라고 설명한다. 단순히 가능한 번호가 $2^k$개라고 해서 window를 $2^k$까지 열면, 번호가 한 바퀴 돈 뒤 이전 frame과 새 frame을 구분하기 어려운 ambiguity가 생길 수 있다. 뒤의 `sliding-window ARQ` 논의에서는 error recovery까지 고려해 이 제한이 더 중요해진다.
 
-3-bit field라면 sequence number는 `0..7`이고, 보통 최대 window는 7 frame이다. 다만 실제 window size는 최대값보다 작게 설정할 수 있다. 예를 들어 3-bit field를 사용하면서 window size를 5로 구성할 수도 있다.
+3-bit field라면 sequence number는 $0..7$이고, 보통 최대 window는 7 frame이다. 다만 실제 window size는 최대값보다 작게 설정할 수 있다. 예를 들어 3-bit field를 사용하면서 window size를 5로 구성할 수도 있다.
 
 #### RR, RNR, Piggybacking
 
@@ -154,7 +154,7 @@ Example 7.2의 sliding-window 흐름은 다음처럼 읽으면 된다.
 
 ### 7.1 Flow Control: Sliding-Window까지의 결론
 
-`sliding-window flow control`은 stop-and-wait의 핵심 병목인 “in-flight frame 하나” 제한을 없앤다. link의 `bit length`가 frame length보다 크고 `a`가 큰 환경에서는 여러 frame을 동시에 보내야 pipeline이 찬다. Example 7.3에서 짧은 optical fiber link는 window size 2만으로도 거의 연속 전송이 가능하지만, satellite link는 ACK까지 488 ms가 걸려 window가 61 frame 정도는 되어야 8 ms마다 frame을 계속 보낼 수 있다. 따라서 window size와 sequence number field 길이는 단순한 format 세부가 아니라 link utilization을 결정하는 설계 변수다.
+`sliding-window flow control`은 stop-and-wait의 핵심 병목인 “in-flight frame 하나” 제한을 없앤다. link의 `bit length`가 frame length보다 크고 $a$가 큰 환경에서는 여러 frame을 동시에 보내야 pipeline이 찬다. Example 7.3에서 짧은 optical fiber link는 window size 2만으로도 거의 연속 전송이 가능하지만, satellite link는 ACK까지 488 ms가 걸려 window가 61 frame 정도는 되어야 8 ms마다 frame을 계속 보낼 수 있다. 따라서 window size와 sequence number field 길이는 단순한 format 세부가 아니라 link utilization을 결정하는 설계 변수다.
 
 ### 7.2 Error Control
 
@@ -362,7 +362,7 @@ $$
 T \approx n(2t_{prop} + t_{frame})
 $$
 
-실제로 data frame을 밀어 넣는 데 쓴 시간은 `n * t_frame`뿐이므로 maximum utilization은 다음과 같다.
+실제로 data frame을 밀어 넣는 데 쓴 시간은 $n\,t_{frame}$뿐이므로 maximum utilization은 다음과 같다.
 
 $$
 U = \frac{t_{frame}}{2t_{prop} + t_{frame}}
@@ -380,26 +380,26 @@ $$
 U = \frac{1}{1 + 2a}
 $$
 
-이 된다. 이 식은 Chapter 7 앞부분의 Figure 7.2를 수식으로 다시 읽은 것이다. `a`가 커질수록 sender가 ACK를 기다리는 시간이 길어지고, utilization은 빠르게 떨어진다.
+이 된다. 이 식은 Chapter 7 앞부분의 Figure 7.2를 수식으로 다시 읽은 것이다. $a$가 커질수록 sender가 ACK를 기다리는 시간이 길어지고, utilization은 빠르게 떨어진다.
 
-`a`는 다음처럼도 쓸 수 있다.
+$a$는 다음처럼도 쓸 수 있다.
 
 $$
 a = \frac{d/V}{L/R} = \frac{Rd}{VL}
 $$
 
-따라서 fixed-length frame에서 `a`는 data rate `R`과 link distance `d`에 비례하고, propagation velocity `V`와 frame length `L`에 반비례한다. 직관적으로는 `bandwidth-delay product`를 frame length와 비교한 값이다.
+따라서 fixed-length frame에서 $a$는 data rate $R$과 link distance $d$에 비례하고, propagation velocity $V$와 frame length $L$에 반비례한다. 직관적으로는 `bandwidth-delay product`를 frame length와 비교한 값이다.
 
-Example 7.6의 결론은 시험용으로도 중요하다. 1000 km optical fiber WAN에서 ATM cell size 424 bits, 155.52 Mbps라면 transmission time은 매우 짧고 propagation time은 상대적으로 길어 `a ≈ 1850`, stop-and-wait utilization은 약 `0.00027`로 거의 쓸 수 없는 수준이다. 반면 10 Mbps LAN에서 1000-bit frame과 짧은 거리라면 `a`가 0.005-0.5 범위라 utilization이 0.5-0.99까지 가능하다. 즉 stop-and-wait의 효율은 protocol 자체보다도 link의 rate-distance-frame-size 조합에 크게 좌우된다.
+Example 7.6의 결론은 시험용으로도 중요하다. 1000 km optical fiber WAN에서 ATM cell size 424 bits, 155.52 Mbps라면 transmission time은 매우 짧고 propagation time은 상대적으로 길어 `a ≈ 1850`, stop-and-wait utilization은 약 `0.00027`로 거의 쓸 수 없는 수준이다. 반면 10 Mbps LAN에서 1000-bit frame과 짧은 거리라면 $a$가 0.005-0.5 범위라 utilization이 0.5-0.99까지 가능하다. 즉 stop-and-wait의 효율은 protocol 자체보다도 link의 rate-distance-frame-size 조합에 크게 좌우된다.
 
 ### Error-Free Sliding-Window Utilization
 
-sliding-window에서는 throughput이 `a`뿐 아니라 window size `W`에도 의존한다. frame transmission time을 1로 정규화하면 propagation time은 `a`다. A가 frame 1을 보낸 뒤, 그 ACK가 A로 돌아오는 시점은 대략 `2a + 1`이다. 이때 두 경우가 생긴다.
+sliding-window에서는 throughput이 $a$뿐 아니라 window size $W$에도 의존한다. frame transmission time을 1로 정규화하면 propagation time은 $a$다. A가 frame 1을 보낸 뒤, 그 ACK가 A로 돌아오는 시점은 대략 `2a + 1`이다. 이때 두 경우가 생긴다.
 
 | 조건 | 의미 | utilization |
 | --- | --- | --- |
-| `W >= 2a + 1` | 첫 frame의 ACK가 돌아오기 전에 sender window가 고갈되지 않는다. 계속 전송 가능하다. | `U = 1` |
-| `W < 2a + 1` | sender가 window를 다 써서 ACK가 오기 전까지 멈춘다. | `U = W / (2a + 1)` |
+| $W\ge 2a+1$ | 첫 frame의 ACK가 돌아오기 전에 sender window가 고갈되지 않는다. 계속 전송 가능하다. | $U=1$ |
+| $W<2a+1$ | sender가 window를 다 써서 ACK가 오기 전까지 멈춘다. | $U=W/(2a+1)$ |
 
 따라서 error-free sliding-window utilization은 다음처럼 쓸 수 있다.
 
@@ -411,19 +411,19 @@ U =
 \end{cases}
 $$
 
-Figure 7.11은 이 타이밍을 보여준다. `W`가 충분히 크면 ACK가 도착하기 전에 sender가 보낼 frame이 계속 남아 있어 line이 비지 않는다. `W`가 작으면 sender가 window를 모두 소진한 뒤 `2a + 1` 시점까지 기다리게 된다.
+Figure 7.11은 이 타이밍을 보여준다. $W$가 충분히 크면 ACK가 도착하기 전에 sender가 보낼 frame이 계속 남아 있어 line이 비지 않는다. $W$가 작으면 sender가 window를 모두 소진한 뒤 `2a + 1` 시점까지 기다리게 된다.
 
 ![Figure 7.11](@/assets/images/data-communication-sliding-window-timing-figure-7-11.png)
 *Figure 7.11 · PDF p. 254 · sliding-window에서 W와 2a+1의 타이밍 관계*
 
-Figure 7.12는 window size가 1, 7, 127일 때 `a`에 따른 utilization 변화를 보여준다. `W = 1`은 stop-and-wait와 같고, `W = 7`은 3-bit sequence number에서 흔한 최대 window이며, `W = 127`은 7-bit sequence number에서 큰 `a`를 가진 high-speed WAN에 더 적합하다.
+Figure 7.12는 window size가 1, 7, 127일 때 $a$에 따른 utilization 변화를 보여준다. $W=1$은 stop-and-wait와 같고, $W=7$은 3-bit sequence number에서 흔한 최대 window이며, $W=127$은 7-bit sequence number에서 큰 $a$를 가진 high-speed WAN에 더 적합하다.
 
 ![Figure 7.12](@/assets/images/data-communication-sliding-window-utilization-figure-7-12.png)
 *Figure 7.12 · PDF p. 255 · a와 window size에 따른 sliding-window utilization*
 
 ### ARQ Utilization with Error Probability
 
-Appendix 7A는 error probability `P`가 있을 때 ARQ utilization도 근사한다. `P`는 single frame이 error일 확률이고, ACK/NAK error는 무시한다고 가정한다. frame 하나가 성공할 때까지 필요한 expected transmission count는
+Appendix 7A는 error probability $P$가 있을 때 ARQ utilization도 근사한다. $P$는 single frame이 error일 확률이고, ACK/NAK error는 무시한다고 가정한다. frame 하나가 성공할 때까지 필요한 expected transmission count는
 
 $$
 N_r = \frac{1}{1-P}
@@ -447,16 +447,16 @@ U =
 \end{cases}
 $$
 
-`go-back-N ARQ`는 오류 하나가 frame 하나만이 아니라 대략 `K`개 frame 재전송을 유발하므로 selective-reject보다 불리하다. window가 충분히 크면 `K ≈ 2a + 1`, window가 작으면 `K = W`로 근사한다. 그래서 `P`가 작아도 `a`가 크고 `W`가 큰 환경에서는 go-back-N의 낭비가 커질 수 있다.
+`go-back-N ARQ`는 오류 하나가 frame 하나만이 아니라 대략 $K$개 frame 재전송을 유발하므로 selective-reject보다 불리하다. window가 충분히 크면 $K\approx 2a+1$, window가 작으면 $K=W$로 근사한다. 그래서 $P$가 작아도 $a$가 크고 $W$가 큰 환경에서는 go-back-N의 낭비가 커질 수 있다.
 
-Figure 7.13은 `P = 10^-3`에서 stop-and-wait, go-back-N, selective-reject를 비교한다. 결론은 다음과 같다.
+Figure 7.13은 $P=10^{-3}$에서 stop-and-wait, go-back-N, selective-reject를 비교한다. 결론은 다음과 같다.
 
 | 상황 | 적합한 해석 |
 | --- | --- |
-| `W = 1` | go-back-N과 selective-reject 모두 stop-and-wait로 축소된다. |
-| 작은 `a` | propagation delay가 작으므로 단순 방식도 비교적 괜찮다. |
-| 큰 `a`, 충분한 `W` | sliding-window가 stop-and-wait보다 압도적으로 유리하다. |
-| 큰 `a`, error 존재 | selective-reject는 필요한 frame만 재전송하므로 go-back-N보다 유리하지만 구현 복잡도가 증가한다. |
+| $W=1$ | go-back-N과 selective-reject 모두 stop-and-wait로 축소된다. |
+| 작은 $a$ | propagation delay가 작으므로 단순 방식도 비교적 괜찮다. |
+| 큰 $a$, 충분한 $W$ | sliding-window가 stop-and-wait보다 압도적으로 유리하다. |
+| 큰 $a$, error 존재 | selective-reject는 필요한 frame만 재전송하므로 go-back-N보다 유리하지만 구현 복잡도가 증가한다. |
 
 ## 연결 관계
 
@@ -467,7 +467,7 @@ Figure 7.13은 `P = 10^-3`에서 stop-and-wait, go-back-N, selective-reject를 �
 | 오해 | 바로잡기 |
 | --- | --- |
 | `flow control`과 `error control`은 같은 것이다. | flow control은 receiver buffer overflow 방지, error control은 lost/damaged frame 복구가 목적이다. 실제 protocol에서는 같은 sequence/ACK/window field를 공유할 뿐 목적은 다르다. |
-| stop-and-wait는 항상 비효율적이다. | `a`가 작고 message가 몇 개의 큰 frame으로 끝나면 단순하고 충분할 수 있다. 비효율은 high data rate, long distance, small frame에서 심해진다. |
+| stop-and-wait는 항상 비효율적이다. | $a$가 작고 message가 몇 개의 큰 frame으로 끝나면 단순하고 충분할 수 있다. 비효율은 high data rate, long distance, small frame에서 심해진다. |
 | ACK number는 마지막으로 받은 frame 번호다. | 이 장의 sliding-window/HDLC 관례에서는 보통 “다음에 기대하는 frame 번호”다. `RR 5`는 frame 4까지 받았다는 cumulative ACK다. |
 | sequence number가 `k` bits면 window size를 항상 `2^k`로 잡을 수 있다. | go-back-N에서는 ambiguity를 피하려고 최대 `2^k - 1`, selective-reject에서는 receive/send window overlap을 피하려고 최대 `2^(k-1)` 이하가 필요하다. |
 | `RNR`은 error를 뜻한다. | `RNR (Receive Not Ready)`는 오류가 아니라 receiver가 현재 추가 I-frame을 받을 수 없다는 flow control 신호다. |

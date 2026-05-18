@@ -306,9 +306,9 @@ where T.salary > S.salary
 
 Note 3.1은 SQL과 multiset relational algebra의 연결을 설명한다. SQL은 duplicate를 허용하므로, formal relational algebra의 set semantics만으로는 SQL 결과의 tuple copy 수를 설명하기 어렵다. Multiset relational algebra에서는 selection을 통과한 tuple copy 수가 유지되고, projection 후에도 duplicate copy가 남으며, Cartesian product에서는 copy 수가 곱해진다. 기본 SQL query는 개념적으로 다음 multiset relational-algebra expression에 대응한다.
 
-```text
-Π_A1,A2,...,An(σ_P(r1 × r2 × ... × rm))
-```
+$$
+\Pi_{A_1, A_2, \ldots, A_n}(\sigma_P(r_1 \times r_2 \times \ldots \times r_m))
+$$
 
 중요한 역사적 용어 함정도 있다. Relational algebra의 select operation은 SQL `select` clause가 아니라 SQL `where` clause에 대응한다. SQL `select` clause는 relational algebra의 projection에 더 가깝다.
 
@@ -675,9 +675,9 @@ Null을 무시한 결과 input collection이 empty가 될 수 있다. Empty coll
 
 Note 3.2는 aggregate가 relational algebra로 어떻게 확장되는지 설명한다. Extended relational algebra의 aggregate operation `γ`는 grouping attribute와 aggregate expression을 함께 표현한다. 예를 들어 department별 average salary는 개념적으로 다음과 같은 형태다.
 
-```text
-dept_name γ_average(salary) as avg_salary(instructor)
-```
+$$
+{}_{\text{dept\_name}}\gamma_{\operatorname{average}(salary) \to \text{avg\_salary}}(instructor)
+$$
 
 SQL의 `group by`와 `having`은 relational algebra 관점에서 `from/where`로 얻은 relation을 group aggregation으로 바꾸고, group-level predicate를 적용한 뒤 projection하는 과정으로 이해할 수 있다.
 

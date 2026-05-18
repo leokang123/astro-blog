@@ -67,7 +67,7 @@ Spread spectrum은 spectrum을 더 많이 쓰기 때문에, 좁은 관점에서�
 
 #### Basic Approach
 
-Figure 9.2는 FH signal의 예시다. 여러 channel이 FH signal을 위해 할당되고, 보통 `2^k`개의 carrier frequency가 `2^k`개의 channel을 만든다. carrier frequency 간 spacing과 각 channel width는 보통 input signal bandwidth에 맞춰진다. transmitter는 한 번에 하나의 channel에서 fixed interval 동안 동작하며, 그 interval 동안 일부 bits 또는 이후 설명할 경우 fraction of a bit을 전송한다.
+Figure 9.2는 FH signal의 예시다. 여러 channel이 FH signal을 위해 할당되고, 보통 $2^k$개의 carrier frequency가 $2^k$개의 channel을 만든다. carrier frequency 간 spacing과 각 channel width는 보통 input signal bandwidth에 맞춰진다. transmitter는 한 번에 하나의 channel에서 fixed interval 동안 동작하며, 그 interval 동안 일부 bits 또는 이후 설명할 경우 fraction of a bit을 전송한다.
 
 ![Figure 9.2](@/assets/images/data-communication-116-figure-9-2-page-296.png)
 *Figure 9.2 · PDF p. 296 · PN sequence가 정한 순서로 carrier channel을 hop하는 FHSS 예*
@@ -76,33 +76,33 @@ FHSS의 channel selection은 `spreading code`가 지시한다. transmitter와 re
 
 #### FHSS System Block
 
-Figure 9.3은 FHSS transmitter/receiver 구조다. 송신 쪽에서는 binary data가 먼저 `FSK` 또는 `BPSK` 같은 digital-to-analog modulation을 거쳐 base frequency 주변의 signal `s_d(t)`가 된다. 별도로 `pseudonoise (PN) bit source`가 channel table의 index를 만들고, `frequency synthesizer`가 선택된 carrier tone `c(t)`를 생성한다. `s_d(t)`와 `c(t)`를 곱하면 원래 data signal의 shape는 유지하되 center frequency가 선택된 channel로 translate된다.
+Figure 9.3은 FHSS transmitter/receiver 구조다. 송신 쪽에서는 binary data가 먼저 `FSK` 또는 `BPSK` 같은 digital-to-analog modulation을 거쳐 base frequency 주변의 signal $s_d(t)$가 된다. 별도로 `pseudonoise (PN) bit source`가 channel table의 index를 만들고, `frequency synthesizer`가 선택된 carrier tone $c(t)$를 생성한다. $s_d(t)$와 $c(t)$를 곱하면 원래 data signal의 shape는 유지하되 center frequency가 선택된 channel로 translate된다.
 
 ![Figure 9.3](@/assets/images/data-communication-117-figure-9-3-page-297.png)
 *Figure 9.3 · PDF p. 297 · PN bit source와 channel table로 carrier를 선택하는 FHSS 송수신 구조*
 
-수신 쪽은 같은 PN sequence와 channel table을 사용해 같은 carrier를 만들어 incoming spread signal에 곱한다. 송신 때 더해진 hopping frequency를 수신 때 다시 제거하면 원래 `s_d(t)` 형태가 나오고, 마지막 demodulator가 binary data를 복구한다.
+수신 쪽은 같은 PN sequence와 channel table을 사용해 같은 carrier를 만들어 incoming spread signal에 곱한다. 송신 때 더해진 hopping frequency를 수신 때 다시 제거하면 원래 $s_d(t)$ 형태가 나오고, 마지막 demodulator가 binary data를 복구한다.
 
-원문의 BFSK 예시는 이 frequency translation을 수식으로 설명한다. data modulation으로 만들어진 signal이 data bit에 따라 `f0` 또는 `f0 + Δf`에 놓인다고 하자. hop interval `i`에서 PN sequence가 carrier `f_i`를 고르면, FHSS signal은 대략 `f0 + f_i` 또는 `f0 + f_i + Δf`로 이동한다. receiver가 같은 `f_i`를 곱하고 bandpass filtering하면 다시 `f0` 또는 `f0 + Δf` signal을 얻는다. 즉 FHSS의 핵심은 정보 modulation 자체를 바꾸는 것이 아니라, information-bearing signal을 PN-controlled carrier frequency 위로 계속 옮기는 것이다.
+원문의 BFSK 예시는 이 frequency translation을 수식으로 설명한다. data modulation으로 만들어진 signal이 data bit에 따라 $f_0$ 또는 $f_0 + \Delta f$에 놓인다고 하자. hop interval $i$에서 PN sequence가 carrier $f_i$를 고르면, FHSS signal은 대략 $f_0 + f_i$ 또는 $f_0 + f_i + \Delta f$로 이동한다. receiver가 같은 $f_i$를 곱하고 bandpass filtering하면 다시 $f_0$ 또는 $f_0 + \Delta f$ signal을 얻는다. 즉 FHSS의 핵심은 정보 modulation 자체를 바꾸는 것이 아니라, information-bearing signal을 PN-controlled carrier frequency 위로 계속 옮기는 것이다.
 
 #### FHSS Using MFSK
 
-FHSS는 `MFSK (multiple FSK)`와 자주 함께 사용된다. Chapter 5의 MFSK에서 `M = 2^L`개의 frequency가 `L` bits per signal element를 나타낸다. FHSS에서는 이 MFSK signal을 `T_c`초마다 다른 FHSS channel로 translate한다.
+FHSS는 `MFSK (multiple FSK)`와 자주 함께 사용된다. Chapter 5의 MFSK에서 $M = 2^L$개의 frequency가 $L$ bits per signal element를 나타낸다. FHSS에서는 이 MFSK signal을 $T_c$초마다 다른 FHSS channel로 translate한다.
 
 | 기호 | 의미 |
 | --- | --- |
-| `R` | data rate |
-| `T = 1/R` | bit duration |
-| `L` | bits per MFSK signal element |
-| `T_s = LT` | signal element duration |
-| `T_c` | hop duration |
+| $R$ | data rate |
+| $T = 1/R$ | bit duration |
+| $L$ | bits per MFSK signal element |
+| $T_s = LT$ | signal element duration |
+| $T_c$ | hop duration |
 
-slow/fast FHSS는 `T_c`와 `T_s`의 관계로 구분한다.
+slow/fast FHSS는 $T_c$와 $T_s$의 관계로 구분한다.
 
 | 방식 | 조건 | 의미 |
 | --- | --- | --- |
-| `slow-frequency-hop spread spectrum` | `T_c >= T_s` | 하나의 hop 동안 하나 이상 signal element가 전송된다. |
-| `fast-frequency-hop spread spectrum` | `T_c < T_s` | 하나의 signal element가 여러 hop, 즉 여러 frequency chip에 걸쳐 전송된다. |
+| `slow-frequency-hop spread spectrum` | $T_c \ge T_s$ | 하나의 hop 동안 하나 이상 signal element가 전송된다. |
+| `fast-frequency-hop spread spectrum` | $T_c < T_s$ | 하나의 signal element가 여러 hop, 즉 여러 frequency chip에 걸쳐 전송된다. |
 
 Slow FHSS 예시의 조건은 `M = 4`, `k = 2`다. 따라서 MFSK는 2 bits씩 한 signal element로 encode하고, FHSS는 `2^k = 4`개 channel 중 하나를 PN sequence 2 bits로 선택한다. slow 예에서는 한 channel이 두 signal elements, 즉 4 bits 동안 유지된다.
 
@@ -115,7 +115,7 @@ fast FHSS는 noise/jamming에 대해 slow FHSS보다 나은 성능을 줄 수 �
 
 #### FHSS Processing Gain
 
-FHSS에서 많은 carrier frequencies를 사용하면 spread bandwidth `W_s`가 data modulation bandwidth `W_d`보다 훨씬 커진다. jammer가 고정 power로 모든 hop frequencies를 방해해야 한다면, 각 frequency band에 들어가는 jamming power가 줄어든다.
+FHSS에서 많은 carrier frequencies를 사용하면 spread bandwidth $W_s$가 data modulation bandwidth $W_d$보다 훨씬 커진다. jammer가 고정 power로 모든 hop frequencies를 방해해야 한다면, 각 frequency band에 들어가는 jamming power가 줄어든다.
 
 원문은 processing gain을 다음처럼 정리한다.
 
@@ -123,7 +123,7 @@ $$
 G_P = 2^k = \frac{W_s}{W_d}
 $$
 
-즉 `k`가 클수록 channel 수가 늘고, jammer가 같은 power를 더 많은 channels에 나눠야 하므로 signal-to-noise ratio 측면의 gain이 커진다. 이 수식은 FHSS의 spread bandwidth가 단순히 넓은 spectrum 사용이 아니라 jamming resistance로 바뀌는 이유를 보여준다.
+즉 $k$가 클수록 channel 수가 늘고, jammer가 같은 power를 더 많은 channels에 나눠야 하므로 signal-to-noise ratio 측면의 gain이 커진다. 이 수식은 FHSS의 spread bandwidth가 단순히 넓은 spectrum 사용이 아니라 jamming resistance로 바뀌는 이유를 보여준다.
 
 ### 9.3 Direct Sequence Spread Spectrum (DSSS)
 
@@ -151,44 +151,44 @@ Figure 9.6에서는 spreading code가 data rate의 4배로 clocked된다. data b
 
 #### DSSS Using BPSK
 
-DSSS를 BPSK로 구현할 때는 binary 1/0 대신 `+1`과 `-1` 표현이 더 편하다. BPSK data signal은 다음처럼 표현된다.
+DSSS를 BPSK로 구현할 때는 binary 1/0 대신 $+1$과 $-1$ 표현이 더 편하다. BPSK data signal은 다음처럼 표현된다.
 
 $$
 s_d(t) = A d(t)\cos(2\pi f_c t)
 $$
 
-여기서 `d(t)`는 bit interval 동안 1이면 `+1`, 0이면 `-1`을 갖는 discrete function이다. DSSS signal은 여기에 PN sequence `c(t)`를 곱한다.
+여기서 $d(t)$는 bit interval 동안 1이면 $+1$, 0이면 $-1$을 갖는 discrete function이다. DSSS signal은 여기에 PN sequence $c(t)$를 곱한다.
 
 $$
 s(t) = A d(t)c(t)\cos(2\pi f_c t)
 $$
 
-receiver가 같은 `c(t)`를 다시 곱하면,
+receiver가 같은 $c(t)$를 다시 곱하면,
 
 $$
 s(t)c(t) = A d(t)c(t)c(t)\cos(2\pi f_c t) = s_d(t)
 $$
 
-가 된다. `c(t)`는 `+1` 또는 `-1`이므로 `c(t)^2 = 1`이다. 이것이 DSSS despreading의 핵심 대칭성이다.
+가 된다. $c(t)$는 $+1$ 또는 $-1$이므로 $c(t)^2=1$이다. 이것이 DSSS despreading의 핵심 대칭성이다.
 
 Figure 9.7은 BPSK data signal을 만든 뒤 PN sequence와 곱해 spread signal을 만들고, receiver에서 같은 PN sequence로 despread한 뒤 BPSK demodulator로 binary data를 복구하는 구현을 보여준다.
 
 ![Figure 9.7](@/assets/images/data-communication-120-figure-9-7-page-303.png)
 *Figure 9.7 · PDF p. 303 · BPSK signal에 PN sequence를 곱하는 DSSS 송수신 구조*
 
-Figure 9.8은 이 BPSK 기반 DSSS의 waveform 예시다. data waveform `d(t)`보다 spreading code `c(t)`의 chip interval `T_c`가 짧고, 최종 transmitted signal은 `d(t)`와 `c(t)`의 부호 변화가 결합된 형태가 된다.
+Figure 9.8은 이 BPSK 기반 DSSS의 waveform 예시다. data waveform $d(t)$보다 spreading code $c(t)$의 chip interval $T_c$가 짧고, 최종 transmitted signal은 $d(t)$와 $c(t)$의 부호 변화가 결합된 형태가 된다.
 
 ![Figure 9.8](@/assets/images/data-communication-121-figure-9-8-page-304.png)
 *Figure 9.8 · PDF p. 304 · BPSK 기반 DSSS에서 data와 spreading code가 결합되는 예*
 
 #### DSSS Spectrum과 Processing Gain
 
-DSSS의 spectrum spreading은 chip duration으로 바로 해석할 수 있다. information bit width가 `T`이면 data rate는 `1/T`이고, data signal spectrum은 encoding 방식에 따라 대략 `2/T` 범위로 잡을 수 있다. PN signal의 chip width가 `T_c`이면 PN spectrum은 대략 `2/T_c`다. `T_c`가 `T`보다 훨씬 작으므로 PN sequence와 곱한 signal의 spectrum은 훨씬 넓어진다.
+DSSS의 spectrum spreading은 chip duration으로 바로 해석할 수 있다. information bit width가 $T$이면 data rate는 $1/T$이고, data signal spectrum은 encoding 방식에 따라 대략 $2/T$ 범위로 잡을 수 있다. PN signal의 chip width가 $T_c$이면 PN spectrum은 대략 $2/T_c$다. $T_c$가 $T$보다 훨씬 작으므로 PN sequence와 곱한 signal의 spectrum은 훨씬 넓어진다.
 
 ![Figure 9.9](@/assets/images/data-communication-122-figure-9-9-page-305.png)
 *Figure 9.9 · PDF p. 305 · data spectrum, PN spectrum, 결합 후 spread spectrum의 관계*
 
-Jamming 관점에서도 FHSS와 유사한 processing gain을 얻는다. center frequency에 simple jammer가 있다고 하면, receiver의 despreader가 received signal에 `c(t)`를 곱할 때 jammer 성분도 PN sequence에 의해 spread된다. 이후 BPSK demodulator의 bandpass filter는 원래 BPSK data bandwidth `2/T`에 맞춰져 있으므로, spread된 jammer power 중 일부만 통과한다.
+Jamming 관점에서도 FHSS와 유사한 processing gain을 얻는다. center frequency에 simple jammer가 있다고 하면, receiver의 despreader가 received signal에 $c(t)$를 곱할 때 jammer 성분도 PN sequence에 의해 spread된다. 이후 BPSK demodulator의 bandpass filter는 원래 BPSK data bandwidth $2/T$에 맞춰져 있으므로, spread된 jammer power 중 일부만 통과한다.
 
 원문은 DSSS processing gain을 다음처럼 근사한다.
 
@@ -196,7 +196,7 @@ $$
 G_P = \frac{T}{T_c} = \frac{R_c}{R} \approx \frac{W_s}{W_d}
 $$
 
-여기서 `R_c`는 spreading bit/chip rate, `R`은 original data rate, `W_s`는 spread spectrum signal bandwidth, `W_d`는 original data signal bandwidth다. 즉 DSSS에서 processing gain은 data bit 하나를 몇 개 chip으로 퍼뜨렸는가, 또는 chip rate가 data rate보다 얼마나 빠른가에 의해 결정된다.
+여기서 $R_c$는 spreading bit/chip rate, $R$은 original data rate, $W_s$는 spread spectrum signal bandwidth, $W_d$는 original data signal bandwidth다. 즉 DSSS에서 processing gain은 data bit 하나를 몇 개 chip으로 퍼뜨렸는가, 또는 chip rate가 data rate보다 얼마나 빠른가에 의해 결정된다.
 
 ### FHSS와 DSSS 비교
 
@@ -204,9 +204,9 @@ $$
 | --- | --- | --- |
 | spreading 방식 | carrier frequency를 PN sequence에 따라 hop한다. | data bit stream에 PN chip stream을 직접 곱하거나 XOR한다. |
 | receiver 동기화 | 같은 hop sequence와 hop timing 필요 | 같은 PN chip sequence와 chip timing 필요 |
-| bandwidth expansion | `2^k`개의 hop channels 사용 | chip rate `R_c`가 data rate `R`보다 큼 |
+| bandwidth expansion | `2^k`개의 hop channels 사용 | chip rate $R_c$가 data rate $R$보다 큼 |
 | jamming 대응 | jammer power가 여러 hop frequencies로 분산되어야 함 | despreading 후 jammer가 spread되고 narrow filter에서 대부분 제거됨 |
-| 핵심 수식 | `G_P = 2^k = W_s/W_d` | `G_P = T/T_c = R_c/R ≈ W_s/W_d` |
+| 핵심 수식 | $G_P=2^k=W_s/W_d$ | `G_P = T/T_c = R_c/R ≈ W_s/W_d` |
 
 ### 9.4 Code-Division Multiple Access (CDMA)
 
@@ -217,7 +217,7 @@ $$
 CDMA의 기본 절차는 다음과 같다.
 
 1. data signal의 bit data rate를 `D`라고 한다.
-2. 각 bit를 사용자별 fixed code에 따라 `k`개의 chips로 나눈다.
+2. 각 bit를 사용자별 fixed code에 따라 $k$개의 chips로 나눈다.
 3. resulting channel의 chip data rate는 `kD chips/s`가 된다.
 4. data bit 1을 보낼 때는 user code 자체를 전송하고, data bit 0을 보낼 때는 code의 complement를 전송한다.
 5. receiver는 찾고 싶은 user의 code와 received chip pattern의 내적을 계산한다.
@@ -253,12 +253,12 @@ CDMA receiver는 원치 않는 사용자들의 contribution을 filtering하거�
 
 #### CDMA for DSSS
 
-Figure 9.11은 DSSS/BPSK 관점에서 CDMA를 보여준다. `n`명의 사용자가 각각 서로 다른 orthogonal PN sequence `c_i(t)`를 사용한다. 각 user의 data stream `d_i(t)`는 BPSK로 modulated되고, 자기 spreading code `c_i(t)`와 곱해져 spread signal `s_i(t)`가 된다. 모든 users의 signals와 noise가 receiver antenna에 동시에 도착한다.
+Figure 9.11은 DSSS/BPSK 관점에서 CDMA를 보여준다. $n$명의 사용자가 각각 서로 다른 orthogonal PN sequence $c_i(t)$를 사용한다. 각 user의 data stream $d_i(t)$는 BPSK로 modulated되고, 자기 spreading code $c_i(t)$와 곱해져 spread signal $s_i(t)$가 된다. 모든 users의 signals와 noise가 receiver antenna에 동시에 도착한다.
 
 ![Figure 9.11](@/assets/images/data-communication-124-figure-9-11-page-309.png)
 *Figure 9.11 · PDF p. 309 · 여러 DSSS 사용자가 같은 bandwidth를 code로 구분해 공유하는 CDMA 구조*
 
-receiver가 user 1의 data를 복구하려면 incoming signal에 user 1의 spreading code `c_1(t)`를 곱하고 demodulate한다. user 1에 해당하는 부분은 despread되어 original unspread bandwidth로 좁아진다. 다른 users의 signals는 `c_1(t)`로 despread되지 않으므로 여전히 spread bandwidth `W_s`에 퍼져 있다. demodulator의 bandpass filter는 desired signal이 집중된 narrow bandwidth를 통과시키고, unwanted signal energy 대부분은 넓은 bandwidth에 남아 attenuate된다.
+receiver가 user 1의 data를 복구하려면 incoming signal에 user 1의 spreading code $c_1(t)$를 곱하고 demodulate한다. user 1에 해당하는 부분은 despread되어 original unspread bandwidth로 좁아진다. 다른 users의 signals는 $c_1(t)$로 despread되지 않으므로 여전히 spread bandwidth $W_s$에 퍼져 있다. demodulator의 bandpass filter는 desired signal이 집중된 narrow bandwidth를 통과시키고, unwanted signal energy 대부분은 넓은 bandwidth에 남아 attenuate된다.
 
 ### 9.4 CDMA: 정리 포인트
 
@@ -277,15 +277,15 @@ Spread spectrum을 이해할 때는 “bandwidth expansion = 낭비”라는 직
 | Spread spectrum은 전송 전 data compression과 비슷하다. | 반대다. 정보 signal을 더 넓은 bandwidth로 퍼뜨린다. 목적은 압축이 아니라 jamming/interception/multipath 대응과 multiple access다. |
 | Spreading code는 진짜 random이어야 한다. | 보통 deterministic한 `pseudonoise (PN)` 또는 pseudorandom sequence를 사용한다. receiver가 같은 algorithm/seed를 알아야 동기 복구가 가능하다. |
 | FHSS에서는 data modulation이 사라진다. | data는 여전히 FSK/BPSK/MFSK 등으로 modulation된다. FHSS는 그 information-bearing signal의 carrier frequency를 PN sequence에 따라 translate한다. |
-| Fast FHSS는 단순히 더 빠른 data rate를 뜻한다. | fast/slow는 data rate 자체가 아니라 `hop duration T_c`와 `signal element duration T_s`의 관계다. `T_c < T_s`이면 fast FHSS다. |
-| DSSS에서 chip은 original data bit와 같은 의미다. | chip은 spreading code의 더 빠른 단위다. data bit 하나가 여러 chips로 표현되며, chip rate `R_c`가 bandwidth expansion을 만든다. |
-| DSSS receiver는 PN sequence를 몰라도 BPSK만 demodulate하면 된다. | 같은 `c(t)`로 despreading하지 않으면 signal energy가 넓은 bandwidth에 퍼져 있어 원래 data를 제대로 복구하기 어렵다. |
+| Fast FHSS는 단순히 더 빠른 data rate를 뜻한다. | fast/slow는 data rate 자체가 아니라 hop duration $T_c$와 signal element duration $T_s$의 관계다. $T_c < T_s$이면 fast FHSS다. |
+| DSSS에서 chip은 original data bit와 같은 의미다. | chip은 spreading code의 더 빠른 단위다. data bit 하나가 여러 chips로 표현되며, chip rate $R_c$가 bandwidth expansion을 만든다. |
+| DSSS receiver는 PN sequence를 몰라도 BPSK만 demodulate하면 된다. | 같은 $c(t)$로 despreading하지 않으면 signal energy가 넓은 bandwidth에 퍼져 있어 원래 data를 제대로 복구하기 어렵다. |
 | CDMA는 사용자가 서로 다른 frequency를 쓰는 방식이다. | CDMA 사용자는 같은 bandwidth를 동시에 쓴다. 구분 기준은 frequency/time이 아니라 user-specific code다. |
 | Orthogonal code만 있으면 CDMA는 무한히 많은 사용자를 받을 수 있다. | orthogonal code 수, synchronization, noise, correlation, near/far problem, power control 때문에 실제 capacity는 제한된다. |
 
 ## 핵심 용어
 
-`spread spectrum`, `spreading code`, `spreading sequence`, `pseudonoise (PN)`, `pseudorandom number generator`, `seed`, `chip`, `chipping signal`, `frequency-hopping spread spectrum (FHSS)`, `slow FHSS`, `fast FHSS`, `hop duration T_c`, `signal element duration T_s`, `frequency synthesizer`, `channel table`, `MFSK`, `FSK`, `BPSK`, `processing gain`, `G_P`, `spread bandwidth W_s`, `data bandwidth W_d`, `direct sequence spread spectrum (DSSS)`, `exclusive-OR (XOR)`, `chip rate R_c`, `despreading`, `code division multiplexing (CDM)`, `code-division multiple access (CDMA)`, `orthogonal`, `correlation`, `near/far problem`, `power control`, `jamming`, `interception`, `multipath distortion`
+`spread spectrum`, `spreading code`, `spreading sequence`, `pseudonoise (PN)`, `pseudorandom number generator`, `seed`, `chip`, `chipping signal`, `frequency-hopping spread spectrum (FHSS)`, `slow FHSS`, `fast FHSS`, hop duration $T_c$, signal element duration $T_s$, `frequency synthesizer`, `channel table`, `MFSK`, `FSK`, `BPSK`, `processing gain`, $G_P$, spread bandwidth $W_s$, data bandwidth $W_d$, `direct sequence spread spectrum (DSSS)`, `exclusive-OR (XOR)`, chip rate $R_c$, `despreading`, `code division multiplexing (CDM)`, `code-division multiple access (CDMA)`, `orthogonal`, `correlation`, `near/far problem`, `power control`, `jamming`, `interception`, `multipath distortion`
 
 ## 면접 질문
 
@@ -293,11 +293,11 @@ Spread spectrum을 이해할 때는 “bandwidth expansion = 낭비”라는 직
 2. `spreading code`, `spreading sequence`, `pseudonoise (PN)`의 관계를 설명하라.
 3. FHSS에서 transmitter와 receiver가 같은 PN sequence에 동기화되어야 하는 이유를 설명하라.
 4. FHSS transmitter에서 `frequency synthesizer`와 `channel table`이 하는 역할을 설명하라.
-5. `slow FHSS`와 `fast FHSS`를 `T_c`와 `T_s`의 관계로 구분하고, fast FHSS가 jamming에 강할 수 있는 이유를 설명하라.
-6. FHSS processing gain `G_P = 2^k = W_s/W_d`의 의미를 설명하라.
+5. `slow FHSS`와 `fast FHSS`를 $T_c$와 $T_s$의 관계로 구분하고, fast FHSS가 jamming에 강할 수 있는 이유를 설명하라.
+6. FHSS processing gain $G_P=2^k=W_s/W_d$의 의미를 설명하라.
 7. DSSS에서 data bit와 PN chip stream을 XOR하거나 곱하면 bandwidth가 왜 넓어지는지 설명하라.
-8. BPSK 기반 DSSS에서 receiver가 같은 `c(t)`를 곱하면 `c(t)^2 = 1` 때문에 data signal이 복구되는 과정을 설명하라.
-9. DSSS processing gain `G_P = T/T_c = R_c/R`이 의미하는 바를 설명하라.
+8. BPSK 기반 DSSS에서 receiver가 같은 $c(t)$를 곱하면 $c(t)^2=1$ 때문에 data signal이 복구되는 과정을 설명하라.
+9. DSSS processing gain $G_P=T/T_c=R_c/R$이 의미하는 바를 설명하라.
 10. CDMA에서 user-specific code와 orthogonality가 unwanted user signal을 줄이는 원리를 설명하라.
 11. CDMA의 `near/far problem`이 무엇이며, 왜 power control이 필요한지 설명하라.
 12. FDM/TDM/CDMA를 각각 frequency domain, time domain, code domain의 multiplexing으로 비교하라.

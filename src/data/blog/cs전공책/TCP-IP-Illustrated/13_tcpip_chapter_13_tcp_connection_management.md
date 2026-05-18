@@ -191,11 +191,11 @@ option 공간 제한 때문에 한 segment에 담을 수 있는 SACK block 수�
 
 수식으로는 실제 window가 다음처럼 계산된다.
 
-```text
-real advertised window = 16-bit window field << scale factor
-```
+$$
+\text{real advertised window} = \text{16-bit window field} \ll \text{scale factor}
+$$
 
-scale factor는 0부터 14까지 가능하다. 0은 scaling 없음이고, 14이면 최대 `65,535 * 2^14 = 1,073,725,440 bytes` 정도, 즉 약 1GB에 가까운 window를 표현할 수 있다. TCP는 내부적으로 real window를 32-bit 값으로 유지한다.
+scale factor는 0부터 14까지 가능하다. 0은 scaling 없음이고, 14이면 최대 $65{,}535 \cdot 2^{14} = 1{,}073{,}725{,}440\text{ bytes}$ 정도, 즉 약 1GB에 가까운 window를 표현할 수 있다. TCP는 내부적으로 real window를 32-bit 값으로 유지한다.
 
 WSOPT는 SYN segment에만 등장할 수 있으므로 scale factor는 connection establishment 때 방향별로 고정된다. window scaling을 쓰려면 양쪽이 SYN에서 이 option을 보내야 한다. active opener가 SYN에 WSOPT를 넣더라도, passive opener가 SYN+ACK에 WSOPT를 보내지 않으면 scale은 0으로 간주된다. 또한 양방향 scale factor는 서로 다를 수 있다. 이 구조는 option을 모르는 오래된 TCP와의 interoperation을 보장한다.
 
@@ -222,9 +222,9 @@ UTO는 강제 negotiation이 아니다. 상대가 큰 UTO나 작은 UTO를 광�
 
 본문의 계산식은 다음 의미다.
 
-```text
-USER_TIMEOUT = min(U_LIMIT, max(ADV_UTO, REMOTE_UTO, L_LIMIT))
-```
+$$
+\text{USER\_TIMEOUT} = \min(\text{U\_LIMIT}, \max(\text{ADV\_UTO}, \text{REMOTE\_UTO}, \text{L\_LIMIT}))
+$$
 
 `ADV_UTO`는 내가 peer에게 광고한 값, `REMOTE_UTO`는 peer가 광고한 값, `U_LIMIT`와 `L_LIMIT`는 local system의 상한/하한이다. 이 식은 양 endpoint가 반드시 같은 USER_TIMEOUT을 갖는다는 뜻이 아니다. 또한 `L_LIMIT`는 connection의 RTO보다 커야 하며, RFC 1122 호환성을 위해 100s가 권장된다. UTO option은 SYN, 첫 non-SYN segment, USER_TIMEOUT 변경 시 포함될 수 있지만 아직 널리 배치된 기능은 아니다.
 
@@ -244,9 +244,9 @@ TCP에서 일반 PMTUD는 ICMPv4 Destination Unreachable(Fragmentation Required)
 
 connection이 established될 때 TCP는 보통 다음 값들 중 작은 쪽을 바탕으로 SMSS(Send Maximum Segment Size)를 고른다.
 
-```text
-initial SMSS = min(outgoing interface MTU에서 header를 뺀 값, peer가 알린 MSS)
-```
+$$
+\text{initial SMSS} = \min(\text{outgoing interface MTU} - \text{headers},\; \text{peer MSS})
+$$
 
 중요한 제한은 PMTUD가 peer가 광고한 MSS를 초과하게 해 주지는 않는다는 점이다. 상대가 "나는 이 크기보다 큰 TCP data segment를 받지 않겠다"고 MSS를 알렸다면, path가 더 큰 packet을 허용해도 sender는 그 MSS를 넘어서는 안 된다. 반대로 peer가 MSS를 알리지 않으면 default 536 bytes를 가정하지만, 현대 TCP에서는 드문 경우다.
 
@@ -254,9 +254,9 @@ initial SMSS = min(outgoing interface MTU에서 header를 뺀 값, peer가 알�
 
 PTB에 next-hop MTU가 포함되어 있으면 sender는 대략 다음처럼 새 segment size를 잡을 수 있다.
 
-```text
-new TCP segment size = next-hop MTU - IP header size - TCP header size
-```
+$$
+\text{new TCP segment size} = \text{next-hop MTU} - \text{IP header size} - \text{TCP header size}
+$$
 
 옛 ICMP error처럼 next-hop MTU 정보가 없으면 sender는 binary search 같은 방식으로 사용할 수 있는 값을 탐색할 수 있다. segment size 변화는 congestion control에도 영향을 주므로 Chapter 16의 성능 제어와 연결된다.
 
@@ -359,9 +359,9 @@ TCP에서 destination port에 listening process가 없는데 SYN이 도착하면
 
 reset 응답의 sequence/ACK number 규칙도 중요하다. 들어온 SYN segment에는 ACK bit가 없으므로, reset의 sequence number는 0으로 설정되고 ACK number는 incoming ISN에 SYN이 소비하는 1을 더한 값이 된다.
 
-```text
-RST ACK number = incoming ISN + data length + 1(for SYN)
-```
+$$
+\text{RST ACK number} = \text{incoming ISN} + \text{data length} + 1\; (\text{for SYN})
+$$
 
 RST를 받아들이는 쪽도 아무 reset이나 믿으면 안 된다. reset segment가 TCP에 accepted 되려면 ACK bit가 설정되어 있고, ACK Number가 valid window 안에 있어야 한다. 그렇지 않으면 공격자가 4-tuple만 맞춘 reset을 보내 connection을 끊는 단순 spoofing attack이 너무 쉬워진다. RFC 5961 계열의 개선은 이런 reset 공격을 더 어렵게 만든다.
 

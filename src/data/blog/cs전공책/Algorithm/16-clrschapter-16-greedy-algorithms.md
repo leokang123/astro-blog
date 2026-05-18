@@ -45,76 +45,78 @@ Chapter 15의 `dynamic programming`은 가능한 choices를 비교하기 위해 
 
 #### Problem definition
 
-활동 집합을 `S = {a_1, a_2, ..., a_n}`이라 하자. 각 activity `a_i`는 start time `s_i`와 finish time `f_i`를 가지며, 실제 사용 interval은 half-open interval `[s_i, f_i)`다.
+활동 집합을 $S = {a_{1}, a_{2}, \ldots, a_{n}}$이라 하자. 각 activity $a_{i}$는 start time $s_{i}$와 finish time $f_{i}$를 가지며, 실제 사용 interval은 half-open interval `[s_i, f_i)`다.
 
-두 activities `a_i`, `a_j`가 `compatible`하려면 interval이 겹치지 않아야 한다.
+두 activities $a_{i}$, $a_{j}$가 `compatible`하려면 interval이 겹치지 않아야 한다.
 
-```text
-a_i and a_j are compatible iff s_i >= f_j or s_j >= f_i
-```
+$$
+a_{i} and a_{j} are compatible iff s_{i} \ge f_{j} or s_{j} \ge f_{i}
+$$
 
 입력 activities는 finish time이 nondecreasing order로 정렬되어 있다고 가정한다.
 
-```text
-f_1 <= f_2 <= ... <= f_{n-1} <= f_n                         (16.1)
-```
+$$
+f_{1} \le f_{2} \le \ldots \le f_{n-1} \le f_{n} (16.1)
+$$
 
 원문 예시는 다음 11개 activities를 사용한다.
 
 | i | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
 |---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
-| `s_i` | 1 | 3 | 0 | 5 | 3 | 5 | 6 | 8 | 8 | 2 | 12 |
-| `f_i` | 4 | 5 | 6 | 7 | 9 | 9 | 10 | 11 | 12 | 14 | 16 |
+| $s_{i}$ | 1 | 3 | 0 | 5 | 3 | 5 | 6 | 8 | 8 | 2 | 12 |
+| $f_{i}$ | 4 | 5 | 6 | 7 | 9 | 9 | 10 | 11 | 12 | 14 | 16 |
 
 `{a_3, a_9, a_11}`은 compatible하지만 maximum-size subset은 아니다. `{a_1, a_4, a_8, a_11}`과 `{a_2, a_4, a_9, a_11}`은 크기 4의 maximum-size compatible subsets다.
 
 #### Dynamic-programming view
 
-Activity-selection은 먼저 DP 문제처럼 볼 수 있다. `S_ij`를 activity `a_i`가 끝난 뒤 시작하고, activity `a_j`가 시작하기 전에 끝나는 activities의 집합이라고 하자. `S_ij`의 optimal solution `A_ij`가 어떤 activity `a_k`를 포함한다면, 문제는 두 subproblems로 갈라진다.
+Activity-selection은 먼저 DP 문제처럼 볼 수 있다. $S_{ij}$를 activity $a_{i}$가 끝난 뒤 시작하고, activity $a_{j}$가 시작하기 전에 끝나는 activities의 집합이라고 하자. $S_{ij}$의 optimal solution $A_{ij}$가 어떤 activity $a_{k}$를 포함한다면, 문제는 두 subproblems로 갈라진다.
 
-```text
-S_ik  +  {a_k}  +  S_kj
-```
+$$
+S_{ik} + {a_{k}} + S_{kj}
+$$
 
-즉 `a_k`보다 앞에 배치할 compatible activities와 뒤에 배치할 compatible activities를 각각 최적으로 골라야 한다. Cut-and-paste argument로 `A_ij` 안의 왼쪽/오른쪽 subsolutions도 optimal이어야 함을 보일 수 있다. 더 좋은 오른쪽 subsolution이 있다면 `A_ij`의 오른쪽 부분만 교체해 전체 activity 수를 늘릴 수 있어 contradiction이다.
+즉 $a_{k}$보다 앞에 배치할 compatible activities와 뒤에 배치할 compatible activities를 각각 최적으로 골라야 한다. Cut-and-paste argument로 $A_{ij}$ 안의 왼쪽/오른쪽 subsolutions도 optimal이어야 함을 보일 수 있다. 더 좋은 오른쪽 subsolution이 있다면 $A_{ij}$의 오른쪽 부분만 교체해 전체 activity 수를 늘릴 수 있어 contradiction이다.
 
-`c[i,j]`를 `S_ij`에서 고를 수 있는 maximum-size compatible subset의 크기라고 하면:
+$c[i,j]$를 $S_{ij}$에서 고를 수 있는 maximum-size compatible subset의 크기라고 하면:
 
-```text
-c[i,j] = 0                                                        if S_ij = ∅
-c[i,j] = max_{a_k in S_ij} { c[i,k] + c[k,j] + 1 }                if S_ij != ∅      (16.2)
-```
+$$
+\begin{aligned}
+c[i,j] &= 0 if S_{ij} = ∅ \\
+c[i,j] &= max_{a_{k} in S_{ij}} { c[i,k] + c[k,j] + 1 } if S_{ij} != ∅ (16.2)
+\end{aligned}
+$$
 
-이 recurrence는 matrix-chain multiplication과 비슷하게 가능한 split/activity `a_k`를 모두 시도하게 만든다. Memoized recursion이나 bottom-up table로 풀 수 있지만, 이 문제에는 더 강한 성질이 있다.
+이 recurrence는 matrix-chain multiplication과 비슷하게 가능한 split/activity $a_{k}$를 모두 시도하게 만든다. Memoized recursion이나 bottom-up table로 풀 수 있지만, 이 문제에는 더 강한 성질이 있다.
 
 #### Greedy choice: earliest finish time
 
-Greedy intuition은 “resource를 가능한 빨리 비워서 뒤의 activities가 들어올 여지를 많이 남기자”이다. 따라서 현재 남은 activities 중 finish time이 가장 이른 activity를 고른다. 입력이 finish time 순서로 정렬되어 있으면 처음 선택은 `a_1`이다.
+Greedy intuition은 “resource를 가능한 빨리 비워서 뒤의 activities가 들어올 여지를 많이 남기자”이다. 따라서 현재 남은 activities 중 finish time이 가장 이른 activity를 고른다. 입력이 finish time 순서로 정렬되어 있으면 처음 선택은 $a_{1}$이다.
 
-`a_1`을 선택하면 왜 왼쪽 subproblem이 없어지는가? `f_1`은 전체에서 가장 이른 finish time이고 `s_1 < f_1`이다. 따라서 어떤 activity도 `s_1` 이전 또는 `s_1`까지 끝날 수 없다. 결국 `a_1`과 compatible한 activities는 모두 `a_1`이 끝난 뒤 시작하는 activities뿐이다.
+$a_{1}$을 선택하면 왜 왼쪽 subproblem이 없어지는가? $f_{1}$은 전체에서 가장 이른 finish time이고 $s_1 < f_1$이다. 따라서 어떤 activity도 $s_{1}$ 이전 또는 $s_{1}$까지 끝날 수 없다. 결국 $a_{1}$과 compatible한 activities는 모두 $a_{1}$이 끝난 뒤 시작하는 activities뿐이다.
 
-`S_k = {a_i in S : s_i >= f_k}`를 activity `a_k`가 끝난 뒤 시작하는 activities의 subproblem이라고 하자. Greedy가 `a_1`을 고르면 남는 문제는 `S_1` 하나뿐이다. 이 점이 DP의 “두 subproblems를 모두 풀고 choice를 고르는 방식”과 다르다.
+$S_{k} = {a_{i} in S : s_{i} \ge f_{k}}$를 activity $a_{k}$가 끝난 뒤 시작하는 activities의 subproblem이라고 하자. Greedy가 $a_{1}$을 고르면 남는 문제는 $S_{1}$ 하나뿐이다. 이 점이 DP의 “두 subproblems를 모두 풀고 choice를 고르는 방식”과 다르다.
 
 #### Theorem 16.1: greedy choice is safe
 
 Theorem 16.1은 activity-selection problem에서 earliest finish time choice가 어떤 optimal solution에 포함됨을 보인다.
 
-> 임의의 nonempty subproblem `S_k`에서 finish time이 가장 이른 activity를 `a_m`이라 하면, `a_m`은 `S_k`의 maximum-size mutually compatible subset 중 적어도 하나에 포함된다.
+> 임의의 nonempty subproblem $S_{k}$에서 finish time이 가장 이른 activity를 $a_{m}$이라 하면, $a_{m}$은 $S_{k}$의 maximum-size mutually compatible subset 중 적어도 하나에 포함된다.
 
 증명은 exchange argument다.
 
-1. `A_k`를 `S_k`의 maximum-size compatible subset이라고 하자.
-2. `A_k` 안에서 가장 먼저 끝나는 activity를 `a_j`라고 하자.
-3. 만약 `a_j = a_m`이면 이미 greedy choice가 optimal solution 안에 있다.
-4. 아니라면 `A'_k = A_k - {a_j} ∪ {a_m}`으로 바꾼다.
-5. `a_m`은 `S_k`에서 가장 빨리 끝나므로 `f_m <= f_j`다. `A_k`에서 `a_j` 뒤에 오던 activities는 `a_j`와 compatible했으므로, 더 일찍 끝나는 `a_m`과도 compatible하다.
-6. 따라서 `A'_k`도 compatible하고 크기는 `A_k`와 같다. 즉 `a_m`을 포함하는 maximum-size solution이 존재한다.
+1. $A_{k}$를 $S_{k}$의 maximum-size compatible subset이라고 하자.
+2. $A_{k}$ 안에서 가장 먼저 끝나는 activity를 $a_{j}$라고 하자.
+3. 만약 $a_{j} = a_{m}$이면 이미 greedy choice가 optimal solution 안에 있다.
+4. 아니라면 $A'_{k} = A_{k} - {a_{j}} \cup {a_{m}}$으로 바꾼다.
+5. $a_{m}$은 $S_{k}$에서 가장 빨리 끝나므로 $f_{m} \le f_{j}$다. $A_{k}$에서 $a_{j}$ 뒤에 오던 activities는 $a_{j}$와 compatible했으므로, 더 일찍 끝나는 $a_{m}$과도 compatible하다.
+6. 따라서 `A'_k`도 compatible하고 크기는 $A_{k}$와 같다. 즉 $a_{m}$을 포함하는 maximum-size solution이 존재한다.
 
 이 증명은 greedy correctness에서 자주 쓰이는 형태다. 어떤 optimal solution이 greedy choice를 포함하지 않더라도, 첫 선택을 greedy choice로 “교환(exchange)”해도 optimality가 깨지지 않음을 보인다.
 
 #### Recursive greedy algorithm
 
-`RECURSIVE-ACTIVITY-SELECTOR`는 fictitious activity `a_0`을 추가해 시작한다. `f_0 = 0`이고, initial call은 `RECURSIVE-ACTIVITY-SELECTOR(s, f, 0, n)`이다. `S_0`가 전체 activity set이 된다.
+`RECURSIVE-ACTIVITY-SELECTOR`는 fictitious activity $a_{0}$을 추가해 시작한다. $f_{0} = 0$이고, initial call은 `RECURSIVE-ACTIVITY-SELECTOR(s, f, 0, n)`이다. $S_{0}$가 전체 activity set이 된다.
 
 ```text
 RECURSIVE-ACTIVITY-SELECTOR(s, f, k, n)
@@ -126,14 +128,14 @@ RECURSIVE-ACTIVITY-SELECTOR(s, f, k, n)
 6  else return ∅
 ```
 
-Line 2-3은 현재 선택된 마지막 activity `a_k`와 compatible한 첫 activity `a_m`을 찾는다. Activities가 finish time 순서로 정렬되어 있으므로, 이 `a_m`은 `S_k`에서 가장 빨리 끝나는 activity다. 찾으면 `a_m`을 선택하고 subproblem `S_m`을 재귀적으로 푼다. 더 이상 compatible activity가 없으면 empty set을 반환한다.
+Line 2-3은 현재 선택된 마지막 activity $a_{k}$와 compatible한 첫 activity $a_{m}$을 찾는다. Activities가 finish time 순서로 정렬되어 있으므로, 이 $a_{m}$은 $S_{k}$에서 가장 빨리 끝나는 activity다. 찾으면 $a_{m}$을 선택하고 subproblem $S_{m}$을 재귀적으로 푼다. 더 이상 compatible activity가 없으면 empty set을 반환한다.
 
 ![Figure 16.1](@/assets/images/cs-algorithm-082-figure-16-1-page-441.png)
 *Figure 16.1 · PDF p. 441 · `RECURSIVE-ACTIVITY-SELECTOR`가 activities를 순서대로 선택/거절하는 과정*
 
-Figure 16.1은 원문 11개 activities에서 recursive calls가 `a_1`, `a_4`, `a_8`, `a_11`을 선택하는 과정을 보여 준다. Shaded activities는 이미 선택된 것들이고, white activity는 현재 검사 중인 activity다. Start time이 최근 선택 activity의 finish time보다 작으면 거절하고, 그렇지 않으면 선택한다.
+Figure 16.1은 원문 11개 activities에서 recursive calls가 $a_{1}$, $a_{4}$, $a_{8}$, $a_{11}$을 선택하는 과정을 보여 준다. Shaded activities는 이미 선택된 것들이고, white activity는 현재 검사 중인 activity다. Start time이 최근 선택 activity의 finish time보다 작으면 거절하고, 그렇지 않으면 선택한다.
 
-정렬이 이미 되어 있다면 running time은 `Θ(n)`이다. 모든 recursive calls 전체에서 각 activity는 while loop test에서 정확히 한 번씩 검사된다. 정렬이 필요하면 finish time 기준 sorting 때문에 전체 시간은 `O(n lg n)`이 된다.
+정렬이 이미 되어 있다면 running time은 $\Theta(n)$이다. 모든 recursive calls 전체에서 각 activity는 while loop test에서 정확히 한 번씩 검사된다. 정렬이 필요하면 finish time 기준 sorting 때문에 전체 시간은 $O(n \lg n)$이 된다.
 
 #### Iterative greedy algorithm
 
@@ -153,11 +155,11 @@ GREEDY-ACTIVITY-SELECTOR(s, f)
 
 입력이 finish time 순서로 정렬되어 있으므로, loop가 어떤 compatible activity를 처음 발견하는 순간 그것이 현재 subproblem에서 earliest finish time activity다. Compatibility는 모든 기존 selected activities와 비교할 필요가 없다. 선택된 activities의 finish times는 증가하고, `k`가 가장 최근 선택 activity이자 현재 `A` 안에서 finish time이 가장 큰 activity를 가리키기 때문이다.
 
-```text
-f_k = max { f_i : a_i in A }                                      (16.3)
-```
+$$
+f_{k} = \max { f_{i} : a_{i} in A } (16.3)
+$$
 
-따라서 새 activity `a_m`이 전체 `A`와 compatible한지 확인하려면 `s[m] >= f[k]`만 검사하면 된다. Iterative algorithm도 sorting 후에는 `Θ(n)` time이다.
+따라서 새 activity $a_{m}$이 전체 `A`와 compatible한지 확인하려면 $s[m] \ge f[k]$만 검사하면 된다. Iterative algorithm도 sorting 후에는 $\Theta(n)$ time이다.
 
 #### Greedy가 실패하는 변형들
 
@@ -169,7 +171,7 @@ Activity-selection에서 “빨리 끝나는 activity”는 안전하지만, 아
 | 남은 activities와 overlap이 가장 적은 activity 선택 | local overlap 수가 전체 chain 구조의 최적성을 보장하지 않음 |
 | earliest start time 선택 | 너무 길게 이어지는 activity를 먼저 잡아 뒤의 many activities를 막을 수 있음 |
 
-또한 activity마다 value `v_i`가 붙어 “개수 최대화”가 아니라 “총 value 최대화”가 목표가 되면 earliest finish time greedy가 충분하지 않다. 이 변형은 weighted interval scheduling 형태로 polynomial-time DP가 필요하다.
+또한 activity마다 value $v_{i}$가 붙어 “개수 최대화”가 아니라 “총 value 최대화”가 목표가 되면 earliest finish time greedy가 충분하지 않다. 이 변형은 weighted interval scheduling 형태로 polynomial-time DP가 필요하다.
 
 ### 16.2 Elements of the greedy strategy
 
@@ -184,14 +186,14 @@ Greedy algorithm은 sequence of choices로 optimal solution을 만든다. 매 de
 
 | 단계 | 16.1에서 한 일 |
 |---|---|
-| 1 | `S_ij`로 optimal substructure를 찾음 |
+| 1 | $S_{ij}$로 optimal substructure를 찾음 |
 | 2 | recurrence (16.2)로 recursive DP 형태를 세움 |
-| 3 | greedy choice를 하면 subproblem이 `S_k` 하나만 남음을 관찰 |
+| 3 | greedy choice를 하면 subproblem이 $S_{k}$ 하나만 남음을 관찰 |
 | 4 | earliest finish time choice가 safe함을 Theorem 16.1로 증명 |
 | 5 | recursive greedy algorithm 작성 |
 | 6 | iterative greedy algorithm으로 변환 |
 
-하지만 실제 greedy 설계는 더 직접적으로 할 수 있다. 처음부터 “choice 하나를 하면 subproblem 하나만 남는” formulation을 잡고, 그 choice가 안전함을 증명한다. Activity-selection에서는 `S_ij` 대신 `S_k`를 subproblem으로 보고, `S_k`에서 가장 빨리 끝나는 activity `a_m`을 고른 뒤 남은 `S_m`을 푸는 식으로 바로 접근할 수 있다.
+하지만 실제 greedy 설계는 더 직접적으로 할 수 있다. 처음부터 “choice 하나를 하면 subproblem 하나만 남는” formulation을 잡고, 그 choice가 안전함을 증명한다. Activity-selection에서는 $S_{ij}$ 대신 $S_{k}$를 subproblem으로 보고, $S_{k}$에서 가장 빨리 끝나는 activity $a_{m}$을 고른 뒤 남은 $S_{m}$을 푸는 식으로 바로 접근할 수 있다.
 
 Greedy 아래에는 대개 더 무거운 dynamic-programming solution이 숨어 있다. Greedy는 그중 일부 choices만 고려해도 충분하다는 증명이 있을 때 DP를 단순화한다.
 
@@ -215,10 +217,12 @@ Greedy에서도 `optimal substructure`가 필요하다. 다만 DP에서처럼 �
 
 즉 증명 목표는 다음 형태다.
 
-```text
-optimal(original)
+$$
+\begin{aligned}
+\text{optimal(original)} \\
 = greedy choice + optimal(remaining subproblem)
-```
+\end{aligned}
+$$
 
 이 논리는 보통 induction으로 확장된다. 첫 greedy choice가 안전하고, 남은 subproblem도 같은 구조를 가진다면, 같은 논리를 반복해 전체 greedy sequence가 optimal solution을 만든다.
 
@@ -226,7 +230,7 @@ optimal(original)
 
 Greedy와 DP의 차이를 보여 주는 대표 예가 `knapsack problem`이다.
 
-`0-1 knapsack problem`에서는 각 item `i`가 value `v_i`, weight `w_i`를 가지며, thief는 capacity `W` 이하에서 value 합을 최대화하고 싶다. 각 item은 take 또는 leave만 가능하다. 즉 fraction을 가져갈 수 없다.
+`0-1 knapsack problem`에서는 각 item `i`가 value $v_{i}$, weight $w_{i}$를 가지며, thief는 capacity `W` 이하에서 value 합을 최대화하고 싶다. 각 item은 take 또는 leave만 가능하다. 즉 fraction을 가져갈 수 없다.
 
 `fractional knapsack problem`은 같은 설정이지만 item을 쪼개서 가져갈 수 있다. Gold ingot은 0-1 knapsack에 가깝고, gold dust는 fractional knapsack에 가깝다.
 
@@ -234,10 +238,10 @@ Greedy와 DP의 차이를 보여 주는 대표 예가 `knapsack problem`이다.
 
 | 문제 | Optimal substructure |
 |---|---|
-| 0-1 knapsack | optimal load에서 item `j`를 제거하면, 남은 load는 capacity `W-w_j`와 item `j` 제외 조건에서 optimal이어야 함 |
+| 0-1 knapsack | optimal load에서 item `j`를 제거하면, 남은 load는 capacity $W-w_{j}$와 item `j` 제외 조건에서 optimal이어야 함 |
 | fractional knapsack | item `j`의 weight `w`만큼 제거하면, 남은 load는 capacity `W-w`에서 optimal이어야 함 |
 
-하지만 greedy-choice property는 fractional knapsack에만 성립한다. Fractional knapsack에서는 value density `v_i / w_i`가 가장 큰 item부터 가능한 만큼 담으면 된다. 한 item이 다 떨어져도 capacity가 남으면 다음 density item을 담는다. Sorting을 쓰면 `O(n lg n)` time이다.
+하지만 greedy-choice property는 fractional knapsack에만 성립한다. Fractional knapsack에서는 value density `v_i / w_i`가 가장 큰 item부터 가능한 만큼 담으면 된다. 한 item이 다 떨어져도 capacity가 남으면 다음 density item을 담는다. Sorting을 쓰면 $O(n \lg n)$ time이다.
 
 ![Figure 16.2](@/assets/images/cs-algorithm-083-figure-16-2-page-448.png)
 *Figure 16.2 · PDF p. 448 · `0-1 knapsack`에서는 value density greedy가 실패하지만 fractional에서는 성공하는 예*
@@ -258,14 +262,16 @@ Value density greedy는 item 1을 먼저 고른다. 하지만 0-1 knapsack의 op
 
 0-1 knapsack에서 어떤 item을 넣을지 말지는 나중의 조합 가능성을 바꾼다. Item 1의 density가 높아도, 그것을 넣으면 남는 capacity가 애매해져 전체 value가 낮아질 수 있다. 따라서 item을 포함하는 subproblem과 제외하는 subproblem을 비교해야 한다.
 
-```text
-best(i, W) = max(
-  best(i-1, W),
-  best(i-1, W-w_i) + v_i
-)
-```
+$$
+\begin{aligned}
+best(i, W) &= \max( \\
+  best(i-1, W), \\
+  best(i-1, W-w_{i}) + v_{i} \\
+\text{)}
+\end{aligned}
+$$
 
-이 비교는 future subproblem solutions에 의존하므로 greedy choice가 아니다. 게다가 같은 `(i, W)` subproblems가 반복되므로 overlapping subproblems가 생긴다. 그래서 0-1 knapsack은 `O(nW)` dynamic programming solution이 자연스럽다.
+이 비교는 future subproblem solutions에 의존하므로 greedy choice가 아니다. 게다가 같은 `(i, W)` subproblems가 반복되므로 overlapping subproblems가 생긴다. 그래서 0-1 knapsack은 $O(nW)$ dynamic programming solution이 자연스럽다.
 
 ### 16.3 Huffman codes
 
@@ -280,21 +286,21 @@ best(i, W) = max(
 
 6개 characters를 fixed-length code로 표현하려면 character마다 3 bits가 필요하므로 전체 `300,000` bits가 든다. 반면 Figure 16.3의 variable-length code는 `a`를 `0`, `f`를 `1100`처럼 표현해 전체 bit 수를 줄인다.
 
-```text
-(45*1 + 13*3 + 12*3 + 16*3 + 9*4 + 5*4) * 1000 = 224,000 bits
-```
+$$
+(45\cdot 1 + 13\cdot 3 + 12\cdot 3 + 16\cdot 3 + 9\cdot 4 + 5\cdot 4) \cdot 1000 = 224,000 bits
+$$
 
 이 예시는 약 25% saving을 만든다. CLRS는 이 code가 해당 frequencies에 대해 optimal임을 Huffman algorithm으로 보인다.
 
 #### Prefix codes
 
-`prefix code`는 어떤 codeword도 다른 codeword의 prefix가 되지 않는 code다. 예를 들어 `a = 0`이라면 `0...`으로 시작하는 다른 codeword가 없어야 한다. 이 조건은 decoding을 unambiguous하게 만든다.
+`prefix code`는 어떤 codeword도 다른 codeword의 prefix가 되지 않는 code다. 예를 들어 $a = 0$이라면 `0...`으로 시작하는 다른 codeword가 없어야 한다. 이 조건은 decoding을 unambiguous하게 만든다.
 
 Encoding은 codewords를 이어 붙이는 것이다. Figure 16.3의 variable-length prefix code에서 `abc`는 다음처럼 encode된다.
 
-```text
-a b c  =>  0 · 101 · 100  = 0101100
-```
+$$
+\text{a b c  =>  0 · 101 · 100} = 0101100
+$$
 
 Decoding은 왼쪽부터 codeword 하나씩 끊어 읽는다. Prefix-free 성질 때문에 처음 codeword가 어디서 끝나는지 모호하지 않다. 예를 들어 `001011101`은 `0 · 0 · 101 · 1101`로 유일하게 parse되어 `aabe`가 된다.
 
@@ -305,17 +311,17 @@ Prefix code는 binary tree로 표현하기 좋다. Root에서 왼쪽 edge는 `0`
 
 Figure 16.4의 tree들은 binary search tree가 아니다. Characters는 leaves에 있고, internal nodes는 keys가 아니라 subtree frequencies sum을 담는다. Optimal prefix code는 항상 `full binary tree`로 나타낼 수 있다. 즉 모든 internal node가 정확히 두 children을 가진다. Positive frequencies를 가진 alphabet `C`에 대해 optimal prefix-code tree는 `|C|` leaves와 `|C|-1` internal nodes를 가진다.
 
-Tree `T`가 prefix code를 나타낼 때, character `c`의 frequency를 `c.freq`, leaf depth를 `d_T(c)`라고 하자. Codeword length가 leaf depth이므로 file encoding bit 수, 즉 tree cost는:
+Tree `T`가 prefix code를 나타낼 때, character `c`의 frequency를 `c.freq`, leaf depth를 $d_{T}(c)$라고 하자. Codeword length가 leaf depth이므로 file encoding bit 수, 즉 tree cost는:
 
-```text
-B(T) = Σ_{c in C} c.freq * d_T(c)                              (16.4)
-```
+$$
+B(T) = \sum_{c in C} c.freq \cdot d_{T}(c) (16.4)
+$$
 
-따라서 Huffman coding 문제는 weighted external path length `B(T)`를 최소화하는 full binary tree를 찾는 문제다.
+따라서 Huffman coding 문제는 weighted external path length $B(T)$를 최소화하는 full binary tree를 찾는 문제다.
 
 #### Huffman algorithm
 
-`HUFFMAN(C)`는 bottom-up으로 optimal prefix-code tree를 만든다. 처음에는 각 character가 leaf node 하나이고, 매 step마다 frequency가 가장 작은 두 nodes를 꺼내 새 internal node의 children으로 merge한다. 새 node의 frequency는 두 frequencies의 합이다.
+$HUFFMAN(C)$는 bottom-up으로 optimal prefix-code tree를 만든다. 처음에는 각 character가 leaf node 하나이고, 매 step마다 frequency가 가장 작은 두 nodes를 꺼내 새 internal node의 children으로 merge한다. 새 node의 frequency는 두 frequencies의 합이다.
 
 ```text
 HUFFMAN(C)
@@ -330,14 +336,14 @@ HUFFMAN(C)
 9  return EXTRACT-MIN(Q)
 ```
 
-`Q`는 `freq`를 key로 하는 `min-priority queue`다. Line 5-6의 두 번의 `EXTRACT-MIN`이 greedy choice다. 가장 낮은 frequencies의 두 objects를 하나의 subtree로 합치고, 그 subtree를 다시 queue에 넣는다. `n-1`번 merge하면 queue에는 root 하나만 남는다.
+`Q`는 `freq`를 key로 하는 `min-priority queue`다. Line 5-6의 두 번의 `EXTRACT-MIN`이 greedy choice다. 가장 낮은 frequencies의 두 objects를 하나의 subtree로 합치고, 그 subtree를 다시 queue에 넣는다. $n-1$번 merge하면 queue에는 root 하나만 남는다.
 
 ![Figure 16.5](@/assets/images/cs-algorithm-086-figure-16-5-page-453.png)
 *Figure 16.5 · PDF p. 453 · Huffman algorithm이 lowest-frequency trees를 반복 merge하는 과정*
 
 Figure 16.5에서는 `f:5`와 `e:9`를 먼저 merge해 frequency `14` node를 만든다. 이후 queue에서 항상 가장 작은 두 trees를 merge한다. 최종 tree의 root-to-leaf edge labels가 codewords가 된다. Left/right child 순서는 임의이며, 바꾸면 codeword bit pattern은 달라지지만 cost는 같다.
 
-Binary min-heap을 쓰면 initialization은 `BUILD-MIN-HEAP`으로 `O(n)`, loop는 `n-1`번 반복되고 각 반복마다 heap operation이 `O(lg n)`이므로 total running time은 `O(n lg n)`이다.
+Binary min-heap을 쓰면 initialization은 `BUILD-MIN-HEAP`으로 $O(n)$, loop는 $n-1$번 반복되고 각 반복마다 heap operation이 $O(\lg n)$이므로 total running time은 $O(n \lg n)$이다.
 
 #### Greedy-choice property: Lemma 16.2
 
@@ -354,18 +360,20 @@ Tree 관점으로 말하면, minimum-frequency characters `x`, `y`를 maximum de
 
 1. 임의의 optimal tree `T`를 잡는다.
 2. `T`에서 maximum depth의 sibling leaves를 `a`, `b`라고 하자.
-3. `x`, `y`는 전체에서 frequencies가 가장 작으므로 `x.freq <= a.freq`, `y.freq <= b.freq`다.
+3. `x`, `y`는 전체에서 frequencies가 가장 작으므로 $x.freq \le a.freq$, $y.freq \le b.freq$다.
 4. `a`와 `x`의 위치를 swap해 `T'`를 만들고, `b`와 `y`의 위치를 swap해 `T''`를 만든다.
 5. 낮은 frequency item을 더 깊은 곳에 두는 것은 cost를 증가시키지 않는다.
 
 첫 swap의 cost 차이는 다음처럼 계산된다.
 
-```text
-B(T) - B(T')
-= (a.freq - x.freq) * (d_T(a) - d_T(x)) >= 0
-```
+$$
+\begin{aligned}
+B(T) - B(T') \\
+= (a.freq - x.freq) \cdot (d_{T}(a) - d_{T}(x)) \ge 0
+\end{aligned}
+$$
 
-`a.freq - x.freq >= 0`이고 `a`가 maximum depth leaf라 `d_T(a) - d_T(x) >= 0`이기 때문이다. 두 번째 swap도 마찬가지다. 따라서 `B(T'') <= B(T)`이고, `T`가 optimal이므로 `T''`도 optimal이다. 이제 `x`, `y`는 deepest sibling leaves다.
+$a.freq - x.freq \ge 0$이고 `a`가 maximum depth leaf라 $d_{T}(a) - d_{T}(x) \ge 0$이기 때문이다. 두 번째 swap도 마찬가지다. 따라서 $B(T'') \le B(T)$이고, `T`가 optimal이므로 `T''`도 optimal이다. 이제 `x`, `y`는 deepest sibling leaves다.
 
 Huffman의 첫 merge는 바로 이 `x`, `y`를 siblings로 묶는 선택이다. 가능한 merge들 중 frequency sum이 가장 작으므로 local merge cost도 가장 작다.
 
@@ -375,19 +383,23 @@ Lemma 16.3은 Huffman problem의 optimal substructure를 보인다.
 
 Minimum-frequency characters `x`, `y`를 하나의 새 character `z`로 합친 reduced alphabet을 생각하자.
 
-```text
-C' = C - {x, y} ∪ {z}
-z.freq = x.freq + y.freq
-```
+$$
+\begin{aligned}
+C' &= C - {x, y} \cup {z} \\
+z.freq &= x.freq + y.freq
+\end{aligned}
+$$
 
 `C'`에 대한 optimal prefix-code tree `T'`가 있으면, `z` leaf를 internal node로 바꾸고 그 children으로 `x`, `y`를 붙인 tree `T`는 원래 alphabet `C`에 대한 optimal tree다.
 
 Cost 관계는 다음과 같다.
 
-```text
-B(T) = B(T') + x.freq + y.freq
-B(T') = B(T) - x.freq - y.freq
-```
+$$
+\begin{aligned}
+B(T) &= B(T') + x.freq + y.freq \\
+B(T') &= B(T) - x.freq - y.freq
+\end{aligned}
+$$
 
 왜냐하면 `x`, `y`는 `z`보다 depth가 1씩 깊어지고, 다른 characters의 depth는 그대로이기 때문이다.
 
@@ -411,52 +423,54 @@ B(T') = B(T) - x.freq - y.freq
 
 #### Matroid definition
 
-Matroid는 ordered pair `M = (S, I)`다. 여기서 `S`는 finite set이고, `I`는 `S`의 subsets 중 `independent subsets`라고 부르는 nonempty family다. `M`이 matroid가 되려면 다음을 만족해야 한다.
+Matroid는 ordered pair $M = (S, I)$다. 여기서 $S$는 finite set이고, $I$는 $S$의 subsets 중 `independent subsets`라고 부르는 nonempty family다. $M$이 matroid가 되려면 다음을 만족해야 한다.
 
 | 조건 | 이름 | 의미 |
 |---|---|---|
-| `S` is finite | finite ground set | 선택 후보가 유한하다. |
-| `B in I` and `A subset B`이면 `A in I` | hereditary property | independent set에서 원소를 제거해도 independent다. Empty set `∅`도 반드시 independent다. |
-| `A, B in I`이고 `|A| < |B|`이면 어떤 `x in B - A`가 있어 `A ∪ {x} in I` | exchange property | 더 작은 independent set은 더 큰 independent set의 어떤 원소를 받아 확장될 수 있다. |
+| $S$ is finite | finite ground set | 선택 후보가 유한하다. |
+| $B \in I$ and $A \subset B$이면 $A \in I$ | hereditary property | independent set에서 원소를 제거해도 independent다. Empty set $\varnothing$도 반드시 independent다. |
+| $A, B \in I$이고 $|A| < |B|$이면 어떤 $x \in B - A$가 있어 $A \cup \{x\} \in I$ | exchange property | 더 작은 independent set은 더 큰 independent set의 어떤 원소를 받아 확장될 수 있다. |
 
 `hereditary property`는 “가능한 선택 집합의 부분집합도 가능하다”는 뜻이고, `exchange property`는 “큰 feasible solution의 원소 중 하나를 작은 feasible solution에 붙일 여지가 있다”는 뜻이다. Greedy proof에서 이 exchange property가 핵심 역할을 한다.
 
 #### Graphic matroid
 
-대표 예시는 `graphic matroid`다. Undirected graph `G = (V, E)`가 있을 때:
+대표 예시는 `graphic matroid`다. Undirected graph $G = (V, E)$가 있을 때:
 
-```text
-S_G = E
-A in I_G  iff  A is acyclic
-```
+$$
+\begin{aligned}
+S_{G} &= E \\
+A \in I_G &\iff A \text{ is acyclic}
+\end{aligned}
+$$
 
-즉 independent subsets는 cycle을 만들지 않는 edge sets다. Subgraph `(V, A)`가 forest이면 `A`는 independent다.
+즉 independent subsets는 cycle을 만들지 않는 edge sets다. Subgraph $(V, A)$가 forest이면 $A$는 independent다.
 
-Theorem 16.5는 `M_G = (S_G, I_G)`가 matroid임을 보인다.
+Theorem 16.5는 $M_{G} = (S_{G}, I_{G})$가 matroid임을 보인다.
 
 | Matroid 조건 | Graphic matroid에서의 이유 |
 |---|---|
-| finite | edge set `E`가 finite |
+| finite | edge set $E$가 finite |
 | hereditary | forest에서 edges를 제거해도 cycle이 생기지 않음 |
 | exchange | 더 많은 edges를 가진 forest는 더 적은 trees를 가지므로, 큰 forest의 어떤 edge가 작은 forest의 서로 다른 trees를 연결해 cycle 없이 추가될 수 있음 |
 
-Forest `F = (V_F, E_F)`가 `t`개의 trees로 이루어져 있으면:
+Forest $F = (V_{F}, E_{F})$가 $t$개의 trees로 이루어져 있으면:
 
-```text
-t = |V_F| - |E_F|
-```
+$$
+t = \lvert V_{F} \rvert - \lvert E_{F} \rvert
+$$
 
-따라서 `|B| > |A|`이면 forest `(V, B)`는 `(V, A)`보다 trees 수가 적다. 그러면 `B`의 어떤 tree 안에는 `A`에서 서로 다른 trees에 속한 두 vertices가 있고, 그 둘을 잇는 edge를 `A`에 추가해도 cycle이 생기지 않는다. 이것이 exchange property다.
+따라서 $|B| > |A|$이면 forest $(V, B)$는 $(V, A)$보다 trees 수가 적다. 그러면 $B$의 어떤 tree 안에는 $A$에서 서로 다른 trees에 속한 두 vertices가 있고, 그 둘을 잇는 edge를 $A$에 추가해도 cycle이 생기지 않는다. 이것이 exchange property다.
 
-Connected undirected graph에서 graphic matroid의 maximal independent subsets는 모두 `|V|-1` edges를 가진 spanning trees다.
+Connected undirected graph에서 graphic matroid의 maximal independent subsets는 모두 $|V|-1$ edges를 가진 spanning trees다.
 
 #### Extension and maximal independent sets
 
-Matroid `M = (S, I)`에서 independent set `A`에 원소 `x`를 추가해도 independent라면, `x`를 `A`의 `extension`이라고 한다.
+Matroid $M = (S, I)$에서 independent set `A`에 원소 `x`를 추가해도 independent라면, `x`를 `A`의 `extension`이라고 한다.
 
-```text
-x is an extension of A  iff  A ∪ {x} in I
-```
+$$
+x is an extension of A iff A \cup {x} in I
+$$
 
 Independent set `A`가 더 이상 extension을 갖지 않으면 `maximal independent subset`이다. Theorem 16.6은 matroid의 모든 maximal independent subsets가 같은 size를 가진다고 말한다. 만약 maximal independent set `A`보다 더 큰 maximal independent set `B`가 있다면, exchange property에 의해 `B-A`의 어떤 원소를 `A`에 추가할 수 있어 `A`의 maximality와 모순이 된다.
 
@@ -464,27 +478,27 @@ Independent set `A`가 더 이상 extension을 갖지 않으면 `maximal indepen
 
 #### Weighted matroid
 
-`weighted matroid`는 각 element `x in S`에 positive weight `w(x)`가 주어진 matroid다. Subset의 weight는 합으로 확장한다.
+`weighted matroid`는 각 element `x in S`에 positive weight $w(x)$가 주어진 matroid다. Subset의 weight는 합으로 확장한다.
 
-```text
-w(A) = Σ_{x in A} w(x)
-```
+$$
+w(A) = \sum_{x in A} w(x)
+$$
 
 목표는 maximum-weight independent subset을 찾는 것이다. 모든 weights가 positive이므로 optimal subset은 항상 maximal independent subset이다. 추가 가능한 원소가 남아 있다면 weight가 양수라 더하는 편이 항상 이득이기 때문이다.
 
 Minimum-spanning-tree problem도 matroid 관점으로 볼 수 있다. 원래 MST는 edge length 합을 minimize한다. Matroid greedy theorem은 maximum-weight independent subset을 찾는 형태이므로, 각 edge의 matroid weight를 다음처럼 바꾼다.
 
-```text
-w'(e) = w_0 - w(e)
-```
+$$
+w'(e) = w_{0} - w(e)
+$$
 
-여기서 `w_0`는 모든 edge length보다 큰 상수다. Connected graph의 spanning tree는 항상 `|V|-1` edges를 가지므로:
+여기서 $w_{0}$는 모든 edge length보다 큰 상수다. Connected graph의 spanning tree는 항상 `|V|-1` edges를 가지므로:
 
-```text
-w'(A) = (|V|-1)w_0 - w(A)
-```
+$$
+w'(A) = (\lvert V \rvert-1)w_{0} - w(A)
+$$
 
-따라서 `w'(A)`를 maximize하는 것은 원래 length sum `w(A)`를 minimize하는 것과 같다.
+따라서 `w'(A)`를 maximize하는 것은 원래 length sum $w(A)$를 minimize하는 것과 같다.
 
 #### Greedy algorithm on a weighted matroid
 
@@ -500,11 +514,11 @@ GREEDY(M, w)
 6  return A
 ```
 
-Line 4의 independence check가 problem-specific이다. Graphic matroid라면 “edge를 추가했을 때 cycle이 생기는가?”를 검사한다. `|S| = n`이고 independence check가 `O(f(n))`이면 total time은 sorting `O(n lg n)` plus checks `O(n f(n))`다.
+Line 4의 independence check가 problem-specific이다. Graphic matroid라면 “edge를 추가했을 때 cycle이 생기는가?”를 검사한다. $|S| = n$이고 independence check가 $O(f(n))$이면 total time은 sorting $O(n \lg n)$ plus checks $O(n f(n))$다.
 
-```text
-O(n lg n + n f(n))
-```
+$$
+O(n \lg n + n f(n))
+$$
 
 #### Correctness of matroid greedy
 
@@ -516,22 +530,24 @@ Matroid greedy correctness는 세 단계로 구성된다.
 | Lemma 16.8 / Corollary 16.9 | 처음에 `∅`의 extension이 아닌 원소는 나중에도 어떤 independent set의 extension이 될 수 없다. |
 | Lemma 16.10 | greedy choice `x`를 고른 뒤의 remaining problem은 contraction matroid `M'`에서 같은 형태의 문제다. |
 
-Lemma 16.7은 weight descending order에서 처음으로 singleton `{x}`가 independent인 원소 `x`를 포함하는 optimal subset이 존재함을 보인다. 어떤 optimal subset `B`가 `x`를 포함하지 않는다면, hereditary property 때문에 `B`의 각 원소 `y`는 singleton `{y}`가 independent다. `x`가 가장 먼저 가능한 원소였으므로 `w(x) >= w(y)`다. Exchange property를 이용해 `B`에서 어떤 `y`를 빼고 `x`를 넣어도 independent와 total weight를 유지하거나 높일 수 있다.
+Lemma 16.7은 weight descending order에서 처음으로 singleton `{x}`가 independent인 원소 `x`를 포함하는 optimal subset이 존재함을 보인다. 어떤 optimal subset `B`가 `x`를 포함하지 않는다면, hereditary property 때문에 `B`의 각 원소 `y`는 singleton `{y}`가 independent다. `x`가 가장 먼저 가능한 원소였으므로 $w(x) \ge w(y)$다. Exchange property를 이용해 `B`에서 어떤 `y`를 빼고 `x`를 넣어도 independent와 total weight를 유지하거나 높일 수 있다.
 
-Lemma 16.8은 `x`가 어떤 independent set `A`의 extension이면 `{x}` 자체도 independent라고 말한다. 이유는 `A ∪ {x}`가 independent이고 hereditary property가 있으므로 그 subset `{x}`도 independent이기 때문이다. 따라서 contrapositive인 Corollary 16.9에 의해 `{x}`가 independent가 아니면 `x`는 어떤 independent set에도 나중에 추가될 수 없다. Greedy가 처음에 skip한 “사용 불가능한” 원소는 영원히 사용 불가능하다.
+Lemma 16.8은 `x`가 어떤 independent set `A`의 extension이면 `{x}` 자체도 independent라고 말한다. 이유는 $A \cup {x}$가 independent이고 hereditary property가 있으므로 그 subset `{x}`도 independent이기 때문이다. 따라서 contrapositive인 Corollary 16.9에 의해 `{x}`가 independent가 아니면 `x`는 어떤 independent set에도 나중에 추가될 수 없다. Greedy가 처음에 skip한 “사용 불가능한” 원소는 영원히 사용 불가능하다.
 
 Lemma 16.10은 greedy가 첫 원소 `x`를 선택한 뒤 남은 문제가 `contraction`으로 표현되는 matroid problem임을 보인다.
 
-```text
-S' = { y in S : {x, y} in I }
-I' = { B subset S - {x} : B ∪ {x} in I }
-```
+$$
+\begin{aligned}
+S' &= { y in S : {x, y} in I } \\
+I' &= { B subset S - {x} : B \cup {x} in I }
+\end{aligned}
+$$
 
-`M' = (S', I')`에서 maximum-weight independent subset `A'`를 찾으면, 원래 matroid에서는 `A' ∪ {x}`가 `x`를 포함하는 maximum-weight independent subset이다. Weight 관계는 항상:
+`M' = (S', I')`에서 maximum-weight independent subset `A'`를 찾으면, 원래 matroid에서는 $A' \cup {x}$가 `x`를 포함하는 maximum-weight independent subset이다. Weight 관계는 항상:
 
-```text
-w(A' ∪ {x}) = w(A') + w(x)
-```
+$$
+w(A' \cup {x}) = w(A') + w(x)
+$$
 
 Theorem 16.11은 이 세 결과로부터 `GREEDY(M, w)`가 optimal subset을 반환한다고 결론낸다. Greedy가 처음에 skip한 원소들은 불가능한 원소라 버려도 되고, 처음 선택한 `x`는 어떤 optimal solution에 포함될 수 있으며, 남은 문제는 contraction matroid에서 동일한 greedy problem이 된다. 이 구조를 반복하면 전체 greedy sequence가 optimal이다.
 
@@ -541,15 +557,15 @@ Theorem 16.11은 이 세 결과로부터 `GREEDY(M, w)`가 optimal subset을 반
 
 #### Problem definition
 
-각 task `a_i`는 정확히 one unit of time이 걸린다. Schedule은 tasks의 permutation이다. 첫 task는 time `0`에 시작해 `1`에 끝나고, 두 번째 task는 `1`에 시작해 `2`에 끝나는 식이다.
+각 task $a_{i}$는 정확히 one unit of time이 걸린다. Schedule은 tasks의 permutation이다. 첫 task는 time `0`에 시작해 `1`에 끝나고, 두 번째 task는 `1`에 시작해 `2`에 끝나는 식이다.
 
 입력은 다음과 같다.
 
 | 입력 | 의미 |
 |---|---|
-| `S = {a_1, ..., a_n}` | unit-time tasks |
-| `d_i` | task `a_i`의 deadline, `1 <= d_i <= n` |
-| `w_i` | `a_i`가 deadline을 놓치면 내는 penalty |
+| $S = {a_{1}, \ldots, a_{n}}$ | unit-time tasks |
+| $d_{i}$ | task $a_{i}$의 deadline, $1 \le d_{i} \le n$ |
+| $w_{i}$ | $a_{i}$가 deadline을 놓치면 내는 penalty |
 
 Task가 deadline까지 끝나면 `early`, deadline 이후에 끝나면 `late`다. 목표는 late tasks의 penalties 합을 최소화하는 schedule을 찾는 것이다.
 
@@ -561,48 +577,50 @@ Task가 deadline까지 끝나면 `early`, deadline 이후에 끝나면 `late`다
 2. Early tasks는 deadline이 nondecreasing order가 되도록 배치된다.
 3. Late tasks는 뒤에 오며 순서는 penalty에 영향을 주지 않는다.
 
-왜 early-first로 바꿀 수 있는가? 어떤 early task `a_i`가 late task `a_j` 뒤에 있다면 둘을 swap해도 `a_i`는 더 빨라지므로 early이고, `a_j`는 더 늦거나 같은 late 영역에 남으므로 late다.
+왜 early-first로 바꿀 수 있는가? 어떤 early task $a_{i}$가 late task $a_{j}$ 뒤에 있다면 둘을 swap해도 $a_{i}$는 더 빨라지므로 early이고, $a_{j}$는 더 늦거나 같은 late 영역에 남으므로 late다.
 
-왜 early tasks를 deadline order로 정렬할 수 있는가? 인접한 두 early tasks `a_i`, `a_j`가 times `k`, `k+1`에 끝나는데 `d_j < d_i`라면, `a_j`가 이미 early였으므로 `k+1 <= d_j < d_i`다. 둘을 swap해도 `a_i`는 time `k+1`에 끝나 still early이고, `a_j`는 time `k`에 끝나 더 early가 된다.
+왜 early tasks를 deadline order로 정렬할 수 있는가? 인접한 두 early tasks $a_{i}$, $a_{j}$가 times $k$, $k+1$에 끝나는데 $d_j < d_i$라면, $a_{j}$가 이미 early였으므로 $k+1 \le d_{j} < d_{i}$다. 둘을 swap해도 $a_{i}$는 time $k+1$에 끝나 still early이고, $a_{j}$는 time $k$에 끝나 더 early가 된다.
 
-따라서 실제 scheduling 문제는 “어떤 tasks를 early set `A`로 둘 것인가?”로 줄어든다. `A`를 결정하면 `A`를 deadline order로 놓고, `S-A`는 뒤에 아무 순서로 두면 된다.
+따라서 실제 scheduling 문제는 “어떤 tasks를 early set $A$로 둘 것인가?”로 줄어든다. $A$를 결정하면 $A$를 deadline order로 놓고, $S-A$는 뒤에 아무 순서로 두면 된다.
 
 #### Independent task sets
 
-Task set `A`가 어떤 schedule에서 모두 early가 될 수 있으면 `A`를 `independent`라고 한다. `I`를 모든 independent task sets의 family라고 하자.
+Task set $A$가 어떤 schedule에서 모두 early가 될 수 있으면 $A$를 `independent`라고 한다. $I$를 모든 independent task sets의 family라고 하자.
 
-`N_t(A)`를 `A` 안에서 deadline이 `t` 이하인 tasks 수라고 하자. `N_0(A) = 0`이다.
+$N_{t}(A)$를 $A$ 안에서 deadline이 $t$ 이하인 tasks 수라고 하자. $N_{0}(A) = 0$이다.
 
 Lemma 16.12는 다음 세 조건이 동치임을 말한다.
 
 | 조건 | 의미 |
 |---|---|
-| `A` is independent | `A`의 모든 tasks를 late 없이 schedule할 수 있음 |
-| 모든 `t = 0,1,...,n`에 대해 `N_t(A) <= t` | deadline `t`까지 끝내야 하는 tasks 수가 available slots `t`개를 넘지 않음 |
-| `A`를 deadline 증가 순서로 schedule하면 no task is late | EDF(earliest deadline first) 순서가 feasible schedule을 제공 |
+| $A$ is independent | $A$의 모든 tasks를 late 없이 schedule할 수 있음 |
+| 모든 $t = 0,1,\ldots,n$에 대해 $N_{t}(A) \le t$ | deadline $t$까지 끝내야 하는 tasks 수가 available slots $t$개를 넘지 않음 |
+| $A$를 deadline 증가 순서로 schedule하면 no task is late | EDF(earliest deadline first) 순서가 feasible schedule을 제공 |
 
-핵심은 condition 2다. Deadline이 `t` 이하인 tasks가 `t`개를 넘으면, time `t` 전까지 끝내야 하는 tasks가 너무 많으므로 어떤 schedule도 feasible하지 않다. 반대로 이 조건이 모든 `t`에서 성립하면 deadline order로 배치했을 때 막히지 않는다.
+핵심은 condition 2다. Deadline이 $t$ 이하인 tasks가 $t$개를 넘으면, time $t$ 전까지 끝내야 하는 tasks가 너무 많으므로 어떤 schedule도 feasible하지 않다. 반대로 이 조건이 모든 $t$에서 성립하면 deadline order로 배치했을 때 막히지 않는다.
 
 #### Transforming objective
 
 Late penalty를 minimize하는 것은 early tasks의 penalty sum을 maximize하는 것과 같다.
 
-```text
-total penalty = Σ_{a_i in S} w_i
-late penalty  = total penalty - Σ_{a_i in early} w_i
-```
+$$
+\begin{aligned}
+\text{total penalty} &= \sum_{a_{i} in S} w_{i} \\
+\text{late penalty} &= total penalty - \sum_{a_{i} in early} w_{i}
+\end{aligned}
+$$
 
-전체 penalty 합은 고정되어 있으므로, late penalty minimization은 independent early set `A`의 weight `w(A)` maximization으로 바뀐다.
+전체 penalty 합은 고정되어 있으므로, late penalty minimization은 independent early set $A$의 weight $w(A)$ maximization으로 바뀐다.
 
 #### Task sets form a matroid
 
-Theorem 16.13은 `S`와 independent task sets `I`가 matroid를 이룬다고 말한다.
+Theorem 16.13은 $S$와 independent task sets $I$가 matroid를 이룬다고 말한다.
 
-Hereditary property는 쉽다. 어떤 task set `A`를 모두 early로 schedule할 수 있다면, 그 subset도 당연히 모두 early로 schedule할 수 있다.
+Hereditary property는 쉽다. 어떤 task set $A$를 모두 early로 schedule할 수 있다면, 그 subset도 당연히 모두 early로 schedule할 수 있다.
 
-Exchange property는 Lemma 16.12의 `N_t(A) <= t` 조건으로 증명한다. Independent sets `A`, `B`가 있고 `|B| > |A|`라고 하자. 어떤 deadline level `k+1`에서 `B`가 `A`보다 더 많은 tasks를 가지는 첫 구간을 잡을 수 있다. 그러면 deadline이 `k+1`인 task `a_i in B-A`를 골라 `A' = A ∪ {a_i}`를 만든다. `t <= k`에서는 `N_t(A') = N_t(A) <= t`이고, `t > k`에서는 `N_t(A') <= N_t(B) <= t`라서 `A'`도 independent다. 따라서 exchange property가 성립한다.
+Exchange property는 Lemma 16.12의 $N_{t}(A) \le t$ 조건으로 증명한다. Independent sets $A$, $B$가 있고 $|B| > |A|$라고 하자. 어떤 deadline level $k+1$에서 $B$가 $A$보다 더 많은 tasks를 가지는 첫 구간을 잡을 수 있다. 그러면 deadline이 $k+1$인 task $a_i \in B-A$를 골라 $A' = A \cup \{a_{i}\}$를 만든다. $t \le k$에서는 $N_{t}(A') = N_{t}(A) \le t$이고, $t > k$에서는 $N_{t}(A') \le N_{t}(B) \le t$라서 $A'$도 independent다. 따라서 exchange property가 성립한다.
 
-이제 16.4의 matroid greedy theorem을 그대로 적용할 수 있다. Penalty `w_i`를 weight로 보고, 높은 penalty task부터 보면서 early set에 넣어도 independent이면 넣는다. 이렇게 얻은 independent set `A`가 maximum penalty-sum early set이다.
+이제 16.4의 matroid greedy theorem을 그대로 적용할 수 있다. Penalty $w_{i}$를 weight로 보고, 높은 penalty task부터 보면서 early set에 넣어도 independent이면 넣는다. 이렇게 얻은 independent set $A$가 maximum penalty-sum early set이다.
 
 #### Greedy scheduling algorithm
 
@@ -618,24 +636,24 @@ SCHEDULE-WITH-DEADLINES(S)
 6  output tasks in A by increasing deadline, then tasks in S-A in any order
 ```
 
-Independence check는 Lemma 16.12의 condition 2를 이용한다. 즉 candidate set에서 각 `t`에 대해 deadline `<= t`인 tasks 수가 `t` 이하인지 확인한다. 단순 구현에서는 each check가 `O(n)`이고 tasks가 `O(n)`개이므로 전체가 `O(n^2)`이다. Problem 16-4는 disjoint-set forest로 더 빠르게 구현하는 변형을 제시한다.
+Independence check는 Lemma 16.12의 condition 2를 이용한다. 즉 candidate set에서 각 $t$에 대해 deadline $\le t$인 tasks 수가 $t$ 이하인지 확인한다. 단순 구현에서는 each check가 $O(n)$이고 tasks가 $O(n)$개이므로 전체가 $O(n^{2})$이다. Problem 16-4는 disjoint-set forest로 더 빠르게 구현하는 변형을 제시한다.
 
 ![Figure 16.7](@/assets/images/cs-algorithm-088-figure-16-7-page-467.png)
 *Figure 16.7 · PDF p. 467 · unit-time tasks의 deadlines와 penalties 예시*
 
-Figure 16.7의 tasks는 penalties 내림차순이 이미 `a_1, a_2, ..., a_7` 순서다. Greedy는 `a_1`, `a_2`, `a_3`, `a_4`를 early set에 넣고, `a_5`와 `a_6`은 넣으면 `N_4 = 5`가 되어 deadline 4까지 5개 tasks를 끝내야 하므로 reject한다. 마지막 `a_7`은 accept한다.
+Figure 16.7의 tasks는 penalties 내림차순이 이미 `a_1, a_2, ..., a_7` 순서다. Greedy는 $a_{1}$, $a_{2}$, $a_{3}$, $a_{4}$를 early set에 넣고, $a_{5}$와 $a_{6}$은 넣으면 $N_{4} = 5$가 되어 deadline 4까지 5개 tasks를 끝내야 하므로 reject한다. 마지막 $a_{7}$은 accept한다.
 
 최종 optimal schedule은:
 
-```text
-<a_2, a_4, a_1, a_3, a_7, a_5, a_6>
-```
+$$
+<a_{2}, a_{4}, a_{1}, a_{3}, a_{7}, a_{5}, a_{6}>
+$$
 
-Early tasks는 `<a_2, a_4, a_1, a_3, a_7>`이고 late tasks는 `a_5`, `a_6`이다. Total incurred penalty는:
+Early tasks는 `<a_2, a_4, a_1, a_3, a_7>`이고 late tasks는 $a_{5}$, $a_{6}$이다. Total incurred penalty는:
 
-```text
-w_5 + w_6 = 30 + 20 = 50
-```
+$$
+w_{5} + w_{6} = 30 + 20 = 50
+$$
 
 #### Chapter 16 problem patterns
 

@@ -104,11 +104,11 @@ Window Size field는 segment를 보내는 쪽이 `reverse direction으로 받아
 
 중요한 관계식은 다음과 같다.
 
-```text
-receiver가 받아들일 수 있는 마지막 sequence 범위
-= ACK Number + Window Size
-  (Window Scale 사용 시 scale 적용)
-```
+$$
+\text{last acceptable sequence} = \text{ACK Number} + \text{Window Size}
+$$
+
+Window Scale을 사용하면 Window Size에 scale을 적용한다.
 
 application이 TCP receive queue에서 data를 빨리 consume하면 Window Size는 크게 변하지 않는다. 반대로 application이 느리거나 다른 일을 하느라 data를 읽지 않으면 TCP가 이미 ACK한 data가 receive buffer에 쌓이고, 새 data를 받을 빈 공간이 줄어든다. 이때 Window Size field가 감소한다. 빈 공간이 완전히 없어지면 receiver는 zero window를 광고해 sender가 새 data 전송을 멈추게 한다.
 
@@ -125,9 +125,9 @@ Sender-side sliding window는 다음 값을 중심으로 움직인다.
 | `SND.NXT` | 다음에 보낼 sequence number |
 | `usable window` | 지금 즉시 더 보낼 수 있는 byte 수 |
 
-```text
-usable window = SND.UNA + SND.WND - SND.NXT
-```
+$$
+\text{usable window} = \text{SND.UNA} + \text{SND.WND} - \text{SND.NXT}
+$$
 
 ![Figure 15-9](@/assets/images/cs-tcp-ip-illustrated-276-figure-15-9-page-741.png)
 *Figure 15-9 · PDF p. 741 · sender-side sliding window의 ACKed/in-flight/usable/cannot-send 영역*
@@ -198,9 +198,9 @@ TCP는 peer가 어떤 방식으로 동작할지 미리 알 수 없으므로 send
 
 Receiver-side SWS avoidance의 규칙은 `작은 window를 광고하지 않는다`이다. 현재 advertised window보다 큰 window를 새로 광고하려면, 증가분이 다음 둘 중 작은 값 이상이 될 때까지 기다린다.
 
-```text
-min(receive MSS, receiver buffer space의 1/2)
-```
+$$
+\min\left(\text{receive MSS}, \frac{\text{receiver buffer space}}{2}\right)
+$$
 
 이 규칙은 application이 buffer를 소비해 공간이 생겼을 때뿐 아니라, TCP가 window probe에 응답해야 할 때도 중요하다.
 
@@ -250,10 +250,12 @@ TCP throughput은 buffer 크기에 크게 영향을 받는다. receive buffer가
 
 Receive window auto-tuning은 connection의 bandwidth-delay product(BDP)를 계속 추정하고, advertised window가 이 값 이상이 되도록 조정하려는 기법이다. BDP는 “path에 동시에 떠 있어야 최대 처리량을 낼 수 있는 data 양”이다. Chapter 16에서 congestion control과 연결되지만, 여기서는 receiver가 sender의 전송을 불필요하게 막지 않도록 충분한 receive window를 유지하는 원리로 이해하면 된다.
 
-```text
-BDP ~= bandwidth * RTT
-필요 receive window >= BDP
-```
+$$
+\begin{aligned}
+\text{BDP} &\approx \text{bandwidth} \cdot \text{RTT} \\
+\text{required receive window} &\ge \text{BDP}
+\end{aligned}
+$$
 
 auto-tuning의 장점은 sender/receiver가 처음부터 과도하게 큰 buffer를 예약하지 않아도, connection 상태를 보며 window를 키워 최대 throughput에 접근할 수 있다는 점이다. 단, 큰 advertised window를 쓰려면 TCP Window Scale option이 제대로 동작해야 한다. 일부 firewall/site가 Window Scale option을 잘못 처리하면 aggressive auto-tuning이 오히려 문제가 될 수 있다.
 

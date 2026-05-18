@@ -446,13 +446,13 @@ CGA는 64-bit subnet prefix와 특별히 만든 interface identifier를 OR/결�
 | Hash | 역할 |
 | --- | --- |
 | `Hash1` | CGA interface identifier의 low-order bits를 만드는 데 사용 |
-| `Hash2` | `Sec` 값에 따라 충분히 어려운 조건, 즉 처음 `(16 * Sec)` bits가 0이 되도록 Modifier를 조정하는 데 사용 |
+| `Hash2` | `Sec` 값에 따라 충분히 어려운 조건, 즉 처음 $16 \cdot \text{Sec}$ bits가 0이 되도록 Modifier를 조정하는 데 사용 |
 
-`Modifier`는 random value로 시작하고, `Collision Count`는 0에서 시작한다. `Sec`는 3-bit unsigned parameter로, 값이 커질수록 공격자가 같은 hash 조건을 만족하는 다른 입력을 찾기 어려워지지만 계산 비용도 지수적으로 증가한다. Hash2 조건을 만족할 때까지 Modifier를 증가시키며 다시 계산하므로 생성 비용은 대략 `O(2^(16*Sec))` 성격을 가진다. 다만 이 비용은 address를 처음 만들 때 주로 발생한다.
+`Modifier`는 random value로 시작하고, `Collision Count`는 0에서 시작한다. `Sec`는 3-bit unsigned parameter로, 값이 커질수록 공격자가 같은 hash 조건을 만족하는 다른 입력을 찾기 어려워지지만 계산 비용도 지수적으로 증가한다. Hash2 조건을 만족할 때까지 Modifier를 증가시키며 다시 계산하므로 생성 비용은 대략 $O(2^{16 \cdot \text{Sec}})$ 성격을 가진다. 다만 이 비용은 address를 처음 만들 때 주로 발생한다.
 
 Hash2 조건을 만족하는 Modifier를 찾으면, Hash1 값의 59 bits를 interface identifier 하위 부분으로 쓰고, 상위 3 bits에는 Sec 값을 넣는다. IPv6 address의 `u`와 `g` bit 위치는 0으로 둔다. Duplicate Address Detection(DAD)에서 충돌이 발견되면 Collision Count를 증가시키고 Hash1을 다시 계산한다. Collision Count는 2를 넘을 수 없으며, 여러 번 충돌한다면 단순 우연보다 configuration error나 attack 가능성을 의심해야 한다.
 
-`CGA verification`은 해당 CGA가 CGA parameters와 subnet prefix에 맞게 잘 만들어졌는지 확인하는 과정이다. verifier는 collision count가 2 이하인지, CGA subnet prefix가 parameters와 일치하는지, Hash1이 interface identifier와 맞는지, Hash2가 `(16 * Sec)`개의 initial zero bits 조건을 만족하는지 확인한다. 생성보다 검증이 훨씬 가벼운 이유는 verifier가 Modifier를 찾기 위해 반복 탐색할 필요가 없기 때문이다.
+`CGA verification`은 해당 CGA가 CGA parameters와 subnet prefix에 맞게 잘 만들어졌는지 확인하는 과정이다. verifier는 collision count가 2 이하인지, CGA subnet prefix가 parameters와 일치하는지, Hash1이 interface identifier와 맞는지, Hash2가 $16 \cdot \text{Sec}$개의 initial zero bits 조건을 만족하는지 확인한다. 생성보다 검증이 훨씬 가벼운 이유는 verifier가 Modifier를 찾기 위해 반복 탐색할 필요가 없기 때문이다.
 
 하지만 CGA가 잘 만들어졌다는 것만으로는 그 node가 address owner임이 증명되지 않는다. 그래서 `signature verification`이 필요하다. owner는 CGA parameters 안의 public key에 대응하는 private key로 typed message에 RSA signature를 붙인다. verifier는 CGA parameters에서 public key를 꺼내고, 128-bit type tag와 message를 연결한 data block에 대해 `RSA signature (RSASSA-PKCS1-v1_5)`를 검증한다. 일반적으로 CGA verification과 signature verification이 모두 성공해야 CGA와 user를 유효하다고 본다.
 

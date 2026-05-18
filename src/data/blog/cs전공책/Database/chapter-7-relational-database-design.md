@@ -93,17 +93,17 @@ Relation schema `R`을 `R1`, `R2`로 decomposition한다고 하자. Attribute se
 
 Relational algebra로 쓰면 다음과 같다.
 
-```text
-Π_R1(r) ⋈ Π_R2(r) = r
-```
+$$
+\Pi_{R_1}(r) \bowtie \Pi_{R_2}(r) = r
+$$
 
 SQL 식으로 보면 “r에서 R1 attribute만 select한 relation”과 “r에서 R2 attribute만 select한 relation”을 natural join했을 때 원래 r이 복원되어야 한다.
 
 반대로 `lossy decomposition`이면 natural join 결과가 원래 relation의 proper superset이 된다.
 
-```text
-r ⊂ Π_R1(r) ⋈ Π_R2(r)
-```
+$$
+r \subset \Pi_{R_1}(r) \bowtie \Pi_{R_2}(r)
+$$
 
 Figure 7.3의 employee decomposition은 `employee1 natural join employee2`가 원래 employee보다 더 많은 tuple을 만들기 때문에 lossy다. 이때 새 tuple이 생기는 것은 정보가 늘어난 것이 아니라, 원래 있었던 정확한 연결 정보가 사라져 가능한 조합을 과하게 허용한 것이다.
 
@@ -151,18 +151,17 @@ Relation schema는 attribute set이지만, 모든 attribute set이 schema는 아
 
 `superkey` 정의를 다시 쓰면 다음과 같다. Relation `r(R)`에서 `K ⊆ R`이 superkey라는 것은, 모든 legal instance에서 서로 다른 두 tuple `t1`, `t2`가 같은 `K` 값을 가질 수 없다는 뜻이다.
 
-```text
-t1 != t2  =>  t1[K] != t2[K]
-```
+$$
+t_1 \ne t_2 \Rightarrow t_1[K] \ne t_2[K]
+$$
 
 또는 같은 말로, `K` 값이 같으면 tuple 전체가 같아야 한다.
 
 `functional dependency(FD)`는 superkey보다 더 일반적이다. FD `α -> β`는 attribute set `α` 값이 같으면 attribute set `β` 값도 반드시 같아야 한다는 constraint다.
 
-```text
-For all tuple pairs t1, t2:
-if t1[α] = t2[α], then t1[β] = t2[β]
-```
+$$
+\forall t_1, t_2,\quad t_1[\alpha] = t_2[\alpha] \Rightarrow t_1[\beta] = t_2[\beta]
+$$
 
 중요한 구분은 두 가지다.
 
@@ -175,10 +174,12 @@ Superkey도 FD로 표현할 수 있다. `K`가 `r(R)`의 superkey라는 것은 `
 
 원문의 `in_dep` schema에서는 다음 FD가 성립한다.
 
-```text
-dept_name -> building, budget
-ID, dept_name -> name, salary, building, budget
-```
+$$
+\begin{aligned}
+\text{dept\_name} &\to building, budget \\
+ID, \text{dept\_name} &\to name, salary, building, budget
+\end{aligned}
+$$
 
 첫 번째 FD는 department name이 department의 building과 budget을 결정한다는 뜻이다. 두 번째는 `(ID, dept_name)`이 `in_dep`의 tuple 전체를 식별할 수 있음을 나타낸다.
 
@@ -209,10 +210,12 @@ FD set `F`가 주어지면, `F`에서 논리적으로 infer할 수 있는 다른
 
 Functional dependency는 decomposition이 lossless인지 판정하는 데 사용할 수 있다. Relation schema `R`을 `R1`, `R2`로 binary decomposition하고 FD set `F`가 주어졌다고 하자. 다음 중 하나가 `F+`에 있으면 decomposition은 lossless다.
 
-```text
-R1 ∩ R2 -> R1
-R1 ∩ R2 -> R2
-```
+$$
+\begin{aligned}
+R_1 \cap R_2 &\to R_1 \\
+R_1 \cap R_2 &\to R_2
+\end{aligned}
+$$
 
 즉 공통 attribute set `R1 ∩ R2`가 `R1` 또는 `R2` 중 하나의 superkey이면 lossless decomposition이다.
 
@@ -246,10 +249,12 @@ Binary decomposition이 `R1 ∩ R2 -> R1` 형태로 lossless라면, SQL schema �
 
 Relation schema `R`이 FD set `F`에 대해 BCNF라는 것은, `F+`에 있는 모든 FD `α -> β`에 대해 다음 중 적어도 하나가 성립한다는 뜻이다.
 
-```text
-1. α -> β is trivial, 즉 β ⊆ α
-2. α is a superkey for R
-```
+$$
+\begin{aligned}
+\text{1. } \alpha \to \beta &\text{ is trivial, i.e. } \beta \subseteq \alpha \\
+\text{2. } \alpha &\text{ is a superkey for } R
+\end{aligned}
+$$
 
 핵심 직관은 간단하다. 어떤 attribute set `α`가 다른 attribute `β`를 결정한다면, `α`는 relation 전체를 식별할 만큼 강해야 한다. 그렇지 않으면 같은 `α` 값 아래에서 `β` 정보가 반복 저장될 가능성이 있다.
 
@@ -264,10 +269,12 @@ Relation schema `R`이 FD set `F`에 대해 BCNF라는 것은, `F+`에 있는 �
 
 BCNF가 아닌 schema `R`에서 nontrivial FD `α -> β`가 있고 `α`가 superkey가 아니면, 기본 decomposition rule은 `R`을 다음 두 schema로 바꾸는 것이다.
 
-```text
-α ∪ β
-R - (β - α)
-```
+$$
+\begin{aligned}
+\alpha \cup \beta \\
+R - (\beta - \alpha)
+\end{aligned}
+$$
 
 `in_dep`에서는 `α = dept_name`, `β = {building, budget}`이므로 다음처럼 분해된다.
 
@@ -295,10 +302,12 @@ dept_advisor(s_ID, i_ID, dept_name)
 
 여기서 다음 FD들이 hold한다.
 
-```text
-i_ID -> dept_name
-s_ID, dept_name -> i_ID
-```
+$$
+\begin{aligned}
+\text{i\_ID} &\to \text{dept\_name} \\
+\text{s\_ID}, \text{dept\_name} &\to \text{i\_ID}
+\end{aligned}
+$$
 
 첫 번째는 instructor가 advisor로서 하나의 department에만 속한다는 뜻이고, 두 번째는 student가 한 department에 대해 advisor를 최대 하나만 갖는다는 뜻이다.
 
@@ -319,11 +328,13 @@ s_ID, dept_name -> i_ID
 
 Relation schema `R`이 FD set `F`에 대해 3NF라는 것은, `F+`에 있는 모든 FD `α -> β`에 대해 다음 중 적어도 하나가 성립한다는 뜻이다.
 
-```text
-1. α -> β is trivial, 즉 β ⊆ α
-2. α is a superkey for R
-3. each attribute A in β - α is contained in a candidate key for R
-```
+$$
+\begin{aligned}
+\text{1. } \alpha \to \beta &\text{ is trivial, i.e. } \beta \subseteq \alpha \\
+\text{2. } \alpha &\text{ is a superkey for } R \\
+\text{3. each } A \in \beta - \alpha &\text{ is contained in a candidate key for } R
+\end{aligned}
+$$
 
 세 번째 조건이 3NF의 핵심 완화다. `β - α`의 모든 attribute가 하나의 같은 candidate key에 들어가야 한다는 뜻은 아니다. 각 attribute가 어떤 candidate key에든 포함되면 된다. 이런 attribute를 흔히 prime attribute라고 부른다.
 
@@ -400,10 +411,12 @@ Phone과 child 사이에는 의미 있는 연결이 없는데도 Cartesian produ
 
 예를 들어 relation schema가 다음과 같다고 하자.
 
-```text
-R = (A, B, C, G, H, I)
-F = { A -> B, A -> C, CG -> H, CG -> I, B -> H }
-```
+$$
+\begin{aligned}
+R &= (A, B, C, G, H, I) \\
+F &= \{ A \to B, A \to C, CG \to H, CG \to I, B \to H \}
+\end{aligned}
+$$
 
 이때 `A -> H`는 `F`에 직접 적혀 있지 않지만 logically implied된다. 두 tuple `t1`, `t2`가 `A` 값이 같으면 `A -> B` 때문에 `B` 값도 같고, `B -> H` 때문에 `H` 값도 같다. 따라서 `A` 값이 같으면 `H` 값이 같으므로 `A -> H`가 성립한다.
 
@@ -505,15 +518,15 @@ Figure 7.9의 절차는 먼저 union rule로 같은 left side를 가진 FD를 �
 
 예를 들어 다음 FD 집합이 있다.
 
-```text
-F = { A -> BC, B -> C, A -> B, AB -> C }
-```
+$$
+F = \{ A \to BC, B \to C, A \to B, AB \to C \}
+$$
 
 `A -> BC`와 `A -> B`는 left side가 같으므로 합쳐 볼 수 있고, `AB -> C`에서는 `B -> C`가 이미 있으므로 `A`가 extraneous한 구조가 된다. 또한 `A -> BC`의 `C`는 `A -> B`와 `B -> C`로 따라오므로 제거할 수 있다. 결과 canonical cover는 다음처럼 단순해진다.
 
-```text
-Fc = { A -> B, B -> C }
-```
+$$
+F_c = \{ A \to B, B \to C \}
+$$
 
 Canonical cover는 뒤의 3NF decomposition algorithm에서 매우 중요하다. 원래 FD 집합을 그대로 사용하면 불필요하게 많은 schema가 생기거나 중복 constraint를 기준으로 분해할 수 있기 때문이다.
 
@@ -530,11 +543,13 @@ Decomposition이 dependency preserving이면 각 relation에서 local하게 FD�
 
 형식적으로는 다음처럼 본다.
 
-```text
-Fi = restriction of F+ to Ri
-F' = F1 ∪ F2 ∪ ... ∪ Fn
-dependency preserving iff F'+ = F+
-```
+$$
+\begin{aligned}
+F_i &= \text{restriction of } F^+ \text{ to } R_i \\
+F' &= F_1 \cup F_2 \cup \ldots \cup F_n \\
+\text{dependency preserving} &\iff (F')^+ = F^+
+\end{aligned}
+$$
 
 다만 Figure 7.10처럼 `F+`와 각 restriction을 직접 계산하는 방식은 비싸다. 원문은 두 가지 대안을 설명한다.
 
@@ -580,19 +595,21 @@ for every subset α of Ri:
 
 어떤 `α`에 대해 `α+`가 `Ri - α`의 일부 attribute는 포함하지만 `Ri` 전체를 포함하지 않는다면, 다음 FD가 `F+`에 있으면서 `Ri`의 BCNF 위반을 보인다.
 
-```text
-α -> (α+ - α) ∩ Ri
-```
+$$
+\alpha \to (\alpha^+ - \alpha) \cap R_i
+$$
 
 ![Figure 7.11](@/assets/images/cs-database-118-figure-7-11-page-360.png)
 *Figure 7.11 · PDF p. 360 · BCNF decomposition algorithm*
 
 BCNF decomposition algorithm의 핵심은 위반 FD를 찾을 때마다 relation을 두 개로 쪼개는 것이다. 어떤 `Ri`가 BCNF가 아니고, nontrivial FD `α -> β`가 `Ri`에서 hold하며 `α+`가 `Ri` 전체를 포함하지 않는다고 하자. 또한 알고리즘은 `α ∩ β = ∅`인 형태를 사용한다. 그러면 `Ri`를 다음 두 schema로 바꾼다.
 
-```text
-Ri - β
-α ∪ β
-```
+$$
+\begin{aligned}
+R_i - \beta \\
+\alpha \cup \beta
+\end{aligned}
+$$
 
 이 decomposition은 lossless다. 두 schema의 공통 부분이 `α`이고, `α -> β`가 hold하기 때문이다. 즉 공통 attribute가 `α ∪ β` 쪽을 결정하므로 lossless join 조건을 만족한다.
 
@@ -608,11 +625,13 @@ class(course_id, title, dept_name, credits,
 
 중요 FD는 다음과 같다.
 
-```text
-course_id -> title, dept_name, credits
-building, room_number -> capacity
-course_id, sec_id, semester, year -> building, room_number, time_slot_id
-```
+$$
+\begin{aligned}
+\text{course\_id} &\to title, \text{dept\_name}, credits \\
+building, \text{room\_number} &\to capacity \\
+\text{course\_id}, \text{sec\_id}, semester, year &\to building, \text{room\_number}, \text{time\_slot\_id}
+\end{aligned}
+$$
 
 Candidate key는 `{course_id, sec_id, semester, year}`이다. 먼저 `course_id -> title, dept_name, credits`가 hold하지만 `course_id`는 `class`의 superkey가 아니므로 BCNF 위반이다. 따라서 다음처럼 나눈다.
 
@@ -655,10 +674,12 @@ section(course_id, sec_id, semester, year,
 
 `dept_advisor(s_ID, i_ID, dept_name)`에 적용하면 FD는 다음 두 개다.
 
-```text
-f1: i_ID -> dept_name
-f2: s_ID, dept_name -> i_ID
-```
+$$
+\begin{aligned}
+f_1:\ \text{i\_ID} &\to \text{dept\_name} \\
+f_2:\ \text{s\_ID}, \text{dept\_name} &\to \text{i\_ID}
+\end{aligned}
+$$
 
 이 FD들에는 extraneous attribute가 없으므로 `Fc = {f1, f2}`다. 알고리즘은 먼저 다음 schema를 만든다.
 
@@ -721,9 +742,9 @@ Functional dependency는 “같은 determinant 값이면 dependent 값이 같아
 
 Relation schema `r(R)`에서 `α ⊆ R`, `β ⊆ R`일 때 MVD는 다음처럼 쓴다.
 
-```text
-α ->-> β
-```
+$$
+\alpha \twoheadrightarrow \beta
+$$
 
 직관적으로 `α ->-> β`는 `α`와 `β` 사이의 관계가 `α`와 `R - α - β` 사이의 관계와 독립적이라는 뜻이다. 같은 `α` 값에 대해 가능한 `β` 값들의 집합과 나머지 attribute 값들의 집합이 독립이면, 그 조합들이 모두 relation에 나타나야 한다.
 
@@ -734,11 +755,13 @@ Figure 7.13은 같은 `α` 값을 가진 두 tuple `t1`, `t2`가 있을 때, `β
 
 MVD가 trivial한 경우는 두 가지다.
 
-```text
-β ⊆ α
-or
-α ∪ β = R
-```
+$$
+\begin{aligned}
+\beta &\subseteq \alpha \\
+\text{or} \\
+\alpha \cup \beta &= R
+\end{aligned}
+$$
 
 FD와 MVD의 차이는 다음처럼 요약할 수 있다.
 
@@ -766,22 +789,24 @@ Figure 7.15는 illegal relation이다. `22222`가 Physics와 Math에 속하고 N
 
 이 예제에서 원하는 MVD는 다음과 같다.
 
-```text
-ID ->-> street, city
-```
+$$
+ID \twoheadrightarrow street, city
+$$
 
 또는 동등하게 다음처럼 볼 수도 있다.
 
-```text
-ID ->-> dept_name
-```
+$$
+ID \twoheadrightarrow \text{dept\_name}
+$$
 
 MVD에 대해 알아둘 기본 규칙은 다음 두 가지다.
 
-```text
-If α -> β, then α ->-> β.
-If α ->-> β, then α ->-> R - α - β.
-```
+$$
+\begin{aligned}
+\text{If } \alpha \to \beta, &\text{ then } \alpha \twoheadrightarrow \beta. \\
+\text{If } \alpha \twoheadrightarrow \beta, &\text{ then } \alpha \twoheadrightarrow R - \alpha - \beta.
+\end{aligned}
+$$
 
 즉 모든 FD는 MVD이기도 하다. 그래서 4NF는 BCNF보다 더 강한 조건이 된다.
 
@@ -810,10 +835,12 @@ Decomposition된 schema `Ri`에 대해 4NF를 검사하려면, `D`의 restrictio
 
 어떤 `Ri`가 4NF가 아니면, nontrivial MVD `α ->-> β`를 찾아 다음으로 분해한다.
 
-```text
-Ri - β
-α ∪ β
-```
+$$
+\begin{aligned}
+R_i - \beta \\
+\alpha \cup \beta
+\end{aligned}
+$$
 
 `r2(ID, dept_name, street, city)`에 적용하면 `ID ->-> dept_name`이 nontrivial MVD이고 `ID`는 superkey가 아니다. 따라서 다음 두 schema로 나눈다.
 
@@ -826,11 +853,13 @@ Ri - β
 
 MVD는 lossless decomposition을 FD보다 더 일반적으로 설명한다. Binary decomposition `R -> R1, R2`가 lossless일 필요충분조건은 다음 중 하나가 `D+`에 있는 것이다.
 
-```text
-R1 ∩ R2 ->-> R1
-or
-R1 ∩ R2 ->-> R2
-```
+$$
+\begin{aligned}
+R_1 \cap R_2 &\twoheadrightarrow R_1 \\
+\text{or} \\
+R_1 \cap R_2 &\twoheadrightarrow R_2
+\end{aligned}
+$$
 
 FD 기반 조건 `R1 ∩ R2 -> R1` 또는 `R1 ∩ R2 -> R2`는 이 조건의 특수한 경우다. 모든 FD가 MVD를 imply하기 때문이다.
 
@@ -910,9 +939,9 @@ total_inst(dept_name, year, size)
 
 FD는 다음과 같고, 이 relation은 BCNF다.
 
-```text
-dept_name, year -> size
-```
+$$
+\text{dept\_name}, year \to size
+$$
 
 하지만 다음처럼 연도별 relation을 따로 만들 수도 있다.
 
@@ -963,9 +992,9 @@ Figure 7.17에서 `CS-201`은 title이 시간에 따라 바뀐다. 2020-01-01에
 
 Temporal relation에서는 기존 FD가 그대로 hold하지 않을 수 있다.
 
-```text
-course_id -> title, dept_name, credits
-```
+$$
+\text{course\_id} \to title, \text{dept\_name}, credits
+$$
 
 위 FD는 temporal `course` 전체에서는 깨진다. 같은 `course_id`가 시간에 따라 다른 `title`을 가질 수 있기 때문이다. 대신 “어떤 특정 time `t`의 snapshot에서는 course_id가 하나의 title/dept_name/credits를 결정한다”는 제약이 성립한다. 이를 `temporal functional dependency`라고 한다.
 

@@ -483,18 +483,18 @@ tunneling의 단점은 서로 다른 address family의 host/service가 직접 re
 
 IPv4/IPv6 translation은 `IPv4-embedded IPv6 address`를 사용한다. IPv6 address 안에 IPv4 address를 algorithmically 넣고 빼는 구조다. 주소 범주는 다음 포함 관계로 기억할 수 있다.
 
-```text
-IPv4-translatable ⊂ IPv4-converted ⊂ IPv4-embedded ⊂ IPv6
-```
+$$
+\text{IPv4-translatable} \subset \text{IPv4-converted} \subset \text{IPv4-embedded} \subset \text{IPv6}
+$$
 
 translation 함수 표기는 원문 기준으로 다음처럼 이해하면 된다.
 
 | 표기 | 의미 |
 |---|---|
-| `To4(A6, P)` | IPv6 address `A6`와 prefix `P`로부터 IPv4 address를 얻음 |
-| `To6(A4, P)` | IPv4 address `A4`와 prefix `P`로부터 IPv6 address를 만듦 |
+| $\operatorname{To4}(A_6, P)$ | IPv6 address $A_6$와 prefix $P$로부터 IPv4 address를 얻음 |
+| $\operatorname{To6}(A_4, P)$ | IPv4 address $A_4$와 prefix $P$로부터 IPv6 address를 만듦 |
 
-대부분의 경우 `A6 = To6(To4(A6, P), P)`와 `A4 = To4(To6(A4, P), P)`가 성립하도록 설계된다. 여기서 prefix `P`는 `Well-Known Prefix (WKP) 64:ff9b::/96` 또는 provider가 가진 `Network-Specific Prefix`다. WKP는 ordinary globally routable IPv4 address 표현에 사용되며 RFC 1918 private address나 IPv4-translatable address 생성에는 쓰지 않는다.
+대부분의 경우 $A_6 = \operatorname{To6}(\operatorname{To4}(A_6, P), P)$와 $A_4 = \operatorname{To4}(\operatorname{To6}(A_4, P), P)$가 성립하도록 설계된다. 여기서 prefix $P$는 `Well-Known Prefix (WKP) 64:ff9b::/96` 또는 provider가 가진 `Network-Specific Prefix`다. WKP는 ordinary globally routable IPv4 address 표현에 사용되며 RFC 1918 private address나 IPv4-translatable address 생성에는 쓰지 않는다.
 
 `64:ff9b::/96` WKP는 Internet checksum 관점에서 checksum-neutral하다. prefix를 16-bit word로 더하면 one's complement에서 0과 같은 `ffff`가 되어, IPv4 address를 WKP 뒤에 붙여 IPv6 address를 만들 때 TCP/UDP checksum 영향이 줄어든다. 적절한 Network-Specific Prefix도 checksum-neutral하게 고를 수 있다.
 

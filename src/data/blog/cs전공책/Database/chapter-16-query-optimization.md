@@ -30,22 +30,26 @@ Chapter 15가 selection, sorting, join, aggregation, pipelining 같은 physical 
 
 Query optimization은 "같은 결과를 내면서 더 싸게 계산하는 plan"을 찾는 문제다. 예를 들어 "Music department instructors의 이름과 그들이 가르치는 course title을 찾아라"라는 query를 생각하자. 처음 relational-algebra expression은 큰 join을 먼저 만들고 나중에 `dept_name = "Music"` selection을 적용할 수 있다.
 
-```text
-pi_name,title(
-  sigma_dept_name="Music"(
-    instructor ⋈ (teaches ⋈ pi_course_id,title(course))
-  )
+$$
+\begin{aligned}
+\pi_{name, title}\Big( \\
+\sigma_{\text{dept\_name} = \text{"Music"}}\Big( \\
+instructor \bowtie (teaches \bowtie \pi_{\text{course\_id}, title}(course)) \\
+\Big) \\
 )
-```
+\end{aligned}
+$$
 
 이 방식은 `instructor ⋈ teaches ⋈ course projection`이라는 큰 intermediate relation을 만들 수 있다. 하지만 최종적으로 필요한 것은 Music department instructors에 관한 tuple뿐이다. Selection을 `instructor`에 먼저 적용하면 intermediate result 크기를 크게 줄일 수 있다.
 
-```text
-pi_name,title(
-  (sigma_dept_name="Music"(instructor))
-  ⋈ (teaches ⋈ pi_course_id,title(course))
+$$
+\begin{aligned}
+\pi_{name, title}\Big( \\
+\sigma_{\text{dept\_name} = \text{"Music"}}(instructor) \\
+\bowtie (teaches \bowtie \pi_{\text{course\_id}, title}(course)) \\
 )
-```
+\end{aligned}
+$$
 
 ![Figure 16.1](@/assets/images/cs-database-239-figure-16-1-page-773.png)
 *Figure 16.1 · PDF p. 773 · selection pushdown으로 큰 intermediate result를 줄이는 equivalent expression 변환*
@@ -133,10 +137,12 @@ Projection pushdown 예도 중요하다. `instructor ⋈ teaches`의 intermediat
 
 Join order는 query cost를 크게 좌우한다. Natural join은 associative이고 commutative이므로, 같은 relations를 다양한 순서로 join해도 같은 logical result를 얻을 수 있다.
 
-```text
-(r1 ⋈ r2) ⋈ r3 ≡ r1 ⋈ (r2 ⋈ r3)
-r1 ⋈ r2 ≡ r2 ⋈ r1
-```
+$$
+\begin{aligned}
+(r_1 \bowtie r_2) \bowtie r_3 \equiv r_1 \bowtie (r_2 \bowtie r_3) \\
+r_1 \bowtie r_2 \equiv r_2 \bowtie r_1
+\end{aligned}
+$$
 
 하지만 cost는 전혀 다를 수 있다. Music query에서 `teaches ⋈ course_projection`을 먼저 계산하면 "가르쳐진 모든 course"에 대한 큰 relation이 생긴다. 반대로 `sigma_dept_name="Music"(instructor) ⋈ teaches`를 먼저 계산하면 Music department instructors가 가르친 courses만 남아 훨씬 작을 가능성이 높다.
 
@@ -177,9 +183,9 @@ DBMS는 `system catalog`에 relation, index, attribute에 대한 통계를 저�
 
 고정 길이 record라면 대략 다음 관계를 쓴다.
 
-```text
-br = ceil(nr / fr)
-```
+$$
+b_r = \lceil n_r / f_r \rceil
+$$
 
 `A`가 `r`의 key이면 모든 tuple이 다른 `A` 값을 가지므로 `V(A, r) = nr`이다. `index`에 대해서는 `B+-tree`의 height, leaf page 수, key distinct value 같은 통계가 중요하다.
 
@@ -256,13 +262,15 @@ selection 결과의 distinct value는 predicate가 attribute를 얼마나 제한
 
 join 결과에서는 attribute가 어느 relation에서 왔는지가 중요하다. `A`가 전부 `r`의 attribute이면 `min(V(A, r), n_{r⋈s})`로 잡고, 전부 `s`에서 왔으면 대칭적으로 계산한다. `A`가 양쪽 relation attribute를 섞은 집합이면, 양쪽 distinct value 조합의 가능한 수와 join 결과 cardinality를 함께 제한으로 둔다.
 
-```text
-min(
-  V(A1, r) * V(A2 - A1, s),
-  V(A1 - A2, r) * V(A2, s),
-  n_{r⋈s}
+$$
+\begin{aligned}
+\min( \\
+V(A_1, r) \cdot V(A_2 - A_1, s), \\
+V(A_1 - A_2, r) \cdot V(A_2, s), \\
+n_{r \bowtie s} \\
 )
-```
+\end{aligned}
+$$
 
 projection은 선택한 attribute 집합의 distinct value 수를 그대로 사용한다. grouping의 distinct value는 group 수가 되고, `sum`, `count`, `avg` 같은 aggregate 결과는 보수적으로 모두 다를 수 있다고 보기도 한다. `min`, `max`는 group 수와 원래 attribute distinct value 수 사이의 작은 쪽으로 제한된다.
 
@@ -276,9 +284,9 @@ Expression generation만으로는 query optimization이 끝나지 않는다. 같
 
 SQL query의 가장 흔한 형태는 여러 relations의 join과 selection predicates다. `r1 ⋈ r2 ⋈ ... ⋈ rn`처럼 join 순서가 지정되지 않은 logical expression은 매우 많은 join order를 가진다. `n = 3`만 되어도 12가지 join order가 가능하고, 일반적으로는 다음 수만큼 늘어난다.
 
-```text
-(2(n - 1))! / (n - 1)!
-```
+$$
+\frac{(2(n - 1))!}{(n - 1)!}
+$$
 
 `n = 7`이면 665,280가지, `n = 10`이면 17.6 billion을 넘는다. 모든 join tree를 단순 열거하는 방식은 금방 불가능해진다.
 
@@ -366,9 +374,9 @@ Subquery가 outer query tuple마다 별도로 실행되는 방식을 `correlated
 
 위 `exists` query는 다음처럼 semijoin으로 표현할 수 있다.
 
-```text
-πname(instructor ⋉instructor.ID=teaches.ID (σteaches.year=2019(teaches)))
-```
+$$
+\pi_{name}\left(instructor \ltimes_{instructor.ID = teaches.ID} \left(\sigma_{teaches.year = 2019}(teaches)\right)\right)
+$$
 
 `in` clause도 같은 semijoin 형태로 바꿀 수 있다. 반대로 `not exists`는 `anti-semijoin` 또는 `anti-join`이 맞다. `r`의 tuple이 `s`에서 matching tuple을 갖지 않을 때만 결과에 남긴다.
 
@@ -376,12 +384,14 @@ Nested query를 `join`, `semijoin`, `anti-semijoin`이 있는 query로 바꾸는
 
 Aggregation이 들어간 scalar subquery는 더 어렵다. 예를 들어 "2019년에 1개 초과 section을 가르친 instructor"를 찾는 query는 subquery 내부의 `count(*)`가 outer `instructor.ID`마다 따로 계산된다. Decorrelation하려면 `teaches`를 `ID`로 group by해서 `count(*) as cnt`를 만들고, `instructor.ID = TID AND 1 < cnt` 조건의 semijoin으로 바꾸어야 한다.
 
-```text
-πname(
-  instructor ⋉(instructor.ID=TID) AND (1<cnt)
-  (ID as TID γcount(*) as cnt(σyear=2019(teaches)))
+$$
+\begin{aligned}
+\pi_{name}\Big( \\
+instructor \ltimes_{instructor.ID = TID \land 1 < cnt} \\
+\left(\gamma_{ID \to TID,\ \operatorname{count}(\ast) \to cnt}\left(\sigma_{year = 2019}(teaches)\right)\right) \\
 )
-```
+\end{aligned}
+$$
 
 모든 nested subquery가 decorrelate될 수 있는 것은 아니다. Scalar subquery는 결과가 하나여야 하며, 여러 tuple을 반환하면 runtime exception이 날 수 있는데, 단순 decorrelated query는 이런 예외 semantics를 그대로 표현하기 어렵다. 따라서 decorrelation 여부도 원칙적으로 cost-based로 판단해야 하고, 많은 optimizer는 복잡한 nested subquery에 대해 제한적인 decorrelation만 수행한다.
 
@@ -421,18 +431,20 @@ Materialized view의 대가는 최신성 유지다. Base relation이 바뀌면 m
 
 Materialized view `v = r ⋈ s`에서 `r`에 tuple 집합 `ir`가 insert되었다고 하자. 새 relation은 `rnew = rold ∪ ir`이고, 새 view는 다음처럼 쓸 수 있다.
 
-```text
-vnew = rnew ⋈ s
-     = (rold ∪ ir) ⋈ s
-     = (rold ⋈ s) ∪ (ir ⋈ s)
-     = vold ∪ (ir ⋈ s)
-```
+$$
+\begin{aligned}
+v_{\text{new}} &= r_{\text{new}} \bowtie s \\
+&= (r_{\text{old}} \cup i_r) \bowtie s \\
+&= (r_{\text{old}} \bowtie s) \cup (i_r \bowtie s) \\
+&= v_{\text{old}} \cup (i_r \bowtie s)
+\end{aligned}
+$$
 
 즉, view 전체를 다시 만들 필요 없이 `ir ⋈ s`만 계산해 기존 materialized view에 추가하면 된다. 삭제 `dr`는 대칭적으로 처리한다.
 
-```text
-vnew = vold - (dr ⋈ s)
-```
+$$
+v_{\text{new}} = v_{\text{old}} - (d_r \bowtie s)
+$$
 
 `s`에 대한 insert/delete도 같은 방식으로 처리한다.
 
@@ -440,10 +452,12 @@ vnew = vold - (dr ⋈ s)
 
 Selection view `v = σθ(r)`는 변화분에도 같은 selection을 적용하면 된다.
 
-```text
-insert ir:  vnew = vold ∪ σθ(ir)
-delete dr:  vnew = vold - σθ(dr)
-```
+$$
+\begin{aligned}
+\text{insert } i_r:\quad v_{\text{new}} &= v_{\text{old}} \cup \sigma_\theta(i_r) \\
+\text{delete } d_r:\quad v_{\text{new}} &= v_{\text{old}} - \sigma_\theta(d_r)
+\end{aligned}
+$$
 
 Projection view `v = πA(r)`는 더 조심해야 한다. `r(A, B)`에 `(a, 2)`, `(a, 3)`이 있으면 `πA(r)`에는 `(a)` 하나만 있다. `(a, 2)`를 삭제했다고 `(a)`를 view에서 지우면 안 된다. `(a, 3)`이 아직 같은 projection result를 지탱하기 때문이다.
 

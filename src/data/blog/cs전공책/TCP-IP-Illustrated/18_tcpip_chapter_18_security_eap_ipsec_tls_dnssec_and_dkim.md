@@ -81,27 +81,33 @@ Digital signature는 authenticity와 nonrepudiation의 기반이다. Alice의 pr
 
 ### 18.4.2 Rivest, Shamir, and Adleman (RSA) Public Key Cryptography
 
-RSA는 factoring large numbers의 어려움에 기대는 public key cryptosystem이다. 두 큰 prime `p`, `q`를 고르고 `n = pq`를 modulus로 둔다. `Φ(n) = (p-1)(q-1)`이고, public exponent `e`와 private exponent `d`는 다음 관계를 만족한다.
+RSA는 factoring large numbers의 어려움에 기대는 public key cryptosystem이다. 두 큰 prime $p$, $q$를 고르고 $n = pq$를 modulus로 둔다. $\Phi(n) = (p-1)(q-1)$이고, public exponent $e$와 private exponent $d$는 다음 관계를 만족한다.
 
-```text
-d = e^-1 mod Φ(n)
-public key  = (e, n)
-private key = (d, n)
-```
+$$
+\begin{aligned}
+d &= e^{-1} \bmod \Phi(n) \\
+\text{public key} &= (e, n) \\
+\text{private key} &= (d, n)
+\end{aligned}
+$$
 
 Encryption과 decryption은 modular exponentiation으로 표현된다.
 
-```text
-c = m^e mod n
-m = c^d mod n
-```
+$$
+\begin{aligned}
+c &= m^e \bmod n \\
+m &= c^d \bmod n
+\end{aligned}
+$$
 
 Digital signature는 RSA를 “reverse”로 쓰는 것처럼 볼 수 있다.
 
-```text
-s = m^d mod n       # sign with private exponent
-m = s^e mod n       # verify with public exponent
-```
+$$
+\begin{aligned}
+s &= m^d \bmod n && \text{sign with private exponent} \\
+m &= s^e \bmod n && \text{verify with public exponent}
+\end{aligned}
+$$
 
 Eve가 `n`과 `e`를 알아도 `p`, `q`, `Φ(n)`을 모르면 `d`를 구하기 어렵다. 즉 RSA security는 semiprime `n`을 factoring하는 것이 현실적으로 어렵다는 가정에 기대며, 이 때문에 key size가 중요하다. 원문은 1024-bit modulus가 쓰이던 맥락과 2048-bit 이상 권고를 언급한다.
 
@@ -109,13 +115,14 @@ Eve가 `n`과 `e`를 알아도 `p`, `q`, `Φ(n)`을 모르면 `d`를 구하기 �
 
 Diffie-Hellman(DH)은 insecure network 위에서 두 endpoint가 shared secret bits를 합의하는 key agreement protocol이다. 공개 parameter `p`, `g`가 있고, Alice와 Bob은 각각 secret random number `a`, `b`를 고른다.
 
-```text
-Alice: A = g^a mod p  -> Bob
-Bob:   B = g^b mod p  -> Alice
-
-Alice computes: K = B^a mod p = g^(ba) mod p
-Bob computes:   K = A^b mod p = g^(ab) mod p
-```
+$$
+\begin{aligned}
+\text{Alice: } A &= g^a \bmod p \to \text{Bob} \\
+\text{Bob: } B &= g^b \bmod p \to \text{Alice} \\
+\text{Alice computes: } K &= B^a \bmod p = g^{ba} \bmod p \\
+\text{Bob computes: } K &= A^b \bmod p = g^{ab} \bmod p
+\end{aligned}
+$$
 
 Eve는 `g`, `p`, `A`, `B`를 볼 수 있지만, discrete log problem을 풀지 못하면 `a`, `b`, `K`를 알 수 없다. 그러나 기본 DH는 authentication을 제공하지 않는다. Mallory가 Alice에게는 Bob인 척, Bob에게는 Alice인 척 자신의 public value를 주입하면 MITM이 가능하다. 따라서 실제 protocol은 DH public value를 digital signature나 certificate로 authenticate한다. STS(Station-to-Station) protocol은 Alice와 Bob이 DH public values에 서명하는 고전적 접근이다.
 
@@ -166,11 +173,11 @@ Message authentication code(MAC)는 link-layer MAC address와 무관하며, mess
 
 HMAC은 hash를 두 겹으로 감싼 구조다.
 
-```text
-HMAC-H(K, M)_t = left_t( H( (K xor opad) || H((K xor ipad) || M) ) )
-```
+$$
+\operatorname{HMAC\text{-}H}(K, M)_t = \operatorname{left}_t\left(H\left((K \oplus \text{opad}) \parallel H((K \oplus \text{ipad}) \parallel M)\right)\right)
+$$
 
-이 nested construction은 단순한 `H(K || M)` 또는 `H(M || K)` 형태의 extension attack을 피하기 위해 설계되었다. `ipad=0x36...`, `opad=0x5C...`는 내부/외부 key material이 충분히 달라지도록 한다. CMAC과 GMAC은 hash function 대신 AES 같은 block cipher mode를 기반으로 MAC 또는 authenticated encryption을 제공한다.
+이 nested construction은 단순한 $H(K \parallel M)$ 또는 $H(M \parallel K)$ 형태의 extension attack을 피하기 위해 설계되었다. $\text{ipad}=0x36\ldots$, $\text{opad}=0x5C\ldots$는 내부/외부 key material이 충분히 달라지도록 한다. CMAC과 GMAC은 hash function 대신 AES 같은 block cipher mode를 기반으로 MAC 또는 authenticated encryption을 제공한다.
 
 ### 18.4.10 Cryptographic Suites and Cipher Suites
 
@@ -421,12 +428,12 @@ KE payload는 DH group number와 public DH value를 담고, Nonce payload `Ni`, 
 
 IKE_SA_INIT 뒤 key derivation은 원문 식으로 요약된다.
 
-```text
-SKEYSEED = prf(Ni | Nr, g^ir)
-
-{SK_d | SK_ai | SK_ar | SK_ei | SK_er | SK_pi | SK_pr}
-  = prf+(SKEYSEED, Ni | Nr | SPIi | SPIr)
-```
+$$
+\begin{aligned}
+\text{SKEYSEED} &= \operatorname{prf}(N_i \parallel N_r, g^{ir}) \\
+\{SK_d \parallel SK_{ai} \parallel SK_{ar} \parallel SK_{ei} \parallel SK_{er} \parallel SK_{pi} \parallel SK_{pr}\} &= \operatorname{prf}^{+}(\text{SKEYSEED}, N_i \parallel N_r \parallel SPI_i \parallel SPI_r)
+\end{aligned}
+$$
 
 `SK_d`는 CHILD_SA key derivation에 쓰이고, `SK_a*`는 authentication/integrity, `SK_e*`는 encryption, `SK_p*`는 IKE_AUTH의 AUTH payload 생성에 쓰인다. Initiator/responder 방향별로 key가 따로 나뉘는 이유는 양방향 SA와 replay/integrity state를 분리하기 위해서다.
 
@@ -641,7 +648,7 @@ TLS 1.2가 의존하는 cryptographic operation은 digital signing, stream ciphe
 
 ### 18.9.1.1 TLS Record Protocol
 
-Record protocol은 upper-layer data를 `TLSPlaintext` record로 fragment한다. Record 최대 payload는 `2^14` bytes이며, TLS는 higher-layer message boundary를 보존하지 않는다. 이후 optional compression으로 `TLSCompressed`를 만들고, encryption/integrity protection으로 `TLSCiphertext`를 만든다.
+Record protocol은 upper-layer data를 `TLSPlaintext` record로 fragment한다. Record 최대 payload는 $2^{14}$ bytes이며, TLS는 higher-layer message boundary를 보존하지 않는다. 이후 optional compression으로 `TLSCompressed`를 만들고, encryption/integrity protection으로 `TLSCiphertext`를 만든다.
 
 ![Figure 18-29](@/assets/images/cs-tcp-ip-illustrated-339-figure-18-29-page-918.png)
 *Figure 18-29 · PDF p. 918 · TLSPlaintext에서 TLSCompressed, TLSCiphertext로 변환되는 record layer 처리 흐름*
@@ -650,10 +657,9 @@ Record 처리 순서는 일반적으로 sequence number 계산, MAC 계산, padd
 
 Record protocol key material은 Handshake protocol이 만든 `master_secret`에서 나온다.
 
-```text
-Mc | Ms | Dc | Ds | IVc | IVs =
-  PRF(master_secret, "key expansion", server_random + client_random)
-```
+$$
+M_c \parallel M_s \parallel D_c \parallel D_s \parallel IV_c \parallel IV_s = \operatorname{PRF}(\text{master\_secret}, \text{key expansion}, \text{server\_random} + \text{client\_random})
+$$
 
 | 값 | 의미 |
 |---|---|
@@ -689,12 +695,12 @@ Server가 client authentication을 요구하면 `CertificateRequest`를 보낸 �
 
 Handshake 마지막에는 `ChangeCipherSpec` 이후 `Finished` message가 오간다. Finished는 처음으로 새 보호 parameter가 적용되는 handshake message이며 다음 값을 포함한다.
 
-```text
-verify_data = PRF(master_secret, finished_label, Hash(handshake_messages))
-
-master_secret = PRF(premaster_secret, "master secret",
-                    ClientHello.random + ServerHello.random)
-```
+$$
+\begin{aligned}
+\text{verify\_data} &= \operatorname{PRF}(\text{master\_secret}, \text{finished\_label}, \operatorname{Hash}(\text{handshake\_messages})) \\
+\text{master\_secret} &= \operatorname{PRF}(\text{premaster\_secret}, \text{master secret}, \text{ClientHello.random} + \text{ServerHello.random})
+\end{aligned}
+$$
 
 `finished_label`은 client와 server 방향에 따라 `"client finished"` 또는 `"server finished"`다. Finished가 중요한 이유는 양쪽이 같은 handshake transcript와 같은 key material에 도달했는지 강하게 확인해 주기 때문이다.
 
@@ -814,11 +820,12 @@ DNSSECbis는 네 가지 핵심 RR와 두 header bit(`CD`, `AD`)를 정의하고,
 
 `Key Tag`는 DNSKEY RR를 찾기 위한 nonunique hint일 뿐이고, 같은 tag를 가진 DNSKEY가 여러 개 있을 수 있다. 따라서 Key Tag만으로 신뢰하지 않고 digest와 signature validation이 필요하다. DS digest는 다음 형태로 계산된다.
 
-```text
-digest = digest_algorithm(DNSKEY owner name | DNSKEY RDATA)
-
-DNSKEY RDATA = Flags | Protocol | Algorithm | Public Key
-```
+$$
+\begin{aligned}
+\text{digest} &= \operatorname{digest\_algorithm}(\text{DNSKEY owner name} \parallel \text{DNSKEY RDATA}) \\
+\text{DNSKEY RDATA} &= \text{Flags} \parallel \text{Protocol} \parallel \text{Algorithm} \parallel \text{Public Key}
+\end{aligned}
+$$
 
 DS RR는 zone boundary를 건너 trust chain을 이어야 하므로, 참조되는 DNSKEY는 zone key여야 한다. Digest type은 SHA-1, SHA-256 등이 쓰일 수 있다.
 
@@ -847,11 +854,13 @@ NSEC의 장점은 authenticated denial of existence가 단순하다는 점이고
 
 NSEC3 hashed owner 계산은 salt와 반복 hash를 사용한다.
 
-```text
-IH(0) = H(owner name | Salt)
-IH(k) = H(IH(k - 1) | Salt), if k > 0
-Next Hashed Owner = H(IH(Iterations) | Salt)
-```
+$$
+\begin{aligned}
+IH(0) &= H(\text{owner name} \parallel \text{Salt}) \\
+IH(k) &= H(IH(k - 1) \parallel \text{Salt}), && k > 0 \\
+\text{Next Hashed Owner} &= H(IH(\text{Iterations}) \parallel \text{Salt})
+\end{aligned}
+$$
 
 `NSEC3PARAM` RR는 authoritative server가 negative response에 사용할 NSEC3 record를 고를 때 필요한 hash parameter를 제공한다. NSEC3를 모르는 resolver가 record를 잘못 해석하지 않도록 algorithm number 6/7 같은 alias도 사용된다. 이는 제대로 이해하지 못하면 insecure로 실패하게 만드는 제한적 backward compatibility다.
 

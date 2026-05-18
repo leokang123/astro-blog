@@ -111,9 +111,9 @@ Predictive coding에서 주의할 점은 두 가지다.
 
 Prediction error는 current macroblock과 reference macroblock의 pixel difference matrix다. 개념적으로는 다음과 같다.
 
-```text
-prediction error = current macroblock - shifted reference macroblock
-```
+$$
+\text{prediction error} = \text{current macroblock} - \text{shifted reference macroblock}
+$$
 
 이 error matrix에는 0 또는 작은 값이 많으므로 original pixel matrix보다 DCT-quantization 후 더 잘 압축된다. MPEG 표준은 matching process 자체를 강제하지 않는다. 보통 search range 안의 candidate displacement 중 cost function을 최소화하는 displacement를 motion vector로 선택한다.
 
@@ -170,9 +170,9 @@ Destination은 incoming packets를 `time delay buffer`에 넣고 약간 지연�
 
 `delay jitter`는 하나의 session에서 packet들이 경험하는 delay의 maximum variation이다. 예를 들어 어떤 packet의 minimum end-to-end delay가 1 ms이고 maximum delay가 6 ms라면 delay jitter는 5 ms다. Time delay buffer가 incoming packet을 최소 5 ms 지연시키면 모든 incoming packet을 순서에 맞춰 내보낼 수 있다. 하지만 buffer delay가 4 ms라면 relative delay가 4 ms를 넘은 packet은 late packet이 되며, playback order를 깨지 않기 위해 discard될 수 있다.
 
-```text
-delay jitter = max end-to-end delay - min end-to-end delay
-```
+$$
+\text{delay jitter} = \text{max end-to-end delay} - \text{min end-to-end delay}
+$$
 
 Real-time traffic이 항상 fixed-size packet을 fixed interval로 만드는 것은 아니다. Figure 24.6은 세 가지 traffic profile을 비교한다.
 
@@ -552,23 +552,25 @@ Reception report block은 이 participant가 data를 받은 각 source마다 하
 
 앞에서 `delay jitter`를 single session에서 packet delay의 maximum variation으로 정의했지만, receiver에서 정확한 maximum variation을 간단히 측정하기는 어렵다. RTCP는 average interarrival jitter를 추정한다.
 
-특정 source의 packet `I`에 대해 다음 값을 둔다.
+특정 source의 packet $I$에 대해 다음 값을 둔다.
 
 | Symbol | 의미 |
 |---|---|
-| `S(I)` | RTP data packet `I`의 timestamp |
-| `R(I)` | Packet `I`의 arrival time을 RTP timestamp unit으로 표현한 값 |
-| `D(I)` | Receiver에서 본 adjacent packet interarrival spacing과 source에서 본 adjacent packet generation spacing의 차이 |
-| `J(I)` | Packet `I` 수신 시점까지의 estimated average interarrival jitter |
+| $S(I)$ | RTP data packet $I$의 timestamp |
+| $R(I)$ | Packet $I$의 arrival time을 RTP timestamp unit으로 표현한 값 |
+| $D(I)$ | Receiver에서 본 adjacent packet interarrival spacing과 source에서 본 adjacent packet generation spacing의 차이 |
+| $J(I)$ | Packet $I$ 수신 시점까지의 estimated average interarrival jitter |
 
 계산식은 다음과 같다.
 
-```text
-D(I) = (R(I) - R(I-1)) - (S(I) - S(I-1))
-J(I) = (15/16) * J(I-1) + (1/16) * |D(I)|
-```
+$$
+\begin{aligned}
+D(I) &= (R(I)-R(I-1)) - (S(I)-S(I-1)) \\
+J(I) &= \frac{15}{16}J(I-1) + \frac{1}{16}|D(I)|
+\end{aligned}
+$$
 
-`D(I)`는 arrival spacing이 source spacing과 얼마나 다른지 측정한다. Jitter가 없으면 두 spacing이 같고 `D(I)=0`이다. `J(I)`는 observed `D(I)`의 exponential average라서 가장 최근 관측값에는 작은 weight만 준다. 이 덕분에 일시적 fluctuation 하나가 전체 estimate를 망가뜨리지 않는다.
+$D(I)$는 arrival spacing이 source spacing과 얼마나 다른지 측정한다. Jitter가 없으면 두 spacing이 같고 $D(I)=0$이다. $J(I)$는 observed $D(I)$의 exponential average라서 가장 최근 관측값에는 작은 weight만 준다. 이 덕분에 일시적 fluctuation 하나가 전체 estimate를 망가뜨리지 않는다.
 
 SR/RR 값은 senders, receivers, network managers가 session condition을 monitoring하는 데 사용된다. Packet loss values는 persistent congestion을 나타내고, jitter는 transient congestion을 나타낼 수 있다. 특히 jitter increase는 packet loss로 이어지기 전 congestion warning이 될 수 있다.
 

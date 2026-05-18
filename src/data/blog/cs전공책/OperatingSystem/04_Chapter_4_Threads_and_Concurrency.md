@@ -135,13 +135,13 @@ Multicore programming은 단순히 thread를 많이 만들면 끝나는 문제�
 
 Multicore를 추가한다고 성능이 무한히 선형 증가하지는 않는다. `Amdahl's Law`는 application 안에 serial component와 parallel component가 함께 있을 때, 추가 cores로 얻을 수 있는 speedup의 상한을 보여준다.
 
-Serial portion을 `S`, processing cores 수를 `N`이라고 하면:
+Serial portion을 $S$, processing cores 수를 $N$이라고 하면:
 
-```text
-speedup <= 1 / (S + ((1 - S) / N))
-```
+$$
+\text{speedup} \le \frac{1}{S + \frac{1 - S}{N}}
+$$
 
-예를 들어 application의 75%가 parallel이고 25%가 serial이면, 2 cores에서는 speedup이 약 1.6배, 4 cores에서는 약 2.28배다. `N`이 infinity로 가도 speedup은 `1 / S`에 수렴한다. 즉 50%가 serial이면 core를 아무리 늘려도 maximum speedup은 2배다.
+예를 들어 application의 75%가 parallel이고 25%가 serial이면, 2 cores에서는 speedup이 약 1.6배, 4 cores에서는 약 2.28배다. $N$이 infinity로 가도 speedup은 $1/S$에 수렴한다. 즉 50%가 serial이면 core를 아무리 늘려도 maximum speedup은 2배다.
 
 이 법칙의 핵심은 serial portion이 전체 성능 이득에 disproportionate effect를 준다는 점이다. Thread를 늘리는 것보다 더 중요한 것은 serial bottleneck을 줄이고, parallelizable portion을 잘 찾아내는 것이다.
 
@@ -154,7 +154,7 @@ Parallelism은 크게 두 유형으로 나뉜다.
 
 | 유형 | 핵심 아이디어 | 예시 |
 |---|---|---|
-| `data parallelism` | 같은 data set을 subset으로 나누고, 각 core가 같은 operation을 수행 | array `[0..N-1]` summation을 `[0..N/2-1]`, `[N/2..N-1]`로 나눠 처리 |
+| `data parallelism` | 같은 data set을 subset으로 나누고, 각 core가 같은 operation을 수행 | array $[0, N-1]$ summation을 $[0, N/2-1]$, $[N/2, N-1]$로 나눠 처리 |
 | `task parallelism` | 서로 다른 tasks/threads를 multiple cores에 나눠 배치 | 같은 array에 대해 한 thread는 평균, 다른 thread는 표준편차 계산 |
 
 Data parallelism은 “data를 나눈다”가 중심이고, task parallelism은 “일의 종류를 나눈다”가 중심이다. 둘은 mutually exclusive하지 않다. 실제 application은 data parallelism과 task parallelism을 hybrid로 사용할 수 있다.

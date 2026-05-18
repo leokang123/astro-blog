@@ -49,7 +49,7 @@ RFC5952는 같은 IPv6 address가 너무 많은 방식으로 표현되는 문제
 
 ### 2.3 Basic IP Address Structure
 
-IPv4 address space는 `2^32 = 4,294,967,296`개 address를 갖고, IPv6 address space는 `2^128`개 address를 갖는다. 이 거대한 공간은 type과 size에 따라 block으로 나뉜다. 대부분의 IPv4 address space는 unicast address로 interface 하나를 식별하는 데 사용되어 왔다. 그 밖에 broadcast, multicast, anycast, special-purpose address처럼 하나 이상의 interface나 특정 의미를 갖는 address가 있다.
+IPv4 address space는 $2^{32} = 4{,}294{,}967{,}296$개 address를 갖고, IPv6 address space는 $2^{128}$개 address를 갖는다. 이 거대한 공간은 type과 size에 따라 block으로 나뉜다. 대부분의 IPv4 address space는 unicast address로 interface 하나를 식별하는 데 사용되어 왔다. 그 밖에 broadcast, multicast, anycast, special-purpose address처럼 하나 이상의 interface나 특정 의미를 갖는 address가 있다.
 
 #### 2.3.1 Classful Addressing
 
@@ -72,18 +72,18 @@ classful IPv4 partition은 대략 다음 의미를 가진다.
 | D | `224.0.0.0-239.255.255.255` | `1110` | multicast | unicast allocation 아님 |
 | E | `240.0.0.0-255.255.255.255` | `1111` | reserved | 일반 unicast 사용 아님 |
 
-Class A/B/C의 host 수는 표면상 각각 `2^24`, `2^16`, `2^8`개지만, 보통 range의 첫 address와 마지막 address는 unicast host address로 쓰지 않는다. 예를 들어 `18.0.0.0/8` 같은 class A allocation은 이론상 `2^24`개 address를 담지만 실제 host에 할당 가능한 수는 보통 `2^24 - 2`로 본다. 이 "첫/마지막 address 제외" 관례는 subnet broadcast 설명에서 다시 중요해진다.
+Class A/B/C의 host 수는 표면상 각각 $2^{24}$, $2^{16}$, $2^8$개지만, 보통 range의 첫 address와 마지막 address는 unicast host address로 쓰지 않는다. 예를 들어 `18.0.0.0/8` 같은 class A allocation은 이론상 $2^{24}$개 address를 담지만 실제 host에 할당 가능한 수는 보통 $2^{24} - 2$로 본다. 이 "첫/마지막 address 제외" 관례는 subnet broadcast 설명에서 다시 중요해진다.
 
 #### 2.3.2 Subnet Addressing
 
 subnet addressing은 중앙에서 받은 class A/B/C network number를 site 내부에서 다시 여러 subnet으로 나누는 방식이다. 핵심 목적은 새 LAN segment가 생길 때마다 global Internet의 중앙 authority에서 새 network number를 받을 필요 없이, site administrator가 local numbering plan을 구성할 수 있게 하는 것이다.
 
-subnetting은 IPv4 address 길이를 늘리지 않는다. 대신 원래 host portion으로 쓰였던 bit 일부를 subnet number로 재해석한다. 따라서 address 구조는 `network number + subnet ID + host ID`가 된다. 이 추가 구분은 site 내부 router와 host만 알면 되고, site 밖 Internet은 여전히 전통적인 classful network number만 보고 해당 site의 border router로 traffic을 보낸다.
+subnetting은 IPv4 address 길이를 늘리지 않는다. 대신 원래 host portion으로 쓰였던 bit 일부를 subnet number로 재해석한다. 따라서 address 구조는 $\text{network number} + \text{subnet ID} + \text{host ID}$가 된다. 이 추가 구분은 site 내부 router와 host만 알면 되고, site 밖 Internet은 여전히 전통적인 classful network number만 보고 해당 site의 border router로 traffic을 보낸다.
 
 ![Figure 2-2](@/assets/images/cs-tcp-ip-illustrated-009-figure-2-2-page-76.png)
 *Figure 2-2 · PDF p. 76 · class B address의 host portion을 subnet ID와 host ID로 나누는 예*
 
-Figure 2-2의 예에서 class B network는 앞 16 bits가 centrally allocated network number다. 남은 16 bits 중 8 bits를 subnet ID로 쓰면 `2^8 = 256`개 subnet을 만들 수 있고, 각 subnet에는 host ID 8 bits가 남는다. 각 subnet에서 all-zero host와 all-one host를 제외하면 `2^8 - 2 = 254`개 host address를 쓸 수 있다. 더 많은 subnet을 원하면 host 수를 줄이고, 더 많은 host를 원하면 subnet 수를 줄이는 trade-off가 생긴다.
+Figure 2-2의 예에서 class B network는 앞 16 bits가 centrally allocated network number다. 남은 16 bits 중 8 bits를 subnet ID로 쓰면 $2^8 = 256$개 subnet을 만들 수 있고, 각 subnet에는 host ID 8 bits가 남는다. 각 subnet에서 all-zero host와 all-one host를 제외하면 $2^8 - 2 = 254$개 host address를 쓸 수 있다. 더 많은 subnet을 원하면 host 수를 줄이고, 더 많은 host를 원하면 subnet 수를 줄이는 trade-off가 생긴다.
 
 ![Figure 2-3](@/assets/images/cs-tcp-ip-illustrated-010-figure-2-3-page-77.png)
 *Figure 2-3 · PDF p. 77 · `128.32.0.0` class B site가 `255.255.255.0` mask로 내부 subnet을 나누는 구조*

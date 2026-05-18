@@ -100,9 +100,9 @@ TCP 계열에서 중요한 것은 `window-based flow control`이다. Receiver는
 
 Window size와 전송률의 관계는 직관적으로 다음과 같다.
 
-```text
-transfer rate ~= (S * W) / R bits/s
-```
+$$
+\text{transfer rate} \approx \frac{S \cdot W}{R}\;\text{bits/s}
+$$
 
 여기서 `S`는 packet size in bits, `W`는 window size, `R`은 RTT다. Receiver가 window advertisement로 `W`를 작게 제한하면 sender가 network에 동시에 올릴 수 있는 data 양이 줄어 receiver를 압도하지 않는다.
 
@@ -237,7 +237,7 @@ TCP connection은 4-tuple로 식별된다.
 
 IP address와 port number의 조합은 `endpoint` 또는 `socket`이라고 부른다. Server가 여러 client와 동시에 통신할 수 있는 이유는 client IP/port가 다르면 같은 server IP/port라도 TCP connection 4-tuple이 서로 다르기 때문이다. 이 사실은 Chapter 13의 connection establishment와 server concurrency 이해에 중요하다.
 
-`Sequence Number`는 한 방향 byte stream에서 이 segment의 첫 byte 번호를 나타낸다. 32-bit unsigned number이므로 `(2^32)-1` 이후 0으로 wraparound된다. TCP connection을 시작할 때 client가 보내는 첫 `SYN` segment에는 그 방향에서 사용할 `ISN (Initial Sequence Number)`이 들어간다. ISN은 보통 0이나 1이 아니라 security 이유로 임의성 있게 선택된다. SYN은 sequence number 하나를 consume하므로, 첫 application data byte의 sequence number는 `ISN + 1`이다. `FIN`도 sequence number를 consume한다. 반대로 pure ACK는 sequence number를 consume하지 않으므로 reliable delivery 대상이 아니다.
+`Sequence Number`는 한 방향 byte stream에서 이 segment의 첫 byte 번호를 나타낸다. 32-bit unsigned number이므로 $(2^{32}) - 1$ 이후 0으로 wraparound된다. TCP connection을 시작할 때 client가 보내는 첫 `SYN` segment에는 그 방향에서 사용할 `ISN (Initial Sequence Number)`이 들어간다. ISN은 보통 0이나 1이 아니라 security 이유로 임의성 있게 선택된다. SYN은 sequence number 하나를 consume하므로, 첫 application data byte의 sequence number는 $\text{ISN} + 1$이다. `FIN`도 sequence number를 consume한다. 반대로 pure ACK는 sequence number를 consume하지 않으므로 reliable delivery 대상이 아니다.
 
 `Acknowledgment Number`는 ACK bit가 set되어 있을 때 valid하다. 값 `N`은 "N 바로 전 byte까지 in-order로 받았고, 다음에는 byte N을 기대한다"는 뜻이다. TCP는 `sliding window protocol with cumulative positive acknowledgments`라고 요약할 수 있다. 일반 ACK Number field만으로는 out-of-order segment 수신 사실을 세밀하게 표현할 수 없다. 예를 들어 bytes 1-1024를 받은 뒤 2049-3072가 먼저 도착해도 cumulative ACK는 여전히 1025를 가리킨다. 현대 TCP의 `SACK (Selective Acknowledgment)` option은 이런 out-of-order data block을 sender에게 알려 selective repeat 성능을 높인다.
 
