@@ -1,11 +1,11 @@
 ---
 title: "programmers-helper 확장 만들기"
 pubDatetime: 2026-05-04T16:20:00+09:00
-modDatetime: 2026-05-04T17:47:48+09:00
+modDatetime: 2026-05-19T02:07:14+09:00
 description: "코덱스를 처음 써보면서 했던 처음의 생각은 \"지금 진행 중인 프로젝트가 없는데, 뭘로 성능 테스트를해볼까? \" 이다."
 tags:
-  - "일반"
-  - "vscode확장"
+  - 일반
+  - vscode확장
 ---
 
 # Programmers-helper 확장 만들기
