@@ -6,7 +6,6 @@ description: "add를 잘못한 경우는 비교적 간단하다"
 tags:
   - "일반"
   - "깃"
-banner: "@/assets/images/shared-cavemansitting.jpg"
 ---
 
 # 잘못 Add, Commit, Push 한 경우

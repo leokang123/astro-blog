@@ -8,7 +8,7 @@ import IconFacebook from "@/assets/icons/IconFacebook.svg";
 import IconTelegram from "@/assets/icons/IconTelegram.svg";
 import IconPinterest from "@/assets/icons/IconPinterest.svg";
 import { SITE } from "@/config";
-import { USER_SOCIALS } from "./user-settings";
+import settings from "./user-settings.json";
 
 interface Social {
   name: string;
@@ -25,6 +25,13 @@ const SOCIAL_ICONS = {
 } as const;
 
 type SocialIconName = keyof typeof SOCIAL_ICONS;
+type UserSocial = {
+  name: SocialIconName;
+  enabled: boolean;
+  href: string;
+};
+
+const USER_SOCIALS = settings.USER_SOCIALS as UserSocial[];
 
 const getSocialLinkTitle = (name: SocialIconName) =>
   name === "Mail" ? `Send an email to ${SITE.title}` : `${SITE.title} on ${name}`;

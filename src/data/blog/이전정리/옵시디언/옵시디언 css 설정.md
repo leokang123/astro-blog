@@ -6,7 +6,6 @@ description: "옵시디언에서 원하는 기능이 있다면 CSS 를 찾아보
 tags:
   - "일반"
   - "옵시디언"
-banner: "@/assets/images/shared-milkyway.jpg"
 ---
 
 # 옵시디언 Css 설정

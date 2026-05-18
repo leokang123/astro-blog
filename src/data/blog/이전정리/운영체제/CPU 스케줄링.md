@@ -6,7 +6,6 @@ description: "운영체제가 프로세스들에게 공정하고 합리적으로
 tags:
   - "일반"
   - "운영체제"
-banner: "@/assets/images/shared-library.jpg"
 ---
 
 # CPU 스케줄링

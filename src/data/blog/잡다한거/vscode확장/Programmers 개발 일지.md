@@ -6,7 +6,6 @@ description: "프로그래머스 문제를 풀 때마다 반복되는 준비 과
 tags:
   - "일반"
   - "vscode확장"
-banner: "@/assets/images/shared-milkyway.jpg"
 ---
 
 # Programmers 개발 일지

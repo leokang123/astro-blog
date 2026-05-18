@@ -6,7 +6,6 @@ description: "코덱스를 처음 써보면서 했던 처음의 생각은 \"지�
 tags:
   - "일반"
   - "vscode확장"
-banner: "@/assets/images/misc-vscode-extension-waterfallgirl.jpg"
 ---
 
 # Programmers-helper 확장 만들기

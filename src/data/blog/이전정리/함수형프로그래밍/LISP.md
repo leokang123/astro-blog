@@ -7,7 +7,6 @@ tags:
   - "일반"
   - "함수형프로그래밍"
   - "개념"
-banner: "@/assets/images/legacy-functional-programming-surfingboards.jpg"
 ---
 
 # LISP

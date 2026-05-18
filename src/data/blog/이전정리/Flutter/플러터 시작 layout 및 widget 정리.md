@@ -6,7 +6,6 @@ description: "Flutter의 UI를 구성하는 모든 요소는 위젯(Widget)이�
 tags:
   - "일반"
   - "Flutter"
-banner: "@/assets/images/shared-cavemansitting.jpg"
 ---
 
 # 플러터 시작 Layout 및 Widget 정리

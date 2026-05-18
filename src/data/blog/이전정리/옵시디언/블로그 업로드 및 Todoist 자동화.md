@@ -6,7 +6,6 @@ description: "취업 준비를 하면서, 블로그 형태로 따로 기록을 �
 tags:
   - "일반"
   - "옵시디언"
-banner: "@/assets/images/legacy-obsidian-whitelodge.jpg"
 ---
 
 # 블로그 업로드 및 Todoist 자동화

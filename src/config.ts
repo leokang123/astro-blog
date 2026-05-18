@@ -1,4 +1,6 @@
-import { USER_SITE } from "./user-settings";
+import settings from "./user-settings.json";
+
+const USER_SITE = settings.USER_SITE;
 
 const normalizeSiteUrl = (siteUrl: string) => {
   const url = new URL(siteUrl);
