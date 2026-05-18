@@ -3,10 +3,10 @@ services:
     build:
       context: .
       args:
-        PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:8080/}
+        PUBLIC_SITE_URL: ${PUBLIC_SITE_URL:-http://localhost:4321/}
         PUBLIC_BASE_PATH: ${PUBLIC_BASE_PATH:-}
     ports:
-      - "8080:80"
+      - "4321:80"
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/"]

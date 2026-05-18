@@ -2,11 +2,11 @@
 title: "Chapter 4. Intermediate SQL"
 order: 4
 pubDatetime: 2026-05-17T00:04:00+09:00
-modDatetime: 2026-05-17T00:04:00+09:00
+modDatetime: 2026-05-18T18:11:35+09:00
 description: "Database System Concepts 정리: Chapter 4. Intermediate SQL"
 tags:
-  - "Database"
-  - "CS"
+  - Database
+  - CS
 ---
 
 ## 개요

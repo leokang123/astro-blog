@@ -9,7 +9,7 @@ COPY package.json pnpm-lock.yaml ./
 RUN pnpm install --frozen-lockfile
 
 COPY . .
-ARG PUBLIC_SITE_URL=http://localhost:8080/
+ARG PUBLIC_SITE_URL=http://localhost:4321/
 ARG PUBLIC_BASE_PATH=
 ENV PUBLIC_SITE_URL=$PUBLIC_SITE_URL
 ENV PUBLIC_BASE_PATH=$PUBLIC_BASE_PATH
