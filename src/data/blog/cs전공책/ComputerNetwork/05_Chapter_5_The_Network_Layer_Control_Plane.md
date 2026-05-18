@@ -1,8 +1,8 @@
 ---
 title: "Chapter 5. The Network Layer: Control Plane"
 order: 5
-pubDatetime: 2026-05-17T00:04:00+09:00
-modDatetime: 2026-05-17T00:04:00+09:00
+pubDatetime: 2026-05-15T00:05:00+09:00
+modDatetime: 2026-05-15T00:05:00+09:00
 description: "Computer Networking Top-Down 정리: Chapter 5. The Network Layer: Control Plane"
 tags:
   - "ComputerNetwork"

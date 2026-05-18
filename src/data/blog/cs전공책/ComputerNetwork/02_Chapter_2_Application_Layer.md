@@ -1,8 +1,8 @@
 ---
 title: "Chapter 2. Application Layer"
 order: 2
-pubDatetime: 2026-05-17T00:07:00+09:00
-modDatetime: 2026-05-17T00:07:00+09:00
+pubDatetime: 2026-05-15T00:02:00+09:00
+modDatetime: 2026-05-15T00:02:00+09:00
 description: "Computer Networking Top-Down 정리: Chapter 2. Application Layer"
 tags:
   - ComputerNetwork

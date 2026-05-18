@@ -1,8 +1,8 @@
 ---
 title: "Chapter 4. Threads and Concurrency"
 order: 4
-pubDatetime: 2026-05-16T00:19:00+09:00
-modDatetime: 2026-05-16T00:19:00+09:00
+pubDatetime: 2026-05-13T00:04:00+09:00
+modDatetime: 2026-05-13T00:04:00+09:00
 description: "Chapter 4. Threads and Concurrency 정리 노트입니다."
 tags:
   - CS

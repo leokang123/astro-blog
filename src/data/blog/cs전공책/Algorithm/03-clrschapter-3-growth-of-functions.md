@@ -1,8 +1,8 @@
 ---
 title: "Chapter 3. Growth of Functions"
 order: 3
-pubDatetime: 2026-05-17T00:19:00+09:00
-modDatetime: 2026-05-17T00:19:00+09:00
+pubDatetime: 2026-05-14T00:03:00+09:00
+modDatetime: 2026-05-14T00:03:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 3. Growth of Functions"
 tags:
   - "Algorithm"

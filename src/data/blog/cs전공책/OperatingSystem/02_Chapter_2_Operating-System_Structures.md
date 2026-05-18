@@ -1,8 +1,8 @@
 ---
 title: "Chapter 2. Operating-System Structures"
 order: 2
-pubDatetime: 2026-05-16T00:21:00+09:00
-modDatetime: 2026-05-16T00:21:00+09:00
+pubDatetime: 2026-05-13T00:02:00+09:00
+modDatetime: 2026-05-13T00:02:00+09:00
 description: "Chapter 2. Operating-System Structures 정리 노트입니다."
 tags:
   - CS

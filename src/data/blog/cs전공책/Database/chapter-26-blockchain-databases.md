@@ -1,8 +1,8 @@
 ---
 title: "Chapter 26. Blockchain Databases"
 order: 26
-pubDatetime: 2026-05-18T00:01:00+09:00
-modDatetime: 2026-05-18T00:01:00+09:00
+pubDatetime: 2026-05-17T00:26:00+09:00
+modDatetime: 2026-05-17T00:26:00+09:00
 description: "Database System Concepts 정리: Chapter 26. Blockchain Databases"
 tags:
   - "Database"

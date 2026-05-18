@@ -1,8 +1,8 @@
 ---
 title: "Chapter 9. Spread Spectrum"
 order: 9
-pubDatetime: 2026-05-18T00:16:00+09:00
-modDatetime: 2026-05-18T00:16:00+09:00
+pubDatetime: 2026-05-18T00:09:00+09:00
+modDatetime: 2026-05-18T00:09:00+09:00
 description: "Data and Computer Communications 정리: Chapter 9. Spread Spectrum"
 tags:
   - "DataCommunication"

@@ -1,8 +1,8 @@
 ---
 title: "Chapter 13. TCP Connection Management"
 order: 13
-pubDatetime: 2026-05-17T00:06:00+09:00
-modDatetime: 2026-05-17T00:06:00+09:00
+pubDatetime: 2026-05-16T00:13:00+09:00
+modDatetime: 2026-05-16T00:13:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 13. TCP Connection Management"
 tags:
   - "ComputerNetwork"

@@ -1,8 +1,8 @@
 ---
 title: "Chapter 12. I/O Systems"
 order: 12
-pubDatetime: 2026-05-16T00:11:00+09:00
-modDatetime: 2026-05-16T00:11:00+09:00
+pubDatetime: 2026-05-13T00:12:00+09:00
+modDatetime: 2026-05-13T00:12:00+09:00
 description: "Chapter 12. I/O Systems 정리 노트입니다."
 tags:
   - "CS"

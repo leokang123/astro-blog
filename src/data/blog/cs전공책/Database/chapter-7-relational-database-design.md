@@ -1,8 +1,8 @@
 ---
 title: "Chapter 7. Relational Database Design"
 order: 7
-pubDatetime: 2026-05-18T00:20:00+09:00
-modDatetime: 2026-05-18T00:20:00+09:00
+pubDatetime: 2026-05-17T00:07:00+09:00
+modDatetime: 2026-05-17T00:07:00+09:00
 description: "Database System Concepts 정리: Chapter 7. Relational Database Design"
 tags:
   - "Database"

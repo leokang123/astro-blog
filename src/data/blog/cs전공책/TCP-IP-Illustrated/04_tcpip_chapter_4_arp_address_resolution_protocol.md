@@ -1,8 +1,8 @@
 ---
 title: "Chapter 4. ARP: Address Resolution Protocol"
 order: 4
-pubDatetime: 2026-05-17T00:15:00+09:00
-modDatetime: 2026-05-17T00:15:00+09:00
+pubDatetime: 2026-05-16T00:04:00+09:00
+modDatetime: 2026-05-16T00:04:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 4. ARP: Address Resolution Protocol"
 tags:
   - "ComputerNetwork"

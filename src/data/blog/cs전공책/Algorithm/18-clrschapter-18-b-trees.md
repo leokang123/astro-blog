@@ -1,8 +1,8 @@
 ---
 title: "Chapter 18. B-Trees"
 order: 18
-pubDatetime: 2026-05-17T00:04:00+09:00
-modDatetime: 2026-05-17T00:04:00+09:00
+pubDatetime: 2026-05-14T00:18:00+09:00
+modDatetime: 2026-05-14T00:18:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 18. B-Trees"
 tags:
   - "Algorithm"

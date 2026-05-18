@@ -1,8 +1,8 @@
 ---
 title: "Chapter 16. Query Optimization"
 order: 16
-pubDatetime: 2026-05-18T00:11:00+09:00
-modDatetime: 2026-05-18T00:11:00+09:00
+pubDatetime: 2026-05-17T00:16:00+09:00
+modDatetime: 2026-05-17T00:16:00+09:00
 description: "Database System Concepts 정리: Chapter 16. Query Optimization"
 tags:
   - "Database"

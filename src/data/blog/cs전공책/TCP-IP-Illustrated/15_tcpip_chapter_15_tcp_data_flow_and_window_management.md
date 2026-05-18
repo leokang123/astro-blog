@@ -1,8 +1,8 @@
 ---
 title: "Chapter 15. TCP Data Flow and Window Management"
 order: 15
-pubDatetime: 2026-05-17T00:04:00+09:00
-modDatetime: 2026-05-17T00:04:00+09:00
+pubDatetime: 2026-05-16T00:15:00+09:00
+modDatetime: 2026-05-16T00:15:00+09:00
 description: "TCP/IP Illustrated 정리: TCP Data Flow and Window Management"
 tags:
   - ComputerNetwork

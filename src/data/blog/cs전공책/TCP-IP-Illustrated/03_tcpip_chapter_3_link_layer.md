@@ -1,8 +1,8 @@
 ---
 title: "Chapter 3. Link Layer"
 order: 3
-pubDatetime: 2026-05-17T00:16:00+09:00
-modDatetime: 2026-05-17T00:16:00+09:00
+pubDatetime: 2026-05-16T00:03:00+09:00
+modDatetime: 2026-05-16T00:03:00+09:00
 description: "TCP/IP Illustrated 정리: Chapter 3. Link Layer"
 tags:
   - "ComputerNetwork"

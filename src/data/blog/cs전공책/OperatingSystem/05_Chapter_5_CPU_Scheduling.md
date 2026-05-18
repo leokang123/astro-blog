@@ -1,8 +1,8 @@
 ---
 title: "Chapter 5. CPU Scheduling"
 order: 5
-pubDatetime: 2026-05-16T00:18:00+09:00
-modDatetime: 2026-05-16T00:18:00+09:00
+pubDatetime: 2026-05-13T00:05:00+09:00
+modDatetime: 2026-05-13T00:05:00+09:00
 description: "Chapter 5. CPU Scheduling 정리 노트입니다."
 tags:
   - "CS"

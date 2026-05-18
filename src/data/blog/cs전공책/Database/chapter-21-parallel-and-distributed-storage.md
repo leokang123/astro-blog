@@ -1,8 +1,8 @@
 ---
 title: "Chapter 21. Parallel and Distributed Storage"
 order: 21
-pubDatetime: 2026-05-18T00:06:00+09:00
-modDatetime: 2026-05-18T00:06:00+09:00
+pubDatetime: 2026-05-17T00:21:00+09:00
+modDatetime: 2026-05-17T00:21:00+09:00
 description: "Database System Concepts 정리: Chapter 21. Parallel and Distributed Storage"
 tags:
   - "Database"

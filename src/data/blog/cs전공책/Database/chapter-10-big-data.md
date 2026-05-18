@@ -1,8 +1,8 @@
 ---
 title: "Chapter 10. Big Data"
 order: 10
-pubDatetime: 2026-05-18T00:17:00+09:00
-modDatetime: 2026-05-18T00:17:00+09:00
+pubDatetime: 2026-05-17T00:10:00+09:00
+modDatetime: 2026-05-17T00:10:00+09:00
 description: "Database System Concepts 정리: Chapter 10. Big Data"
 tags:
   - "Database"

@@ -1,8 +1,8 @@
 ---
 title: "Chapter 12. Physical Storage Systems"
 order: 12
-pubDatetime: 2026-05-18T00:15:00+09:00
-modDatetime: 2026-05-18T00:15:00+09:00
+pubDatetime: 2026-05-17T00:12:00+09:00
+modDatetime: 2026-05-17T00:12:00+09:00
 description: "Database System Concepts 정리: Chapter 12. Physical Storage Systems"
 tags:
   - "Database"

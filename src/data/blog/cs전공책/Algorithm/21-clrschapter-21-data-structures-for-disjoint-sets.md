@@ -1,8 +1,8 @@
 ---
 title: "Chapter 21. Data Structures for Disjoint Sets"
 order: 21
-pubDatetime: 2026-05-17T00:01:00+09:00
-modDatetime: 2026-05-17T00:01:00+09:00
+pubDatetime: 2026-05-14T00:21:00+09:00
+modDatetime: 2026-05-14T00:21:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 21. Data Structures for Disjoint Sets"
 tags:
   - "Algorithm"

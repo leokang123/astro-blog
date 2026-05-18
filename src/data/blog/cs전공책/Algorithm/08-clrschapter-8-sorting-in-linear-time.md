@@ -1,8 +1,8 @@
 ---
 title: "Chapter 8. Sorting in Linear Time"
 order: 8
-pubDatetime: 2026-05-17T00:14:00+09:00
-modDatetime: 2026-05-17T00:14:00+09:00
+pubDatetime: 2026-05-14T00:08:00+09:00
+modDatetime: 2026-05-14T00:08:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 8. Sorting in Linear Time"
 tags:
   - "Algorithm"

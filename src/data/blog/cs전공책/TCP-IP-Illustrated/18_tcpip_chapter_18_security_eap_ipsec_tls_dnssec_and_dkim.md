@@ -1,8 +1,8 @@
 ---
 title: "Chapter 18. Security: EAP, IPsec, TLS, DNSSEC, and DKIM"
 order: 18
-pubDatetime: 2026-05-17T00:01:00+09:00
-modDatetime: 2026-05-17T00:01:00+09:00
+pubDatetime: 2026-05-16T00:18:00+09:00
+modDatetime: 2026-05-16T00:18:00+09:00
 description: "TCP/IP Illustrated 정리: Security: EAP, IPsec, TLS, DNSSEC, and DKIM"
 tags:
   - ComputerNetwork

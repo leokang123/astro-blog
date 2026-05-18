@@ -1,8 +1,8 @@
 ---
 title: "Chapter 7. Data Link Control Protocols"
 order: 7
-pubDatetime: 2026-05-18T00:18:00+09:00
-modDatetime: 2026-05-18T00:18:00+09:00
+pubDatetime: 2026-05-18T00:07:00+09:00
+modDatetime: 2026-05-18T00:07:00+09:00
 description: "Data and Computer Communications 정리: Chapter 7. Data Link Control Protocols"
 tags:
   - "DataCommunication"

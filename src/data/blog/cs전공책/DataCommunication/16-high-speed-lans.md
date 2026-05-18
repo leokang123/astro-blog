@@ -1,8 +1,8 @@
 ---
 title: "Chapter 16. High-Speed LANs"
 order: 16
-pubDatetime: 2026-05-18T00:09:00+09:00
-modDatetime: 2026-05-18T00:09:00+09:00
+pubDatetime: 2026-05-18T00:16:00+09:00
+modDatetime: 2026-05-18T00:16:00+09:00
 description: "Data and Computer Communications 정리: Chapter 16. High-Speed LANs"
 tags:
   - "DataCommunication"

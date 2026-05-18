@@ -1,8 +1,8 @@
 ---
 title: "Chapter 19. Recovery System"
 order: 19
-pubDatetime: 2026-05-18T00:08:00+09:00
-modDatetime: 2026-05-18T00:08:00+09:00
+pubDatetime: 2026-05-17T00:19:00+09:00
+modDatetime: 2026-05-17T00:19:00+09:00
 description: "Database System Concepts 정리: Chapter 19. Recovery System"
 tags:
   - "Database"

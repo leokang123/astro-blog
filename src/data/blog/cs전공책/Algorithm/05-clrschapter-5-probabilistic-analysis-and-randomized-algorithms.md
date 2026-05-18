@@ -1,8 +1,8 @@
 ---
 title: "Chapter 5. Probabilistic Analysis and Randomized Algorithms"
 order: 5
-pubDatetime: 2026-05-17T00:17:00+09:00
-modDatetime: 2026-05-17T00:17:00+09:00
+pubDatetime: 2026-05-14T00:05:00+09:00
+modDatetime: 2026-05-14T00:05:00+09:00
 description: "CLRS 알고리즘 정리: Chapter 5. Probabilistic Analysis and Randomized Algorithms"
 tags:
   - "Algorithm"

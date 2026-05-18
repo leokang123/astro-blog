@@ -1,8 +1,8 @@
 ---
 title: "Chapter 6. Digital Data Communication Techniques"
 order: 6
-pubDatetime: 2026-05-18T00:19:00+09:00
-modDatetime: 2026-05-18T00:19:00+09:00
+pubDatetime: 2026-05-18T00:06:00+09:00
+modDatetime: 2026-05-18T00:06:00+09:00
 description: "Data and Computer Communications 정리: Chapter 6. Digital Data Communication Techniques"
 tags:
   - "DataCommunication"

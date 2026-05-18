@@ -1,8 +1,8 @@
 ---
 title: "Network Security"
 order: 21
-pubDatetime: 2026-05-18T00:04:00+09:00
-modDatetime: 2026-05-18T00:04:00+09:00
+pubDatetime: 2026-05-18T00:21:00+09:00
+modDatetime: 2026-05-18T00:21:00+09:00
 description: "Data and Computer Communications 정리: Network Security"
 tags:
   - "DataCommunication"

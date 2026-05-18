@@ -1,8 +1,8 @@
 ---
 title: "Chapter 24. Advanced Indexing Techniques"
 order: 24
-pubDatetime: 2026-05-18T00:03:00+09:00
-modDatetime: 2026-05-18T00:03:00+09:00
+pubDatetime: 2026-05-17T00:24:00+09:00
+modDatetime: 2026-05-17T00:24:00+09:00
 description: "Database System Concepts 정리: Chapter 24. Advanced Indexing Techniques"
 tags:
   - "Database"

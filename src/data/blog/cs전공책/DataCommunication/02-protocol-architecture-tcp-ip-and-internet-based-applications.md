@@ -1,8 +1,8 @@
 ---
 title: "Chapter 2. Protocol Architecture, TCP/IP, and Internet-Based Applications"
 order: 2
-pubDatetime: 2026-05-18T00:23:00+09:00
-modDatetime: 2026-05-18T00:23:00+09:00
+pubDatetime: 2026-05-18T00:02:00+09:00
+modDatetime: 2026-05-18T00:02:00+09:00
 description: "Data and Computer Communications 정리: Chapter 2. Protocol Architecture, TCP/IP, and Internet-Based Applications"
 tags:
   - "DataCommunication"

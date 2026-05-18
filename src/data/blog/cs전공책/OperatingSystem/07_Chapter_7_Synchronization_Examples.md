@@ -1,8 +1,8 @@
 ---
 title: "Chapter 7. Synchronization Examples"
 order: 7
-pubDatetime: 2026-05-16T00:16:00+09:00
-modDatetime: 2026-05-16T00:16:00+09:00
+pubDatetime: 2026-05-13T00:07:00+09:00
+modDatetime: 2026-05-13T00:07:00+09:00
 description: "Chapter 7. Synchronization Examples 정리 노트입니다."
 tags:
   - "CS"

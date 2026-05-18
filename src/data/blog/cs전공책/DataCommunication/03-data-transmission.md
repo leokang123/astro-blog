@@ -1,8 +1,8 @@
 ---
 title: "Chapter 3. Data Transmission"
 order: 3
-pubDatetime: 2026-05-18T00:22:00+09:00
-modDatetime: 2026-05-18T00:22:00+09:00
+pubDatetime: 2026-05-18T00:03:00+09:00
+modDatetime: 2026-05-18T00:03:00+09:00
 description: "Data and Computer Communications 정리: Chapter 3. Data Transmission"
 tags:
   - "DataCommunication"
