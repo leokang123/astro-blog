@@ -2,11 +2,11 @@
 title: "Chapter 2. Introduction to the Relational Model"
 order: 2
 pubDatetime: 2026-05-17T00:02:00+09:00
-modDatetime: 2026-05-17T00:02:00+09:00
+modDatetime: 2026-05-19T22:05:28+09:00
 description: "Database System Concepts 정리: Chapter 2. Introduction to the Relational Model"
 tags:
-  - "Database"
-  - "CS"
+  - Database
+  - CS
 ---
 
 ## 개요
@@ -393,3 +393,4 @@ Relational algebra는 사용자가 실제로 직접 작성하는 상용 query la
 15. Union, intersection, set difference가 compatible relations를 요구하는 이유를 arity와 attribute type 관점에서 설명하라.
 16. Rename(ρ)이 self-join 또는 같은 relation의 반복 참조에서 필요한 이유를 설명하라.
 17. Equivalent queries가 query optimizer에 왜 중요한지, selection pushdown 예시로 설명하라.
+

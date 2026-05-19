@@ -2,11 +2,11 @@
 title: "Chapter 7. Relational Database Design"
 order: 7
 pubDatetime: 2026-05-17T00:07:00+09:00
-modDatetime: 2026-05-17T00:07:00+09:00
+modDatetime: 2026-05-19T21:31:08+09:00
 description: "Database System Concepts 정리: Chapter 7. Relational Database Design"
 tags:
-  - "Database"
-  - "CS"
+  - Database
+  - CS
 ---
 
 ## 개요
@@ -888,6 +888,7 @@ Non-atomic value의 예는 다음과 같다.
 중요한 점은 domain 자체보다 “DB application이 값을 어떻게 사용하는가”다. Integer는 보통 atomic하다고 보지만, 숫자의 각 digit을 나눠 의미 있게 해석하는 application이라면 그 사용 방식에서는 atomic하지 않다.
 
 Course identifier `CS-101`도 사람이 보기에는 `CS`가 department를 뜻하는 것처럼 보인다. 하지만 database application이 `course_id`를 쪼개 department를 찾지 않고, `dept_name` attribute를 별도로 사용한다면 `course_id` domain은 atomic하게 취급될 수 있다.
+작성할때 배터리 소모량을 다시 보고 있는데 에너지 영향도가 좀 아직 남아있하네 
 
 Set-valued attribute는 redundancy와 inconsistency를 만들 수 있다. 예를 들어 instructor마다 가르치는 section set을 저장하고, section마다 instructor set도 저장하면 같은 teaches 관계가 두 곳에 반복된다. 한쪽만 update하면 inconsistent state가 된다. 반대로 한쪽만 저장하면 특정 query가 어려워진다. 그래서 relational design에서는 보통 별도 relationship relation으로 표현한다.
 
