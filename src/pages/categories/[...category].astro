@@ -28,6 +28,7 @@ export async function getStaticPaths() {
 
 const { categoryItem, childCategories, categoryPosts } = Astro.props;
 const hasChildCategories = childCategories.length > 0;
+const hasCategoryPosts = categoryPosts.length > 0;
 ---
 
 <Layout title={`Category: ${categoryItem.categoryName} | ${SITE.title}`}>
@@ -37,33 +38,52 @@ const hasChildCategories = childCategories.length > 0;
     titleTransition={categoryItem.category}
     pageDesc={
       hasChildCategories
-        ? `Browse the next level inside "${categoryItem.categoryName}".`
+        ? `Browse posts and child categories inside "${categoryItem.categoryName}".`
         : `All the articles in the "${categoryItem.categoryName}" category.`
     }
   >
     <h1 slot="title" transition:name={categoryItem.category}>
       {`Category:${categoryItem.categoryName}`}
     </h1>
-    {
-      hasChildCategories ? (
-        <ul class="space-y-3">
-          {childCategories.map(({ category, categoryLabel }) => (
-            <li>
-              <a
-                href={siteHref(`/categories/${category}/`)}
-                class="text-lg text-accent underline decoration-dashed underline-offset-4"
-              >
-                {categoryLabel}
-              </a>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <ul>
-          {categoryPosts.map(data => <Card variant="compact" {...data} />)}
-        </ul>
-      )
-    }
+    <div class="space-y-10">
+      {
+        hasChildCategories && (
+          <section>
+            <h2 class="mb-4 text-sm font-semibold uppercase tracking-wide text-muted">
+              Subcategories
+            </h2>
+            <ul class="space-y-3">
+              {childCategories.map(({ category, categoryLabel }) => (
+                <li>
+                  <a
+                    href={siteHref(`/categories/${category}/`)}
+                    class="text-lg text-accent underline decoration-dashed underline-offset-4"
+                  >
+                    {categoryLabel}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+      {
+        hasCategoryPosts && (
+          <section
+            class:list={[
+              hasChildCategories && "border-t border-dashed border-border pt-8",
+            ]}
+          >
+            <h2 class="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
+              Posts
+            </h2>
+            <ul>
+              {categoryPosts.map(data => <Card variant="compact" {...data} />)}
+            </ul>
+          </section>
+        )
+      }
+    </div>
   </Main>
 
   <Footer />
