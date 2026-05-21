@@ -2,7 +2,7 @@
 title: "Chapter 6. The Link Layer and LANs"
 order: 6
 pubDatetime: 2026-05-15T00:06:00+09:00
-modDatetime: 2026-05-15T00:06:00+09:00
+modDatetime: 2026-05-22T02:45:48+09:00
 description: "Computer Networking Top-Down 정리: Chapter 6. The Link Layer and LANs"
 tags:
   - ComputerNetwork

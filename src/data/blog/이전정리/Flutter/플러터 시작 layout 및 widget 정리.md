@@ -1,11 +1,11 @@
 ---
 title: "플러터 시작 layout 및 widget 정리"
 pubDatetime: 2025-06-10T22:04:00+09:00
-modDatetime: 2025-06-11T00:00:23+09:00
+modDatetime: 2026-05-22T00:29:15+09:00
 description: "Flutter의 UI를 구성하는 모든 요소는 위젯(Widget)이다"
 tags:
-  - "일반"
-  - "Flutter"
+  - 일반
+  - Flutter
 ---
 
 # 플러터 시작 Layout 및 Widget 정리
