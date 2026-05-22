@@ -1,47 +1,47 @@
 {
-  "USER_SITE": {
-    "website": "https://kang-log.org/",
-    "author": "Jeonghoon",
-    "profile": "https://kang-log.org/about/",
-    "desc": "홈서버, Docker, 웹호스팅, 개발 기록을 모아두는 개인 기술 블로그",
-    "title": "Kang Log",
-    "postPerIndex": 4,
-    "postPerPage": 4,
-    "home": {
-      "title": "Kang Log",
-      "description": [
+  "USER_SITE" : {
+    "author" : "Jeonghoon",
+    "desc" : "홈서버, Docker, 웹호스팅, 개발 기록을 모아두는 개인 기술 블로그",
+    "home" : {
+      "allPostsText" : "All Posts",
+      "description" : [
         "홈서버, Docker, 웹호스팅, 개발 기록을 모아두는 개인 기술 블로그입니다.",
         "공부 노트와 프로젝트 기록을 카테고리별로 정리합니다."
       ],
-      "readMore": {
-        "text": "Read the blog posts or check",
-        "linkText": "README",
-        "href": "https://github.com/satnaing/astro-paper#readme"
+      "readMore" : {
+        "href" : "https:\/\/github.com\/satnaing\/astro-paper#readme",
+        "linkText" : "README",
+        "text" : "Read the blog posts or check"
       },
-      "socialLabel": "Social Links:",
-      "allPostsText": "All Posts"
-    }
+      "socialLabel" : "Social Links:",
+      "title" : "Kang Log"
+    },
+    "postPerIndex" : 4,
+    "postPerPage" : 4,
+    "profile" : "https:\/\/kang-log.org\/about\/",
+    "title" : "Kang Log",
+    "website" : "https:\/\/kang-log.org\/"
   },
-  "USER_SOCIALS": [
+  "USER_SOCIALS" : [
     {
-      "name": "GitHub",
-      "enabled": true,
-      "href": "https://github.com/leokang123/"
+      "enabled" : true,
+      "href" : "https:\/\/github.com\/leokang123\/",
+      "name" : "GitHub"
     },
     {
-      "name": "X",
-      "enabled": false,
-      "href": "https://x.com/username"
+      "enabled" : false,
+      "href" : "https:\/\/x.com\/username",
+      "name" : "X"
     },
     {
-      "name": "LinkedIn",
-      "enabled": true,
-      "href": "https://www.linkedin.com/in/kang-jeonghoon-a625911bb/"
+      "enabled" : true,
+      "href" : "https:\/\/www.linkedin.com\/in\/kang-jeonghoon-a625911bb\/",
+      "name" : "LinkedIn"
     },
     {
-      "name": "Mail",
-      "enabled": true,
-      "href": "mailto:leokang321@gmail.com"
+      "enabled" : true,
+      "href" : "mailto:leokang321@gmail.com",
+      "name" : "Mail"
     }
   ]
 }
