@@ -1,11 +1,14 @@
 import type { ImageMetadata } from "astro";
 import type { CollectionEntry } from "astro:content";
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 const imageModules = import.meta.glob<{ default: ImageMetadata }>(
   "/src/assets/images/**/*.{avif,gif,jpeg,jpg,png,webp}",
   { eager: true }
 );
+
+export const MISSING_IMAGE_FALLBACK = "/missing-image.svg";
 
 const markdownImagePattern = /!\[[^\]]*]\((?<src><[^>]+>|[^)\s]+)(?:\s+["'][^"']*["'])?\)/g;
 const htmlImagePattern = /<img\b[^>]*\bsrc=["'](?<src>[^"']+)["'][^>]*>/gi;
@@ -26,19 +29,22 @@ const decodeImageSrc = (src: string) => {
 };
 
 export const resolvePostImageSrc = (
-  image: CollectionEntry<"blog">["data"]["ogImage"] | string,
+  image: string | undefined,
   post?: Pick<CollectionEntry<"blog">, "filePath">
 ) => {
   if (!image) return undefined;
 
-  if (typeof image !== "string") {
-    return image.src;
-  }
-
   const decodedSrc = decodeImageSrc(image);
 
-  if (isRemoteUrl(decodedSrc) || decodedSrc.startsWith("/")) {
+  if (isRemoteUrl(decodedSrc)) {
     return decodedSrc;
+  }
+
+  if (decodedSrc.startsWith("/")) {
+    if (decodedSrc === MISSING_IMAGE_FALLBACK) return decodedSrc;
+
+    const publicPath = path.join(process.cwd(), "public", decodedSrc.slice(1));
+    return existsSync(publicPath) ? decodedSrc : MISSING_IMAGE_FALLBACK;
   }
 
   let assetPath: string | undefined;
@@ -57,7 +63,9 @@ export const resolvePostImageSrc = (
     }
   }
 
-  return assetPath ? imageModules[assetPath]?.default.src : undefined;
+  return assetPath
+    ? imageModules[assetPath]?.default.src ?? MISSING_IMAGE_FALLBACK
+    : undefined;
 };
 
 const firstMatchingImage = (

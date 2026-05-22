@@ -10,7 +10,7 @@ import ShareLinks from "@/components/ShareLinks.astro";
 import BackButton from "@/components/BackButton.astro";
 import BackToTopButton from "@/components/BackToTopButton.astro";
 import { getPath } from "@/utils/getPath";
-import { getFirstPostImage } from "@/utils/getFirstPostImage";
+import { getFirstPostImage, resolvePostImageSrc } from "@/utils/getFirstPostImage";
 import siteHref from "@/utils/siteHref";
 import { slugifyStr } from "@/utils/slugify";
 import IconChevronLeft from "@/assets/icons/IconChevronLeft.svg";
@@ -43,9 +43,7 @@ let ogImageUrl: string | undefined;
 
 // Determine OG image source
 if (typeof initOgImage === "string") {
-  ogImageUrl = initOgImage; // Remote OG image (absolute URL)
-} else if (initOgImage?.src) {
-  ogImageUrl = initOgImage.src; // Local asset
+  ogImageUrl = resolvePostImageSrc(initOgImage, post);
 }
 
 if (!ogImageUrl) {
