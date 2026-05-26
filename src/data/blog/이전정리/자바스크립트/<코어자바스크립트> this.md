@@ -1,15 +1,16 @@
 ---
 title: "<코어자바스크립트> this"
+order: 3
 pubDatetime: 2024-09-01T17:25:00+09:00
-modDatetime: 2024-09-05T14:33:21+09:00
+modDatetime: 2026-05-26T16:46:21+09:00
 description: "대부분의 객체지향 언어에서 this는 클래스로 생성한 인스턴스 객체를 의미한다. 클래스에서만 사용할 수 있기 때문에 혼란의 여지가 없거나 많지 않은데, 자바스크립트에서의 this는 어디서든 사용할 수 있다 (혼란의 여지가 많다는 뜻)"
 tags:
-  - "일반"
-  - "자바스크립트"
-  - "책리뷰"
+  - 일반
+  - 자바스크립트
+  - 책리뷰
 ---
 
-# <코어자바스크립트> This
+# <코어자바스크립트 This
 
 #자바스크립트 #책리뷰
 
@@ -40,40 +41,40 @@ console.log(window.a);  // 1
 
 앞에서 **'전역변수를 선언하면 자동으로 전역 객체의 프로퍼티로도 할당한다'** 라고 했는데 이 문장에서 **'로도'** 라는 말이 틀렸다는 것을 이해 할거다. 정확히 표현하면 **'전역변수를 선언하면 자바스크립트는 이를 전역객체의 프로퍼티로 할당한다'** 가 되겠다
 
-> **그러면 이러한 의문이 들수도 있다. var 로 값을 할당하나 global의 프로퍼티로 값을 할당하나 똑같은거 아니야??**
-> 결론부터 말하면 비슷하지만 다르다,
-> 할당하는 과정 자체는 거의 일치하지만 값을 삭제하는 경우에 둘이 다르다.
-> ```js
-> var a = 1;
-> delete window.a;  // false
-> console.log(a, window.a, this.a); // 1 1 1
-> ```
-> ```js
-> global.b = 2;
-> delete window.b; // true
-> console.log(b, window.b, this.b); // Uncaught RefernceError: b is not defined
-> ```
-> var을 사용하는 것은 해당 변수를 전역객체의 프로퍼티로 할당하면서 추가적으로 해당 프로퍼티의 configurable 속성(변경 및 삭제 가능성)을 false로 정의하는 것이다
-> 이처럼 var로 선언한 전역변수와 전역객체의 프로퍼치는 호이스팅 여부 및 configurable여부에서 차이를 보인다.
+### 그러면 이러한 의문이 들수도 있다. var 로 값을 할당하나 global의 프로퍼티로 값을 할당하나 똑같은거 아니야??
+ 결론부터 말하면 비슷하지만 다르다,
+ 할당하는 과정 자체는 거의 일치하지만 값을 삭제하는 경우에 둘이 다르다.
+ ```js
+ var a = 1;
+ delete window.a;  // false
+ console.log(a, window.a, this.a); // 1 1 1
+ ```
+ ```js
+ global.b = 2;
+ delete window.b; // true
+ console.log(b, window.b, this.b); // Uncaught RefernceError: b is not defined
+ ```
+ var을 사용하는 것은 해당 변수를 전역객체의 프로퍼티로 할당하면서 추가적으로 해당 프로퍼티의 configurable 속성(변경 및 삭제 가능성)을 false로 정의하는 것이다
+ 이처럼 var로 선언한 전역변수와 전역객체의 프로퍼치는 호이스팅 여부 및 configurable여부에서 차이를 보인다.
 
 #### 책에서의 NodeJs와 다른점
 
-> 추가로 NodeJs환경에서의 결과는 책의 내용과 사뭇 다르다 *(브라우저 환경은 책과 동일)*
-> 책에서는 Nodejs환경에서 `console.log(this)`를 하면 global객체가 출력된다 했는데, 실제로 해보니 `{}`와 같은 빈 객체가 나왔다.
-> 이유는 다음과 같다
-> - Node 에서 실행되는 **js 파일은 하나의 모듈(Module)** 이다
-> - 실제로 node 명령어를 통해 js 파일 하나를 실행하면, **파일의 전체 script가 하나의 함수 안**에 들어가게 된다.
-> - **Node 엔진은 해당 함수를 실행함**으로써 사용자가 작성한 코드의 결과를 출력하는 것이다.
-> - 결과적으로, js파일에서 작성하는 **코드 전체는 하나의 함수 내부에 들어가**게 되는 것이므로, **지역 scope**를 가지게 된다
->
-> 따라서 자바스크립트 엔진에서 **함수선언문으로 함수를 실행할 시 this가 전역객체를 참조**하는다는 점을 이용하여 우리가 원하는 결과를 출력할 수 있다.
-> ```js
-> function a() {
->   console.log(this); // global
->   console.log(this === global); // true;
-> }
-> a();
-> ```
+ 추가로 NodeJs환경에서의 결과는 책의 내용과 사뭇 다르다 *(브라우저 환경은 책과 동일)*
+ 책에서는 Nodejs환경에서 `console.log(this)`를 하면 global객체가 출력된다 했는데, 실제로 해보니 `{}`와 같은 빈 객체가 나왔다.
+ 이유는 다음과 같다
+ - Node 에서 실행되는 **js 파일은 하나의 모듈(Module)** 이다
+ - 실제로 node 명령어를 통해 js 파일 하나를 실행하면, **파일의 전체 script가 하나의 함수 안**에 들어가게 된다.
+ - **Node 엔진은 해당 함수를 실행함**으로써 사용자가 작성한 코드의 결과를 출력하는 것이다.
+ - 결과적으로, js파일에서 작성하는 **코드 전체는 하나의 함수 내부에 들어가**게 되는 것이므로, **지역 scope**를 가지게 된다
+
+ 따라서 자바스크립트 엔진에서 **함수선언문으로 함수를 실행할 시 this가 전역객체를 참조**하는다는 점을 이용하여 우리가 원하는 결과를 출력할 수 있다.
+ ```js
+ function a() {
+   console.log(this); // global
+   console.log(this === global); // true;
+ }
+ a();
+ ```
 
 ### 메소드로서 호출할 때 그 메소드 내부에서의 This
 
@@ -84,5 +85,5 @@ console.log(window.a);  // 1
 
 ## 참조
 
-[\[NodeJS\] Node 의 this 란? (+ 화살표 함수의 this)](https://haeunyah.tistory.com/86)
-[\[JS\] 📚 자바스크립트 this 💯 완전 정복](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-this-%EC%B4%9D%EC%A0%95%EB%A6%AC)
+[Node 의 this 란? (+ 화살표 함수의 this)](https://haeunyah.tistory.com/86)
+[📚 자바스크립트 this 💯 완전 정복](https://inpa.tistory.com/entry/JS-%F0%9F%93%9A-this-%EC%B4%9D%EC%A0%95%EB%A6%AC)

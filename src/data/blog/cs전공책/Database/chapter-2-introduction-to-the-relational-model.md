@@ -2,7 +2,7 @@
 title: "Chapter 2. Introduction to the Relational Model"
 order: 2
 pubDatetime: 2026-05-17T00:02:00+09:00
-modDatetime: 2026-05-21T23:17:50+09:00
+modDatetime: 2026-05-26T16:05:12+09:00
 description: "Database System Concepts 정리: Chapter 2. Introduction to the Relational Model"
 tags:
   - Database

@@ -1,0 +1,24 @@
+{
+  "assets" : {
+    "imageDir" : "src\/assets\/images",
+    "markdownPathTemplate" : "@\/assets\/images\/{filename}"
+  },
+  "content" : {
+    "excludeDirectories" : [
+      "images"
+    ],
+    "extensions" : [
+      "md"
+    ],
+    "postRoot" : "src\/data\/blog"
+  },
+  "id" : "astro-paper",
+  "name" : "AstroPaper",
+  "siteFiles" : {
+    "aboutPage" : "src\/pages\/about.md",
+    "config" : "src\/config.ts",
+    "defaultOGImage" : "public\/astropaper-og.jpg",
+    "favicon" : "public\/favicon.svg",
+    "settings" : "src\/user-settings.json"
+  }
+}
