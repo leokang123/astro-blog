@@ -2,9 +2,8 @@
 title: "Chapter 3. Transport Layer"
 order: 3
 pubDatetime: 2026-05-15T00:03:00+09:00
-modDatetime: 2026-05-29T04:08:42+09:00
+modDatetime: 2026-05-29T20:13:01+09:00
 description: "Computer Networking Top-Down 정리: Chapter 3. Transport Layer"
-ogImage: "@/assets/images/2026-05-28-005.png"
 tags:
   - ComputerNetwork
   - CS
