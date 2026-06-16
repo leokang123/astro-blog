@@ -2,7 +2,7 @@
 title: "배포 dispatch 실행시 workflow"
 order: 3
 pubDatetime: 2026-06-16T14:34:27+09:00
-modDatetime: 2026-06-16T15:07:13+09:00
+modDatetime: 2026-06-16T15:33:37+09:00
 description: "ec2에 원격으로 접속하여 실행파일을 실행하는 방식으로 blue green 배포 전략 구현"
 ogImage: "@/assets/images/2026-06-16-001.png"
 tags:
@@ -12,14 +12,13 @@ tags:
 ### 1차 마일스톤 
 일단 자동배포되게 만들기 (Recreate방식) 
 
-서버의 docker image를 main병합시 workflow를 통해 빌드해놓아 GHCR에 저장한 것을 사용하여 
-배포 workflow dispatch를 실행할 시 EC2 서버에 원격으로 접속하여 GHCR의 이미지를 pull 하여 컨테이너 빌드없이 컨테이너를 띄워는 방식으로 배포를 하였다. 
+서버의 docker image를 main병합시 workflow(CI)를 통해 Docker image를 빌드해 GHCR에 push하고 배포 workflow dispatch를 실행할 시(CD) EC2 서버에 원격으로 접속하여 GHCR의 이미지를 pull 하여 별도의 이미지 빌드없이 컨테이너를 실행시키는 방식으로 배포를 하였다. 
 
 초기에는 Recreate방식으로 가장 간단한 형태의 배포 전략을 취하였다. 처음에는 git clone을 통해 EC2에서 docker build를 하여 진행하였는데 EC2의 메모리 문제로 잘 이루어지지 않았다.
 
 따라서 가상메모리 방식을 사용하여 메모리 용량을 늘려서 docker build를 하여 서버를 띄웠다. 하지만 이 또한 결국 GHCR을 통해 이미지 pull을 하면 따로 build 해줄 필요가 없개된다는 것을 알게되면서 이미지를 받아오는 방식으로 바뀌었다. 
 
-github의 action variable을 통해 비밀키를 등록하여 EC2에 ssh 연결이 가능하게끔 설계하였고, 기존 springboot 서버에 actuator/health-check 의존성을 추가하여 git actions에서 서버 배포를 마치고 마무리로 헬스체크를 통과하면 workflow가 마무리되게끔 구조를 짰다. 
+github의 actions Secrets를 통해 비밀키를 등록하여 EC2에 ssh 연결이 가능하게끔 설계하였고, Spring Boot Actuator 의존성을 추가하고 /actuator/health 엔드포인트를 이용해 배포 후 헬스체크를 수행하게끔 하였다. 
 
 
 ### 2차 마일스톤 
