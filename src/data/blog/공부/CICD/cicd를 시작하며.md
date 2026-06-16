@@ -2,11 +2,12 @@
 title: "cicd를 시작하며"
 order: 1
 pubDatetime: 2026-05-28T15:52:36+09:00
-modDatetime: 2026-05-28T16:50:38+09:00
+modDatetime: 2026-06-16T15:07:04+09:00
 description: "Continuous Integration, Continuous Delivery"
 ogImage: "@/assets/images/2026-05-28-007.png"
 tags:
   - general
+  - cicd
 ---
 최근에 CICD에 대해 이전에 진행한 '요엔' 이라는 여행 정산 앱 프로젝트를 가지고 다시 공부해보고 있다. ci 는 `Continuous Integration`의 뜻으로 지속적 통합이라는 뜻이다. 
 

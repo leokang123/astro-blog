@@ -2,11 +2,12 @@
 title: "main 병합시 workflow"
 order: 2
 pubDatetime: 2026-05-28T17:40:29+09:00
-modDatetime: 2026-05-28T18:52:43+09:00
+modDatetime: 2026-06-16T15:07:08+09:00
 description: ""
 ogImage: "@/assets/images/2026-05-28-002.png"
 tags:
   - general
+  - cicd
 ---
 
 PR이 `main` 브랜치에 병합되면 GitHub Actions의 `Docker Publish` workflow가 자동으로 실행된다.
