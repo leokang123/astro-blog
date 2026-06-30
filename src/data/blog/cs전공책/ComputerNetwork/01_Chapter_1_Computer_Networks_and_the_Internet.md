@@ -2,9 +2,8 @@
 title: "Chapter 1. Computer Networks and the Internet"
 order: 1
 pubDatetime: 2026-05-15T00:01:00+09:00
-modDatetime: 2026-05-15T00:01:00+09:00
+modDatetime: 2026-06-30T17:38:40+09:00
 description: "Computer Networking Top-Down 정리: Chapter 1. Computer Networks and the Internet"
-featured: true
 tags:
   - ComputerNetwork
   - CS
