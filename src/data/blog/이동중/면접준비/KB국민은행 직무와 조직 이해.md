@@ -2,7 +2,7 @@
 title: "KB국민은행 직무와 조직 이해"
 order: 1
 pubDatetime: 2026-10-24T22:31:32+09:00
-modDatetime: 2026-10-24T22:38:51+09:00
+modDatetime: 2026-10-24T23:04:30+09:00
 description: ""
 tags:
   - general
@@ -17,7 +17,8 @@ tags:
 3. [은행의 다른 금융 직무](03-financial-roles.md): 자산관리·기업금융·IB·글로벌·자본시장
 4. [경력개발과 복리후생](04-growth-and-benefits.md): CDP·연수·복지
 5. [IT 채용 정보와 공식 자료](05-recruitment-and-resources.md): 해당 회차의 공고·FAQ·영상 링크
-[데코레이터 패턴](/posts/%EA%B3%B5%EB%B6%80/%EB%94%94%EC%9E%90%EC%9D%B8%ED%8C%A8%ED%84%B4/%EB%8D%B0%EC%BD%94%EB%A0%88%EC%9D%B4%ED%84%B0-%ED%8C%A8%ED%84%B4)
+
+[데코레이터 패턴](/posts/공부/디자인패턴/데코레이터-패턴)
 ## 읽을 때의 기준
 
 - 현직자의 개인 경험과 은행 전체의 운영 현황을 구분한다.
